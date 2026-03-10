@@ -6,12 +6,12 @@ import { Save, Plus, EyeOff, XCircle, CheckCircle2 } from 'lucide-react';
 type SessionStatus = 'active' | 'hidden' | 'cancelled';
 
 const CATEGORIES = [
-    { id: 'Tennis_Clinic', label: 'Tennis Clinic' },
     { id: 'Tennis_OpenPlay', label: 'Tennis Open Play' },
-    { id: 'Badminton_Clinic', label: 'Badminton Clinic' },
+    { id: 'Tennis_Clinic', label: 'Tennis Clinic' },
     { id: 'Badminton_OpenPlay', label: 'Badminton Open Play' },
-    { id: 'Squash_Clinic', label: 'Squash Clinic' },
-    { id: 'Squash_OpenPlay', label: 'Squash Open Play' }
+    { id: 'Badminton_Clinic', label: 'Badminton Clinic' },
+    { id: 'Squash_OpenPlay', label: 'Squash Open Play' },
+    { id: 'Squash_Clinic', label: 'Squash Clinic' }
 ];
 
 const AdminDashboard = () => {

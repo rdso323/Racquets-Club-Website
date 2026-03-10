@@ -309,7 +309,10 @@ const BookingEngine = () => {
     };
 
     const renderCard = (session: Session, isMock = false) => {
-        const categoryKey = `${activeSport}_Clinic`;
+        // Correctly map session type to category key
+        const categoryKey = session.type === 'court'
+            ? `${activeSport}_OpenPlay`
+            : `${activeSport}_Clinic`;
         const status = sessionStatuses[categoryKey] || 'active';
 
         if (status === 'hidden') return null;
@@ -333,8 +336,19 @@ const BookingEngine = () => {
         const formattedClinicDate = clinicDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
         return (
-            <div key={session.id} className="club-card overflow-hidden flex flex-col h-full bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                <div className={`p-4 border-b relative ${session.type === 'coaching' ? 'bg-gradient-to-r from-blue-50 to-indigo-50/50 border-blue-100' : 'bg-gradient-to-r from-green-50 to-emerald-50/50 border-green-100'}`}>
+            <div key={session.id} className="club-card overflow-hidden flex flex-col h-full bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative">
+                {/* Cancelled full-card overlay — centered message over blurred card */}
+                {isCancelled && (
+                    <div className="absolute inset-0 z-40 flex items-center justify-center backdrop-blur-[2px] bg-white/30 rounded-xl">
+                        <div className="bg-white border border-red-200 shadow-lg rounded-xl px-5 py-4 flex flex-col items-center text-center max-w-[75%]">
+                            <AlertTriangle className="w-6 h-6 text-red-500 mb-2" />
+                            <p className="text-sm font-bold text-red-700">Cancelled This Week</p>
+                            <p className="text-xs text-gray-500 mt-1 font-medium">This session won't be running this week.</p>
+                        </div>
+                    </div>
+                )}
+
+                <div className={`p-4 border-b relative ${session.type === 'coaching' ? 'bg-gradient-to-r from-blue-50 to-indigo-50/50 border-blue-100' : 'bg-gradient-to-r from-green-50 to-emerald-50/50 border-green-100'} ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="flex justify-between items-start mb-3">
                         <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm text-white shadow-sm ${session.type === 'coaching' ? 'bg-wimbledon-navy' : 'bg-wimbledon-green'}`}>
                             {session.type}
@@ -349,12 +363,7 @@ const BookingEngine = () => {
                     </div>
                 </div>
 
-                <div className="p-4 flex-grow flex flex-col justify-between relative text-left">
-                    {/* Darker background for cancelled cards */}
-                    {isCancelled && (
-                        <div className="absolute inset-0 bg-gray-100/40 z-10 pointer-events-none" />
-                    )}
-
+                <div className={`p-4 flex-grow flex flex-col justify-between relative text-left ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     {!user && !isMock && (
                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] rounded-b-xl border-t border-gray-100">
                             <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center max-w-[80%] mb-10">
@@ -365,7 +374,7 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    <div className={!user && !isMock ? 'opacity-30 pointer-events-none blur-[1px] transition-all' : ''}>
+                    <div className={`${!user && !isMock ? 'opacity-40 pointer-events-none blur-[1.5px] transition-all' : ''}`}>
                         <div className="flex items-center justify-between text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
                             <span className="flex items-center group relative">
                                 <Users className="w-4 h-4 mr-1.5 text-gray-400" />
@@ -385,13 +394,7 @@ const BookingEngine = () => {
                         {renderAttendeesList(session.attendees, session.maxAttendees)}
                     </div>
 
-                    <div className={`mt-auto pt-2 space-y-2 relative z-20 w-full ${(!user && !isMock) || isCancelled ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
-                        {isCancelled && (
-                            <div className="mb-3 bg-red-50 border border-red-100 text-red-700 text-xs px-3 py-2.5 rounded-lg font-bold text-center shadow-sm flex items-center justify-center">
-                                <AlertTriangle className="w-3.5 h-3.5 mr-2" />
-                                Cancelled This Week
-                            </div>
-                        )}
+                    <div className={`mt-auto pt-2 space-y-2 relative z-10 w-full ${!user && !isMock ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
                         {isLocked && !isCancelled && (
                             <div className="mb-3 bg-amber-50 border border-amber-100 text-amber-700 text-xs px-3 py-2 rounded-lg font-medium text-center shadow-sm">
                                 Locked until Sunday 5:00 PM
@@ -516,8 +519,19 @@ const BookingEngine = () => {
         }
 
         return (
-            <div className="club-card overflow-hidden flex flex-col h-full bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                <div className={`p-5 border-b bg-gradient-to-br from-green-50 to-emerald-100/30 border-green-100 relative`}>
+            <div className="club-card overflow-hidden flex flex-col h-full bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative">
+                {/* Cancelled full-card overlay */}
+                {isCancelled && (
+                    <div className="absolute inset-0 z-40 flex items-center justify-center backdrop-blur-[2px] bg-white/30 rounded-xl">
+                        <div className="bg-white border border-red-200 shadow-lg rounded-xl px-5 py-4 flex flex-col items-center text-center max-w-[75%]">
+                            <AlertTriangle className="w-6 h-6 text-red-500 mb-2" />
+                            <p className="text-sm font-bold text-red-700">Cancelled This Week</p>
+                            <p className="text-xs text-gray-500 mt-1 font-medium">This session won't be running this week.</p>
+                        </div>
+                    </div>
+                )}
+
+                <div className={`p-5 border-b bg-gradient-to-br from-green-50 to-emerald-100/30 border-green-100 relative ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                         <Users className="w-24 h-24 text-wimbledon-green" />
                     </div>
@@ -561,10 +575,7 @@ const BookingEngine = () => {
                     </div>
                 </div>
 
-                <div className="p-5 flex-grow flex flex-col justify-between relative text-left">
-                    {isCancelled && (
-                        <div className="absolute inset-0 bg-gray-100/40 z-10 pointer-events-none" />
-                    )}
+                <div className={`p-5 flex-grow flex flex-col justify-between relative text-left ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     {!user && !isMock && (
                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] rounded-b-xl border-t border-gray-100">
                             <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center max-w-[80%] mb-10">
@@ -575,7 +586,7 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    <div className={!user && !isMock ? 'opacity-30 pointer-events-none blur-[1px] transition-all' : ''}>
+                    <div className={`${!user && !isMock ? 'opacity-40 pointer-events-none blur-[1.5px] transition-all' : ''}`}>
                         <div className="flex items-center justify-between text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
                             <span className="flex items-center group relative">
                                 <Users className="w-4 h-4 mr-1.5 text-gray-400" />
@@ -591,7 +602,7 @@ const BookingEngine = () => {
                             />
                         </div>
 
-                        {isLocked && (
+                        {isLocked && !isCancelled && (
                             <div className="mt-3 bg-amber-50 border border-amber-100 text-amber-700 text-xs px-3 py-2 rounded-lg font-medium text-center">
                                 Next week's sessions are locked until Sunday at 5:00 PM
                             </div>
@@ -599,13 +610,7 @@ const BookingEngine = () => {
 
                         {renderAttendeesList(orderedAttendees, totalMax, courtsForDay.length > 1, courtsForDay)}
 
-                        <div className={`mt-4 pt-4 border-t border-gray-100 grid gap-3 relative z-20 w-full ${(!user && !isMock) || isCancelled ? 'opacity-30 pointer-events-none blur-[1px]' : ''} ${courtsForDay.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
-                            {isCancelled && (
-                                <div className="col-span-full mb-1 bg-red-50 border border-red-100 text-red-700 text-xs px-3 py-2.5 rounded-lg font-bold text-center shadow-sm flex items-center justify-center">
-                                    <AlertTriangle className="w-3.5 h-3.5 mr-2" />
-                                    This Session is Cancelled for this Week
-                                </div>
-                            )}
+                        <div className={`mt-4 pt-4 border-t border-gray-100 grid gap-3 relative z-20 w-full ${(!user && !isMock) ? 'opacity-30 pointer-events-none blur-[1px]' : ''} ${courtsForDay.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = session.attendees.filter(a => a.endsWith(`|${courtName}`));
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;
