@@ -1,13 +1,29 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Save, Plus } from 'lucide-react';
+import { Save, Plus, EyeOff, XCircle, CheckCircle2 } from 'lucide-react';
+
+type SessionStatus = 'active' | 'hidden' | 'cancelled';
+
+const CATEGORIES = [
+    { id: 'Tennis_Clinic', label: 'Tennis Clinic' },
+    { id: 'Tennis_OpenPlay', label: 'Tennis Open Play' },
+    { id: 'Badminton_Clinic', label: 'Badminton Clinic' },
+    { id: 'Badminton_OpenPlay', label: 'Badminton Open Play' },
+    { id: 'Squash_Clinic', label: 'Squash Clinic' },
+    { id: 'Squash_OpenPlay', label: 'Squash Open Play' }
+];
 
 const AdminDashboard = () => {
     const [tickerText, setTickerText] = useState('');
     const [loading, setLoading] = useState(true);
     const [savingTicker, setSavingTicker] = useState(false);
     const [message, setMessage] = useState('');
+
+    // Session Status State
+    const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
+    const [savingStatuses, setSavingStatuses] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
 
     // Event State
     const [newEvent, setNewEvent] = useState({
@@ -22,20 +38,33 @@ const AdminDashboard = () => {
     const [eventMessage, setEventMessage] = useState('');
 
     useEffect(() => {
-        const fetchTicker = async () => {
+        const fetchSettings = async () => {
             try {
-                const docRef = doc(db, 'settings', 'ticker');
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setTickerText(docSnap.data().text || '');
+                // Fetch ticker
+                const tickerRef = doc(db, 'settings', 'ticker');
+                const tickerSnap = await getDoc(tickerRef);
+                if (tickerSnap.exists()) {
+                    setTickerText(tickerSnap.data().text || '');
+                }
+
+                // Fetch session statuses
+                const statusRef = doc(db, 'settings', 'sessionStatus');
+                const statusSnap = await getDoc(statusRef);
+                if (statusSnap.exists()) {
+                    setSessionStatuses(statusSnap.data() as Record<string, SessionStatus>);
+                } else {
+                    // Initialize defaults if missing
+                    const defaults: Record<string, SessionStatus> = {};
+                    CATEGORIES.forEach(cat => defaults[cat.id] = 'active');
+                    setSessionStatuses(defaults);
                 }
             } catch (error) {
-                console.error("Error fetching ticker", error);
+                console.error("Error fetching settings", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchTicker();
+        fetchSettings();
     }, []);
 
     const handleSaveTicker = async () => {
@@ -51,6 +80,25 @@ const AdminDashboard = () => {
         } finally {
             setSavingTicker(false);
         }
+    };
+
+    const handleSaveStatuses = async () => {
+        setSavingStatuses(true);
+        setStatusMessage('');
+        try {
+            await setDoc(doc(db, 'settings', 'sessionStatus'), sessionStatuses);
+            setStatusMessage('Statuses updated successfully!');
+            setTimeout(() => setStatusMessage(''), 3000);
+        } catch (error) {
+            console.error("Error updating statuses", error);
+            setStatusMessage('Error updating statuses.');
+        } finally {
+            setSavingStatuses(false);
+        }
+    };
+
+    const updateStatus = (id: string, status: SessionStatus) => {
+        setSessionStatuses(prev => ({ ...prev, [id]: status }));
     };
 
     const handleAddEvent = async (e: React.FormEvent) => {
@@ -142,6 +190,55 @@ const AdminDashboard = () => {
                         >
                             <Save className="w-4 h-4 mr-2" />
                             {savingTicker ? 'Saving...' : 'Save Ticker'}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Session Status Section */}
+            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 mb-8">
+                <h2 className="text-xl font-medium text-gray-900 mb-2">Session Status Manager</h2>
+                <p className="text-gray-500 text-sm mb-6">
+                    Control which sessions appear on the Booking Engine and their current availability for this week.
+                </p>
+
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {CATEGORIES.map(cat => (
+                            <div key={cat.id} className="p-4 border border-gray-100 rounded-xl bg-gray-50/30">
+                                <label className="block text-sm font-bold text-gray-700 mb-3">{cat.label}</label>
+                                <div className="flex bg-white p-1 rounded-lg border border-gray-200 shadow-sm gap-1">
+                                    {(['active', 'hidden', 'cancelled'] as SessionStatus[]).map(status => (
+                                        <button
+                                            key={status}
+                                            onClick={() => updateStatus(cat.id, status)}
+                                            className={`flex-1 flex items-center justify-center py-2 px-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${sessionStatuses[cat.id] === status
+                                                ? (status === 'active' ? 'bg-wimbledon-green text-white shadow-md' : status === 'hidden' ? 'bg-gray-500 text-white shadow-md' : 'bg-red-500 text-white shadow-md')
+                                                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                                }`}
+                                        >
+                                            {status === 'active' && <CheckCircle2 className="w-3 h-3 mr-1" />}
+                                            {status === 'hidden' && <EyeOff className="w-3 h-3 mr-1" />}
+                                            {status === 'cancelled' && <XCircle className="w-3 h-3 mr-1" />}
+                                            {status}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <span className={`text-sm ${statusMessage.includes('Error') ? 'text-red-500' : 'text-green-600'}`}>
+                            {statusMessage}
+                        </span>
+                        <button
+                            onClick={handleSaveStatuses}
+                            disabled={savingStatuses}
+                            className="flex items-center bg-wimbledon-navy hover:bg-[#00287a] text-white px-6 py-2 rounded-lg transition-colors font-medium disabled:opacity-50"
+                        >
+                            <Save className="w-4 h-4 mr-2" />
+                            {savingStatuses ? 'Saving...' : 'Save All Statuses'}
                         </button>
                     </div>
                 </div>

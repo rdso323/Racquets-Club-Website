@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, setDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, CalendarDays, Rocket } from 'lucide-react';
+import { Users, CalendarDays, Rocket, AlertTriangle } from 'lucide-react';
+
+type SessionStatus = 'active' | 'hidden' | 'cancelled';
 
 const getBaseWeekStart = (sport: string) => {
     const now = new Date();
@@ -126,6 +128,7 @@ const BookingEngine = () => {
     const [sessions, setSessions] = useState<Session[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
     const [activeSport, setActiveSport] = useState('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
     const [activeDay, setActiveDay] = useState<'tuesday' | 'thursday' | 'wednesday'>('tuesday');
@@ -141,15 +144,30 @@ const BookingEngine = () => {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'sessions'), (snapshot) => {
-            const fbSessions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Session));
-            setSessions(fbSessions.sort((a, b) => a.date.localeCompare(b.date)));
+            const sessionsData = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            })) as Session[];
+            setSessions(sessionsData);
             setLoading(false);
-            setError(null);
         }, (err) => {
             console.error("Error fetching sessions:", err);
-            setError("Could not connect to database. Ensure Firebase rules allow reads.");
+            setError("Could not load sessions. Please try again later.");
             setLoading(false);
         });
+
+        // Fetch session statuses
+        const fetchStatuses = async () => {
+            try {
+                const statusDoc = await getDoc(doc(db, 'settings', 'sessionStatus'));
+                if (statusDoc.exists()) {
+                    setSessionStatuses(statusDoc.data() as Record<string, SessionStatus>);
+                }
+            } catch (err) {
+                console.error("Error fetching statuses:", err);
+            }
+        };
+        fetchStatuses();
 
         return () => unsubscribe();
     }, []);
@@ -291,6 +309,12 @@ const BookingEngine = () => {
     };
 
     const renderCard = (session: Session, isMock = false) => {
+        const categoryKey = `${activeSport}_Clinic`;
+        const status = sessionStatuses[categoryKey] || 'active';
+
+        if (status === 'hidden') return null;
+        const isCancelled = status === 'cancelled';
+
         const isFull = session.attendees.length >= session.maxAttendees;
         const isJoining = user ? session.attendees.some(a => a.startsWith(user.uid + "|") || a === user.uid) : false;
 
@@ -323,15 +347,14 @@ const BookingEngine = () => {
                         <h3 className="text-xl font-bold text-gray-900">{session.title}</h3>
                         <p className="text-sm font-semibold text-gray-700 bg-white/70 w-fit px-2 py-1 rounded shadow-sm border border-gray-100 whitespace-nowrap">{formattedClinicDate} • 3:00 PM - 4:00 PM</p>
                     </div>
-                    {session.type === 'coaching' && (
-                        <p className="text-sm text-gray-600 mt-1 font-medium flex items-center">
-                            <Rocket className="w-3.5 h-3.5 mr-1 text-wimbledon-navy" />
-                            Instructor: <span className="text-wimbledon-navy ml-1">{session.coach || 'TBD'}</span>
-                        </p>
-                    )}
                 </div>
 
-                <div className="p-4 flex-grow flex flex-col justify-between relative">
+                <div className="p-4 flex-grow flex flex-col justify-between relative text-left">
+                    {/* Darker background for cancelled cards */}
+                    {isCancelled && (
+                        <div className="absolute inset-0 bg-gray-100/40 z-10 pointer-events-none" />
+                    )}
+
                     {!user && !isMock && (
                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] rounded-b-xl border-t border-gray-100">
                             <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center max-w-[80%] mb-10">
@@ -362,16 +385,22 @@ const BookingEngine = () => {
                         {renderAttendeesList(session.attendees, session.maxAttendees)}
                     </div>
 
-                    <div className={`mt-auto pt-2 space-y-2 relative z-10 w-full ${!user && !isMock ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
-                        {isLocked && (
+                    <div className={`mt-auto pt-2 space-y-2 relative z-20 w-full ${(!user && !isMock) || isCancelled ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
+                        {isCancelled && (
+                            <div className="mb-3 bg-red-50 border border-red-100 text-red-700 text-xs px-3 py-2.5 rounded-lg font-bold text-center shadow-sm flex items-center justify-center">
+                                <AlertTriangle className="w-3.5 h-3.5 mr-2" />
+                                Cancelled This Week
+                            </div>
+                        )}
+                        {isLocked && !isCancelled && (
                             <div className="mb-3 bg-amber-50 border border-amber-100 text-amber-700 text-xs px-3 py-2 rounded-lg font-medium text-center shadow-sm">
                                 Locked until Sunday 5:00 PM
                             </div>
                         )}
                         <button
                             onClick={() => handleJoin(session, isMock)}
-                            disabled={isMock || isPast || isLocked || (isFull && !isJoining) || !user}
-                            className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
+                            disabled={isMock || isPast || isLocked || isCancelled || (isFull && !isJoining) || !user}
+                            className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
                                 isLocked ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
                                     isJoining ? 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 hover:shadow' :
                                         isFull ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
@@ -379,7 +408,7 @@ const BookingEngine = () => {
                                                 'bg-wimbledon-navy hover:bg-[#00287a] text-white hover:shadow-md hover:-translate-y-0.5'
                                 }`}
                         >
-                            {isMock ? 'Demo Enabled' : isPast ? 'Session Ended' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
+                            {isMock ? 'Demo Enabled' : isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
                         </button>
 
                         {session.type === 'coaching' && isAdmin && (
@@ -405,6 +434,12 @@ const BookingEngine = () => {
     };
 
     const renderGroupedOpenPlayCard = (groupedSessions: Session[], isMock: boolean) => {
+        const categoryKey = `${activeSport}_OpenPlay`;
+        const status = sessionStatuses[categoryKey] || 'active';
+
+        if (status === 'hidden') return null;
+        const isCancelled = status === 'cancelled';
+
         const baseStartOfWeek = getBaseWeekStart(activeSport);
         const isLocked = isWeekLocked(baseStartOfWeek, false);
         const dateRangeDisplay = getWeekDateRangeDisplay(baseStartOfWeek, false);
@@ -526,7 +561,10 @@ const BookingEngine = () => {
                     </div>
                 </div>
 
-                <div className="p-5 flex-grow flex flex-col justify-between relative">
+                <div className="p-5 flex-grow flex flex-col justify-between relative text-left">
+                    {isCancelled && (
+                        <div className="absolute inset-0 bg-gray-100/40 z-10 pointer-events-none" />
+                    )}
                     {!user && !isMock && (
                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] rounded-b-xl border-t border-gray-100">
                             <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center text-center max-w-[80%] mb-10">
@@ -561,7 +599,13 @@ const BookingEngine = () => {
 
                         {renderAttendeesList(orderedAttendees, totalMax, courtsForDay.length > 1, courtsForDay)}
 
-                        <div className={`mt-4 pt-4 border-t border-gray-100 grid gap-3 relative z-10 w-full ${!user && !isMock ? 'opacity-30 pointer-events-none blur-[1px]' : ''} ${courtsForDay.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                        <div className={`mt-4 pt-4 border-t border-gray-100 grid gap-3 relative z-20 w-full ${(!user && !isMock) || isCancelled ? 'opacity-30 pointer-events-none blur-[1px]' : ''} ${courtsForDay.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                            {isCancelled && (
+                                <div className="col-span-full mb-1 bg-red-50 border border-red-100 text-red-700 text-xs px-3 py-2.5 rounded-lg font-bold text-center shadow-sm flex items-center justify-center">
+                                    <AlertTriangle className="w-3.5 h-3.5 mr-2" />
+                                    This Session is Cancelled for this Week
+                                </div>
+                            )}
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = session.attendees.filter(a => a.endsWith(`|${courtName}`));
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;
@@ -572,8 +616,8 @@ const BookingEngine = () => {
                                     <button
                                         key={courtName}
                                         onClick={() => handleJoin(session, isMock, courtName)}
-                                        disabled={isMock || isPast || isLocked || (isCourtFull && !userInThisCourt) || !user}
-                                        className={`w-full py-3 rounded-xl font-semibold tracking-wide text-xs md:text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
+                                        disabled={isMock || isPast || isLocked || isCancelled || (isCourtFull && !userInThisCourt) || !user}
+                                        className={`w-full py-3 rounded-xl font-semibold tracking-wide text-xs md:text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
                                             isLocked ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
                                                 userInThisCourt ? 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 hover:shadow' :
                                                     isCourtFull ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200' :
@@ -581,7 +625,7 @@ const BookingEngine = () => {
                                                             'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5'
                                             }`}
                                     >
-                                        {isMock ? 'Demo Enabled' : isPast ? 'Session Ended' : isLocked ? 'Locked' : userInThisCourt ? `Drop ${courtName}` : userInAnotherCourt ? `Switch to ${courtName}` : isCourtFull ? `${courtName} Full` : `Join ${courtName}`}
+                                        {isMock ? 'Demo Enabled' : isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userInThisCourt ? `Drop ${courtName}` : userInAnotherCourt ? `Switch to ${courtName}` : isCourtFull ? `${courtName} Full` : `Join ${courtName}`}
                                     </button>
                                 );
                             })}
