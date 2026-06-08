@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -11,6 +12,13 @@ export default {
           navy: '#001A57',
           green: '#006400',
           purple: '#4B0082',
+          gold: '#C9A84C',       /* Stitch Dark mode accent */
+          green_accent: '#10B981', /* Pop green for dark mode */
+        },
+        club: {
+          bg: '#0A101D',
+          surface: '#111827',
+          surface_hover: '#1F2937',
         }
       },
       fontFamily: {

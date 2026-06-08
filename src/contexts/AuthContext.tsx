@@ -36,7 +36,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 // Using a specific ID or email for the admin, or a generic check.
-const ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu']; // Assuming we can use these for admin check
+const ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu', 'fuqua-racquets@duke.edu']; // Assuming we can use these for admin check
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
@@ -173,7 +173,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAdmin = user ? ADMIN_EMAILS.includes(user.email || '') : false;
+    const isAdmin = user ? ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') : false;
 
     return (
         <AuthContext.Provider value={{

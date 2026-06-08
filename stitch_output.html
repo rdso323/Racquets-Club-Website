@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fuqua Racquets Club | The Gold Standard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#dee2f5",
+              "primary": "#82db6f",
+              "primary-fixed": "#9df888",
+              "on-tertiary-fixed": "#241a00",
+              "on-surface-variant": "#bfcab7",
+              "primary-container": "#006400",
+              "surface-container-highest": "#303443",
+              "on-tertiary": "#3d2e00",
+              "on-error-container": "#ffdad6",
+              "primary-fixed-dim": "#82db6f",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-primary-fixed": "#002200",
+              "on-secondary-fixed-variant": "#304380",
+              "on-secondary": "#172c68",
+              "outline": "#899483",
+              "surface-container-high": "#252a38",
+              "secondary-fixed": "#dce1ff",
+              "on-primary": "#003a00",
+              "background": "#0e1320",
+              "surface-container-low": "#161b29",
+              "secondary-fixed-dim": "#b5c4ff",
+              "on-surface": "#dee2f5",
+              "surface-bright": "#343948",
+              "outline-variant": "#404a3b",
+              "surface": "#0e1320",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface-tint": "#82db6f",
+              "on-secondary-fixed": "#00164d",
+              "inverse-on-surface": "#2b303e",
+              "tertiary": "#e6c364",
+              "on-primary-fixed-variant": "#005300",
+              "surface-container": "#1a1f2d",
+              "error-container": "#93000a",
+              "on-error": "#690005",
+              "secondary-container": "#304380",
+              "tertiary-fixed": "#ffe08f",
+              "on-secondary-container": "#a0b2f7",
+              "surface-container-lowest": "#090e1b",
+              "tertiary-container": "#c9a84c",
+              "on-tertiary-container": "#4f3d00",
+              "on-primary-container": "#86df72",
+              "surface-variant": "#303443",
+              "error": "#ffb4ab",
+              "on-background": "#dee2f5",
+              "secondary": "#b5c4ff",
+              "inverse-primary": "#126e0c",
+              "surface-dim": "#0e1320"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-panel {
+        background: rgba(26, 31, 45, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(64, 74, 59, 0.15);
+      }
+      .text-glow-green {
+        text-shadow: 0 0 15px rgba(130, 219, 111, 0.4);
+      }
+      .forest-gradient {
+        background: linear-gradient(135deg, #82db6f 0%, #006400 100%);
+      }
+      .premium-shadow {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0e1320;
+      }
+    </style>
+</head>
+<body class="text-on-surface antialiased">
+<!-- LIVE TICKER BAR -->
+<div class="h-10 bg-[#001A57] flex items-center overflow-hidden border-b border-primary-container relative z-[60]">
+<div class="flex whitespace-nowrap animate-pulse px-8 items-center gap-8 w-full">
+<span class="text-xs font-bold tracking-[0.2em] text-primary flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_#82db6f]"></span>
+                LIVE: CHAMPIONSHIP FINALS COMMENCING ON COURT 1
+            </span>
+<span class="text-xs font-medium text-on-surface-variant uppercase tracking-widest opacity-60">|</span>
+<span class="text-xs font-bold tracking-[0.2em] text-tertiary">MEMBER EXCLUSIVE: WINTER GALA TICKETS NOW AVAILABLE</span>
+<span class="text-xs font-medium text-on-surface-variant uppercase tracking-widest opacity-60">|</span>
+<span class="text-xs font-bold tracking-[0.2em] text-primary">WEATHER UPDATE: INDOOR COURTS FULLY OPERATIONAL</span>
+</div>
+</div>
+<!-- NAVBAR (TopAppBar Shared Component) -->
+<header class="bg-[#0e1320]/80 backdrop-blur-xl fixed top-10 w-full z-50 border-b border-[#404a3b]/15 shadow-2xl shadow-black/40 h-20">
+<div class="flex items-center justify-between px-8 h-full w-full mx-auto">
+<div class="flex items-center gap-12">
+<span class="text-xl font-bold tracking-tighter text-[#dee2f5] uppercase">Fuqua Racquets</span>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#82db6f] font-semibold border-b-2 border-[#82db6f] pb-1 transition-all" href="#">Courts</a>
+<a class="text-[#bfcab7] hover:text-[#dee2f5] transition-colors" href="#">Lessons</a>
+<a class="text-[#bfcab7] hover:text-[#dee2f5] transition-colors" href="#">Events</a>
+<a class="text-[#bfcab7] hover:text-[#dee2f5] transition-colors" href="#">Membership</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center gap-4 text-sm font-medium">
+<span class="text-on-surface-variant">Welcome, <span class="text-on-surface">Alex</span></span>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="Member Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a sophisticated man with a friendly expression in a premium studio lighting setup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9Gc-PPcBfrcGVITMhY727rBtJkqJ7uhTUdWtGSDn2_dyDZWAzov53PLKWHoxKQujRCpSaOo9dC03joQsGGhjMKIEbtyzfdMamDXhyOUHUMrYuh0cowI6l13g_dCaiix8fuDVkqd7Zf8eQKtbe3B1s8uoRNUk_k-Q9usY8jEhtXn4qev2Nh_TjIazM0uvK77-gX1FZ668CgPCC06PsrNxkvshZOJvwdJv01BRPJbYWtR_oG73x868nM7O9b2H-MD5Hnfq3IC_zJA"/>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface-variant hover:bg-[#343948]/50 rounded-lg transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="px-4 py-2 text-sm font-semibold bg-surface-container-high text-on-surface rounded-lg hover:bg-[#343948]/50 transition-all border border-outline-variant/20">
+                        Admin
+                    </button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-32 min-h-screen">
+<!-- HERO SECTION -->
+<section class="px-8 mb-20">
+<div class="relative rounded-3xl overflow-hidden min-h-[500px] flex items-center p-12 md:p-20 bg-gradient-to-br from-[#0e1320] via-[#0A0F1C] to-[#001A57]">
+<!-- Decorative Glows -->
+<div class="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4"></div>
+<div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-tertiary/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/4"></div>
+<div class="relative z-10 max-w-3xl">
+<span class="text-primary font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Exclusive Members Only</span>
+<h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-[0.9]">
+                        Welcome to <br/>the <span class="text-glow-green text-primary">Club.</span>
+</h1>
+<p class="text-on-surface-variant text-xl mb-10 max-w-xl leading-relaxed">
+                        Experience the pinnacle of racquet sports in an atmosphere of refined luxury. Your court is waiting.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="forest-gradient px-8 py-4 rounded-lg text-on-primary font-bold text-lg hover:scale-105 transition-transform premium-shadow">
+                            Book a Court
+                        </button>
+<button class="px-8 py-4 rounded-lg bg-transparent border border-outline-variant/30 text-white font-bold text-lg hover:bg-white/5 transition-all">
+                            View Schedule
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- TWO-COLUMN LAYOUT -->
+<section class="px-8 mb-24 grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- LEFT: Events Carousel (Featured) -->
+<div class="lg:col-span-8 space-y-8">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-tertiary text-xs font-bold uppercase tracking-widest mb-2 block">Premium Events</span>
+<h2 class="text-3xl font-bold tracking-tight">Upcoming Tournaments</h2>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 text-sm font-medium">
+                        View Calendar <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="relative group cursor-pointer overflow-hidden rounded-3xl aspect-[16/9] border border-primary-container/20">
+<img alt="Tennis Match" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Dramatic wide shot of a professional indoor tennis court with moody lighting and glowing lines on the surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIqm4lzL4JAw9YFnvrZeFKomD5DSj6A2oArVpT0C9Fbg0dV-WfyVmkidhl8k0X1_NqKmtpARLSlm7joUcvBDBXY3fGaLLbXRXerSP5LwzD0_WnW1NsSHNrbNYMZAn3qzFSkhFCFTXJ6qFDuKKeSKHLTb1caqo0cbyDZ3N16XZJEz4NHUEU0BlS6NwHkhQ1oMCrIz2C_eWFBj3QDP0dnFashx5FT3LILnFao9l86mNEL67pEEOjso_7HLqMhDGQXxpeCjmozbriVA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 w-full">
+<div class="flex gap-3 mb-4">
+<span class="px-3 py-1 bg-primary-container text-primary text-[10px] font-bold rounded-full uppercase tracking-tighter">Premier League</span>
+<span class="px-3 py-1 bg-tertiary-container text-tertiary text-[10px] font-bold rounded-full uppercase tracking-tighter">Gold Tier</span>
+</div>
+<h3 class="text-4xl font-black text-white mb-2 tracking-tight">Annual Fuqua Winter Championship</h3>
+<p class="text-on-surface-variant max-w-lg mb-6">Join the club's most prestigious event of the year. Registrations are now open for all doubles categories.</p>
+<div class="flex items-center gap-6">
+<span class="flex items-center gap-2 text-sm font-medium"><span class="material-symbols-outlined text-primary">calendar_month</span> Dec 15 - 20</span>
+<span class="flex items-center gap-2 text-sm font-medium"><span class="material-symbols-outlined text-primary">location_on</span> Main Arena</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT: Latest News -->
+<div class="lg:col-span-4 space-y-8">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-tertiary text-xs font-bold uppercase tracking-widest mb-2 block">Daily Brief</span>
+<h2 class="text-3xl font-bold tracking-tight">Club News</h2>
+</div>
+</div>
+<div class="space-y-4">
+<!-- News Card 1 -->
+<div class="glass-panel p-6 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-0.5 bg-primary-container/30 text-primary text-[10px] font-bold rounded-full uppercase">Wellness</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-medium">2 Hours Ago</span>
+</div>
+<h4 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">New Recovery Suite Opening</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2">Our state-of-the-art cryotherapy and sauna facilities are ready for member use starting Monday.</p>
+</div>
+<!-- News Card 2 -->
+<div class="glass-panel p-6 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-0.5 bg-tertiary-container/30 text-tertiary text-[10px] font-bold rounded-full uppercase">Pro Shop</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-medium">Yesterday</span>
+</div>
+<h4 class="text-lg font-bold text-white mb-2 group-hover:text-tertiary transition-colors">Limited Edition Racquets</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2">Exclusive Fuqua X Wilson carbon-fiber frames have arrived in the lounge pro shop.</p>
+</div>
+<!-- News Card 3 -->
+<div class="glass-panel p-6 rounded-2xl hover:bg-surface-container-high transition-all group">
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-0.5 bg-primary-container/30 text-primary text-[10px] font-bold rounded-full uppercase">Dining</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-medium">2 Days Ago</span>
+</div>
+<h4 class="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">Seasonal Menu Launch</h4>
+<p class="text-sm text-on-surface-variant line-clamp-2">Chef Julian reveals the Winter menu at The Baseline Bistro, featuring organic local produce.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- BOOKING ENGINE -->
+<section class="px-8 pb-32">
+<div class="glass-panel p-8 md:p-12 rounded-[2rem] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 forest-gradient"></div>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+<div>
+<h2 class="text-4xl font-black text-white tracking-tight mb-2 uppercase">Reserve Your Court</h2>
+<p class="text-on-surface-variant">Instant availability across 12 professional surfaces.</p>
+</div>
+<div class="flex bg-surface-container-lowest p-1.5 rounded-xl border border-outline-variant/10">
+<button class="px-6 py-2 bg-primary text-on-primary font-bold text-sm rounded-lg shadow-lg shadow-primary/20 transition-all">Tennis</button>
+<button class="px-6 py-2 text-on-surface-variant hover:text-white font-bold text-sm transition-all">Badminton</button>
+<button class="px-6 py-2 text-on-surface-variant hover:text-white font-bold text-sm transition-all">Squash</button>
+<button class="px-6 py-2 text-on-surface-variant hover:text-white font-bold text-sm transition-all">Padel</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Session Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 hover:border-primary/50 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-bold text-primary tracking-widest uppercase mb-1 block">Session 01</span>
+<h4 class="text-2xl font-black text-white">08:00 <span class="text-sm font-medium text-on-surface-variant">AM</span></h4>
+</div>
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold text-on-surface-variant">MORNING PRIME</span>
+</div>
+<div class="flex items-center justify-between mb-8">
+<span class="text-xs font-medium text-on-surface-variant">Availability</span>
+<span class="text-xs font-bold text-error">FULL CAPACITY</span>
+</div>
+<button class="w-full py-3 rounded-lg bg-surface-container-highest text-on-surface-variant font-bold text-sm cursor-not-allowed opacity-50" disabled="">
+                            Fully Booked
+                        </button>
+</div>
+<!-- Session Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 hover:border-primary/50 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-bold text-primary tracking-widest uppercase mb-1 block">Session 02</span>
+<h4 class="text-2xl font-black text-white">10:30 <span class="text-sm font-medium text-on-surface-variant">AM</span></h4>
+</div>
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold text-on-surface-variant">MID-DAY</span>
+</div>
+<div class="flex items-center justify-between mb-8">
+<span class="text-xs font-medium text-on-surface-variant">Availability</span>
+<span class="text-xs font-bold text-primary">2 / 4 SLOTS</span>
+</div>
+<button class="w-full py-3 rounded-lg forest-gradient text-on-primary font-bold text-sm hover:scale-[1.02] transition-transform">
+                            Book Now
+                        </button>
+</div>
+<!-- Session Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 hover:border-primary/50 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-bold text-primary tracking-widest uppercase mb-1 block">Session 03</span>
+<h4 class="text-2xl font-black text-white">01:00 <span class="text-sm font-medium text-on-surface-variant">PM</span></h4>
+</div>
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold text-on-surface-variant">AFTERNOON</span>
+</div>
+<div class="flex items-center justify-between mb-8">
+<span class="text-xs font-medium text-on-surface-variant">Availability</span>
+<span class="text-xs font-bold text-primary">4 / 4 SLOTS</span>
+</div>
+<button class="w-full py-3 rounded-lg forest-gradient text-on-primary font-bold text-sm hover:scale-[1.02] transition-transform">
+                            Book Now
+                        </button>
+</div>
+<!-- Session Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-6 hover:border-primary/50 transition-all group">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="text-[10px] font-bold text-primary tracking-widest uppercase mb-1 block">Session 04</span>
+<h4 class="text-2xl font-black text-white">04:30 <span class="text-sm font-medium text-on-surface-variant">PM</span></h4>
+</div>
+<span class="px-2 py-1 bg-surface-container-high rounded text-[10px] font-bold text-on-surface-variant">SUNSET MATCH</span>
+</div>
+<div class="flex items-center justify-between mb-8">
+<span class="text-xs font-medium text-on-surface-variant">Availability</span>
+<span class="text-xs font-bold text-tertiary">1 / 4 SLOTS</span>
+</div>
+<button class="w-full py-3 rounded-lg forest-gradient text-on-primary font-bold text-sm hover:scale-[1.02] transition-transform">
+                            Book Now
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FOOTER (Footer Shared Component) -->
+<footer class="bg-[#0e1320] w-full py-12 px-8 border-t border-[#404a3b]/10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 max-w-7xl mx-auto">
+<div class="space-y-4 text-center md:text-left">
+<span class="text-md font-bold text-[#dee2f5]">Fuqua Racquets Club</span>
+<p class="font-['Inter'] text-xs uppercase tracking-[0.1em] text-[#bfcab7]/60">© 2024 Fuqua Racquets Club. The Gold Standard of Sport.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-['Inter'] text-xs uppercase tracking-[0.1em] text-[#bfcab7]/60 hover:text-[#e6c364] transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Inter'] text-xs uppercase tracking-[0.1em] text-[#bfcab7]/60 hover:text-[#e6c364] transition-colors" href="#">Terms of Service</a>
+<a class="font-['Inter'] text-xs uppercase tracking-[0.1em] text-[#bfcab7]/60 hover:text-[#e6c364] transition-colors" href="#">Guest Access</a>
+<a class="font-['Inter'] text-xs uppercase tracking-[0.1em] text-[#bfcab7]/60 hover:text-[#e6c364] transition-colors" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:text-tertiary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-lg">public</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary hover:text-tertiary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-lg">share</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
