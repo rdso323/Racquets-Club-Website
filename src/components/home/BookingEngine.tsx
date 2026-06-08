@@ -783,7 +783,7 @@ const BookingEngine = () => {
     const regularSessions = displaySessions.filter(s => !(s.type === 'court' && s.title.toLowerCase().includes('open play')));
 
     return (
-        <section>
+        <section id="booking-section">
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors tracking-tight uppercase">

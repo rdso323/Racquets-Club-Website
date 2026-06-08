@@ -190,7 +190,7 @@ const SocialHub = ({ children }: { children?: React.ReactNode }) => {
             </div>
 
             {/* Latest News */}
-            <div className="space-y-4">
+            <div id="news-section" className="space-y-4">
                 <h2 className="text-2xl font-light text-wimbledon-navy dark:text-gray-100 border-b border-gray-200 dark:border-gray-800 pb-2 flex justify-between items-baseline transition-colors">
                     Latest News
                     <a href="https://www.espn.com/tennis/" target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-wimbledon-green dark:text-wimbledon-gold uppercase tracking-wide hover:underline transition-colors">View All</a>
