@@ -1,23 +1,23 @@
 {
-  "tickerText": "[TENNIS] Roland-Garros: Mirra Andreeva (19) wins her 1st Grand Slam title, defeating Maja Chwalińska 6-3, 6-2! Men's Final: Alexander Zverev leading Flavio Cobolli 2-1 (6-1, 4-6, 6-4) • [BADMINTON] Indonesia Open: Victor Lai (CAN) def. Jonatan Christie (INA) 21-19, 21-8; An Se-young (KOR) def. Akane Yamaguchi (JPN) 23-21, 21-12 • [SQUASH] British Open: 18-year-old Amina Orfi becomes the youngest champion in history & Paul Coll clinches his 3rd crown in Birmingham!",
+  "tickerText": "[TENNIS] Roland-Garros: Mirra Andreeva (19) wins her 1st Grand Slam title, defeating Maja Chwalińska 6-3, 6-2! Men's Singles: Alexander Zverev def. Flavio Cobolli 6-1, 4-6, 6-4, 6-7(5), 6-1 to win his 1st Major! • [BADMINTON] Indonesia Open: Victor Lai (CAN) def. Jonatan Christie (INA) 21-19, 21-8; An Se-young (KOR) def. Akane Yamaguchi (JPN) 23-21, 21-12 • [SQUASH] British Open: 18-year-old Amina Orfi becomes the youngest women's champion in history (def. Nour El Sherbini 3-1) & Paul Coll clinches his 3rd title (def. Mostafa Asal 3-1) in Birmingham!",
   "newsItems": [
     {
-      "title": "Mirra Andreeva Makes History at Roland-Garros",
-      "excerpt": "The 19-year-old phenom Mirra Andreeva captured her first Grand Slam singles title with a commanding 6-3, 6-2 victory over Maja Chwalińska, becoming the youngest champion in Paris since Monica Seles in 1992.",
+      "title": "Zverev and Andreeva Conquer Roland-Garros 2026",
+      "excerpt": "Alexander Zverev defeated Flavio Cobolli in a grueling 5-set final to win his first Grand Slam title, while 19-year-old Mirra Andreeva captured the women's singles title with a straight-sets victory.",
       "date": "June 7, 2026",
       "category": "Tennis",
       "link": "https://www.rolandgarros.com"
     },
     {
       "title": "Victor Lai and An Se-young Triumph at Indonesia Open",
-      "excerpt": "Canada's Victor Lai stunned home favorite Jonatan Christie in straight sets, while top-seeded An Se-young of South Korea overcame Japan's Akane Yamaguchi to secure the prestigious 2026 Indonesia Open crowns.",
+      "excerpt": "Canada's Victor Lai stunned local favorite Jonatan Christie in straight games (21-19, 21-8), while top seed An Se-young overcame Akane Yamaguchi to defend her title.",
       "date": "June 7, 2026",
       "category": "Badminton",
       "link": "https://bwfworldtour.bwfbadminton.com"
     },
     {
-      "title": "Coll and Orfi Crowned 2026 British Open Champions",
-      "excerpt": "Egypt's 18-year-old Amina Orfi made history as the youngest women's British Open champion ever, while New Zealand's Paul Coll secured his third title in a thrilling series of finals in Birmingham.",
+      "title": "Coll Wins 3rd British Open; Orfi Makes Squash History",
+      "excerpt": "New Zealand's Paul Coll claimed his third British Open title after a 3-1 victory over Mostafa Asal, while 18-year-old Amina Orfi made history as the youngest women's champion ever.",
       "date": "June 7, 2026",
       "category": "Squash",
       "link": "https://www.psaworldtour.com"

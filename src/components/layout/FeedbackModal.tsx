@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { X, Send, CheckCircle2, MessageSquare, AlertTriangle, Sparkles, Mail } from 'lucide-react';
+import { X, Send, CheckCircle2, MessageSquare, AlertTriangle, Sparkles, Mail, Lock } from 'lucide-react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { useNavigate } from 'react-router-dom';
 
 interface FeedbackModalProps {
     isOpen: boolean;
@@ -13,6 +14,7 @@ type FeedbackType = 'bug' | 'improvement' | 'other';
 
 const FeedbackModal = ({ isOpen, onClose }: FeedbackModalProps) => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     
     // Form states
     const [type, setType] = useState<FeedbackType>('improvement');
@@ -122,7 +124,26 @@ const FeedbackModal = ({ isOpen, onClose }: FeedbackModalProps) => {
 
                 {/* Content */}
                 <div className="p-5 flex-grow overflow-y-auto">
-                    {success ? (
+                    {!user ? (
+                        <div className="flex flex-col items-center justify-center py-8 text-center animate-in fade-in zoom-in-95 duration-300">
+                            <div className="w-16 h-16 bg-amber-50 dark:bg-amber-950/20 rounded-full flex items-center justify-center mb-4 border border-amber-100 dark:border-amber-900/30">
+                                <Lock className="w-8 h-8 text-amber-600 dark:text-wimbledon-gold" />
+                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Sign In Required</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed mb-6">
+                                You must be logged in to submit feedback. This helps us ensure suggestions are from verified club members.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    handleReset();
+                                    navigate('/login');
+                                }}
+                                className="px-6 py-2.5 bg-wimbledon-navy hover:bg-[#00287a] dark:bg-wimbledon-gold dark:hover:bg-amber-500 dark:text-slate-950 text-white font-semibold rounded-xl transition duration-300 shadow-sm"
+                            >
+                                Go to Sign In
+                            </button>
+                        </div>
+                    ) : success ? (
                         <div className="flex flex-col items-center justify-center py-8 text-center animate-in fade-in zoom-in-95 duration-300">
                             <div className="w-16 h-16 bg-green-50 dark:bg-green-950/20 rounded-full flex items-center justify-center mb-4 border border-green-100 dark:border-green-900/30">
                                 <CheckCircle2 className="w-10 h-10 text-wimbledon-green dark:text-wimbledon-green-accent" />
