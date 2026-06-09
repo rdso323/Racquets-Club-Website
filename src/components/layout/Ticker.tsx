@@ -23,7 +23,7 @@ const Ticker = () => {
     return (
         <div className="bg-[#001A57] text-white text-sm py-2 overflow-hidden border-b-2 border-green-700 shadow-md">
             <div
-                className="whitespace-nowrap inline-flex animate-marquee hover:[animation-play-state:paused]"
+                className="whitespace-nowrap inline-flex animate-marquee hover:[animation-play-state:paused] will-change-transform"
                 style={{ width: 'max-content' }}
             >
                 <div

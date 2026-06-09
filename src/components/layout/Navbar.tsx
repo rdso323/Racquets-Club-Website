@@ -32,7 +32,7 @@ const Navbar = () => {
                 <div className="flex justify-between h-20 items-center">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center group mr-4">
-                            <img src={theme === 'dark' ? "/logo_dark.png" : "/logo_light.png"} alt="Fuqua Racquets Club logo" className="h-10 w-auto mr-3 border border-transparent dark:border-gray-800 rounded shadow-sm" />
+                            <img src={theme === 'dark' ? "/logo_dark.png" : "/logo_light.png"} alt="Fuqua Racquets Club logo" className="h-10 w-auto mr-3" />
                             <span className="text-xl font-semibold font-['Outfit'] text-wimbledon-navy dark:text-white tracking-wide -ml-1 mt-0.5 transition-colors hidden sm:inline-block">
                                 Fuqua Racquets Club
                             </span>
