@@ -4,6 +4,8 @@
 
 This is a single-service frontend app: **Fuqua Racquets Club**, built with React 19 + TypeScript + Vite, styled with Tailwind, backed by Firebase (Auth + Firestore). Package manager is **npm** (`package-lock.json`). There is no backend service in this repo and no automated test suite.
 
+**Deployment:** the production site is hosted on **Cloudflare** at **https://www.fuquaracquetsclub.com**. Deployment is driven by `wrangler.jsonc` (Cloudflare Workers/Assets), which serves the Vite build output in `./dist` with SPA fallback. The deploy flow is `npm run build` followed by a Wrangler deploy (e.g. `npx wrangler deploy`); Wrangler is not a project dependency, so it must be run via `npx`.
+
 Standard commands live in `package.json` scripts; use them directly:
 - Dev server: `npm run dev` (Vite, serves on `http://localhost:5173`).
 - Lint: `npm run lint` (`eslint .`). Note: the repo currently has pre-existing lint errors; a non-zero exit from lint does not mean your environment is broken.
