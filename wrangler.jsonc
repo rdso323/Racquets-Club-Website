@@ -1,14 +1,8 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
   "name": "racquets-club-website",
   "compatibility_date": "2026-06-08",
-  "observability": {
-    "enabled": true
-  },
   "assets": {
+    "directory": "./dist",
     "not_found_handling": "single-page-application"
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  }
 }

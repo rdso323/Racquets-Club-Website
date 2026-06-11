@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 
@@ -6,8 +6,6 @@ const HARDCODED_TICKER = "INDIAN WELLS M1000 (LIVE): A. Zverev 🇩🇪 d. B. Na
 
 const Ticker = () => {
     const [tickerText, setTickerText] = useState(HARDCODED_TICKER);
-    const textRef = useRef<HTMLDivElement>(null);
-    const [animDuration, setAnimDuration] = useState(60);
 
     // Try to load from Firestore, fall back to hardcoded
     useEffect(() => {
@@ -22,47 +20,11 @@ const Ticker = () => {
         return () => unsubscribe();
     }, []);
 
-    // Calculate animation duration based on text width for consistent speed
-    useEffect(() => {
-        const calculatePosition = () => {
-            if (textRef.current && textRef.current.firstElementChild) {
-                const singleInstanceWidth = textRef.current.firstElementChild.scrollWidth;
-                if (singleInstanceWidth > 0) {
-                    // ~60 pixels per second
-                    const duration = Math.max(10, singleInstanceWidth / 60);
-                    setAnimDuration(duration);
-                }
-            }
-        };
-
-        // Small timeout to ensure DOM has rendered
-        const timer = setTimeout(calculatePosition, 200);
-        window.addEventListener('resize', calculatePosition);
-
-        return () => {
-            clearTimeout(timer);
-            window.removeEventListener('resize', calculatePosition);
-        };
-    }, [tickerText]);
-
     return (
         <div className="bg-[#001A57] text-white text-sm py-2 overflow-hidden border-b-2 border-green-700 shadow-md">
-            <style>{`
-                @keyframes marquee-seamless {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                }
-                .ticker-animate {
-                    animation: marquee-seamless linear infinite;
-                }
-            `}</style>
             <div
-                ref={textRef}
-                className="whitespace-nowrap inline-flex ticker-animate"
-                style={{
-                    animationDuration: `${animDuration}s`,
-                    width: 'max-content'
-                }}
+                className="whitespace-nowrap inline-flex animate-marquee hover:[animation-play-state:paused] will-change-transform"
+                style={{ width: 'max-content' }}
             >
                 <div
                     className="flex-shrink-0 pr-12"
