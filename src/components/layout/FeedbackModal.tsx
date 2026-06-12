@@ -1,33 +1,33 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { X, Send, CheckCircle2, MessageSquare, AlertTriangle, Sparkles, Mail, Lock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { useUI } from '../system/UIProvider';
+import { useTransitionRouter } from '../system/TransitionProvider';
 
-interface FeedbackModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
+/*
+ * TRANSMIT — the feedback uplink. Firestore writes (feedback + mail
+ * notification) are identical to the legacy modal.
+ */
 
 type FeedbackType = 'bug' | 'improvement' | 'other';
 
-const FeedbackModal = ({ isOpen, onClose }: FeedbackModalProps) => {
+const FeedbackModal = () => {
     const { user } = useAuth();
-    const navigate = useNavigate();
-    
+    const { feedbackOpen, closeFeedback } = useUI();
+    const { go } = useTransitionRouter();
+
     // Form states
     const [type, setType] = useState<FeedbackType>('improvement');
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
     const [submitAnonymously, setSubmitAnonymously] = useState(true);
-    
+
     // Status states
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -76,7 +76,7 @@ const FeedbackModal = ({ isOpen, onClose }: FeedbackModalProps) => {
             }
 
             setSuccess(true);
-            
+
             // Reset fields
             setMessage('');
             setEmail('');
@@ -96,222 +96,171 @@ const FeedbackModal = ({ isOpen, onClose }: FeedbackModalProps) => {
         setMessage('');
         setEmail('');
         setSubmitAnonymously(true);
-        onClose();
+        closeFeedback();
     };
 
+    const TYPES: { id: FeedbackType; label: string; glyph: string }[] = [
+        { id: 'bug', label: 'BUG', glyph: '▲' },
+        { id: 'improvement', label: 'IDEA', glyph: '✦' },
+        { id: 'other', label: 'OTHER', glyph: '◆' },
+    ];
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <div className="bg-white dark:bg-club-surface border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col mt-10 md:mt-0 animate-in fade-in zoom-in-95 duration-200">
-                
-                {/* Header */}
-                <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-club-bg/30">
-                    <div>
-                        <h2 className="text-xl font-semibold text-wimbledon-navy dark:text-gray-100 flex items-center gap-2">
-                            <MessageSquare className="w-5 h-5 text-wimbledon-gold" />
-                            Submit Feedback
-                        </h2>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            Bugs, suggestions, or general improvements.
-                        </p>
-                    </div>
-                    <button 
-                        onClick={handleReset} 
-                        className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors focus:outline-none"
+        <AnimatePresence>
+            {feedbackOpen && (
+                <motion.div
+                    className="fixed inset-0 z-[180] flex items-center justify-center bg-court/85 p-4 backdrop-blur-md"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
+                    <motion.div
+                        className="w-full max-w-md border border-chalk/20 bg-carbon"
+                        initial={{ y: 50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 24, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                     >
-                        <X className="w-5 h-5" />
-                    </button>
-                </div>
-
-                {/* Content */}
-                <div className="p-5 flex-grow overflow-y-auto">
-                    {!user ? (
-                        <div className="flex flex-col items-center justify-center py-8 text-center animate-in fade-in zoom-in-95 duration-300">
-                            <div className="w-16 h-16 bg-amber-50 dark:bg-amber-950/20 rounded-full flex items-center justify-center mb-4 border border-amber-100 dark:border-amber-900/30">
-                                <Lock className="w-8 h-8 text-amber-600 dark:text-wimbledon-gold" />
+                        {/* Header */}
+                        <div className="hairline-b flex items-start justify-between p-6">
+                            <div>
+                                <p className="hud-label mb-1 text-ace">● UPLINK CHANNEL</p>
+                                <h2 className="display-narrow text-3xl text-chalk">TRANSMIT</h2>
+                                <p className="hud-label mt-1 text-chalk/45">BUGS / IDEAS / DISPATCHES → CLUB OPS</p>
                             </div>
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Sign In Required</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed mb-6">
-                                You must be logged in to submit feedback. This helps us ensure suggestions are from verified club members.
-                            </p>
-                            <button
-                                onClick={() => {
-                                    handleReset();
-                                    navigate('/login');
-                                }}
-                                className="px-6 py-2.5 bg-wimbledon-navy hover:bg-[#00287a] dark:bg-wimbledon-gold dark:hover:bg-amber-500 dark:text-slate-950 text-white font-semibold rounded-xl transition duration-300 shadow-sm"
-                            >
-                                Go to Sign In
+                            <button onClick={handleReset} data-cursor="hover" className="hud-label text-chalk/50 transition-colors hover:text-alert">
+                                ✕ CLOSE
                             </button>
                         </div>
-                    ) : success ? (
-                        <div className="flex flex-col items-center justify-center py-8 text-center animate-in fade-in zoom-in-95 duration-300">
-                            <div className="w-16 h-16 bg-green-50 dark:bg-green-950/20 rounded-full flex items-center justify-center mb-4 border border-green-100 dark:border-green-900/30">
-                                <CheckCircle2 className="w-10 h-10 text-wimbledon-green dark:text-wimbledon-green-accent" />
-                            </div>
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Thank you!</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed">
-                                Your feedback has been sent directly to the club administration. We appreciate your help in improving the digital clubhouse!
-                            </p>
-                            <button
-                                onClick={handleReset}
-                                className="mt-6 px-6 py-2 bg-wimbledon-navy hover:bg-[#00287a] dark:bg-wimbledon-gold dark:hover:bg-amber-500 dark:text-slate-950 text-white font-semibold rounded-xl transition duration-300 shadow-sm"
-                            >
-                                Close Window
-                            </button>
-                        </div>
-                    ) : (
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            
-                            {/* Type Selection */}
-                            <div className="space-y-2">
-                                <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                                    Feedback Type
-                                </label>
-                                <div className="grid grid-cols-3 gap-2">
-                                    {/* Bug button */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setType('bug')}
-                                        className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-xl border text-center transition-all duration-200 ${
-                                            type === 'bug'
-                                                ? 'bg-red-50/50 dark:bg-red-950/20 border-red-500 text-red-800 dark:text-red-400 font-semibold shadow-sm'
-                                                : 'bg-white dark:bg-club-bg border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-700'
-                                        }`}
-                                    >
-                                        <AlertTriangle className={`w-5 h-5 mb-1 ${type === 'bug' ? 'text-red-500' : 'text-gray-400'}`} />
-                                        <span className="text-xs">Bug / Issue</span>
-                                    </button>
 
-                                    {/* Suggestion button */}
+                        <div className="max-h-[70vh] overflow-y-auto p-6">
+                            {!user ? (
+                                <div className="flex flex-col items-center py-8 text-center">
+                                    <span className="hud-label mb-4 border border-chalk/25 px-3 py-2 text-chalk/70">▦ AUTH REQUIRED</span>
+                                    <p className="mb-8 max-w-xs font-mono text-xs leading-relaxed text-chalk/60">
+                                        You must be signed in to transmit. This keeps every dispatch tied to a verified club member.
+                                    </p>
                                     <button
-                                        type="button"
-                                        onClick={() => setType('improvement')}
-                                        className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-xl border text-center transition-all duration-200 ${
-                                            type === 'improvement'
-                                                ? 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-500 text-amber-800 dark:text-amber-300 font-semibold shadow-sm'
-                                                : 'bg-white dark:bg-club-bg border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-700'
-                                        }`}
+                                        onClick={() => {
+                                            handleReset();
+                                            go('/login', 'ACCESS');
+                                        }}
+                                        data-cursor="hover"
+                                        className="bg-ace px-7 py-3.5 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110"
                                     >
-                                        <Sparkles className={`w-5 h-5 mb-1 ${type === 'improvement' ? 'text-amber-500 dark:text-wimbledon-gold' : 'text-gray-400'}`} />
-                                        <span className="text-xs">Suggestion</span>
-                                    </button>
-
-                                    {/* Other button */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setType('other')}
-                                        className={`flex flex-col items-center justify-center py-2.5 px-3 rounded-xl border text-center transition-all duration-200 ${
-                                            type === 'other'
-                                                ? 'bg-blue-50/50 dark:bg-blue-950/20 border-blue-500 text-blue-800 dark:text-blue-300 font-semibold shadow-sm'
-                                                : 'bg-white dark:bg-club-bg border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-700'
-                                        }`}
-                                    >
-                                        <MessageSquare className={`w-5 h-5 mb-1 ${type === 'other' ? 'text-blue-500' : 'text-gray-400'}`} />
-                                        <span className="text-xs">Other</span>
+                                        OPEN THE AIRLOCK →
                                     </button>
                                 </div>
-                            </div>
-
-                            {/* Message Input */}
-                            <div className="space-y-2">
-                                <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                                    Details
-                                </label>
-                                <textarea
-                                    required
-                                    value={message}
-                                    onChange={(e) => {
-                                        setMessage(e.target.value);
-                                        if (error) setError(null);
-                                    }}
-                                    placeholder={
-                                        type === 'bug'
-                                            ? 'What went wrong? Tell us what you did and what happened...'
-                                            : type === 'improvement'
-                                            ? 'How can we improve? What features or changes would you like to see?'
-                                            : 'Tell us what is on your mind...'
-                                    }
-                                    className="w-full h-32 p-3.5 border border-gray-200 dark:border-gray-800 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-xl focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all resize-none text-sm leading-relaxed"
-                                />
-                            </div>
-
-                            {/* Submitter Info */}
-                            <div className="space-y-3">
-                                <div className="flex items-center gap-2.5">
-                                    <input
-                                        type="checkbox"
-                                        id="submitAnonymously"
-                                        checked={submitAnonymously}
-                                        onChange={(e) => setSubmitAnonymously(e.target.checked)}
-                                        className="rounded border-gray-300 dark:border-gray-750 text-wimbledon-navy dark:text-wimbledon-gold focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold w-4 h-4 bg-white dark:bg-club-bg"
-                                    />
-                                    <label htmlFor="submitAnonymously" className="text-sm font-medium text-gray-600 dark:text-gray-300 cursor-pointer select-none">
-                                        Submit anonymously
-                                    </label>
+                            ) : success ? (
+                                <div className="flex flex-col items-center py-8 text-center">
+                                    <span className="hud-label mb-4 border border-ace/60 px-3 py-2 text-ace">✓ TRANSMISSION RECEIVED</span>
+                                    <p className="mb-8 max-w-xs font-mono text-xs leading-relaxed text-chalk/60">
+                                        Your dispatch is on the operations desk. Thanks for sharpening the clubhouse.
+                                    </p>
+                                    <button
+                                        onClick={handleReset}
+                                        data-cursor="hover"
+                                        className="bg-ace px-7 py-3.5 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110"
+                                    >
+                                        CLOSE CHANNEL
+                                    </button>
                                 </div>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="space-y-7">
+                                    {/* Type Selection */}
+                                    <div>
+                                        <label className="hud-label mb-3 block text-chalk/45">SIGNAL TYPE</label>
+                                        <div className="flex gap-px bg-chalk/10">
+                                            {TYPES.map((t) => (
+                                                <button
+                                                    key={t.id}
+                                                    type="button"
+                                                    onClick={() => setType(t.id)}
+                                                    data-cursor="hover"
+                                                    className={`flex flex-1 flex-col items-center gap-1.5 py-3.5 font-mono text-[10px] uppercase tracking-hud transition-colors ${type === t.id ? 'bg-ace text-court' : 'bg-court text-chalk/50 hover:text-chalk'}`}
+                                                >
+                                                    <span className="text-sm">{t.glyph}</span>
+                                                    {t.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                                {!submitAnonymously && (
-                                    <div className="space-y-2 animate-in fade-in duration-200">
-                                        <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">
-                                            Contact Email
-                                        </label>
-                                        {user ? (
-                                            <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-club-bg/50 border border-gray-150 dark:border-gray-800 rounded-lg text-sm text-gray-600 dark:text-gray-300 font-medium animate-in slide-in-from-top-1 duration-200">
-                                                <Mail className="w-4 h-4 text-gray-400" />
-                                                <span>Include email: <strong className="text-gray-800 dark:text-gray-200">{user.email}</strong></span>
-                                            </div>
-                                        ) : (
-                                            <div className="relative animate-in slide-in-from-top-1 duration-200">
-                                                <input
-                                                    type="email"
-                                                    value={email}
-                                                    onChange={(e) => setEmail(e.target.value)}
-                                                    placeholder="Enter email address"
-                                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all text-sm"
-                                                />
+                                    {/* Message */}
+                                    <div>
+                                        <label className="hud-label mb-2 block text-chalk/45">PAYLOAD</label>
+                                        <textarea
+                                            required
+                                            value={message}
+                                            onChange={(e) => {
+                                                setMessage(e.target.value);
+                                                if (error) setError(null);
+                                            }}
+                                            placeholder={
+                                                type === 'bug'
+                                                    ? 'What went wrong? Tell us what you did and what happened…'
+                                                    : type === 'improvement'
+                                                        ? 'How can we improve? What would make the clubhouse sharper?'
+                                                        : 'Tell us what is on your mind…'
+                                            }
+                                            className="h-32 w-full resize-none border border-chalk/15 bg-court p-3.5 font-mono text-xs leading-relaxed text-chalk placeholder-chalk/30 transition-colors focus:border-ace focus:outline-none"
+                                        />
+                                    </div>
+
+                                    {/* Submitter Info */}
+                                    <div className="space-y-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSubmitAnonymously(!submitAnonymously)}
+                                            data-cursor="hover"
+                                            className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-hud text-chalk/70 transition-colors hover:text-chalk"
+                                        >
+                                            <span className={`flex h-4 w-4 items-center justify-center border ${submitAnonymously ? 'border-ace bg-ace text-court' : 'border-chalk/30'}`}>
+                                                {submitAnonymously && '✓'}
+                                            </span>
+                                            GHOST MODE — TRANSMIT ANONYMOUSLY
+                                        </button>
+
+                                        {!submitAnonymously && (
+                                            <div className="border border-chalk/15 bg-court px-3.5 py-3">
+                                                <span className="hud-label text-chalk/50">
+                                                    CALLSIGN ATTACHED: <span className="text-ace">{user.email?.toUpperCase()}</span>
+                                                </span>
                                             </div>
                                         )}
                                     </div>
-                                )}
-                            </div>
 
-                            {error && (
-                                <div className="text-red-500 text-xs font-medium flex items-center gap-1.5 animate-in fade-in duration-200">
-                                    <AlertTriangle className="w-4 h-4" />
-                                    <span>{error}</span>
-                                </div>
-                            )}
-
-                            {/* Actions */}
-                            <div className="border-t border-gray-100 dark:border-gray-800 pt-4 flex justify-end gap-3 bg-white dark:bg-club-surface">
-                                <button
-                                    type="button"
-                                    onClick={handleReset}
-                                    disabled={loading}
-                                    className="px-4 py-2.5 text-sm font-semibold text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all disabled:opacity-50"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="px-5 py-2.5 text-sm font-semibold text-white bg-wimbledon-navy hover:bg-[#00287a] dark:bg-wimbledon-gold dark:text-slate-950 dark:hover:bg-amber-500 rounded-xl shadow-sm hover:shadow transition-all flex items-center gap-2 disabled:opacity-50"
-                                >
-                                    {loading ? (
-                                        <>Submitting...</>
-                                    ) : (
-                                        <>
-                                            <Send className="w-4 h-4" />
-                                            Send Feedback
-                                        </>
+                                    {error && (
+                                        <p className="hud-label border border-alert/60 px-3 py-2.5 text-alert">▲ {error.toUpperCase()}</p>
                                     )}
-                                </button>
-                            </div>
-                        </form>
-                    )}
-                </div>
-            </div>
-        </div>
+
+                                    {/* Actions */}
+                                    <div className="hairline-t flex justify-end gap-px bg-chalk/10 pt-5">
+                                        <button
+                                            type="button"
+                                            onClick={handleReset}
+                                            disabled={loading}
+                                            data-cursor="hover"
+                                            className="bg-court px-5 py-3 font-mono text-[10px] uppercase tracking-hud text-chalk/60 transition-colors hover:text-chalk disabled:opacity-40"
+                                        >
+                                            ABORT
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            data-cursor="hover"
+                                            className="bg-ace px-6 py-3 font-mono text-[10px] uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
+                                        >
+                                            {loading ? 'TRANSMITTING…' : 'SEND TRANSMISSION →'}
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 };
 

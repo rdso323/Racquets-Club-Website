@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, onSnapshot, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { motion, AnimatePresence } from 'framer-motion';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-    Save, Plus, EyeOff, XCircle, CheckCircle2, Trash2, AlertTriangle, Sparkles, MessageSquare, 
-    Calendar, MapPin, Clock, Edit, Sliders, ArrowLeft, Users, X, UserPlus, Shield
-} from 'lucide-react';
+import { useTransitionRouter } from '../components/system/TransitionProvider';
+
+/*
+ * CONTROL — the operations deck. A telemetry console for broadcast,
+ * sessions, transmissions and the inbox. Every Firestore handler is
+ * carried over from the legacy dashboard, byte for byte.
+ */
 
 type SessionStatus = 'active' | 'hidden' | 'cancelled';
 type SessionType = 'coaching' | 'court';
@@ -51,11 +55,17 @@ const CATEGORIES = [
     { id: 'Squash_Clinic', label: 'Squash Clinic' }
 ];
 
+/* shared console field styles */
+const FIELD = 'w-full border border-chalk/15 bg-carbon px-3.5 py-3 font-mono text-xs text-chalk placeholder-chalk/30 transition-colors focus:border-ace focus:outline-none';
+const LABEL = 'hud-label mb-1.5 block text-chalk/45';
+const SPORT_DOT: Record<string, string> = { Tennis: '#D7FF3E', Badminton: '#6FA8FF', Squash: '#FF6A3D' };
+
 const AdminDashboard = () => {
     const { user } = useAuth();
+    const { go } = useTransitionRouter();
     const [activeTab, setActiveTab] = useState<'settings' | 'sessions' | 'events' | 'feedback'>('settings');
     const [loading, setLoading] = useState(true);
-    
+
     // Ticker State
     const [tickerText, setTickerText] = useState('');
     const [savingTicker, setSavingTicker] = useState(false);
@@ -76,8 +86,8 @@ const AdminDashboard = () => {
         title: '',
         sport: 'Tennis',
         type: 'court' as SessionType,
-        date: '', 
-        time: '', 
+        date: '',
+        time: '',
         maxAttendees: 4,
         coach: '',
     });
@@ -106,7 +116,7 @@ const AdminDashboard = () => {
 
     // Filter states
     const [sessionsSportFilter, setSessionsSportFilter] = useState('All');
-    
+
     // Refs for scrolling to Create Session form
     const createSessionFormRef = useRef<HTMLDivElement>(null);
 
@@ -451,974 +461,913 @@ const AdminDashboard = () => {
         return { uid, name, email, court, raw: attendeeStr };
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading admin terminal...</div>;
+    /* ── render ───────────────────────────────────────────────── */
+
+    const MODULES = [
+        { id: 'settings' as const, code: 'M.01', label: 'BROADCAST', sub: 'WIRE + GRID STATUS', count: null },
+        { id: 'sessions' as const, code: 'M.02', label: 'SESSIONS', sub: 'COURTS + ROSTERS', count: sessionsList.length },
+        { id: 'events' as const, code: 'M.03', label: 'SIGNALS', sub: 'EVENTS REEL', count: eventsList.length },
+        { id: 'feedback' as const, code: 'M.04', label: 'INBOX', sub: 'MEMBER FEEDBACK', count: feedbackList.length },
+    ];
+
+    if (loading) {
+        return (
+            <main className="flex min-h-screen items-center justify-center">
+                <span className="hud-label animate-blink text-ace">BOOTING CONTROL DECK…</span>
+            </main>
+        );
+    }
 
     return (
-        <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300">
-            {/* Upper title grid */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 dark:border-gray-800 pb-4">
+        <motion.main
+            className="relative min-h-screen px-5 pb-24 pt-28 md:px-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+        >
+            {/* Deck header */}
+            <div className="hairline-b mb-10 flex flex-col gap-6 pb-8 md:flex-row md:items-end md:justify-between">
                 <div>
-                    <h1 className="text-3xl font-light text-wimbledon-navy dark:text-gray-100 flex items-center gap-3">
-                        <Shield className="w-8 h-8 text-wimbledon-gold animate-pulse" />
-                        Admin Operations Terminal
+                    <p className="hud-label mb-3 text-ace">● OPERATIONS — RESTRICTED FREQUENCY</p>
+                    <h1 className="display-tight text-6xl text-chalk md:text-8xl">
+                        CONTROL<span className="text-ace">.</span>
                     </h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Signed in as <span className="font-semibold text-wimbledon-navy dark:text-wimbledon-gold">{user?.email}</span>
+                    <p className="hud-label mt-3 text-chalk/50">
+                        OPERATOR: <span className="text-ace">{user?.email?.toUpperCase()}</span>
                     </p>
                 </div>
-                
-                <div className="flex gap-3 mt-4 md:mt-0">
-                    <button 
-                        onClick={removeDuplicates} 
-                        className="text-xs bg-red-55 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30 px-3 py-2 font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                <div className="flex gap-px bg-chalk/10">
+                    <button
+                        onClick={removeDuplicates}
+                        data-cursor="hover"
+                        className="bg-court px-5 py-3.5 font-mono text-[10px] uppercase tracking-hud text-alert transition-colors hover:bg-carbon"
                     >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        Scan Duplicates
+                        ⌦ SCAN DUPLICATES
                     </button>
-                    <a 
-                        href="/" 
-                        className="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-club-surface dark:hover:bg-club-surface_hover text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-800 px-3 py-2 font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                    <button
+                        onClick={() => go('/', 'INDEX')}
+                        data-cursor="hover"
+                        className="bg-court px-5 py-3.5 font-mono text-[10px] uppercase tracking-hud text-chalk/70 transition-colors hover:bg-carbon hover:text-chalk"
                     >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        View Live Website
-                    </a>
+                        ← LIVE SITE
+                    </button>
                 </div>
             </div>
 
-            {/* Layout Grid */}
-            <div className="flex flex-col lg:flex-row gap-8 items-start">
-                
-                {/* Sidebar Navigation */}
-                <aside className="w-full lg:w-64 shrink-0 bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm flex flex-col gap-2">
-                    <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800/80 mb-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-wimbledon-gold">Menu Modules</span>
-                    </div>
-
-                    <button
-                        onClick={() => setActiveTab('settings')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                            activeTab === 'settings' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
-                        }`}
-                    >
-                        <Sliders className="w-4 h-4" />
-                        Ticker & Settings
-                    </button>
-
-                    <button
-                        onClick={() => setActiveTab('sessions')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                            activeTab === 'sessions' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
-                        }`}
-                    >
-                        <Calendar className="w-4 h-4" />
-                        Courts & Sessions
-                        {sessionsList.length > 0 && (
-                            <span className="ml-auto bg-gray-100 dark:bg-club-bg text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-bold">
-                                {sessionsList.length}
-                            </span>
-                        )}
-                    </button>
-
-                    <button
-                        onClick={() => setActiveTab('events')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                            activeTab === 'events' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
-                        }`}
-                    >
-                        <Sparkles className="w-4 h-4" />
-                        Events Manager
-                        {eventsList.length > 0 && (
-                            <span className="ml-auto bg-gray-100 dark:bg-club-bg text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-bold">
-                                {eventsList.length}
-                            </span>
-                        )}
-                    </button>
-
-                    <button
-                        onClick={() => setActiveTab('feedback')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                            activeTab === 'feedback' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
-                        }`}
-                    >
-                        <MessageSquare className="w-4 h-4" />
-                        Feedback Inbox
-                        {feedbackList.length > 0 && (
-                            <span className="ml-auto bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs px-2 py-0.5 rounded-full font-bold">
-                                {feedbackList.length}
-                            </span>
-                        )}
-                    </button>
-
-                    <div className="pt-4 mt-4 border-t border-gray-150 dark:border-gray-800 flex flex-col gap-2">
-                        <button 
+            <div className="flex flex-col gap-10 lg:flex-row">
+                {/* ── Module rail ── */}
+                <aside className="w-full shrink-0 lg:w-64">
+                    <div className="flex flex-row gap-px overflow-x-auto bg-chalk/10 no-scrollbar lg:flex-col lg:sticky lg:top-24">
+                        {MODULES.map((mod) => {
+                            const active = activeTab === mod.id;
+                            return (
+                                <button
+                                    key={mod.id}
+                                    onClick={() => setActiveTab(mod.id)}
+                                    data-cursor="hover"
+                                    className={`group relative flex min-w-[10rem] flex-1 flex-col gap-1 p-5 text-left transition-colors lg:min-w-0 ${active ? 'bg-carbon' : 'bg-court hover:bg-carbon/60'}`}
+                                >
+                                    <span className={`hud-label ${active ? 'text-ace' : 'text-chalk/35'}`}>{mod.code}</span>
+                                    <span className={`display-narrow text-2xl ${active ? 'text-chalk' : 'text-chalk/55 group-hover:text-chalk'}`}>
+                                        {mod.label}
+                                        {mod.count !== null && mod.count > 0 && (
+                                            <span className="ml-2 align-middle font-mono text-[10px] text-ace">[{mod.count}]</span>
+                                        )}
+                                    </span>
+                                    <span className="hud-label text-[8px] text-chalk/35">{mod.sub}</span>
+                                    {active && <span className="absolute inset-y-0 left-0 w-0.5 bg-ace" />}
+                                </button>
+                            );
+                        })}
+                        <button
                             onClick={triggerQuickSession}
-                            className="w-full bg-wimbledon-green hover:bg-[#004d00] dark:bg-wimbledon-green dark:hover:bg-emerald-600 text-white text-xs font-bold py-2.5 rounded-xl transition-all duration-150 active:scale-95 shadow-sm flex items-center justify-center gap-1.5"
+                            data-cursor="hover"
+                            className="flex min-w-[10rem] items-center justify-center gap-2 bg-ace p-5 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110 lg:min-w-0"
                         >
-                            <Plus className="w-3.5 h-3.5" />
-                            Quick Session
+                            + QUICK SESSION
                         </button>
                     </div>
                 </aside>
 
-                {/* Main Content Area */}
-                <main className="flex-grow w-full bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 shadow-sm min-h-[600px] transition-colors duration-300">
-                    
-                    {/* Settings Tab */}
-                    {activeTab === 'settings' && (
-                        <div className="space-y-8 animate-fadeIn">
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors">Edit Live Ticker</h2>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors">
-                                    Change the message scrollbar displayed at the top of the homepage. Use dots • or lines | to split ideas.
-                                </p>
-                                <div className="mt-4 space-y-4">
-                                    <textarea
-                                        value={tickerText}
-                                        onChange={(e) => setTickerText(e.target.value)}
-                                        className="w-full h-32 p-4 border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent resize-none font-mono text-sm transition-colors"
-                                        placeholder="Type marquee text..."
-                                    />
-                                    <div className="flex items-center justify-between">
-                                        <span className={`text-sm ${message.includes('Error') ? 'text-red-500' : 'text-green-600'}`}>
-                                            {message}
-                                        </span>
-                                        <button
-                                            onClick={handleSaveTicker}
-                                            disabled={savingTicker}
-                                            className="flex items-center bg-wimbledon-navy hover:bg-[#00287a] text-white px-5 py-2 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
-                                        >
-                                            <Save className="w-4 h-4 mr-2" />
-                                            {savingTicker ? 'Saving...' : 'Save Ticker'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <hr className="border-gray-150 dark:border-gray-800" />
-
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors">Session Status Manager</h2>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors">
-                                    Manage visibility blocks for weekly recurring category slots in the Booking Engine.
-                                </p>
-                                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {CATEGORIES.map(cat => (
-                                        <div key={cat.id} className="p-4 border border-gray-100 dark:border-gray-800/80 rounded-xl bg-gray-50/30 dark:bg-club-bg/50 transition-colors">
-                                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 transition-colors">{cat.label}</label>
-                                            <div className="flex bg-white dark:bg-club-surface p-1 rounded-lg border border-gray-200 dark:border-gray-800 gap-1 shadow-sm">
-                                                {(['active', 'hidden', 'cancelled'] as SessionStatus[]).map(status => (
-                                                    <button
-                                                        key={status}
-                                                        onClick={() => updateStatus(cat.id, status)}
-                                                        className={`flex-1 flex items-center justify-center py-2 px-1 rounded text-[10px] font-bold uppercase tracking-wider transition-all duration-200 ${
-                                                            sessionStatuses[cat.id] === status
-                                                                ? (status === 'active' ? 'bg-wimbledon-green text-white shadow-sm font-black' : status === 'hidden' ? 'bg-gray-500 text-white shadow-sm font-black' : 'bg-red-500 text-white shadow-sm font-black')
-                                                                : 'text-gray-400 hover:text-gray-650 dark:hover:text-gray-300'
-                                                        }`}
-                                                    >
-                                                        {status === 'active' && <CheckCircle2 className="w-3.5 h-3.5 mr-1" />}
-                                                        {status === 'hidden' && <EyeOff className="w-3.5 h-3.5 mr-1" />}
-                                                        {status === 'cancelled' && <XCircle className="w-3.5 h-3.5 mr-1" />}
-                                                        {status}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="mt-6 flex items-center justify-between">
-                                    <span className={`text-sm ${statusMessage.includes('Error') ? 'text-red-500' : 'text-green-600'}`}>
-                                        {statusMessage}
-                                    </span>
-                                    <button
-                                        onClick={handleSaveStatuses}
-                                        disabled={savingStatuses}
-                                        className="flex items-center bg-wimbledon-navy hover:bg-[#00287a] text-white px-5 py-2 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
-                                    >
-                                        <Save className="w-4 h-4 mr-2" />
-                                        {savingStatuses ? 'Saving...' : 'Save All Statuses'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Courts & Sessions Tab */}
-                    {activeTab === 'sessions' && (
-                        <div className="space-y-8 animate-fadeIn">
-                            
-                            {/* Filter and Sessions List */}
-                            <div>
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
+                {/* ── Module canvas ── */}
+                <div className="min-h-[600px] flex-grow">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={activeTab}
+                            initial={{ opacity: 0, y: 18 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -12 }}
+                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            {/* ════ BROADCAST ════ */}
+                            {activeTab === 'settings' && (
+                                <div className="space-y-14">
                                     <div>
-                                        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Live Scheduled Sessions</h2>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Add attendees, edit capacities or remove sessions live on the website.</p>
-                                    </div>
-                                    
-                                    <div className="flex bg-gray-105 dark:bg-club-bg p-1 rounded-full border border-gray-200 dark:border-gray-800">
-                                        {['All', 'Tennis', 'Badminton', 'Squash'].map(sport => (
+                                        <div className="mb-2 flex items-baseline justify-between">
+                                            <h2 className="display-narrow text-3xl text-chalk">THE WIRE</h2>
+                                            <span className="hud-label text-chalk/40">SETTINGS / TICKER</span>
+                                        </div>
+                                        <p className="hud-label mb-6 text-chalk/45">
+                                            FEEDS THE KINETIC MARQUEE ON THE INDEX. SPLIT IDEAS WITH DOTS • OR PIPES |
+                                        </p>
+                                        <textarea
+                                            value={tickerText}
+                                            onChange={(e) => setTickerText(e.target.value)}
+                                            className={`${FIELD} h-36 resize-none leading-relaxed`}
+                                            placeholder="TYPE BROADCAST COPY…"
+                                        />
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <span className={`hud-label ${message.includes('Error') ? 'text-alert' : 'text-ace'}`}>{message.toUpperCase()}</span>
                                             <button
-                                                key={sport}
-                                                onClick={() => setSessionsSportFilter(sport)}
-                                                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
-                                                    sessionsSportFilter === sport 
-                                                        ? 'bg-white dark:bg-club-surface text-wimbledon-navy dark:text-wimbledon-gold shadow-sm font-extrabold' 
-                                                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
-                                                }`}
+                                                onClick={handleSaveTicker}
+                                                disabled={savingTicker}
+                                                data-cursor="hover"
+                                                className="bg-ace px-6 py-3 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
                                             >
-                                                {sport}
+                                                {savingTicker ? 'TRANSMITTING…' : 'PUSH TO WIRE →'}
                                             </button>
-                                        ))}
+                                        </div>
                                     </div>
-                                </div>
 
-                                {sessionsList.length === 0 ? (
-                                    <div className="text-center py-12 border border-dashed border-gray-200 dark:border-gray-800 rounded-2xl text-gray-400 dark:text-gray-500">
-                                        <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                        <p className="text-sm">No scheduled sessions in Firestore database.</p>
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {sessionsList
-                                            .filter(s => sessionsSportFilter === 'All' || s.sport?.toLowerCase() === sessionsSportFilter.toLowerCase())
-                                            .map(session => {
-                                                const enrolledCount = session.attendees?.length || 0;
-                                                const isFull = enrolledCount >= session.maxAttendees;
-
+                                    <div>
+                                        <div className="mb-2 flex items-baseline justify-between">
+                                            <h2 className="display-narrow text-3xl text-chalk">GRID STATUS</h2>
+                                            <span className="hud-label text-chalk/40">VISIBILITY MATRIX</span>
+                                        </div>
+                                        <p className="hud-label mb-6 text-chalk/45">
+                                            ARM / HIDE / SCRUB EACH WEEKLY CATEGORY ON THE COURT RADAR
+                                        </p>
+                                        <div className="grid gap-px bg-chalk/10 md:grid-cols-2">
+                                            {CATEGORIES.map(cat => {
+                                                const sport = cat.id.split('_')[0];
                                                 return (
-                                                    <div 
-                                                        key={session.id} 
-                                                        className="bg-gray-50/20 dark:bg-club-bg/30 border border-gray-250/70 dark:border-gray-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-wimbledon-gold/30 hover:shadow-md transition-all duration-200 relative overflow-hidden"
-                                                    >
-                                                        <div>
-                                                            <div className="flex justify-between items-start mb-3">
-                                                                <div>
-                                                                    <span className="text-[10px] font-bold tracking-widest uppercase text-wimbledon-gold bg-wimbledon-navy/10 dark:bg-wimbledon-navy/50 px-2.5 py-1 rounded border border-wimbledon-navy/20 dark:border-wimbledon-gold/10">
-                                                                        {session.sport || 'Tennis'}
-                                                                    </span>
-                                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2 truncate">{session.title}</h3>
-                                                                </div>
-                                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                                                                    session.type === 'coaching' 
-                                                                        ? 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-450 border border-blue-100 dark:border-blue-900/20' 
-                                                                        : 'bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/20'
-                                                                }`}>
-                                                                    {session.type === 'coaching' ? 'Clinic' : 'Court'}
-                                                                </span>
-                                                            </div>
-
-                                                            <div className="flex flex-col gap-1 text-xs text-gray-500 dark:text-gray-400 mb-4 bg-white/40 dark:bg-club-surface/40 p-2.5 rounded-xl border border-gray-150 dark:border-gray-850">
-                                                                <div className="flex items-center gap-1.5">
-                                                                    <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                                                                    <span>{session.date}</span>
-                                                                </div>
-                                                                <div className="flex items-center gap-1.5">
-                                                                    <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                                                    <span>{session.time}</span>
-                                                                </div>
-                                                                {session.type === 'coaching' && (
-                                                                    <div className="flex items-center gap-1.5">
-                                                                        <Users className="w-3.5 h-3.5 text-gray-400" />
-                                                                        <span>Coach: <span className="font-semibold text-gray-700 dark:text-gray-300">{session.coach || 'TBD'}</span></span>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-
-                                                            {/* Roster list */}
-                                                            <div className="mb-4 space-y-2">
-                                                                <div className="flex justify-between items-center text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                                                                    <span>Roster ({enrolledCount} / {session.maxAttendees})</span>
-                                                                    <span className={isFull ? 'text-red-500' : 'text-wimbledon-green'}>{session.maxAttendees - enrolledCount} Open</span>
-                                                                </div>
-                                                                
-                                                                {enrolledCount === 0 ? (
-                                                                    <p className="text-xs text-gray-400 dark:text-gray-500 italic p-3 text-center border border-dashed border-gray-200 dark:border-gray-800 rounded-xl bg-white/10 dark:bg-black/10">No players registered.</p>
-                                                                ) : (
-                                                                    <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                                                                        {session.attendees.map((attString, i) => {
-                                                                            const player = parseAttendee(attString);
-                                                                            return (
-                                                                                <div key={i} className="flex justify-between items-center text-xs bg-white dark:bg-club-surface/60 border border-gray-150 dark:border-gray-800/60 p-2 rounded-lg group/item">
-                                                                                    <div className="truncate pr-2">
-                                                                                        <p className="font-semibold text-gray-850 dark:text-gray-250 truncate">{player.name}</p>
-                                                                                        <p className="text-[10px] text-gray-400 truncate mt-0.5">{player.email} {player.court && `• ${player.court}`}</p>
-                                                                                    </div>
-                                                                                    <button 
-                                                                                        onClick={() => handleRemoveAttendee(session.id, player.raw)}
-                                                                                        className="text-gray-450 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 p-1 rounded transition-colors"
-                                                                                        title="Remove player"
-                                                                                    >
-                                                                                        <X className="w-3.5 h-3.5" />
-                                                                                    </button>
-                                                                                </div>
-                                                                            );
-                                                                        })}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Actions & Manual Add Attendee */}
-                                                        <div className="mt-4 pt-3 border-t border-gray-150 dark:border-gray-800/80 space-y-3">
-                                                            <div className="flex gap-2">
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder="Add Name..."
-                                                                    value={newAttendeeName[session.id] || ''}
-                                                                    onChange={e => setNewAttendeeName(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                                                    className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                                />
-                                                                
-                                                                {/* Optional court selector for Tennis/Badminton */}
-                                                                {(session.sport === 'Tennis' || session.sport === 'Badminton' || session.sport === 'Squash') && (
-                                                                    <select
-                                                                        value={newAttendeeCourt[session.id] || ''}
-                                                                        onChange={e => setNewAttendeeCourt(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                                                        className="w-24 text-[10px] p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                    <div key={cat.id} className="bg-court p-5">
+                                                        <p className="hud-label mb-3 flex items-center gap-2 text-chalk/80">
+                                                            <span className="h-1.5 w-1.5 rounded-full" style={{ background: SPORT_DOT[sport] }} />
+                                                            {cat.label.toUpperCase()}
+                                                        </p>
+                                                        <div className="flex gap-px bg-chalk/10">
+                                                            {(['active', 'hidden', 'cancelled'] as SessionStatus[]).map(status => {
+                                                                const selected = sessionStatuses[cat.id] === status;
+                                                                return (
+                                                                    <button
+                                                                        key={status}
+                                                                        onClick={() => updateStatus(cat.id, status)}
+                                                                        data-cursor="hover"
+                                                                        className={`flex-1 py-2.5 font-mono text-[9px] uppercase tracking-hud transition-colors ${selected
+                                                                            ? status === 'active' ? 'bg-ace text-court'
+                                                                                : status === 'hidden' ? 'bg-chalk/25 text-chalk'
+                                                                                    : 'bg-alert text-court'
+                                                                            : 'bg-carbon text-chalk/40 hover:text-chalk'}`}
                                                                     >
-                                                                        <option value="">Court...</option>
-                                                                        <option value="Court 1">Court 1</option>
-                                                                        <option value="Court 2">Court 2</option>
-                                                                        {session.sport === 'Tennis' && (
-                                                                            <>
-                                                                                <option value="Court 3">Court 3</option>
-                                                                                <option value="Court 4">Court 4</option>
-                                                                                <option value="Court 5">Court 5</option>
-                                                                            </>
-                                                                        )}
-                                                                    </select>
-                                                                )}
-
-                                                                <button
-                                                                    onClick={() => handleAddAttendee(session.id)}
-                                                                    disabled={!newAttendeeName[session.id]}
-                                                                    className="bg-wimbledon-navy hover:bg-[#00287a] text-white p-2 rounded-lg transition-colors disabled:opacity-40"
-                                                                    title="Register member"
-                                                                >
-                                                                    <UserPlus className="w-3.5 h-3.5" />
-                                                                </button>
-                                                            </div>
-
-                                                            <div className="flex justify-between items-center pt-2">
-                                                                <button 
-                                                                    onClick={() => setEditingSession(session)}
-                                                                    className="text-xs text-gray-500 hover:text-wimbledon-gold dark:hover:text-wimbledon-gold flex items-center gap-1 transition-colors font-medium"
-                                                                >
-                                                                    <Edit className="w-3.5 h-3.5" />
-                                                                    Edit Details
-                                                                </button>
-                                                                <button 
-                                                                    onClick={() => handleDeleteSession(session.id)}
-                                                                    className="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1 transition-colors font-medium"
-                                                                >
-                                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                                    Delete Session
-                                                                </button>
-                                                            </div>
+                                                                        {status === 'active' ? '● LIVE' : status === 'hidden' ? '◌ HIDDEN' : '✕ SCRUB'}
+                                                                    </button>
+                                                                );
+                                                            })}
                                                         </div>
                                                     </div>
                                                 );
                                             })}
-                                    </div>
-                                )}
-                            </div>
-
-                            <hr className="border-gray-150 dark:border-gray-800" />
-
-                            {/* Create Session Form */}
-                            <div ref={createSessionFormRef} className="bg-gray-55/20 dark:bg-club-bg/20 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-1.5 h-full bg-wimbledon-gold"></div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                    <Plus className="w-5 h-5 text-wimbledon-gold" />
-                                    Schedule New Custom Session
-                                </h3>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-6">Create customized coaching clinics or court booking reservations.</p>
-
-                                <form onSubmit={handleAddSession} className="space-y-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Session Title</label>
-                                            <input 
-                                                type="text" 
-                                                required
-                                                placeholder="e.g. Intermediate Backhand Clinic"
-                                                value={newSession.title}
-                                                onChange={e => setNewSession({ ...newSession, title: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                            />
                                         </div>
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <span className={`hud-label ${statusMessage.includes('Error') ? 'text-alert' : 'text-ace'}`}>{statusMessage.toUpperCase()}</span>
+                                            <button
+                                                onClick={handleSaveStatuses}
+                                                disabled={savingStatuses}
+                                                data-cursor="hover"
+                                                className="bg-ace px-6 py-3 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
+                                            >
+                                                {savingStatuses ? 'ARMING…' : 'COMMIT MATRIX →'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ════ SESSIONS ════ */}
+                            {activeTab === 'sessions' && (
+                                <div className="space-y-14">
+                                    <div>
+                                        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                                             <div>
-                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Sport</label>
-                                                <select 
-                                                    value={newSession.sport}
-                                                    onChange={e => setNewSession({ ...newSession, sport: e.target.value })}
-                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                >
-                                                    <option value="Tennis">Tennis</option>
-                                                    <option value="Badminton">Badminton</option>
-                                                    <option value="Squash">Squash</option>
-                                                </select>
+                                                <h2 className="display-narrow text-3xl text-chalk">LIVE SESSIONS</h2>
+                                                <p className="hud-label mt-1 text-chalk/45">ROSTERS, CAPACITIES AND SCRUBS — LIVE ON THE GRID</p>
                                             </div>
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Session Type</label>
-                                                <select 
-                                                    value={newSession.type}
-                                                    onChange={e => setNewSession({ ...newSession, type: e.target.value as SessionType })}
-                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                >
-                                                    <option value="court">Court Open Play</option>
-                                                    <option value="coaching">Clinic / Coaching</option>
-                                                </select>
+                                            <div className="flex gap-px bg-chalk/10">
+                                                {['All', 'Tennis', 'Badminton', 'Squash'].map(sport => (
+                                                    <button
+                                                        key={sport}
+                                                        onClick={() => setSessionsSportFilter(sport)}
+                                                        data-cursor="hover"
+                                                        className={`px-4 py-2 font-mono text-[10px] uppercase tracking-hud transition-colors ${sessionsSportFilter === sport ? 'bg-ace text-court' : 'bg-carbon text-chalk/50 hover:text-chalk'}`}
+                                                    >
+                                                        {sport}
+                                                    </button>
+                                                ))}
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Pick Date</label>
-                                            <input 
-                                                type="date" 
-                                                required
-                                                value={sessionDateInput}
-                                                onChange={e => {
-                                                    setSessionDateInput(e.target.value);
-                                                    setNewSession(prev => ({ ...prev, date: formatSelectedDate(e.target.value) }));
-                                                }}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold text-gray-500 dark:text-gray-300"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Formatted Date (Read-only)</label>
-                                            <input 
-                                                type="text" 
-                                                readOnly
-                                                placeholder="e.g. Tuesday, Jun 9"
-                                                value={newSession.date}
-                                                className="w-full p-2.5 text-sm border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-black/20 text-gray-500 dark:text-gray-400 rounded-lg outline-none cursor-default"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Time Slot (Text input)</label>
-                                            <input 
-                                                type="text" 
-                                                required
-                                                placeholder="e.g. 9:00 PM - 11:00 PM"
-                                                value={newSession.time}
-                                                onChange={e => setNewSession({ ...newSession, time: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                            />
-                                        </div>
-                                    </div>
+                                        {sessionsList.length === 0 ? (
+                                            <div className="border border-dashed border-chalk/15 py-16 text-center">
+                                                <p className="hud-label text-chalk/40">NO SCHEDULED SESSIONS ON THE FIRESTORE GRID</p>
+                                            </div>
+                                        ) : (
+                                            <div className="grid gap-px bg-chalk/10 md:grid-cols-2">
+                                                {sessionsList
+                                                    .filter(s => sessionsSportFilter === 'All' || s.sport?.toLowerCase() === sessionsSportFilter.toLowerCase())
+                                                    .map(session => {
+                                                        const enrolledCount = session.attendees?.length || 0;
+                                                        const isFull = enrolledCount >= session.maxAttendees;
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Max capacity (Max Attendees)</label>
-                                            <input 
-                                                type="number" 
-                                                required
-                                                min={1}
-                                                placeholder="4"
-                                                value={newSession.maxAttendees}
-                                                onChange={e => setNewSession({ ...newSession, maxAttendees: Number(e.target.value) })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                            />
-                                        </div>
-                                        {newSession.type === 'coaching' && (
-                                            <div>
-                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Coach Name</label>
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Coach's Full Name"
-                                                    value={newSession.coach}
-                                                    onChange={e => setNewSession({ ...newSession, coach: e.target.value })}
-                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                />
+                                                        return (
+                                                            <div key={session.id} className="flex flex-col bg-court p-6 transition-colors hover:bg-carbon/70">
+                                                                <div className="mb-4 flex items-start justify-between">
+                                                                    <div>
+                                                                        <span className="hud-label flex items-center gap-2 text-chalk/50">
+                                                                            <span className="h-1.5 w-1.5 rounded-full" style={{ background: SPORT_DOT[session.sport || 'Tennis'] || '#D7FF3E' }} />
+                                                                            {(session.sport || 'Tennis').toUpperCase()}
+                                                                        </span>
+                                                                        <h3 className="display-narrow mt-2 text-2xl uppercase text-chalk">{session.title}</h3>
+                                                                    </div>
+                                                                    <span className={`hud-label border px-2 py-1 ${session.type === 'coaching' ? 'border-ace/50 text-ace' : 'border-chalk/25 text-chalk/60'}`}>
+                                                                        {session.type === 'coaching' ? 'CLINIC' : 'COURT'}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="hairline-t hairline-b mb-4 flex flex-col gap-1 py-3">
+                                                                    <span className="hud-label text-chalk/60">▸ {session.date?.toUpperCase()}</span>
+                                                                    <span className="hud-label text-chalk/60">▸ {session.time?.toUpperCase()}</span>
+                                                                    {session.type === 'coaching' && (
+                                                                        <span className="hud-label text-chalk/60">▸ COACH: <span className="text-ace">{(session.coach || 'TBD').toUpperCase()}</span></span>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Roster */}
+                                                                <div className="mb-4">
+                                                                    <div className="mb-2 flex justify-between">
+                                                                        <span className="hud-label text-chalk/45">ROSTER {enrolledCount}/{session.maxAttendees}</span>
+                                                                        <span className={`hud-label ${isFull ? 'text-alert' : 'text-ace'}`}>{session.maxAttendees - enrolledCount} OPEN</span>
+                                                                    </div>
+                                                                    {enrolledCount === 0 ? (
+                                                                        <p className="hud-label border border-dashed border-chalk/15 py-4 text-center text-chalk/30">EMPTY GRID</p>
+                                                                    ) : (
+                                                                        <div className="max-h-44 space-y-px overflow-y-auto bg-chalk/8">
+                                                                            {session.attendees.map((attString, i) => {
+                                                                                const player = parseAttendee(attString);
+                                                                                return (
+                                                                                    <div key={i} className="flex items-center justify-between bg-carbon px-3 py-2">
+                                                                                        <div className="min-w-0">
+                                                                                            <p className="truncate font-mono text-[11px] uppercase text-chalk/85">{player.name}</p>
+                                                                                            <p className="truncate font-mono text-[9px] text-chalk/35">{player.email}{player.court && ` — ${player.court}`}</p>
+                                                                                        </div>
+                                                                                        <button
+                                                                                            onClick={() => handleRemoveAttendee(session.id, player.raw)}
+                                                                                            data-cursor="hover"
+                                                                                            title="Remove player"
+                                                                                            className="ml-3 shrink-0 font-mono text-[10px] text-chalk/40 transition-colors hover:text-alert"
+                                                                                        >
+                                                                                            ✕
+                                                                                        </button>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Manual add + actions */}
+                                                                <div className="mt-auto space-y-3">
+                                                                    <div className="flex gap-px bg-chalk/10">
+                                                                        <input
+                                                                            type="text"
+                                                                            placeholder="ADD NAME…"
+                                                                            value={newAttendeeName[session.id] || ''}
+                                                                            onChange={e => setNewAttendeeName(prev => ({ ...prev, [session.id]: e.target.value }))}
+                                                                            className="min-w-0 flex-grow border-0 bg-carbon px-3 py-2.5 font-mono text-[11px] uppercase text-chalk placeholder-chalk/30 focus:outline-none focus:ring-1 focus:ring-ace"
+                                                                        />
+                                                                        {(session.sport === 'Tennis' || session.sport === 'Badminton' || session.sport === 'Squash') && (
+                                                                            <select
+                                                                                value={newAttendeeCourt[session.id] || ''}
+                                                                                onChange={e => setNewAttendeeCourt(prev => ({ ...prev, [session.id]: e.target.value }))}
+                                                                                className="w-28 border-0 bg-carbon px-2 py-2.5 font-mono text-[10px] uppercase text-chalk/70 focus:outline-none focus:ring-1 focus:ring-ace"
+                                                                            >
+                                                                                <option value="">COURT…</option>
+                                                                                <option value="Court 1">Court 1</option>
+                                                                                <option value="Court 2">Court 2</option>
+                                                                                {session.sport === 'Tennis' && (
+                                                                                    <>
+                                                                                        <option value="Court 3">Court 3</option>
+                                                                                        <option value="Court 4">Court 4</option>
+                                                                                        <option value="Court 5">Court 5</option>
+                                                                                    </>
+                                                                                )}
+                                                                            </select>
+                                                                        )}
+                                                                        <button
+                                                                            onClick={() => handleAddAttendee(session.id)}
+                                                                            disabled={!newAttendeeName[session.id]}
+                                                                            data-cursor="hover"
+                                                                            title="Register member"
+                                                                            className="bg-ace px-4 font-mono text-[11px] uppercase text-court transition-all hover:brightness-110 disabled:opacity-30"
+                                                                        >
+                                                                            +
+                                                                        </button>
+                                                                    </div>
+
+                                                                    <div className="flex justify-between">
+                                                                        <button
+                                                                            onClick={() => setEditingSession(session)}
+                                                                            data-cursor="hover"
+                                                                            className="hud-label text-chalk/50 transition-colors hover:text-ace"
+                                                                        >
+                                                                            ✎ EDIT DETAILS
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => handleDeleteSession(session.id)}
+                                                                            data-cursor="hover"
+                                                                            className="hud-label text-chalk/50 transition-colors hover:text-alert"
+                                                                        >
+                                                                            ⌦ DELETE
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="flex justify-between items-center pt-2">
-                                        <span className={`text-sm ${newSessionMsg.includes('Error') ? 'text-red-500' : 'text-green-600'}`}>
-                                            {newSessionMsg}
-                                        </span>
-                                        <button
-                                            type="submit"
-                                            disabled={newSessionSaving}
-                                            className="flex items-center bg-wimbledon-green hover:bg-[#004d00] text-white px-6 py-2.5 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
-                                        >
-                                            <Plus className="w-4 h-4 mr-2" />
-                                            {newSessionSaving ? 'Scheduling...' : 'Schedule Session'}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    )}
+                                    {/* Create Session */}
+                                    <div ref={createSessionFormRef} className="relative border border-chalk/15 p-6 md:p-8">
+                                        <span className="absolute left-0 top-0 h-full w-0.5 bg-ace" />
+                                        <h3 className="display-narrow text-3xl text-chalk">SCHEDULE NEW SESSION</h3>
+                                        <p className="hud-label mb-8 mt-1 text-chalk/45">CUSTOM CLINICS OR COURT RESERVATIONS — STRAIGHT TO THE GRID</p>
 
-                    {/* Events Tab */}
-                    {activeTab === 'events' && (
-                        <div className="space-y-8 animate-fadeIn">
-                            
-                            {/* Live Events List */}
-                            <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Active Events Carousel</h2>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Manage cards inside the Upcoming Events slider carousel on the home page.</p>
-                                
-                                {eventsList.length === 0 ? (
-                                    <div className="text-center py-12 border border-dashed border-gray-200 dark:border-gray-800 rounded-2xl text-gray-400 dark:text-gray-500">
-                                        <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                        <p className="text-sm">No events listed in Firestore. Use the form below to create one!</p>
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                                        {eventsList.map(event => (
-                                            <div 
-                                                key={event.id}
-                                                className="bg-gray-50/20 dark:bg-club-bg/30 border border-gray-250/75 dark:border-gray-800/80 rounded-2xl overflow-hidden shadow-sm flex flex-col group relative"
-                                            >
-                                                <div className="h-40 w-full relative overflow-hidden bg-gray-200 dark:bg-club-surface">
-                                                    <img 
-                                                        src={event.image} 
-                                                        alt={event.title} 
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        <form onSubmit={handleAddSession} className="space-y-6">
+                                            <div className="grid gap-6 md:grid-cols-2">
+                                                <div>
+                                                    <label className={LABEL}>SESSION TITLE</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        placeholder="e.g. Intermediate Backhand Clinic"
+                                                        value={newSession.title}
+                                                        onChange={e => setNewSession({ ...newSession, title: e.target.value })}
+                                                        className={FIELD}
                                                     />
-                                                    <div className="absolute top-2 right-2 flex gap-1.5">
-                                                        <button 
-                                                            onClick={() => setEditingEvent(event)}
-                                                            className="p-1.5 bg-black/60 backdrop-blur-sm rounded-lg text-white hover:text-wimbledon-gold transition-colors"
-                                                            title="Edit Event"
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-6">
+                                                    <div>
+                                                        <label className={LABEL}>SPORT</label>
+                                                        <select
+                                                            value={newSession.sport}
+                                                            onChange={e => setNewSession({ ...newSession, sport: e.target.value })}
+                                                            className={FIELD}
                                                         >
-                                                            <Edit className="w-3.5 h-3.5" />
-                                                        </button>
-                                                        <button 
-                                                            onClick={() => handleDeleteEvent(event.id)}
-                                                            className="p-1.5 bg-black/60 backdrop-blur-sm rounded-lg text-white hover:text-red-500 transition-colors"
-                                                            title="Delete Event"
+                                                            <option value="Tennis">Tennis</option>
+                                                            <option value="Badminton">Badminton</option>
+                                                            <option value="Squash">Squash</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className={LABEL}>TYPE</label>
+                                                        <select
+                                                            value={newSession.type}
+                                                            onChange={e => setNewSession({ ...newSession, type: e.target.value as SessionType })}
+                                                            className={FIELD}
                                                         >
-                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                        </button>
+                                                            <option value="court">Court Open Play</option>
+                                                            <option value="coaching">Clinic / Coaching</option>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div className="p-4 flex-grow flex flex-col justify-between">
+                                            </div>
+
+                                            <div className="grid gap-6 md:grid-cols-3">
+                                                <div>
+                                                    <label className={LABEL}>PICK DATE</label>
+                                                    <input
+                                                        type="date"
+                                                        required
+                                                        value={sessionDateInput}
+                                                        onChange={e => {
+                                                            setSessionDateInput(e.target.value);
+                                                            setNewSession(prev => ({ ...prev, date: formatSelectedDate(e.target.value) }));
+                                                        }}
+                                                        className={FIELD}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className={LABEL}>FORMATTED (READ-ONLY)</label>
+                                                    <input
+                                                        type="text"
+                                                        readOnly
+                                                        placeholder="e.g. Tuesday, Jun 9"
+                                                        value={newSession.date}
+                                                        className={`${FIELD} cursor-default opacity-60`}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className={LABEL}>TIME SLOT</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        placeholder="e.g. 9:00 PM - 11:00 PM"
+                                                        value={newSession.time}
+                                                        onChange={e => setNewSession({ ...newSession, time: e.target.value })}
+                                                        className={FIELD}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="grid gap-6 md:grid-cols-2">
+                                                <div>
+                                                    <label className={LABEL}>MAX CAPACITY</label>
+                                                    <input
+                                                        type="number"
+                                                        required
+                                                        min={1}
+                                                        placeholder="4"
+                                                        value={newSession.maxAttendees}
+                                                        onChange={e => setNewSession({ ...newSession, maxAttendees: Number(e.target.value) })}
+                                                        className={FIELD}
+                                                    />
+                                                </div>
+                                                {newSession.type === 'coaching' && (
                                                     <div>
-                                                        <h3 className="font-bold text-gray-900 dark:text-gray-100 line-clamp-1" title={event.title}>{event.title}</h3>
-                                                        <div className="flex flex-col gap-1 mt-2.5 text-xs text-gray-500 dark:text-gray-400">
-                                                            <div className="flex items-center gap-1.5">
-                                                                <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                                                                <span>{event.date}</span>
-                                                            </div>
-                                                            {event.time && (
-                                                                <div className="flex items-center gap-1.5">
-                                                                    <Clock className="w-3.5 h-3.5 text-gray-400" />
-                                                                    <span>{event.time}</span>
-                                                                </div>
+                                                        <label className={LABEL}>COACH NAME</label>
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Coach's Full Name"
+                                                            value={newSession.coach}
+                                                            onChange={e => setNewSession({ ...newSession, coach: e.target.value })}
+                                                            className={FIELD}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="flex items-center justify-between pt-2">
+                                                <span className={`hud-label ${newSessionMsg.includes('Error') || newSessionMsg.includes('required') ? 'text-alert' : 'text-ace'}`}>
+                                                    {newSessionMsg.toUpperCase()}
+                                                </span>
+                                                <button
+                                                    type="submit"
+                                                    disabled={newSessionSaving}
+                                                    data-cursor="hover"
+                                                    className="bg-ace px-7 py-3.5 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
+                                                >
+                                                    {newSessionSaving ? 'SCHEDULING…' : '+ DEPLOY SESSION'}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ════ SIGNALS / EVENTS ════ */}
+                            {activeTab === 'events' && (
+                                <div className="space-y-14">
+                                    <div>
+                                        <h2 className="display-narrow text-3xl text-chalk">SIGNALS REEL</h2>
+                                        <p className="hud-label mb-6 mt-1 text-chalk/45">CARDS ON THE INDEX TRANSMISSIONS STRIP</p>
+
+                                        {eventsList.length === 0 ? (
+                                            <div className="border border-dashed border-chalk/15 py-16 text-center">
+                                                <p className="hud-label text-chalk/40">NO EVENTS ON THE FIRESTORE FEED — DEPLOY ONE BELOW</p>
+                                            </div>
+                                        ) : (
+                                            <div className="grid gap-px bg-chalk/10 md:grid-cols-2 xl:grid-cols-3">
+                                                {eventsList.map(event => (
+                                                    <div key={event.id} className="group flex flex-col bg-court">
+                                                        <div className="relative h-36 w-full overflow-hidden bg-carbon">
+                                                            {event.image && (
+                                                                <img
+                                                                    src={event.image}
+                                                                    alt={event.title}
+                                                                    className="h-full w-full object-cover opacity-60 saturate-0 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
+                                                                />
                                                             )}
-                                                            {event.location && (
-                                                                <div className="flex items-center gap-1.5">
-                                                                    <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                                                                    <span>{event.location}</span>
-                                                                </div>
+                                                            <div className="absolute right-2 top-2 flex gap-px bg-chalk/20">
+                                                                <button
+                                                                    onClick={() => setEditingEvent(event)}
+                                                                    data-cursor="hover"
+                                                                    title="Edit Event"
+                                                                    className="bg-court/90 px-3 py-1.5 font-mono text-[10px] uppercase text-chalk transition-colors hover:text-ace"
+                                                                >
+                                                                    ✎
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleDeleteEvent(event.id)}
+                                                                    data-cursor="hover"
+                                                                    title="Delete Event"
+                                                                    className="bg-court/90 px-3 py-1.5 font-mono text-[10px] uppercase text-chalk transition-colors hover:text-alert"
+                                                                >
+                                                                    ✕
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-grow flex-col p-5">
+                                                            <h3 className="display-narrow mb-3 text-xl uppercase text-chalk" title={event.title}>{event.title}</h3>
+                                                            <div className="flex flex-col gap-1">
+                                                                <span className="hud-label text-chalk/55">▸ {event.date?.toUpperCase()}</span>
+                                                                {event.time && <span className="hud-label text-chalk/55">▸ {event.time.toUpperCase()}</span>}
+                                                                {event.location && <span className="hud-label text-chalk/55">▸ {event.location.toUpperCase()}</span>}
+                                                            </div>
+                                                            {event.link && (
+                                                                <a
+                                                                    href={event.link}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    data-cursor="hover"
+                                                                    className="hud-label mt-4 truncate text-ace hover:text-chalk"
+                                                                >
+                                                                    LINK: {event.link.substring(0, 30)}… ↗
+                                                                </a>
                                                             )}
                                                         </div>
                                                     </div>
-                                                    {event.link && (
-                                                        <a 
-                                                            href={event.link} 
-                                                            target="_blank" 
-                                                            rel="noopener noreferrer" 
-                                                            className="mt-4 text-xs font-semibold text-wimbledon-navy dark:text-wimbledon-gold hover:underline truncate"
-                                                        >
-                                                            Link: {event.link.substring(0, 30)}...
-                                                        </a>
-                                                    )}
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Add Event */}
+                                    <div className="relative border border-chalk/15 p-6 md:p-8">
+                                        <span className="absolute left-0 top-0 h-full w-0.5 bg-ace" />
+                                        <h3 className="display-narrow text-3xl text-chalk">DEPLOY NEW SIGNAL</h3>
+                                        <p className="hud-label mb-8 mt-1 text-chalk/45">ANNOUNCEMENTS + MATCHES FOR THE TRANSMISSIONS STRIP</p>
+
+                                        <form onSubmit={handleAddEvent} className="space-y-6">
+                                            <div className="grid gap-6 md:grid-cols-2">
+                                                <div>
+                                                    <label className={LABEL}>EVENT TITLE</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        value={newEvent.title}
+                                                        onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
+                                                        className={FIELD}
+                                                        placeholder="e.g. Annual Squash Championship Match"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className={LABEL}>DATE STRING</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        value={newEvent.date}
+                                                        onChange={e => setNewEvent({ ...newEvent, date: e.target.value })}
+                                                        className={FIELD}
+                                                        placeholder="e.g. October 14"
+                                                    />
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <hr className="border-gray-150 dark:border-gray-800" />
-
-                            {/* Add New Event Form */}
-                            <div className="bg-gray-50/20 dark:bg-club-bg/20 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-1.5 h-full bg-wimbledon-gold"></div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                    <Plus className="w-5 h-5 text-wimbledon-gold" />
-                                    Add New Club Event
-                                </h3>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-6">Insert new announcements or matches into Upcoming Events slider.</p>
-
-                                <form onSubmit={handleAddEvent} className="space-y-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Event Title</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={newEvent.title}
-                                                onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                placeholder="e.g. Annual Squash Championship Match"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Date String</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={newEvent.date}
-                                                onChange={e => setNewEvent({ ...newEvent, date: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                placeholder="e.g. October 14"
-                                            />
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Time Slot</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={newEvent.time}
-                                                onChange={e => setNewEvent({ ...newEvent, time: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                placeholder="e.g. 9:00 AM EST"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Location</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                value={newEvent.location}
-                                                onChange={e => setNewEvent({ ...newEvent, location: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                placeholder="e.g. Center Courts 1 & 2"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
-                                            <input
-                                                type="url"
-                                                required
-                                                value={newEvent.image}
-                                                onChange={e => setNewEvent({ ...newEvent, image: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                placeholder="https://..."
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">External Link (Optional)</label>
-                                            <input
-                                                type="url"
-                                                value={newEvent.link}
-                                                onChange={e => setNewEvent({ ...newEvent, link: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                                placeholder="https://fuquaconnect..."
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center justify-between pt-2">
-                                        <span className={`text-sm ${eventMessage.includes('Error') ? 'text-red-500' : 'text-green-600'}`}>
-                                            {eventMessage}
-                                        </span>
-                                        <button
-                                            type="submit"
-                                            disabled={savingEvent}
-                                            className="flex items-center bg-wimbledon-green hover:bg-[#004d00] text-white px-6 py-2.5 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
-                                        >
-                                            <Plus className="w-4 h-4 mr-2" />
-                                            {savingEvent ? 'Adding...' : 'Add Event'}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Feedback Tab */}
-                    {activeTab === 'feedback' && (
-                        <div className="space-y-6 animate-fadeIn">
-                            <div className="flex justify-between items-center mb-4">
-                                <div>
-                                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Feedback Inbox</h2>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">Read bugs, suggestions, and submissions sent by members.</p>
-                                </div>
-                                <span className="bg-gray-100 dark:bg-club-bg text-gray-700 dark:text-gray-300 text-xs px-2.5 py-1 rounded-full font-bold">
-                                    {feedbackList.length} Items
-                                </span>
-                            </div>
-
-                            {feedbackList.length === 0 ? (
-                                <div className="py-12 border-2 border-dashed border-gray-150 dark:border-gray-800 rounded-2xl text-center text-gray-400 dark:text-gray-500">
-                                    <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                    <p className="text-sm">No feedback reports found.</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
-                                    {feedbackList.map((item) => {
-                                        const dateLabel = item.createdAt?.seconds 
-                                            ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('en-US', {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })
-                                            : 'Recent';
-
-                                        return (
-                                            <div key={item.id} className="p-4 border border-gray-150 dark:border-gray-850 rounded-xl bg-gray-50/20 dark:bg-club-bg/40 flex flex-col md:flex-row justify-between gap-4 items-start transition-all hover:border-gray-250 dark:hover:border-gray-750">
-                                                <div className="space-y-2 flex-grow">
-                                                    <div className="flex flex-wrap items-center gap-2">
-                                                        {item.type === 'bug' ? (
-                                                            <span className="inline-flex items-center gap-1 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-405 border border-red-200 dark:border-red-900/30 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                                                                <AlertTriangle className="w-3 h-3" />
-                                                                Bug
-                                                            </span>
-                                                        ) : item.type === 'improvement' ? (
-                                                            <span className="inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-305 border border-amber-200 dark:border-amber-900/30 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                                                                <Sparkles className="w-3 h-3" />
-                                                                Suggestion
-                                                            </span>
-                                                        ) : (
-                                                            <span className="inline-flex items-center gap-1 bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/30 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                                                                <MessageSquare className="w-3 h-3" />
-                                                                Other
-                                                            </span>
-                                                        )}
-                                                        <span className="text-xs text-gray-400 font-medium">{dateLabel}</span>
-                                                        <span className="text-xs text-gray-350 dark:text-gray-700">•</span>
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold">{item.email}</span>
-                                                    </div>
-                                                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap font-sans">
-                                                        {item.message}
-                                                    </p>
+                                            <div className="grid gap-6 md:grid-cols-2">
+                                                <div>
+                                                    <label className={LABEL}>TIME SLOT</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        value={newEvent.time}
+                                                        onChange={e => setNewEvent({ ...newEvent, time: e.target.value })}
+                                                        className={FIELD}
+                                                        placeholder="e.g. 9:00 AM EST"
+                                                    />
                                                 </div>
+                                                <div>
+                                                    <label className={LABEL}>LOCATION</label>
+                                                    <input
+                                                        type="text"
+                                                        required
+                                                        value={newEvent.location}
+                                                        onChange={e => setNewEvent({ ...newEvent, location: e.target.value })}
+                                                        className={FIELD}
+                                                        placeholder="e.g. Center Courts 1 & 2"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="grid gap-6 md:grid-cols-2">
+                                                <div>
+                                                    <label className={LABEL}>IMAGE URL</label>
+                                                    <input
+                                                        type="url"
+                                                        required
+                                                        value={newEvent.image}
+                                                        onChange={e => setNewEvent({ ...newEvent, image: e.target.value })}
+                                                        className={FIELD}
+                                                        placeholder="https://…"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className={LABEL}>EXTERNAL LINK (OPTIONAL)</label>
+                                                    <input
+                                                        type="url"
+                                                        value={newEvent.link}
+                                                        onChange={e => setNewEvent({ ...newEvent, link: e.target.value })}
+                                                        className={FIELD}
+                                                        placeholder="https://fuquaconnect…"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between pt-2">
+                                                <span className={`hud-label ${eventMessage.includes('Error') ? 'text-alert' : 'text-ace'}`}>{eventMessage.toUpperCase()}</span>
                                                 <button
-                                                    onClick={() => handleDeleteFeedback(item.id)}
-                                                    className="p-2 text-gray-400 hover:text-red-500 dark:text-gray-550 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent hover:border-red-105 rounded-xl transition-all self-end md:self-start flex-shrink-0"
-                                                    title="Dismiss feedback"
+                                                    type="submit"
+                                                    disabled={savingEvent}
+                                                    data-cursor="hover"
+                                                    className="bg-ace px-7 py-3.5 font-mono text-[11px] uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
                                                 >
-                                                    <Trash2 className="w-4 h-4" />
+                                                    {savingEvent ? 'DEPLOYING…' : '+ DEPLOY SIGNAL'}
                                                 </button>
                                             </div>
-                                        );
-                                    })}
+                                        </form>
+                                    </div>
                                 </div>
                             )}
-                        </div>
-                    )}
-                </main>
+
+                            {/* ════ INBOX ════ */}
+                            {activeTab === 'feedback' && (
+                                <div>
+                                    <div className="mb-8 flex items-end justify-between">
+                                        <div>
+                                            <h2 className="display-narrow text-3xl text-chalk">THE INBOX</h2>
+                                            <p className="hud-label mt-1 text-chalk/45">BUGS, IDEAS AND DISPATCHES FROM MEMBERS</p>
+                                        </div>
+                                        <span className="hud-label border border-chalk/20 px-3 py-1.5 text-chalk/70">{feedbackList.length} ITEMS</span>
+                                    </div>
+
+                                    {feedbackList.length === 0 ? (
+                                        <div className="border border-dashed border-chalk/15 py-20 text-center">
+                                            <p className="hud-label text-chalk/40">INBOX ZERO — NO TRANSMISSIONS</p>
+                                        </div>
+                                    ) : (
+                                        <div className="max-h-[640px] space-y-px overflow-y-auto bg-chalk/10 pr-0.5">
+                                            {feedbackList.map((item) => {
+                                                const dateLabel = item.createdAt?.seconds
+                                                    ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })
+                                                    : 'Recent';
+
+                                                const typeMeta = item.type === 'bug'
+                                                    ? { label: '▲ BUG', cls: 'border-alert/60 text-alert' }
+                                                    : item.type === 'improvement'
+                                                        ? { label: '✦ SUGGESTION', cls: 'border-ace/60 text-ace' }
+                                                        : { label: '◆ OTHER', cls: 'border-shuttle/60 text-shuttle' };
+
+                                                return (
+                                                    <div key={item.id} className="flex items-start justify-between gap-5 bg-court p-5 transition-colors hover:bg-carbon/70">
+                                                        <div className="min-w-0 space-y-2.5">
+                                                            <div className="flex flex-wrap items-center gap-3">
+                                                                <span className={`hud-label border px-2 py-1 ${typeMeta.cls}`}>{typeMeta.label}</span>
+                                                                <span className="hud-label text-chalk/40">{dateLabel.toUpperCase()}</span>
+                                                                <span className="hud-label text-chalk/60">{item.email.toUpperCase()}</span>
+                                                            </div>
+                                                            <p className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-chalk/80">
+                                                                {item.message}
+                                                            </p>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleDeleteFeedback(item.id)}
+                                                            data-cursor="hover"
+                                                            title="Dismiss feedback"
+                                                            className="shrink-0 border border-chalk/15 px-3 py-2 font-mono text-[10px] uppercase text-chalk/50 transition-colors hover:border-alert hover:text-alert"
+                                                        >
+                                                            DISMISS ✕
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
             </div>
 
-            {/* Edit Session Modal */}
-            {editingSession && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-                    <div className="bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-6 max-w-md w-full shadow-xl space-y-4">
-                        <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-800">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Edit Session Details</h3>
-                            <button onClick={() => setEditingSession(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-                        <form onSubmit={handleSaveSessionEdit} className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Session Title</label>
-                                <input 
-                                    type="text" 
-                                    required
-                                    value={editingSession.title}
-                                    onChange={e => setEditingSession({ ...editingSession, title: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                />
+            {/* ── Edit Session Modal ── */}
+            <AnimatePresence>
+                {editingSession && (
+                    <motion.div
+                        className="fixed inset-0 z-[170] flex items-center justify-center bg-court/85 p-4 backdrop-blur-md"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="w-full max-w-md border border-chalk/20 bg-carbon p-7"
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <div className="hairline-b mb-6 flex items-center justify-between pb-4">
+                                <h3 className="display-narrow text-2xl text-chalk">EDIT SESSION</h3>
+                                <button onClick={() => setEditingSession(null)} data-cursor="hover" className="hud-label text-chalk/50 hover:text-alert">✕ ABORT</button>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <form onSubmit={handleSaveSessionEdit} className="space-y-5">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Sport</label>
-                                    <select 
-                                        value={editingSession.sport}
-                                        onChange={e => setEditingSession({ ...editingSession, sport: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                    >
-                                        <option value="Tennis">Tennis</option>
-                                        <option value="Badminton">Badminton</option>
-                                        <option value="Squash">Squash</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Type</label>
-                                    <select 
-                                        value={editingSession.type}
-                                        onChange={e => setEditingSession({ ...editingSession, type: e.target.value as SessionType })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                    >
-                                        <option value="court">Open Play / Court</option>
-                                        <option value="coaching">Clinic / Coaching</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Date</label>
-                                    <input 
-                                        type="text" 
+                                    <label className={LABEL}>SESSION TITLE</label>
+                                    <input
+                                        type="text"
                                         required
-                                        value={editingSession.date}
-                                        onChange={e => setEditingSession({ ...editingSession, date: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                        placeholder="e.g. Monday, Jun 15"
+                                        value={editingSession.title}
+                                        onChange={e => setEditingSession({ ...editingSession, title: e.target.value })}
+                                        className={FIELD}
                                     />
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Time Slot</label>
-                                    <input 
-                                        type="text" 
-                                        required
-                                        value={editingSession.time}
-                                        onChange={e => setEditingSession({ ...editingSession, time: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                        placeholder="e.g. 9:00 PM - 11:00 PM"
-                                    />
-                                </div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Max Capacity</label>
-                                    <input 
-                                        type="number" 
-                                        required
-                                        min={1}
-                                        value={editingSession.maxAttendees}
-                                        onChange={e => setEditingSession({ ...editingSession, maxAttendees: Number(e.target.value) })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                    />
-                                </div>
-                                {editingSession.type === 'coaching' && (
+                                <div className="grid grid-cols-2 gap-5">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Coach Name</label>
-                                        <input 
-                                            type="text" 
-                                            value={editingSession.coach || ''}
-                                            onChange={e => setEditingSession({ ...editingSession, coach: e.target.value })}
-                                            className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-905 dark:text-gray-100 rounded-lg"
-                                            placeholder="Coach Name"
+                                        <label className={LABEL}>SPORT</label>
+                                        <select
+                                            value={editingSession.sport}
+                                            onChange={e => setEditingSession({ ...editingSession, sport: e.target.value })}
+                                            className={FIELD}
+                                        >
+                                            <option value="Tennis">Tennis</option>
+                                            <option value="Badminton">Badminton</option>
+                                            <option value="Squash">Squash</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className={LABEL}>TYPE</label>
+                                        <select
+                                            value={editingSession.type}
+                                            onChange={e => setEditingSession({ ...editingSession, type: e.target.value as SessionType })}
+                                            className={FIELD}
+                                        >
+                                            <option value="court">Open Play / Court</option>
+                                            <option value="coaching">Clinic / Coaching</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-5">
+                                    <div>
+                                        <label className={LABEL}>DATE</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={editingSession.date}
+                                            onChange={e => setEditingSession({ ...editingSession, date: e.target.value })}
+                                            className={FIELD}
+                                            placeholder="e.g. Monday, Jun 15"
                                         />
                                     </div>
-                                )}
-                            </div>
-                            <div className="flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-gray-800">
-                                <button type="button" onClick={() => setEditingSession(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                                    Cancel
-                                </button>
-                                <button type="submit" className="px-4 py-2 text-sm bg-wimbledon-navy hover:bg-[#00287a] text-white rounded-lg">
-                                    Save Changes
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+                                    <div>
+                                        <label className={LABEL}>TIME SLOT</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={editingSession.time}
+                                            onChange={e => setEditingSession({ ...editingSession, time: e.target.value })}
+                                            className={FIELD}
+                                            placeholder="e.g. 9:00 PM - 11:00 PM"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-5">
+                                    <div>
+                                        <label className={LABEL}>MAX CAPACITY</label>
+                                        <input
+                                            type="number"
+                                            required
+                                            min={1}
+                                            value={editingSession.maxAttendees}
+                                            onChange={e => setEditingSession({ ...editingSession, maxAttendees: Number(e.target.value) })}
+                                            className={FIELD}
+                                        />
+                                    </div>
+                                    {editingSession.type === 'coaching' && (
+                                        <div>
+                                            <label className={LABEL}>COACH NAME</label>
+                                            <input
+                                                type="text"
+                                                value={editingSession.coach || ''}
+                                                onChange={e => setEditingSession({ ...editingSession, coach: e.target.value })}
+                                                className={FIELD}
+                                                placeholder="Coach Name"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="hairline-t flex justify-end gap-px bg-chalk/10 pt-5">
+                                    <button type="button" onClick={() => setEditingSession(null)} data-cursor="hover" className="bg-court px-5 py-3 font-mono text-[10px] uppercase tracking-hud text-chalk/60 hover:text-chalk">
+                                        CANCEL
+                                    </button>
+                                    <button type="submit" data-cursor="hover" className="bg-ace px-5 py-3 font-mono text-[10px] uppercase tracking-hud text-court hover:brightness-110">
+                                        COMMIT CHANGES →
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-            {/* Edit Event Modal */}
-            {editingEvent && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-                    <div className="bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-6 max-w-md w-full shadow-xl space-y-4">
-                        <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-800">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Edit Event</h3>
-                            <button onClick={() => setEditingEvent(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-                        <form onSubmit={handleSaveEventEdit} className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Event Title</label>
-                                <input 
-                                    type="text" 
-                                    required
-                                    value={editingEvent.title}
-                                    onChange={e => setEditingEvent({ ...editingEvent, title: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                />
+            {/* ── Edit Event Modal ── */}
+            <AnimatePresence>
+                {editingEvent && (
+                    <motion.div
+                        className="fixed inset-0 z-[170] flex items-center justify-center bg-court/85 p-4 backdrop-blur-md"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                    >
+                        <motion.div
+                            className="w-full max-w-md border border-chalk/20 bg-carbon p-7"
+                            initial={{ y: 40, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: 20, opacity: 0 }}
+                            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <div className="hairline-b mb-6 flex items-center justify-between pb-4">
+                                <h3 className="display-narrow text-2xl text-chalk">EDIT SIGNAL</h3>
+                                <button onClick={() => setEditingEvent(null)} data-cursor="hover" className="hud-label text-chalk/50 hover:text-alert">✕ ABORT</button>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <form onSubmit={handleSaveEventEdit} className="space-y-5">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Date</label>
-                                    <input 
-                                        type="text" 
+                                    <label className={LABEL}>EVENT TITLE</label>
+                                    <input
+                                        type="text"
                                         required
-                                        value={editingEvent.date}
-                                        onChange={e => setEditingEvent({ ...editingEvent, date: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        value={editingEvent.title}
+                                        onChange={e => setEditingEvent({ ...editingEvent, title: e.target.value })}
+                                        className={FIELD}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-2 gap-5">
+                                    <div>
+                                        <label className={LABEL}>DATE</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={editingEvent.date}
+                                            onChange={e => setEditingEvent({ ...editingEvent, date: e.target.value })}
+                                            className={FIELD}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className={LABEL}>TIME</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={editingEvent.time}
+                                            onChange={e => setEditingEvent({ ...editingEvent, time: e.target.value })}
+                                            className={FIELD}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className={LABEL}>LOCATION</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={editingEvent.location}
+                                        onChange={e => setEditingEvent({ ...editingEvent, location: e.target.value })}
+                                        className={FIELD}
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Time</label>
-                                    <input 
-                                        type="text" 
+                                    <label className={LABEL}>IMAGE URL</label>
+                                    <input
+                                        type="url"
                                         required
-                                        value={editingEvent.time}
-                                        onChange={e => setEditingEvent({ ...editingEvent, time: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-950 dark:text-gray-100 rounded-lg"
+                                        value={editingEvent.image}
+                                        onChange={e => setEditingEvent({ ...editingEvent, image: e.target.value })}
+                                        className={FIELD}
                                     />
                                 </div>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Location</label>
-                                <input 
-                                    type="text" 
-                                    required
-                                    value={editingEvent.location}
-                                    onChange={e => setEditingEvent({ ...editingEvent, location: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Image URL</label>
-                                <input 
-                                    type="url" 
-                                    required
-                                    value={editingEvent.image}
-                                    onChange={e => setEditingEvent({ ...editingEvent, image: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">External Link (Optional)</label>
-                                <input 
-                                    type="url" 
-                                    value={editingEvent.link || ''}
-                                    onChange={e => setEditingEvent({ ...editingEvent, link: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
-                                />
-                            </div>
-                            <div className="flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-gray-800">
-                                <button type="button" onClick={() => setEditingEvent(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                                    Cancel
-                                </button>
-                                <button type="submit" className="px-4 py-2 text-sm bg-wimbledon-navy hover:bg-[#00287a] text-white rounded-lg">
-                                    Save Changes
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-        </div>
+                                <div>
+                                    <label className={LABEL}>EXTERNAL LINK (OPTIONAL)</label>
+                                    <input
+                                        type="url"
+                                        value={editingEvent.link || ''}
+                                        onChange={e => setEditingEvent({ ...editingEvent, link: e.target.value })}
+                                        className={FIELD}
+                                    />
+                                </div>
+                                <div className="hairline-t flex justify-end gap-px bg-chalk/10 pt-5">
+                                    <button type="button" onClick={() => setEditingEvent(null)} data-cursor="hover" className="bg-court px-5 py-3 font-mono text-[10px] uppercase tracking-hud text-chalk/60 hover:text-chalk">
+                                        CANCEL
+                                    </button>
+                                    <button type="submit" data-cursor="hover" className="bg-ace px-5 py-3 font-mono text-[10px] uppercase tracking-hud text-court hover:brightness-110">
+                                        COMMIT CHANGES →
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.main>
     );
 };
 

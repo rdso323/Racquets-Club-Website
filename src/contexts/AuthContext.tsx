@@ -188,9 +188,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             updateTabPreferences
         }}>
             {loading ? (
-                <div className="min-h-screen flex items-center justify-center bg-gray-50 flex-col">
-                    <div className="w-8 h-8 border-4 border-[#001A57] border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p className="text-gray-500">Connecting securely...</p>
+                <div className="min-h-screen flex items-center justify-center bg-court flex-col gap-4">
+                    <div className="w-8 h-8 border border-ace border-t-transparent rounded-full animate-spin"></div>
+                    <p className="hud-label text-chalk/50">ESTABLISHING SECURE LINK…</p>
                 </div>
             ) : children}
         </AuthContext.Provider>

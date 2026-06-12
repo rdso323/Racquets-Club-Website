@@ -1,21 +1,23 @@
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
-import { LogIn, UserPlus, Mail, ArrowLeft, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../contexts/AuthContext';
+import { AirlockScene } from '../components/three/scenes';
+import { RevealLines } from '../components/system/kinetic';
 
+/*
+ * ACCESS — the airlock. A lone satellite spins over a sunken court
+ * while the terminal on the right negotiates Duke credentials.
+ * Auth handlers are the legacy ones, untouched.
+ */
 const Login = () => {
     const { signInWithEmail, signUpWithEmail, error } = useAuth();
-    const { theme } = useTheme();
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-
-    // Use the correct logo per theme — same logic as Navbar
-    const logoSrc = theme === 'dark' ? '/logo_dark.png' : '/logo_light.png';
+    const [submitting, setSubmitting] = useState(false);
 
     // Forgot Password States
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -26,10 +28,15 @@ const Login = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (isSignUp) {
-            await signUpWithEmail(email, password);
-        } else {
-            await signInWithEmail(email, password);
+        setSubmitting(true);
+        try {
+            if (isSignUp) {
+                await signUpWithEmail(email, password);
+            } else {
+                await signInWithEmail(email, password);
+            }
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -62,215 +69,254 @@ const Login = () => {
         }
     };
 
+    const isVerifyNotice = !!error && error.includes('verify your account');
+
+    const inputClass =
+        'w-full border-0 border-b border-chalk/20 bg-transparent px-0 py-3.5 font-mono text-sm text-chalk placeholder-chalk/30 transition-colors focus:border-ace focus:outline-none focus:ring-0';
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950 flex-col px-4 text-center transition-colors duration-300">
-            <div className="bg-white dark:bg-club-surface p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 max-w-md w-full transition-colors relative overflow-hidden min-h-[520px] flex flex-col justify-center">
-                <AnimatePresence mode="wait">
-                    {!showForgotPassword ? (
-                        <motion.div
-                            key="login-view"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
-                            transition={{ duration: 0.25 }}
-                            className="w-full flex flex-col justify-between h-full"
-                        >
-                            <div>
-                                <img
-                                    src={logoSrc}
-                                    alt="Fuqua Racquets Club Logo"
-                                    className="mx-auto h-56 w-auto -mb-6 object-contain relative z-0"
-                                    style={theme === 'dark' ? { mixBlendMode: 'screen' } : {}}
-                                />
-                                <h1 className="text-3xl font-light text-wimbledon-navy dark:text-gray-100 mb-2 tracking-tight -mt-4 transition-colors relative z-10">
-                                    Digital Clubhouse
-                                </h1>
-                                <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm transition-colors relative z-10">
-                                    Exclusive access for Fuqua members.
-                                </p>
+        <motion.main
+            className="relative min-h-screen overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+        >
+            <div className="grid min-h-screen lg:grid-cols-[1.15fr_1fr]">
+                {/* ── Left: the satellite chamber ── */}
+                <div className="relative hidden overflow-hidden lg:block">
+                    <AirlockScene />
+                    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_25%,#070907_95%)]" />
 
-                                {error && (
-                                    error.includes('verify your account') ? (
-                                        <div className="bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 p-4 rounded-xl mb-6 text-sm flex items-start text-left border border-amber-200 dark:border-amber-900/30">
-                                            <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
-                                            <div>
-                                                <span className="font-semibold block mb-0.5 text-amber-900 dark:text-amber-200">Verification Required</span>
-                                                <span>
-                                                    Please check your Duke inbox to verify your account. Be sure to check your <strong>junk/spam folder</strong>, as verification emails often land there.
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100 dark:border-red-900/30">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                            </svg>
-                                            <span>{error}</span>
-                                        </div>
-                                    )
-                                )}
+                    <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-12 pt-28">
+                        <RevealLines
+                            delay={0.3}
+                            lines={[
+                                <span key="1" className="display-tight block text-7xl text-chalk xl:text-8xl">MEMBERS</span>,
+                                <span key="2" className="display-tight block text-7xl text-hollow xl:text-8xl">ONLY<span className="text-ace">.</span></span>,
+                                <span key="3" className="serif-ital mt-3 block text-2xl text-chalk/70">the airlock checks your credentials</span>,
+                            ]}
+                        />
+                        <div className="flex items-end justify-between">
+                            <span className="hud-label text-chalk/50">CHANNEL — AUTH.01</span>
+                            <span className="hud-label text-chalk/50">FIREBASE SECURE LINK ●</span>
+                        </div>
+                    </div>
 
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <input
-                                            type="email"
-                                            required
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="Email (@duke.edu)"
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all"
-                                        />
-                                    </div>
-                                    <div>
-                                        <div className="relative flex items-center">
-                                            <input
-                                                type={showPassword ? 'text' : 'password'}
-                                                required
-                                                value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
-                                                placeholder="Password"
-                                                className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all"
-                                            />
+                    <div className="absolute inset-y-12 right-0 w-px bg-gradient-to-b from-transparent via-chalk/25 to-transparent" />
+                </div>
+
+                {/* ── Right: the terminal ── */}
+                <div className="relative flex items-center justify-center px-5 py-28 lg:px-16">
+                    <div className="w-full max-w-md">
+                        <AnimatePresence mode="wait">
+                            {!showForgotPassword ? (
+                                <motion.div
+                                    key="auth-terminal"
+                                    initial={{ opacity: 0, y: 28 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                                >
+                                    <p className="hud-label mb-3 text-ace">● AIRLOCK TERMINAL</p>
+                                    <h1 className="display-tight mb-2 text-5xl text-chalk md:text-6xl">
+                                        {isSignUp ? 'ENLIST' : 'ACCESS'}
+                                    </h1>
+                                    <p className="hud-label mb-10 text-chalk/50">
+                                        DUKE.EDU CREDENTIALS — VERIFIED MEMBERS ONLY
+                                    </p>
+
+                                    {/* mode switch */}
+                                    <div className="mb-10 flex border border-chalk/15">
+                                        {[
+                                            { label: 'SIGN IN', value: false },
+                                            { label: 'REGISTER', value: true },
+                                        ].map((mode) => (
                                             <button
-                                                type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none transition-colors"
+                                                key={mode.label}
+                                                onClick={() => setIsSignUp(mode.value)}
+                                                data-cursor="hover"
+                                                className={`relative flex-1 py-3 font-mono text-[11px] uppercase tracking-hud transition-colors ${isSignUp === mode.value ? 'text-court' : 'text-chalk/50 hover:text-chalk'}`}
                                             >
-                                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                                {isSignUp === mode.value && (
+                                                    <motion.span
+                                                        layoutId="auth-mode"
+                                                        className="absolute inset-0 bg-ace"
+                                                        transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }}
+                                                    />
+                                                )}
+                                                <span className="relative z-10">{mode.label}</span>
                                             </button>
-                                        </div>
-                                        {!isSignUp && (
-                                            <div className="text-right mt-1.5">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setShowForgotPassword(true);
-                                                        setResetEmail(email);
-                                                        setResetError(null);
-                                                        setResetSuccess(false);
-                                                    }}
-                                                    className="text-xs font-medium text-wimbledon-navy dark:text-wimbledon-gold hover:underline focus:outline-none transition-colors"
-                                                >
-                                                    Forgot Password?
-                                                </button>
-                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* system alerts */}
+                                    <AnimatePresence>
+                                        {error && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className={`mb-8 border px-4 py-3.5 ${isVerifyNotice ? 'border-ace/50' : 'border-alert/60'}`}>
+                                                    <p className={`hud-label mb-1 ${isVerifyNotice ? 'text-ace' : 'text-alert'}`}>
+                                                        {isVerifyNotice ? '▲ VERIFICATION REQUIRED' : '▲ SYSTEM ALERT'}
+                                                    </p>
+                                                    <p className="font-mono text-xs leading-relaxed text-chalk/75">
+                                                        {error}
+                                                        {isVerifyNotice && ' Check your junk/spam folder — verification drops often land there.'}
+                                                    </p>
+                                                </div>
+                                            </motion.div>
                                         )}
-                                    </div>
+                                    </AnimatePresence>
 
-                                    <button
-                                        type="submit"
-                                        className="w-full flex items-center justify-center bg-wimbledon-navy hover:bg-[#00287a] text-white py-3 px-4 rounded-xl transition duration-300 ease-in-out font-medium mt-6"
-                                    >
-                                        {isSignUp ? <UserPlus className="w-5 h-5 mr-2" /> : <LogIn className="w-5 h-5 mr-2" />}
-                                        {isSignUp ? 'Create Account' : 'Sign In'}
-                                    </button>
-                                </form>
-
-                                <div className="mt-6 flex justify-between text-sm">
-                                    <button
-                                        onClick={() => setIsSignUp(!isSignUp)}
-                                        className="text-wimbledon-navy dark:text-wimbledon-gold hover:underline focus:outline-none transition-colors mx-auto"
-                                    >
-                                        {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400">
-                                Trouble logging in? Contact the admin.
-                            </div>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="forgot-password-view"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.25 }}
-                            className="w-full flex flex-col justify-between h-full"
-                        >
-                            <div>
-                                <div className="mx-auto w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4 border border-blue-100 dark:border-blue-900/30">
-                                    <KeyRound className="w-6 h-6 text-wimbledon-navy dark:text-wimbledon-gold" />
-                                </div>
-                                <h1 className="text-2xl font-semibold text-wimbledon-navy dark:text-gray-100 mb-2 tracking-tight transition-colors">
-                                    Reset Password
-                                </h1>
-                                <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm transition-colors max-w-xs mx-auto leading-relaxed">
-                                    Enter your Duke email address and we'll send you a link to reset your password.
-                                </p>
-
-                                {resetError && (
-                                    <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                        </svg>
-                                        <span>{resetError}</span>
-                                    </div>
-                                )}
-
-                                {resetSuccess ? (
-                                    <div className="bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400 p-5 rounded-2xl mb-6 text-sm flex flex-col items-center text-center border border-green-200 dark:border-green-900/30 shadow-sm">
-                                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-wimbledon-green dark:text-wimbledon-green-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <span className="font-bold text-base text-wimbledon-green dark:text-wimbledon-green-accent mb-1.5">Reset Link Sent!</span>
-                                        <span className="text-xs text-gray-600 dark:text-gray-400 max-w-xs">
-                                            We sent a reset link to <strong className="text-gray-800 dark:text-gray-200">{resetEmail || 'your email'}</strong>. Please check your inbox.
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <form onSubmit={handleResetPassword} className="space-y-4">
-                                        <div className="relative">
+                                    <form onSubmit={handleSubmit} className="flex flex-col gap-7">
+                                        <div>
+                                            <label className="hud-label mb-1 block text-chalk/45">CALLSIGN / EMAIL</label>
                                             <input
                                                 type="email"
                                                 required
-                                                value={resetEmail}
-                                                onChange={(e) => setResetEmail(e.target.value)}
-                                                placeholder="Email (@duke.edu)"
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                placeholder="you@duke.edu"
+                                                className={inputClass}
                                             />
+                                        </div>
+
+                                        <div>
+                                            <label className="hud-label mb-1 block text-chalk/45">PASSKEY</label>
+                                            <div className="relative">
+                                                <input
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    required
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                    placeholder="••••••••"
+                                                    className={`${inputClass} pr-16`}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    data-cursor="hover"
+                                                    className="hud-label absolute right-0 top-1/2 -translate-y-1/2 text-chalk/40 transition-colors hover:text-ace"
+                                                >
+                                                    {showPassword ? 'HIDE' : 'SHOW'}
+                                                </button>
+                                            </div>
+                                            {!isSignUp && (
+                                                <div className="mt-2.5 text-right">
+                                                    <button
+                                                        type="button"
+                                                        data-cursor="hover"
+                                                        onClick={() => {
+                                                            setShowForgotPassword(true);
+                                                            setResetEmail(email);
+                                                            setResetError(null);
+                                                            setResetSuccess(false);
+                                                        }}
+                                                        className="hud-label text-chalk/40 transition-colors hover:text-ace"
+                                                    >
+                                                        LOST PASSKEY?
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
 
                                         <button
                                             type="submit"
-                                            disabled={isResetLoading}
-                                            className="w-full flex items-center justify-center bg-wimbledon-navy hover:bg-[#00287a] text-white py-3 px-4 rounded-xl transition duration-300 ease-in-out font-medium mt-6 disabled:opacity-50"
+                                            disabled={submitting}
+                                            data-cursor="hover"
+                                            data-cursor-label="TRANSMIT"
+                                            className="group mt-2 flex w-full items-center justify-between bg-ace px-6 py-4 font-mono text-sm uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
                                         >
-                                            <Mail className="w-5 h-5 mr-2" />
-                                            {isResetLoading ? 'Sending Link...' : 'Send Reset Link'}
+                                            <span>{submitting ? 'NEGOTIATING…' : isSignUp ? 'CREATE CREDENTIALS' : 'OPEN THE AIRLOCK'}</span>
+                                            <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
                                         </button>
                                     </form>
-                                )}
 
-                                <div className="mt-6">
+                                    <p className="hud-label mt-10 text-center text-chalk/30">
+                                        TROUBLE DOCKING? CONTACT THE ADMIN.
+                                    </p>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    key="reset-terminal"
+                                    initial={{ opacity: 0, y: 28 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                                >
+                                    <p className="hud-label mb-3 text-ace">● RECOVERY CHANNEL</p>
+                                    <h1 className="display-tight mb-2 text-5xl text-chalk md:text-6xl">RESET</h1>
+                                    <p className="hud-label mb-10 text-chalk/50">
+                                        WE BEAM A RESET LINK TO YOUR DUKE INBOX
+                                    </p>
+
+                                    {resetError && (
+                                        <div className="mb-8 border border-alert/60 px-4 py-3.5">
+                                            <p className="hud-label mb-1 text-alert">▲ SYSTEM ALERT</p>
+                                            <p className="font-mono text-xs leading-relaxed text-chalk/75">{resetError}</p>
+                                        </div>
+                                    )}
+
+                                    {resetSuccess ? (
+                                        <div className="border border-ace/50 px-5 py-6">
+                                            <p className="hud-label mb-2 text-ace">✓ RESET LINK DEPLOYED</p>
+                                            <p className="font-mono text-xs leading-relaxed text-chalk/75">
+                                                A reset link is en route to{' '}
+                                                <strong className="text-chalk">{resetEmail || 'your email'}</strong>. Check your inbox.
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleResetPassword} className="flex flex-col gap-7">
+                                            <div>
+                                                <label className="hud-label mb-1 block text-chalk/45">CALLSIGN / EMAIL</label>
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    value={resetEmail}
+                                                    onChange={(e) => setResetEmail(e.target.value)}
+                                                    placeholder="you@duke.edu"
+                                                    className={inputClass}
+                                                />
+                                            </div>
+                                            <button
+                                                type="submit"
+                                                disabled={isResetLoading}
+                                                data-cursor="hover"
+                                                className="group flex w-full items-center justify-between bg-ace px-6 py-4 font-mono text-sm uppercase tracking-hud text-court transition-all hover:brightness-110 disabled:opacity-40"
+                                            >
+                                                <span>{isResetLoading ? 'TRANSMITTING…' : 'SEND RESET LINK'}</span>
+                                                <span className="transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                                            </button>
+                                        </form>
+                                    )}
+
                                     <button
                                         type="button"
+                                        data-cursor="hover"
                                         onClick={() => {
                                             setShowForgotPassword(false);
                                             setResetError(null);
                                             setResetSuccess(false);
                                         }}
-                                        className="text-sm font-medium text-wimbledon-navy dark:text-wimbledon-gold hover:underline focus:outline-none transition-colors inline-flex items-center"
+                                        className="hud-label mt-10 text-chalk/50 transition-colors hover:text-ace"
                                     >
-                                        <ArrowLeft className="w-4 h-4 mr-1.5" />
-                                        Back to Sign In
+                                        ← BACK TO THE AIRLOCK
                                     </button>
-                                </div>
-                            </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
-                            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400">
-                                Trouble logging in? Contact the admin.
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                    {/* corner telemetry */}
+                    <span className="hud-label absolute bottom-6 left-5 text-chalk/30 lg:left-16">AUTH NODE 01</span>
+                    <span className="hud-label absolute bottom-6 right-5 text-chalk/30 lg:right-16">FRC — AFTER DARK</span>
+                </div>
             </div>
-        </div>
+        </motion.main>
     );
 };
 
 export default Login;
-

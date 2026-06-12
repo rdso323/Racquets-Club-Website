@@ -2,51 +2,208 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ────────────────────────────────────────────────────────────────
+   FUQUA RACQUETS CLUB — "AFTER DARK" DESIGN SYSTEM
+   Void-black courts, chalk type, fluoro signals.
+   ──────────────────────────────────────────────────────────────── */
+
+:root {
+  --accent: #d7ff3e;            /* re-themed per discipline at runtime */
+  --accent-dim: rgba(215, 255, 62, 0.14);
+  color-scheme: dark;
+}
+
 @layer base {
-  body {
-    @apply bg-white text-gray-900 transition-colors duration-300;
-    font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  html {
+    background: #070907;
   }
 
-  .dark body {
-    background-color: #0A101D;
-    color: #f3f4f6;
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-court text-chalk antialiased;
+    font-family: 'Archivo', system-ui, sans-serif;
+    font-variation-settings: 'wdth' 100;
+    overscroll-behavior-y: none;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #070907;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #070907;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(237, 242, 228, 0.25);
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: var(--accent);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
   }
 }
 
 @layer utilities {
-  .club-card {
-    @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300;
+  /* HUD micro-labels */
+  .hud-label {
+    @apply font-mono text-[10px] uppercase tracking-hud;
   }
 
-  .dark .club-card {
-    background-color: #111827;
-    border-color: #1f2937;
+  /* Massive condensed-to-expanded display type */
+  .display-tight {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900;
+    font-variation-settings: 'wdth' 118;
+    letter-spacing: -0.03em;
+    line-height: 0.84;
   }
 
-  .dark .club-card:hover {
-    border-color: rgba(201, 168, 76, 0.5);
+  .display-narrow {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    font-variation-settings: 'wdth' 76;
+    letter-spacing: -0.01em;
+    line-height: 0.9;
   }
 
-  .glass-panel {
-    @apply bg-white/70 backdrop-blur-xl border border-gray-200/50 shadow-sm transition-all;
+  .serif-ital {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
   }
 
-  .dark .glass-panel {
-    background: rgba(26, 31, 45, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(64, 74, 59, 0.15);
+  /* Hollow / outlined type */
+  .text-hollow {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(237, 242, 228, 0.55);
   }
 
-  .text-glow-green {
-    text-shadow: 0 0 15px rgba(130, 219, 111, 0.4);
+  .text-hollow-accent {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--accent);
   }
 
-  .forest-gradient {
-    background: linear-gradient(135deg, #10B981 0%, #006400 100%);
+  /* Hairlines */
+  .hairline {
+    box-shadow: 0 0 0 1px rgba(237, 242, 228, 0.1) inset;
+  }
+  .hairline-t {
+    border-top: 1px solid rgba(237, 242, 228, 0.12);
+  }
+  .hairline-b {
+    border-bottom: 1px solid rgba(237, 242, 228, 0.12);
   }
 
-  .premium-shadow {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  .accent-text {
+    color: var(--accent);
+  }
+  .accent-bg {
+    background-color: var(--accent);
+  }
+  .accent-border {
+    border-color: var(--accent);
+  }
+  .accent-glow {
+    filter: drop-shadow(0 0 14px var(--accent-dim)) drop-shadow(0 0 4px var(--accent-dim));
+  }
+
+  /* Film grain — layered over everything */
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: -100%;
+    z-index: 200;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    animation: grain-shift 0.6s steps(4) infinite;
+  }
+
+  @keyframes grain-shift {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2%, 1.5%); }
+    50% { transform: translate(1.5%, -1%); }
+    75% { transform: translate(-1%, -2%); }
+    100% { transform: translate(2%, 1%); }
+  }
+
+  /* Radar scan sweep */
+  .scanline {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--accent-dim) 45%,
+      var(--accent) 50%,
+      var(--accent-dim) 55%,
+      transparent 100%
+    );
+    opacity: 0.5;
+    mix-blend-mode: screen;
+  }
+
+  /* Redacted member names for guests */
+  .redacted {
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(237, 242, 228, 0.28) 0 8px,
+      rgba(237, 242, 228, 0.08) 8px 10px
+    );
+    color: transparent;
+    border-radius: 1px;
+    user-select: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom cursor takes over on precision pointers */
+@media (pointer: fine) {
+  .cursor-none-host,
+  .cursor-none-host * {
+    cursor: none !important;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

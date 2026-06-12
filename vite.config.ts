@@ -6,6 +6,17 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 
 export default defineConfig({
   base: '/',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three', '@react-three/fiber'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
+          motion: ['framer-motion', 'lenis'],
+        },
+      },
+    },
+  },
   plugins: [react(), VitePWA({
     registerType: 'autoUpdate',
     includeAssets: ['new_logo.png'],
