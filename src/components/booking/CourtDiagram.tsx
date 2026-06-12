@@ -103,7 +103,7 @@ const CourtDiagram = ({
             data-cursor-label={selected ? 'TARGET LOCKED' : 'SELECT COURT'}
             className="group relative block w-full text-left focus:outline-none"
             initial={false}
-            animate={{ opacity: dimmed ? 0.38 : 1, scale: selected ? 1 : 0.97 }}
+            animate={{ opacity: dimmed ? 0.55 : 1, scale: selected ? 1 : 0.97 }}
             whileHover={{ scale: selected ? 1 : 0.99 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -199,8 +199,8 @@ const CourtDiagram = ({
                 </svg>
 
                 {locked && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-court/70 backdrop-blur-[1px]">
-                        <span className="hud-label border border-chalk/25 px-3 py-1.5 text-chalk/70">▦ LOCKED</span>
+                    <div className="absolute inset-0 flex items-center justify-center bg-court/35">
+                        <span className="hud-label border border-chalk/30 bg-court/80 px-3 py-1.5 text-chalk/80">▦ LOCKED</span>
                     </div>
                 )}
             </div>

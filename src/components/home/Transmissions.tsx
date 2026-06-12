@@ -158,8 +158,9 @@ const Transmissions = () => {
                                     <>
                                         <img
                                             src={event.image}
-                                            alt={event.title}
+                                            alt=""
                                             draggable={false}
+                                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                             className="absolute inset-0 h-full w-full object-cover opacity-45 saturate-0 transition-all duration-500 hover:opacity-65"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-court via-court/55 to-transparent" />

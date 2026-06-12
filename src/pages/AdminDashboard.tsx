@@ -945,7 +945,8 @@ const AdminDashboard = () => {
                                                             {event.image && (
                                                                 <img
                                                                     src={event.image}
-                                                                    alt={event.title}
+                                                                    alt=""
+                                                                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                                                     className="h-full w-full object-cover opacity-60 saturate-0 transition-all duration-500 group-hover:scale-105 group-hover:opacity-80"
                                                                 />
                                                             )}
