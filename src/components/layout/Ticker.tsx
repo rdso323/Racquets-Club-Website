@@ -24,7 +24,10 @@ const Ticker = () => {
         <div className="bg-[#001A57] text-white text-sm py-2 overflow-hidden border-b-2 border-green-700 shadow-md">
             <div
                 className="whitespace-nowrap inline-flex animate-marquee hover:[animation-play-state:paused] will-change-transform"
-                style={{ width: 'max-content' }}
+                style={{
+                    width: 'max-content',
+                    animationDuration: `${Math.max(30, Math.round(tickerText.length * 0.08))}s`
+                }}
             >
                 <div
                     className="flex-shrink-0 pr-12"

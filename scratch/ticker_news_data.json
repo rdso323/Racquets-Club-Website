@@ -1,23 +1,23 @@
 {
-  "tickerText": "[TENNIS] Roland-Garros: Mirra Andreeva (19) wins her 1st Grand Slam title, defeating Maja Chwalińska 6-3, 6-2! Men's Singles: Alexander Zverev def. Flavio Cobolli 6-1, 4-6, 6-4, 6-7(5), 6-1 to win his 1st Major! • [BADMINTON] Indonesia Open: Victor Lai (CAN) def. Jonatan Christie (INA) 21-19, 21-8; An Se-young (KOR) def. Akane Yamaguchi (JPN) 23-21, 21-12 • [SQUASH] British Open: 18-year-old Amina Orfi becomes the youngest women's champion in history (def. Nour El Sherbini 3-1) & Paul Coll clinches his 3rd title (def. Mostafa Asal 3-1) in Birmingham!",
+  "tickerText": "[TENNIS] Boss Open (Stuttgart): Alexander Bublik defeats Jan-Lennard Struff (7-6, 3-6, 6-2) to advance to the quarterfinals; Nick Kyrgios makes a winning grass-court comeback against Corentin Moutet (6-3, 6-4). WTA HSBC Championships (London): Iva Jovic, Amanda Anisimova, and Karolina Pliskova advance to the quarterfinals • [BADMINTON] Australian Open (Sydney): PV Sindhu defeats fellow Indian Isharani Baruah (22-20, 21-12) to advance to the quarterfinals, while former champion Lee Zii Jia suffers a first-round shock exit to Lee Chia-hao • [SQUASH] British Open (Birmingham): 18-year-old Amina Orfi makes history as the youngest women's champion ever, defeating Nour El Sherbini; Paul Coll wins his 3rd British Open title, defeating Mostafa Asal. Players now prepare for the PSA Squash Tour Finals in Paris (June 17-20)!",
   "newsItems": [
     {
-      "title": "Zverev and Andreeva Conquer Roland-Garros 2026",
-      "excerpt": "Alexander Zverev defeated Flavio Cobolli in a grueling 5-set final to win his first Grand Slam title, while 19-year-old Mirra Andreeva captured the women's singles title with a straight-sets victory.",
-      "date": "June 7, 2026",
+      "title": "Bublik Outlasts Struff in Stuttgart; Kyrgios Returns Victorious",
+      "excerpt": "Alexander Bublik edged out Jan-Lennard Struff in a three-set thriller at the Boss Open in Stuttgart to advance to the quarterfinals. The tournament also featured a successful comeback for Nick Kyrgios, who defeated Corentin Moutet in straight sets.",
+      "date": "June 11, 2026",
       "category": "Tennis",
-      "link": "https://www.rolandgarros.com"
+      "link": "https://www.atptour.com"
     },
     {
-      "title": "Victor Lai and An Se-young Triumph at Indonesia Open",
-      "excerpt": "Canada's Victor Lai stunned local favorite Jonatan Christie in straight games (21-19, 21-8), while top seed An Se-young overcame Akane Yamaguchi to defend her title.",
-      "date": "June 7, 2026",
+      "title": "Sindhu Secures Quarterfinals Spot in Sydney; Lee Zii Jia Exits",
+      "excerpt": "Two-time Olympic medalist PV Sindhu defeated Isharani Baruah (22-20, 21-12) to reach the quarterfinals of the Australian Badminton Open. Meanwhile, former champion Lee Zii Jia suffered a shocking straight-sets defeat to Lee Chia-hao in the first round.",
+      "date": "June 11, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com"
+      "link": "https://bwfbadminton.com"
     },
     {
-      "title": "Coll Wins 3rd British Open; Orfi Makes Squash History",
-      "excerpt": "New Zealand's Paul Coll claimed his third British Open title after a 3-1 victory over Mostafa Asal, while 18-year-old Amina Orfi made history as the youngest women's champion ever.",
+      "title": "Orfi and Coll Claim Historic British Open Championships",
+      "excerpt": "18-year-old Amina Orfi made history as the youngest-ever women's champion at the British Open in Birmingham by defeating world No. 1 Nour El Sherbini. On the men's side, Paul Coll claimed his third title by defeating Mostafa Asal in a physical final match.",
       "date": "June 7, 2026",
       "category": "Squash",
       "link": "https://www.psaworldtour.com"
