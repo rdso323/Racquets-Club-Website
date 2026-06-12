@@ -21,22 +21,31 @@ const Ticker = () => {
     }, []);
 
     return (
-        <div className="bg-[#001A57] text-white text-sm py-2 overflow-hidden border-b-2 border-green-700 shadow-md">
-            <div
-                className="whitespace-nowrap inline-flex animate-marquee hover:[animation-play-state:paused] will-change-transform"
-                style={{
-                    width: 'max-content',
-                    animationDuration: `${Math.max(30, Math.round(tickerText.length * 0.08))}s`
-                }}
-            >
+        <div className="bg-wimbledon-navy dark:bg-court-900 text-white text-sm border-b border-green-700 dark:border-court-line/10 shadow-md flex items-stretch transition-colors duration-300">
+            <div className="flex items-center gap-1.5 px-3 py-2 bg-clay-600 dark:bg-clay-700 flex-shrink-0 z-10">
+                <span className="relative flex h-2 w-2">
+                    <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-court-line opacity-60"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-court-line"></span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-court-line">The Wire</span>
+            </div>
+            <div className="flex-1 overflow-hidden py-2">
                 <div
-                    className="flex-shrink-0 pr-12"
-                    dangerouslySetInnerHTML={{ __html: tickerText }}
-                />
-                <div
-                    className="flex-shrink-0 pr-12"
-                    dangerouslySetInnerHTML={{ __html: tickerText }}
-                />
+                    className="whitespace-nowrap inline-flex animate-marquee hover:[animation-play-state:paused] will-change-transform"
+                    style={{
+                        width: 'max-content',
+                        animationDuration: `${Math.max(30, Math.round(tickerText.length * 0.08))}s`
+                    }}
+                >
+                    <div
+                        className="flex-shrink-0 pr-12 pl-4"
+                        dangerouslySetInnerHTML={{ __html: tickerText }}
+                    />
+                    <div
+                        className="flex-shrink-0 pr-12 pl-4"
+                        dangerouslySetInnerHTML={{ __html: tickerText }}
+                    />
+                </div>
             </div>
         </div>
     );

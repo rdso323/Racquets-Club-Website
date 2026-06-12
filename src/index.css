@@ -9,8 +9,13 @@
   }
 
   .dark body {
-    background-color: #0A101D;
+    background-color: #050A07;
     color: #f3f4f6;
+  }
+
+  ::selection {
+    background: rgba(199, 93, 61, 0.45);
+    color: #F4EFE2;
   }
 }
 
@@ -20,12 +25,12 @@
   }
 
   .dark .club-card {
-    background-color: #111827;
-    border-color: #1f2937;
+    background-color: rgba(15, 32, 22, 0.55);
+    border-color: rgba(244, 239, 226, 0.08);
   }
 
   .dark .club-card:hover {
-    border-color: rgba(201, 168, 76, 0.5);
+    border-color: rgba(201, 168, 76, 0.45);
   }
 
   .glass-panel {
@@ -33,20 +38,184 @@
   }
 
   .dark .glass-panel {
-    background: rgba(26, 31, 45, 0.7);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(64, 74, 59, 0.15);
+    background: rgba(10, 20, 14, 0.62);
+    backdrop-filter: blur(22px);
+    border: 1px solid rgba(244, 239, 226, 0.08);
+  }
+
+  /* Heavier editorial glass used on the home composition */
+  .glass-deep {
+    @apply rounded-3xl border transition-all duration-300;
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(26px) saturate(1.2);
+    border-color: rgba(0, 26, 87, 0.08);
+    box-shadow: 0 24px 60px -24px rgba(0, 26, 87, 0.18);
+  }
+
+  .dark .glass-deep {
+    background: linear-gradient(160deg, rgba(15, 32, 22, 0.72), rgba(5, 10, 7, 0.82));
+    border-color: rgba(244, 239, 226, 0.09);
+    box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(244, 239, 226, 0.06);
   }
 
   .text-glow-green {
     text-shadow: 0 0 15px rgba(130, 219, 111, 0.4);
   }
 
+  .text-glow-gold {
+    text-shadow: 0 0 24px rgba(201, 168, 76, 0.45);
+  }
+
   .forest-gradient {
     background: linear-gradient(135deg, #10B981 0%, #006400 100%);
   }
 
+  .clay-gradient {
+    background: linear-gradient(135deg, #D97A55 0%, #A8482E 100%);
+  }
+
   .premium-shadow {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Court schematic primitives (the Matchmaker court)                  */
+  /* ------------------------------------------------------------------ */
+
+  /* The grounds around the playing surface */
+  .court-apron {
+    background:
+      radial-gradient(120% 140% at 20% 0%, rgba(52, 211, 153, 0.10) 0%, transparent 55%),
+      linear-gradient(155deg, #16301F 0%, #0F2016 55%, #0A140E 100%);
+  }
+
+  .light .court-apron,
+  :root:not(.dark) .court-apron {
+    background:
+      radial-gradient(120% 140% at 20% 0%, rgba(16, 185, 129, 0.12) 0%, transparent 55%),
+      linear-gradient(155deg, #2B5E3E 0%, #1E452C 60%, #16301F 100%);
+  }
+
+  /* The clay playing surface inside the doubles lines */
+  .court-surface {
+    background:
+      radial-gradient(90% 120% at 50% 0%, rgba(244, 239, 226, 0.07) 0%, transparent 60%),
+      linear-gradient(155deg, #C75D3D 0%, #A8482E 55%, #853723 100%);
+    box-shadow: inset 0 2px 18px rgba(61, 26, 18, 0.55);
+  }
+
+  /* Chalk court lines — used for absolutely-positioned line segments */
+  .court-line {
+    background-color: rgba(244, 239, 226, 0.88);
+    box-shadow: 0 0 6px rgba(244, 239, 226, 0.22);
+  }
+
+  /* Player slot base: circular position on the court */
+  .player-slot {
+    @apply absolute flex items-center justify-center rounded-full transition-all duration-300;
+    transform: translate(-50%, -50%);
+  }
+
+  .player-slot:focus-visible {
+    outline: 2px solid #F4EFE2;
+    outline-offset: 3px;
+  }
+
+  .player-slot--open {
+    border: 2px dashed rgba(244, 239, 226, 0.75);
+    background: rgba(244, 239, 226, 0.07);
+    color: rgba(244, 239, 226, 0.9);
+  }
+
+  .player-slot--open:not(:disabled):hover {
+    transform: translate(-50%, -50%) scale(1.12);
+    background: rgba(52, 211, 153, 0.22);
+    border-color: #34D399;
+    border-style: solid;
+    box-shadow: 0 0 24px rgba(52, 211, 153, 0.45);
+  }
+
+  .player-slot--filled {
+    border: 2px solid rgba(244, 239, 226, 0.85);
+    background: linear-gradient(150deg, #0F2016, #16301F);
+    color: #F4EFE2;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  }
+
+  .player-slot--mine {
+    border-color: #C9A84C;
+    background: linear-gradient(150deg, #5F271A, #853723);
+    box-shadow: 0 0 22px rgba(201, 168, 76, 0.4);
+  }
+
+  .player-slot--inert {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Motion — progressive enhancement only                              */
+  /* ------------------------------------------------------------------ */
+
+  /* Scroll-driven reveals: elements look final by default; browsers that
+     support animation-timeline get the scroll-linked entrance instead. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .scroll-rise {
+        animation: scroll-rise-kf linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry 50%;
+      }
+
+      .scroll-fade {
+        animation: scroll-fade-kf linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+
+      .scroll-drift {
+        animation: scroll-drift-kf linear both;
+        animation-timeline: scroll(root);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-glow-pulse,
+    .animate-float-slow,
+    .animate-ball-bounce,
+    .animate-rise,
+    .animate-fade-in {
+      animation: none !important;
+    }
+  }
+}
+
+@keyframes scroll-rise-kf {
+  from {
+    opacity: 0.001;
+    transform: translateY(48px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-fade-kf {
+  from {
+    opacity: 0.001;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-drift-kf {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-120px);
   }
 }

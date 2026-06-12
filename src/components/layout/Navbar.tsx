@@ -18,7 +18,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800/50 sticky top-0 z-40 shadow-sm transition-colors duration-300">
+        <nav className="bg-white/85 dark:bg-court-950/75 backdrop-blur-xl border-b border-gray-200 dark:border-court-line/10 sticky top-0 z-40 shadow-sm dark:shadow-black/40 transition-colors duration-300">
             <style>{`
                 .no-scrollbar::-webkit-scrollbar {
                     display: none;
@@ -33,7 +33,7 @@ const Navbar = () => {
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center group mr-4">
                             <img src={theme === 'dark' ? "/logo_dark.png" : "/logo_light.png"} alt="Fuqua Racquets Club logo" className="h-10 w-auto mr-3" />
-                            <span className="text-xl font-semibold font-['Outfit'] text-wimbledon-navy dark:text-white tracking-wide -ml-1 mt-0.5 transition-colors hidden sm:inline-block">
+                            <span className="text-xl font-display font-semibold text-wimbledon-navy dark:text-court-line tracking-wide -ml-1 mt-0.5 transition-colors hidden sm:inline-block">
                                 Fuqua Racquets Club
                             </span>
                         </Link>
@@ -86,7 +86,7 @@ const Navbar = () => {
                         ) : (
                             <button
                                 onClick={() => navigate('/login')}
-                                className="bg-wimbledon-navy dark:bg-slate-800 hover:bg-[#00287a] dark:hover:bg-slate-700 text-white px-4 py-1.5 rounded-xl font-bold text-sm transition-colors shadow-sm flex items-center gap-1.5 flex-shrink-0"
+                                className="bg-wimbledon-navy dark:clay-gradient dark:bg-clay-600 hover:bg-[#00287a] dark:hover:brightness-110 text-white px-4 py-1.5 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center gap-1.5 flex-shrink-0"
                             >
                                 <LogIn className="w-4 h-4" />
                                 <span>Sign In</span>

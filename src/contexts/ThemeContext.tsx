@@ -12,9 +12,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem('theme');
-    // Default to light mode for now since the original site was light mode,
-    // though we could default to system preference if desired.
-    return (savedTheme as Theme) || 'light';
+    // Dark is the system default; an explicit user choice always wins.
+    if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+    return 'dark';
   });
 
   useEffect(() => {
