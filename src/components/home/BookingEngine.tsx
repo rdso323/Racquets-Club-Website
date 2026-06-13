@@ -3,7 +3,7 @@ import { collection, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, setDoc
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Users, CalendarDays, Rocket, AlertTriangle } from 'lucide-react';
-import { type Sport } from '../../lib/sports';
+import { type Sport, SPORTS } from '../../lib/sports';
 import {
     type Session,
     type SessionStatus,
@@ -644,7 +644,7 @@ const BookingEngine = () => {
                         RESERVE YOUR COURT
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 transition-colors">
-                        Browse availability across 12 professional surfaces.
+                        Browse court availability across our {SPORTS.length} club sports.
                     </p>
                 </div>
             </div>
