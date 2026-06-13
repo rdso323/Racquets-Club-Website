@@ -9,19 +9,39 @@ import {
 import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { SPORTS } from '../lib/sports';
 
 export interface TabPreference {
     id: string;
     visible: boolean;
 }
 
-const DEFAULT_TABS: TabPreference[] = [
-    { id: 'Tennis', visible: true },
-    { id: 'Badminton', visible: true },
-    { id: 'Squash', visible: true },
-    { id: 'Pickleball', visible: true },
-    { id: 'Table Tennis', visible: true },
-];
+const DEFAULT_TABS: TabPreference[] = SPORTS.map((id) => ({ id, visible: true }));
+
+/** Merge saved preferences with current defaults so new sports appear automatically. */
+export const mergeTabPreferences = (saved: TabPreference[]): TabPreference[] => {
+    const validIds = new Set<string>(SPORTS);
+    const merged: TabPreference[] = [];
+
+    for (const tab of saved) {
+        if (validIds.has(tab.id) && !merged.some((t) => t.id === tab.id)) {
+            merged.push(tab);
+        }
+    }
+
+    for (const defaultTab of DEFAULT_TABS) {
+        if (!merged.some((t) => t.id === defaultTab.id)) {
+            merged.push({ ...defaultTab });
+        }
+    }
+
+    return merged;
+};
+
+const tabsNeedSync = (saved: TabPreference[], merged: TabPreference[]): boolean => {
+    if (saved.length !== merged.length) return true;
+    return merged.some((tab, i) => tab.id !== saved[i]?.id);
+};
 
 interface AuthContextType {
     user: User | null;
@@ -74,16 +94,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     try {
                         const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
                         if (userDoc.exists() && userDoc.data().tabPreferences) {
-                            setTabPreferences(userDoc.data().tabPreferences);
+                            const saved = userDoc.data().tabPreferences as TabPreference[];
+                            const merged = mergeTabPreferences(saved);
+                            setTabPreferences(merged);
+                            if (tabsNeedSync(saved, merged)) {
+                                await setDoc(doc(db, 'users', currentUser.uid), { tabPreferences: merged }, { merge: true });
+                            }
                         } else {
-                            // Migration / Default
                             const local = localStorage.getItem('booking_tabs_preferences');
                             if (local) {
                                 try {
-                                    const parsed = JSON.parse(local);
-                                    setTabPreferences(parsed);
-                                    // Sync to firestore immediately so it's backed up
-                                    await setDoc(doc(db, 'users', currentUser.uid), { tabPreferences: parsed }, { merge: true });
+                                    const parsed = JSON.parse(local) as TabPreference[];
+                                    const merged = mergeTabPreferences(parsed);
+                                    setTabPreferences(merged);
+                                    await setDoc(doc(db, 'users', currentUser.uid), { tabPreferences: merged }, { merge: true });
                                 } catch (e) { }
                             }
                         }
@@ -165,10 +189,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const updateTabPreferences = async (newTabs: TabPreference[]) => {
-        setTabPreferences(newTabs);
+        const merged = mergeTabPreferences(newTabs);
+        setTabPreferences(merged);
         if (user) {
             try {
-                await setDoc(doc(db, 'users', user.uid), { tabPreferences: newTabs }, { merge: true });
+                await setDoc(doc(db, 'users', user.uid), { tabPreferences: merged }, { merge: true });
             } catch (err) {
                 console.error("Error saving preferences:", err);
             }
