@@ -397,9 +397,15 @@ const AdminDashboard = () => {
         const attendeeString = court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
 
         try {
-            await updateDoc(doc(db, 'sessions', sessionId), {
-                attendees: arrayUnion(attendeeString)
-            });
+            await setDoc(doc(db, 'sessions', sessionId), {
+                title: session.title,
+                sport: session.sport || inferSport(session),
+                type: session.type,
+                date: session.date,
+                time: session.time,
+                maxAttendees: session.maxAttendees,
+                attendees: arrayUnion(attendeeString),
+            }, { merge: true });
             setNewAttendeeName(prev => ({ ...prev, [sessionId]: '' }));
             setNewAttendeeCourt(prev => ({ ...prev, [sessionId]: '' }));
         } catch (err) {

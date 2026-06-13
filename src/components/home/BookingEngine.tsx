@@ -108,8 +108,6 @@ const BookingEngine = () => {
     const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
-    const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
-    const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
@@ -237,23 +235,6 @@ const BookingEngine = () => {
         } catch (error) {
             console.error("Error updating session", error);
             alert("Failed to update booking. Make sure you have the right permissions.");
-        }
-    };
-
-    const handleUpdateCoach = async (sessionId: string) => {
-        if (!isAdmin) return;
-        const coachName = coachDraft[sessionId]?.trim();
-        setSavingCoach(prev => ({ ...prev, [sessionId]: true }));
-        try {
-            await updateDoc(doc(db, 'sessions', sessionId), {
-                coach: coachName || 'TBD',
-                coachId: null,
-            });
-        } catch (error) {
-            console.error("Error updating coach", error);
-            alert("Failed to update coach.");
-        } finally {
-            setSavingCoach(prev => ({ ...prev, [sessionId]: false }));
         }
     };
 
@@ -447,37 +428,18 @@ const BookingEngine = () => {
                         </button>
 
                         {session.type === 'coaching' && isAdmin && (
-                            <>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        placeholder="Assign coach name..."
-                                        value={coachDraft[session.id] ?? session.coach ?? ''}
-                                        onChange={e => setCoachDraft(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                        className="flex-grow text-sm p-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => handleUpdateCoach(session.id)}
-                                        disabled={savingCoach[session.id]}
-                                        className="bg-wimbledon-navy hover:bg-[#00287a] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40 whitespace-nowrap"
-                                    >
-                                        {savingCoach[session.id] ? 'Saving...' : 'Save Coach'}
-                                    </button>
-                                </div>
-                                <button
-                                    onClick={() => handleCoachAction(session)}
-                                    className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${session.coachId === user?.uid
-                                        ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 hover:shadow'
-                                        : session.coachId
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                                            : 'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
-                                        }`}
-                                    disabled={(!!session.coachId && session.coachId !== user?.uid)}
-                                >
-                                    {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
-                                </button>
-                            </>
+                            <button
+                                onClick={() => handleCoachAction(session)}
+                                className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${session.coachId === user?.uid
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 hover:shadow'
+                                    : session.coachId
+                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+                                        : 'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
+                                    }`}
+                                disabled={(!!session.coachId && session.coachId !== user?.uid)}
+                            >
+                                {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
+                            </button>
                         )}
                     </div>
                 </div>
