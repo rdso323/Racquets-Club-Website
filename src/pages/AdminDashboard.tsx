@@ -9,11 +9,11 @@ import {
     type SessionType,
     parseAttendee,
     getOpenPlayInstancesWithinHorizon,
-    filterRegularSessionsForDisplay,
-    isLegacyBundledOpenPlay,
     getActiveCourtAttendees,
     getDefaultMaxAttendees,
     inferSport,
+    buildAdminDisplaySessions,
+    getCourtsForSession,
 } from '../lib/sessions';
 
 interface Event {
@@ -94,6 +94,8 @@ const AdminDashboard = () => {
     // Attendee lists manual add states
     const [newAttendeeName, setNewAttendeeName] = useState<Record<string, string>>({});
     const [newAttendeeCourt, setNewAttendeeCourt] = useState<Record<string, string>>({});
+    const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
+    const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
 
     // Filter states
     const [sessionsSportFilter, setSessionsSportFilter] = useState('All');
@@ -110,37 +112,7 @@ const AdminDashboard = () => {
 
     const adminDisplaySessions = useMemo(() => {
         const sportFilter = sessionsSportFilter === 'All' ? null : sessionsSportFilter;
-        const sportsToShow = sportFilter ? [sportFilter] : [...SPORTS];
-
-        const openPlayResolved: Session[] = [];
-        for (const sport of sportsToShow) {
-            const instances = getOpenPlayInstancesWithinHorizon(sessionsList, sport as typeof SPORTS[number]);
-            openPlayResolved.push(...instances.map(({ session }) => session));
-        }
-
-        const regularSessions = sportsToShow.flatMap((sport) =>
-            filterRegularSessionsForDisplay(sessionsList, sport as typeof SPORTS[number]),
-        );
-
-        const customSessions = sessionsList.filter((s) => {
-            if (isLegacyBundledOpenPlay(s)) return false;
-            if (s.type === 'court' && s.title.toLowerCase().includes('open play') && s.id.startsWith('open_play_')) {
-                return false;
-            }
-            const sport = inferSport(s);
-            if (sportFilter && sport !== sportFilter) return false;
-            if (s.type === 'court' && s.title.toLowerCase().includes('open play')) return false;
-            if (regularSessions.some((r) => r.id === s.id)) return false;
-            return true;
-        });
-
-        const combined = [...openPlayResolved, ...regularSessions, ...customSessions];
-        const seen = new Set<string>();
-        return combined.filter((s) => {
-            if (seen.has(s.id)) return false;
-            seen.add(s.id);
-            return true;
-        });
+        return buildAdminDisplaySessions(sessionsList, sportFilter);
     }, [sessionsList, sessionsSportFilter]);
 
     const getSessionRoster = (session: Session): string[] => {
@@ -407,10 +379,18 @@ const AdminDashboard = () => {
     };
 
     // Roster management: add attendee
-    const handleAddAttendee = async (sessionId: string) => {
+    const handleAddAttendee = async (session: Session) => {
+        const sessionId = session.id;
         const name = newAttendeeName[sessionId]?.trim();
         if (!name) return;
+
+        const availableCourts = getCourtsForSession(session);
         const court = newAttendeeCourt[sessionId]?.trim() || '';
+
+        if (availableCourts.length > 0 && !court) {
+            alert('Please select a court for this open play session.');
+            return;
+        }
 
         const uid = `manual_${Date.now()}`;
         const email = `${name.toLowerCase().replace(/\s+/g, '')}@manual.club`;
@@ -425,6 +405,22 @@ const AdminDashboard = () => {
         } catch (err) {
             console.error("Error adding attendee: ", err);
             alert("Failed to add attendee.");
+        }
+    };
+
+    const handleUpdateCoach = async (sessionId: string) => {
+        const coachName = coachDraft[sessionId]?.trim();
+        setSavingCoach(prev => ({ ...prev, [sessionId]: true }));
+        try {
+            await updateDoc(doc(db, 'sessions', sessionId), {
+                coach: coachName || 'TBD',
+                coachId: null,
+            });
+        } catch (err) {
+            console.error("Error updating coach:", err);
+            alert("Failed to update coach.");
+        } finally {
+            setSavingCoach(prev => ({ ...prev, [sessionId]: false }));
         }
     };
 
@@ -735,6 +731,8 @@ const AdminDashboard = () => {
                                                 const rosterAttendees = getSessionRoster(session);
                                                 const enrolledCount = rosterAttendees.length;
                                                 const isFull = enrolledCount >= session.maxAttendees;
+                                                const sessionCourts = getCourtsForSession(session);
+                                                const coachValue = coachDraft[session.id] ?? session.coach ?? '';
 
                                                 return (
                                                     <div 
@@ -768,9 +766,28 @@ const AdminDashboard = () => {
                                                                     <span>{session.time}</span>
                                                                 </div>
                                                                 {session.type === 'coaching' && (
-                                                                    <div className="flex items-center gap-1.5">
-                                                                        <Users className="w-3.5 h-3.5 text-gray-400" />
-                                                                        <span>Coach: <span className="font-semibold text-gray-700 dark:text-gray-300">{session.coach || 'TBD'}</span></span>
+                                                                    <div className="space-y-2">
+                                                                        <div className="flex items-center gap-1.5">
+                                                                            <Users className="w-3.5 h-3.5 text-gray-400" />
+                                                                            <span>Coach: <span className="font-semibold text-gray-700 dark:text-gray-300">{session.coach || 'TBD'}</span></span>
+                                                                        </div>
+                                                                        <div className="flex gap-2">
+                                                                            <input
+                                                                                type="text"
+                                                                                placeholder="Assign coach name..."
+                                                                                value={coachValue}
+                                                                                onChange={e => setCoachDraft(prev => ({ ...prev, [session.id]: e.target.value }))}
+                                                                                className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                                            />
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => handleUpdateCoach(session.id)}
+                                                                                disabled={savingCoach[session.id]}
+                                                                                className="bg-wimbledon-navy hover:bg-[#00287a] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40"
+                                                                            >
+                                                                                {savingCoach[session.id] ? 'Saving...' : 'Save Coach'}
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -820,29 +837,22 @@ const AdminDashboard = () => {
                                                                     className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
                                                                 />
                                                                 
-                                                                {/* Optional court selector for Tennis/Badminton */}
-                                                                {(session.sport === 'Tennis' || session.sport === 'Badminton' || session.sport === 'Squash' || session.sport === 'Pickleball' || session.sport === 'Table Tennis') && (
+                                                                {sessionCourts.length > 0 && (
                                                                     <select
                                                                         value={newAttendeeCourt[session.id] || ''}
                                                                         onChange={e => setNewAttendeeCourt(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                                                        className="w-24 text-[10px] p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                                        className="w-28 text-[10px] p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
                                                                     >
                                                                         <option value="">Court...</option>
-                                                                        <option value="Court 1">Court 1</option>
-                                                                        <option value="Court 2">Court 2</option>
-                                                                        {session.sport === 'Tennis' && (
-                                                                            <>
-                                                                                <option value="Court 3">Court 3</option>
-                                                                                <option value="Court 4">Court 4</option>
-                                                                                <option value="Court 5">Court 5</option>
-                                                                            </>
-                                                                        )}
+                                                                        {sessionCourts.map(court => (
+                                                                            <option key={court} value={court}>{court}</option>
+                                                                        ))}
                                                                     </select>
                                                                 )}
 
                                                                 <button
-                                                                    onClick={() => handleAddAttendee(session.id)}
-                                                                    disabled={!newAttendeeName[session.id]}
+                                                                    onClick={() => handleAddAttendee(session)}
+                                                                    disabled={!newAttendeeName[session.id] || (sessionCourts.length > 0 && !newAttendeeCourt[session.id])}
                                                                     className="bg-wimbledon-navy hover:bg-[#00287a] text-white p-2 rounded-lg transition-colors disabled:opacity-40"
                                                                     title="Register member"
                                                                 >

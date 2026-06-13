@@ -108,6 +108,8 @@ const BookingEngine = () => {
     const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
+    const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
+    const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
@@ -238,6 +240,23 @@ const BookingEngine = () => {
         }
     };
 
+    const handleUpdateCoach = async (sessionId: string) => {
+        if (!isAdmin) return;
+        const coachName = coachDraft[sessionId]?.trim();
+        setSavingCoach(prev => ({ ...prev, [sessionId]: true }));
+        try {
+            await updateDoc(doc(db, 'sessions', sessionId), {
+                coach: coachName || 'TBD',
+                coachId: null,
+            });
+        } catch (error) {
+            console.error("Error updating coach", error);
+            alert("Failed to update coach.");
+        } finally {
+            setSavingCoach(prev => ({ ...prev, [sessionId]: false }));
+        }
+    };
+
     const handleCoachAction = async (session: Session) => {
         if (!user || !isAdmin) return;
         const sessionRef = doc(db, 'sessions', session.id);
@@ -280,14 +299,14 @@ const BookingEngine = () => {
         }
 
         return (
-            <div className={`my-3 grid gap-3 ${courtNames && courts.length > 1 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+            <div className="my-3 grid grid-cols-1 gap-3">
                 {courts.map((court, courtIdx) => (
-                    <div key={courtIdx} className="bg-gray-50/80 dark:bg-slate-900/50 rounded shadow-sm border border-gray-100 dark:border-slate-800 p-2">
-                        <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-1.5 flex justify-between">
+                    <div key={courtIdx} className="bg-gray-50/80 dark:bg-slate-900/50 rounded shadow-sm border border-gray-100 dark:border-slate-800 p-3">
+                        <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2 flex justify-between">
                             <span>{courtNames ? courtNames[courtIdx] : `Court ${courtIdx + 1}`}</span>
                             <span>{court.filter(Boolean).length}/{court.length}</span>
                         </p>
-                        <div className="flex gap-1.5 text-xs">
+                        <div className="grid grid-cols-4 gap-2 text-xs">
                             {court.map((p, i) => {
                                 const isPresent = !!p;
                                 let name = 'Open';
@@ -306,7 +325,7 @@ const BookingEngine = () => {
                                     }
                                 }
                                 return (
-                                    <div key={i} className={`flex-1 truncate text-center py-1.5 px-0.5 rounded transition-all duration-300 ${isPresent ? 'bg-wimbledon-green/10 text-wimbledon-green font-semibold border border-wimbledon-green/30' : 'bg-white border border-dashed border-gray-300 text-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-500'}`} title={isPresent ? tooltip : ''}>
+                                    <div key={i} className={`text-center py-2 px-1 rounded transition-all duration-300 ${isPresent ? 'bg-wimbledon-green/10 text-wimbledon-green font-semibold border border-wimbledon-green/30 truncate' : 'bg-white border border-dashed border-gray-300 text-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-500'}`} title={isPresent ? tooltip : ''}>
                                         {name}
                                     </div>
                                 );
@@ -428,18 +447,37 @@ const BookingEngine = () => {
                         </button>
 
                         {session.type === 'coaching' && isAdmin && (
-                            <button
-                                onClick={() => handleCoachAction(session)}
-                                className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${session.coachId === user?.uid
-                                    ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 hover:shadow'
-                                    : session.coachId
-                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                                        : 'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
-                                    }`}
-                                disabled={(!!session.coachId && session.coachId !== user?.uid)}
-                            >
-                                {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
-                            </button>
+                            <>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Assign coach name..."
+                                        value={coachDraft[session.id] ?? session.coach ?? ''}
+                                        onChange={e => setCoachDraft(prev => ({ ...prev, [session.id]: e.target.value }))}
+                                        className="flex-grow text-sm p-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleUpdateCoach(session.id)}
+                                        disabled={savingCoach[session.id]}
+                                        className="bg-wimbledon-navy hover:bg-[#00287a] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-40 whitespace-nowrap"
+                                    >
+                                        {savingCoach[session.id] ? 'Saving...' : 'Save Coach'}
+                                    </button>
+                                </div>
+                                <button
+                                    onClick={() => handleCoachAction(session)}
+                                    className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${session.coachId === user?.uid
+                                        ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 hover:shadow'
+                                        : session.coachId
+                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+                                            : 'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
+                                        }`}
+                                    disabled={(!!session.coachId && session.coachId !== user?.uid)}
+                                >
+                                    {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
+                                </button>
+                            </>
                         )}
                     </div>
                 </div>
@@ -548,7 +586,7 @@ const BookingEngine = () => {
 
                         {renderAttendeesList(orderedAttendees, totalMax, courtsForDay)}
 
-                        <div className={`mt-4 pt-4 border-t border-gray-100 grid gap-3 relative z-20 w-full ${!user ? 'opacity-30 pointer-events-none blur-[1px]' : ''} ${courtsForDay.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                        <div className={`mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 gap-3 relative z-20 w-full ${!user ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = session.attendees.filter(a => a.endsWith(`|${courtName}`));
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;

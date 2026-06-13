@@ -315,3 +315,91 @@ export const filterRegularSessionsForDisplay = (
 export const getDefaultMaxAttendees = (type: SessionType): number => {
     return type === 'court' ? DEFAULT_OPEN_PLAY_CAPACITY : 4;
 };
+
+export const isOpenPlaySession = (session: Session): boolean => {
+    const title = session.title.toLowerCase();
+    return session.type === 'court' && (title.includes('open play') || session.id.startsWith('open_play_'));
+};
+
+export const getOpenPlayConfigForSession = (session: Session): OpenPlayDayConfig | null => {
+    if (!isOpenPlaySession(session)) return null;
+
+    const sport = inferSport(session);
+    const configs = OPEN_PLAY_SCHEDULE[sport] || [];
+
+    const byTitle = configs.find((c) => c.title === session.title);
+    if (byTitle) return byTitle;
+
+    const idMatch = session.id.match(/open_play_[a-z_]+_(monday|tuesday|wednesday|thursday)_/);
+    if (idMatch) {
+        const day = idMatch[1] as DayName;
+        return configs.find((c) => c.day === day) || null;
+    }
+
+    const titleLower = session.title.toLowerCase();
+    return configs.find((c) => titleLower.includes(c.day)) || null;
+};
+
+export const getCourtsForSession = (session: Session): string[] => {
+    if (session.type === 'coaching') return [];
+
+    const config = getOpenPlayConfigForSession(session);
+    if (config) return config.courts;
+
+    return [];
+};
+
+const sortSessionsWithinSport = (a: Session, b: Session): number => {
+    const aOpen = isOpenPlaySession(a);
+    const bOpen = isOpenPlaySession(b);
+    if (aOpen !== bOpen) return aOpen ? -1 : 1;
+
+    const dateA = parseSessionDateString(a.date)?.getTime() ?? 0;
+    const dateB = parseSessionDateString(b.date)?.getTime() ?? 0;
+    if (dateA !== dateB) return dateA - dateB;
+
+    return a.title.localeCompare(b.title);
+};
+
+export const buildAdminDisplaySessions = (
+    sessionsList: Session[],
+    sportFilter: string | null,
+): Session[] => {
+    const sportsToShow = sportFilter ? [sportFilter as Sport] : [...SPORTS];
+    const combined: Session[] = [];
+    const seen = new Set<string>();
+
+    const pushUnique = (session: Session) => {
+        if (seen.has(session.id)) return;
+        seen.add(session.id);
+        combined.push(session);
+    };
+
+    for (const sport of sportsToShow) {
+        const openPlayResolved = getOpenPlayInstancesWithinHorizon(sessionsList, sport).map(
+            ({ session }) => session,
+        );
+        openPlayResolved.sort(sortSessionsWithinSport);
+        openPlayResolved.forEach(pushUnique);
+
+        const regularSessions = filterRegularSessionsForDisplay(sessionsList, sport);
+        regularSessions.sort(sortSessionsWithinSport);
+        regularSessions.forEach(pushUnique);
+
+        const regularIds = new Set(regularSessions.map((s) => s.id));
+        const openPlayIds = new Set(openPlayResolved.map((s) => s.id));
+
+        const customSessions = sessionsList.filter((s) => {
+            if (isLegacyBundledOpenPlay(s)) return false;
+            if (openPlayIds.has(s.id) || regularIds.has(s.id)) return false;
+            if (s.type === 'court' && s.title.toLowerCase().includes('open play')) return false;
+
+            const sessionSport = inferSport(s);
+            return sessionSport === sport;
+        });
+        customSessions.sort(sortSessionsWithinSport);
+        customSessions.forEach(pushUnique);
+    }
+
+    return combined;
+};
