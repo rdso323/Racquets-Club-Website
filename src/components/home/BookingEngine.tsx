@@ -16,6 +16,8 @@ import {
     inferSport,
     parseSessionDateString,
     isWithinBookingHorizon,
+    getCourtsForSession,
+    getSlotsPerCourt,
 } from '../../lib/sessions';
 
 const createICSFile = (session: Session, courtName?: string) => {
@@ -225,7 +227,11 @@ const BookingEngine = () => {
                     time: sessionToJoin.time,
                     maxAttendees: sessionToJoin.maxAttendees,
                     attendees: arrayUnion(attendeeString),
-                    sport: activeSport
+                    sport: activeSport,
+                    ...(sessionToJoin.courts?.length ? {
+                        courts: sessionToJoin.courts,
+                        slotsPerCourt: sessionToJoin.slotsPerCourt ?? getSlotsPerCourt(sessionToJoin),
+                    } : {}),
                 }, { merge: true });
 
                 if (window.confirm("Successfully joined! Would you like to download a calendar invite?")) {
@@ -342,8 +348,21 @@ const BookingEngine = () => {
         const isPast = clinicDateObj.getTime() + 24 * 60 * 60 * 1000 < new Date().getTime();
         const formattedClinicDate = clinicDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
-        const isFull = session.attendees.length >= session.maxAttendees;
+        const sessionCourts = session.type === 'court' ? getCourtsForSession(session) : [];
+        const hasCourtBuckets = sessionCourts.length > 0;
+        const maxPerCourt = getSlotsPerCourt(session);
+        const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
+
+        const activeAttendees = hasCourtBuckets
+            ? session.attendees.filter((a) => sessionCourts.some((court) => a.endsWith(`|${court}`)))
+            : session.attendees;
+
+        const isFull = activeAttendees.length >= totalMax;
         const isJoining = user ? session.attendees.some(a => a.startsWith(user.uid + "|") || a === user.uid) : false;
+        const userEntry = user ? session.attendees.find(a => a.startsWith(user.uid + "|") || a === user.uid) : undefined;
+        const orderedAttendees = hasCourtBuckets
+            ? bucketAttendeesByCourt(activeAttendees, sessionCourts, maxPerCourt)
+            : session.attendees;
 
         return (
             <div key={session.id} className="club-card overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative">
@@ -393,19 +412,23 @@ const BookingEngine = () => {
                         <div className="flex items-center justify-between text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
                             <span className="flex items-center group relative">
                                 <Users className="w-4 h-4 mr-1.5 text-gray-400" />
-                                {session.attendees.length} / {session.maxAttendees} Enrolled
+                                {activeAttendees.length} / {totalMax} Enrolled
                             </span>
-                            <span className={isFull ? 'text-red-500' : 'text-wimbledon-green'}>{session.maxAttendees - session.attendees.length} Spots Left</span>
+                            <span className={isFull ? 'text-red-500' : 'text-wimbledon-green'}>{totalMax - activeAttendees.length} Spots Left</span>
                         </div>
 
                         <div className="w-full bg-gray-100 dark:bg-slate-800 rounded-full h-1.5 mb-2 overflow-hidden">
                             <div
                                 className={`h-1.5 rounded-full transition-all duration-700 ease-out ${isFull ? 'bg-red-500' : 'bg-gradient-to-r from-wimbledon-green to-emerald-400'}`}
-                                style={{ width: `${Math.min(100, (session.attendees.length / session.maxAttendees) * 100)}%` }}
+                                style={{ width: `${Math.min(100, (activeAttendees.length / totalMax) * 100)}%` }}
                             />
                         </div>
 
-                        {renderAttendeesList(session.attendees, session.maxAttendees)}
+                        {renderAttendeesList(
+                            hasCourtBuckets ? orderedAttendees : session.attendees,
+                            hasCourtBuckets ? totalMax : session.maxAttendees,
+                            hasCourtBuckets ? sessionCourts : undefined,
+                        )}
                     </div>
 
                     <div className={`mt-auto pt-2 space-y-2 relative z-10 w-full ${!user ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
@@ -414,18 +437,45 @@ const BookingEngine = () => {
                                 Locked until Sunday 5:00 PM
                             </div>
                         )}
-                        <button
-                            onClick={() => handleJoin(session)}
-                            disabled={isPast || isLocked || isCancelled || (isFull && !isJoining) || !user}
-                            className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                isLocked ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                    isJoining ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 hover:shadow' :
-                                        isFull ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                            'bg-wimbledon-navy hover:bg-[#00287a] text-white hover:shadow-md hover:-translate-y-0.5'
-                                }`}
-                        >
-                            {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
-                        </button>
+                        {hasCourtBuckets ? (
+                            <div className="grid grid-cols-1 gap-3">
+                                {sessionCourts.map((courtName) => {
+                                    const courtAttendees = session.attendees.filter(a => a.endsWith(`|${courtName}`));
+                                    const isCourtFull = courtAttendees.length >= maxPerCourt;
+                                    const userInThisCourt = userEntry && (courtAttendees.includes(userEntry) || userEntry.endsWith(`|${courtName}`));
+                                    const userInAnotherCourt = userEntry && !userInThisCourt;
+
+                                    return (
+                                        <button
+                                            key={courtName}
+                                            onClick={() => handleJoin(session, courtName)}
+                                            disabled={isPast || isLocked || isCancelled || (isCourtFull && !userInThisCourt) || !user}
+                                            className={`w-full py-3 rounded-xl font-semibold tracking-wide text-xs md:text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
+                                                isLocked ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
+                                                    userInThisCourt ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 hover:shadow' :
+                                                        isCourtFull ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
+                                                            'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
+                                                }`}
+                                        >
+                                            {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userInThisCourt ? `Drop ${courtName}` : userInAnotherCourt ? `Switch to ${courtName}` : isCourtFull ? `${courtName} Full` : `Join ${courtName}`}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => handleJoin(session)}
+                                disabled={isPast || isLocked || isCancelled || (isFull && !isJoining) || !user}
+                                className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
+                                    isLocked ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
+                                        isJoining ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 hover:shadow' :
+                                            isFull ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
+                                                'bg-wimbledon-navy hover:bg-[#00287a] text-white hover:shadow-md hover:-translate-y-0.5'
+                                    }`}
+                            >
+                                {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
+                            </button>
+                        )}
 
                         {session.type === 'coaching' && isAdmin && (
                             <button

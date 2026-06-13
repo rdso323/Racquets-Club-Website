@@ -1,6 +1,7 @@
 import {
     DEFAULT_OPEN_PLAY_CAPACITY,
     OPEN_PLAY_SCHEDULE,
+    SLOTS_PER_COURT,
     type DayName,
     type OpenPlayDayConfig,
     type Sport,
@@ -24,6 +25,8 @@ export interface Session {
     coachId?: string | null;
     sport?: string;
     weekStartDate?: string;
+    courts?: string[];
+    slotsPerCourt?: number;
 }
 
 export interface ParsedAttendee {
@@ -316,6 +319,48 @@ export const getDefaultMaxAttendees = (type: SessionType): number => {
     return type === 'court' ? DEFAULT_OPEN_PLAY_CAPACITY : 4;
 };
 
+export const buildCourtLabels = (
+    count: number,
+    startNumber: number,
+    customOverride?: string,
+): string[] => {
+    const trimmed = customOverride?.trim();
+    if (trimmed) {
+        return trimmed.split(',').map((label) => label.trim()).filter(Boolean);
+    }
+
+    const safeCount = Math.max(1, Math.min(5, count));
+    const safeStart = Math.max(1, startNumber);
+    return Array.from({ length: safeCount }, (_, i) => `Court ${safeStart + i}`);
+};
+
+export const getSlotsPerCourt = (session: Session): number => {
+    return session.slotsPerCourt ?? SLOTS_PER_COURT;
+};
+
+export const suggestedCapacityForCourts = (courts: string[], slotsPerCourt = SLOTS_PER_COURT): number => {
+    return courts.length * slotsPerCourt;
+};
+
+export const courtFieldsFromSession = (courts?: string[]): {
+    courtCount: number;
+    courtStartNumber: number;
+    customCourtLabels: string;
+} => {
+    if (!courts?.length) {
+        return { courtCount: 2, courtStartNumber: 1, customCourtLabels: '' };
+    }
+
+    for (let start = 1; start <= 10; start++) {
+        const auto = buildCourtLabels(courts.length, start);
+        if (courts.join('|') === auto.join('|')) {
+            return { courtCount: courts.length, courtStartNumber: start, customCourtLabels: '' };
+        }
+    }
+
+    return { courtCount: courts.length, courtStartNumber: 1, customCourtLabels: courts.join(', ') };
+};
+
 export const isOpenPlaySession = (session: Session): boolean => {
     const title = session.title.toLowerCase();
     return session.type === 'court' && (title.includes('open play') || session.id.startsWith('open_play_'));
@@ -345,6 +390,8 @@ export const getCourtsForSession = (session: Session): string[] => {
 
     const config = getOpenPlayConfigForSession(session);
     if (config) return config.courts;
+
+    if (session.courts && session.courts.length > 0) return session.courts;
 
     return [];
 };

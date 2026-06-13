@@ -2,18 +2,20 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, onSnapshot, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
-import { SPORTS, SPORT_FILTER_TABS, SESSION_STATUS_CATEGORIES } from '../lib/sports';
+import { SPORTS, SPORT_FILTER_TABS, SESSION_STATUS_CATEGORIES, SLOTS_PER_COURT } from '../lib/sports';
 import {
     type Session,
     type SessionStatus,
     type SessionType,
     parseAttendee,
-    getOpenPlayInstancesWithinHorizon,
     getActiveCourtAttendees,
     getDefaultMaxAttendees,
     inferSport,
     buildAdminDisplaySessions,
     getCourtsForSession,
+    buildCourtLabels,
+    suggestedCapacityForCourts,
+    courtFieldsFromSession,
 } from '../lib/sessions';
 
 interface Event {
@@ -71,6 +73,9 @@ const AdminDashboard = () => {
         time: '', 
         maxAttendees: getDefaultMaxAttendees('court'),
         coach: '',
+        courtCount: 2,
+        courtStartNumber: 1,
+        customCourtLabels: '',
     });
     const [sessionDateInput, setSessionDateInput] = useState(''); // helper YYYY-MM-DD
     const [newSessionSaving, setNewSessionSaving] = useState(false);
@@ -89,6 +94,11 @@ const AdminDashboard = () => {
 
     // Editing states
     const [editingSession, setEditingSession] = useState<Session | null>(null);
+    const [editCourtFields, setEditCourtFields] = useState({
+        courtCount: 2,
+        courtStartNumber: 1,
+        customCourtLabels: '',
+    });
     const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
     // Attendee lists manual add states
@@ -116,22 +126,28 @@ const AdminDashboard = () => {
     }, [sessionsList, sessionsSportFilter]);
 
     const getSessionRoster = (session: Session): string[] => {
-        const sport = inferSport(session);
-        const isOpenPlay = session.title.toLowerCase().includes('open play') || session.id.startsWith('open_play_');
-
-        if (!isOpenPlay) {
-            return session.attendees || [];
+        const courts = getCourtsForSession(session);
+        if (courts.length > 0) {
+            return getActiveCourtAttendees(session.attendees || [], courts);
         }
-
-        const schedule = getOpenPlayInstancesWithinHorizon(sessionsList, sport)
-            .find(({ session: resolved }) => resolved.id === session.id);
-
-        if (schedule) {
-            return getActiveCourtAttendees(session.attendees || [], schedule.config.courts);
-        }
-
-        return getActiveCourtAttendees(session.attendees || [], []);
+        return session.attendees || [];
     };
+
+    const previewCourtLabels = buildCourtLabels(
+        newSession.courtCount,
+        newSession.courtStartNumber,
+        newSession.customCourtLabels,
+    );
+
+    const openEditSession = (session: Session) => {
+        setEditingSession(session);
+        setEditCourtFields(courtFieldsFromSession(session.courts));
+    };
+
+    const isEditableCustomCourtSession = (session: Session) =>
+        session.type === 'court' &&
+        !session.id.startsWith('open_play_') &&
+        !session.title.toLowerCase().includes('open play');
 
     // Fetch and sync data
     useEffect(() => {
@@ -312,7 +328,11 @@ const AdminDashboard = () => {
         setNewSessionSaving(true);
         setNewSessionMsg('');
         try {
-            const sessionData = {
+            const courts = newSession.type === 'court'
+                ? buildCourtLabels(newSession.courtCount, newSession.courtStartNumber, newSession.customCourtLabels)
+                : [];
+
+            const sessionData: Record<string, unknown> = {
                 title: newSession.title,
                 sport: newSession.sport,
                 type: newSession.type,
@@ -322,11 +342,16 @@ const AdminDashboard = () => {
                 attendees: [],
                 coach: newSession.type === 'coaching' ? (newSession.coach || 'TBD') : null,
                 coachId: null,
-                weekStartDate: sessionDateInput // Store base date input for rollover checks
+                weekStartDate: sessionDateInput,
             };
+
+            if (newSession.type === 'court' && courts.length > 0) {
+                sessionData.courts = courts;
+                sessionData.slotsPerCourt = SLOTS_PER_COURT;
+            }
+
             await addDoc(collection(db, 'sessions'), sessionData);
             setNewSessionMsg('Session scheduled successfully!');
-            // Reset form
             setNewSession({
                 title: '',
                 sport: sessionsSportFilter !== 'All' ? sessionsSportFilter : 'Tennis',
@@ -334,7 +359,10 @@ const AdminDashboard = () => {
                 date: '',
                 time: '',
                 maxAttendees: getDefaultMaxAttendees('court'),
-                coach: ''
+                coach: '',
+                courtCount: 2,
+                courtStartNumber: 1,
+                customCourtLabels: '',
             });
             setSessionDateInput('');
             setTimeout(() => setNewSessionMsg(''), 3000);
@@ -351,15 +379,31 @@ const AdminDashboard = () => {
         e.preventDefault();
         if (!editingSession) return;
         try {
-            await updateDoc(doc(db, 'sessions', editingSession.id), {
+            const courts = editingSession.type === 'court' && isEditableCustomCourtSession(editingSession)
+                ? buildCourtLabels(editCourtFields.courtCount, editCourtFields.courtStartNumber, editCourtFields.customCourtLabels)
+                : editingSession.courts;
+
+            const updateData: Record<string, unknown> = {
                 title: editingSession.title,
                 sport: editingSession.sport,
                 type: editingSession.type,
                 date: editingSession.date,
                 time: editingSession.time,
                 maxAttendees: Number(editingSession.maxAttendees),
-                coach: editingSession.type === 'coaching' ? (editingSession.coach || 'TBD') : null
-            });
+                coach: editingSession.type === 'coaching' ? (editingSession.coach || 'TBD') : null,
+            };
+
+            if (editingSession.type === 'court') {
+                if (isEditableCustomCourtSession(editingSession) && courts && courts.length > 0) {
+                    updateData.courts = courts;
+                    updateData.slotsPerCourt = SLOTS_PER_COURT;
+                }
+            } else {
+                updateData.courts = null;
+                updateData.slotsPerCourt = null;
+            }
+
+            await updateDoc(doc(db, 'sessions', editingSession.id), updateData);
             setEditingSession(null);
         } catch (err) {
             console.error("Error saving session edit:", err);
@@ -405,6 +449,7 @@ const AdminDashboard = () => {
                 time: session.time,
                 maxAttendees: session.maxAttendees,
                 attendees: arrayUnion(attendeeString),
+                ...(session.courts?.length ? { courts: session.courts, slotsPerCourt: session.slotsPerCourt ?? SLOTS_PER_COURT } : {}),
             }, { merge: true });
             setNewAttendeeName(prev => ({ ...prev, [sessionId]: '' }));
             setNewAttendeeCourt(prev => ({ ...prev, [sessionId]: '' }));
@@ -868,7 +913,7 @@ const AdminDashboard = () => {
 
                                                             <div className="flex justify-between items-center pt-2">
                                                                 <button 
-                                                                    onClick={() => setEditingSession(session)}
+                                                                    onClick={() => openEditSession(session)}
                                                                     className="text-xs text-gray-500 hover:text-wimbledon-gold dark:hover:text-wimbledon-gold flex items-center gap-1 transition-colors font-medium"
                                                                 >
                                                                     <Edit className="w-3.5 h-3.5" />
@@ -933,10 +978,15 @@ const AdminDashboard = () => {
                                                     value={newSession.type}
                                                     onChange={e => {
                                                         const type = e.target.value as SessionType;
+                                                        const courts = type === 'court'
+                                                            ? buildCourtLabels(newSession.courtCount, newSession.courtStartNumber, newSession.customCourtLabels)
+                                                            : [];
                                                         setNewSession({
                                                             ...newSession,
                                                             type,
-                                                            maxAttendees: getDefaultMaxAttendees(type),
+                                                            maxAttendees: type === 'court'
+                                                                ? suggestedCapacityForCourts(courts, SLOTS_PER_COURT)
+                                                                : getDefaultMaxAttendees('coaching'),
                                                         });
                                                     }}
                                                     className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
@@ -984,6 +1034,80 @@ const AdminDashboard = () => {
                                             />
                                         </div>
                                     </div>
+
+                                    {newSession.type === 'court' && (
+                                        <div className="space-y-3 p-4 border border-gray-200 dark:border-gray-800 rounded-xl bg-white/50 dark:bg-club-bg/30">
+                                            <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Courts</p>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Number of courts</label>
+                                                    <select
+                                                        value={newSession.courtCount}
+                                                        onChange={e => {
+                                                            const courtCount = Number(e.target.value);
+                                                            const courts = buildCourtLabels(courtCount, newSession.courtStartNumber, newSession.customCourtLabels);
+                                                            setNewSession({
+                                                                ...newSession,
+                                                                courtCount,
+                                                                maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                            });
+                                                        }}
+                                                        disabled={!!newSession.customCourtLabels.trim()}
+                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold disabled:opacity-50"
+                                                    >
+                                                        {[1, 2, 3, 4, 5].map(n => (
+                                                            <option key={n} value={n}>{n}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Starting court #</label>
+                                                    <input
+                                                        type="number"
+                                                        min={1}
+                                                        value={newSession.courtStartNumber}
+                                                        onChange={e => {
+                                                            const courtStartNumber = Number(e.target.value) || 1;
+                                                            const courts = buildCourtLabels(newSession.courtCount, courtStartNumber, newSession.customCourtLabels);
+                                                            setNewSession({
+                                                                ...newSession,
+                                                                courtStartNumber,
+                                                                maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                            });
+                                                        }}
+                                                        disabled={!!newSession.customCourtLabels.trim()}
+                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold disabled:opacity-50"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Custom labels (optional)</label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="e.g. Court 2, Court 4"
+                                                        value={newSession.customCourtLabels}
+                                                        onChange={e => {
+                                                            const customCourtLabels = e.target.value;
+                                                            const courts = buildCourtLabels(newSession.courtCount, newSession.courtStartNumber, customCourtLabels);
+                                                            setNewSession({
+                                                                ...newSession,
+                                                                customCourtLabels,
+                                                                maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                            });
+                                                        }}
+                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <span className="text-xs font-semibold text-gray-500 uppercase">Preview:</span>
+                                                {previewCourtLabels.map(court => (
+                                                    <span key={court} className="text-xs font-bold px-2.5 py-1 rounded-full bg-wimbledon-navy/10 text-wimbledon-navy dark:bg-wimbledon-gold/10 dark:text-wimbledon-gold border border-wimbledon-navy/20">
+                                                        {court}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
@@ -1362,6 +1486,81 @@ const AdminDashboard = () => {
                                     />
                                 </div>
                             </div>
+                            {editingSession.type === 'court' && isEditableCustomCourtSession(editingSession) && (
+                                <div className="space-y-3 p-3 border border-gray-200 dark:border-gray-800 rounded-xl bg-gray-50/50 dark:bg-club-bg/30">
+                                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Courts</p>
+                                    <div className="grid grid-cols-1 gap-3">
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Number of courts</label>
+                                                <select
+                                                    value={editCourtFields.courtCount}
+                                                    onChange={e => {
+                                                        const courtCount = Number(e.target.value);
+                                                        const courts = buildCourtLabels(courtCount, editCourtFields.courtStartNumber, editCourtFields.customCourtLabels);
+                                                        setEditCourtFields(prev => ({ ...prev, courtCount }));
+                                                        setEditingSession(prev => prev ? {
+                                                            ...prev,
+                                                            maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                        } : prev);
+                                                    }}
+                                                    disabled={!!editCourtFields.customCourtLabels.trim()}
+                                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                                >
+                                                    {[1, 2, 3, 4, 5].map(n => (
+                                                        <option key={n} value={n}>{n}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Starting court #</label>
+                                                <input
+                                                    type="number"
+                                                    min={1}
+                                                    value={editCourtFields.courtStartNumber}
+                                                    onChange={e => {
+                                                        const courtStartNumber = Number(e.target.value) || 1;
+                                                        const courts = buildCourtLabels(editCourtFields.courtCount, courtStartNumber, editCourtFields.customCourtLabels);
+                                                        setEditCourtFields(prev => ({ ...prev, courtStartNumber }));
+                                                        setEditingSession(prev => prev ? {
+                                                            ...prev,
+                                                            maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                        } : prev);
+                                                    }}
+                                                    disabled={!!editCourtFields.customCourtLabels.trim()}
+                                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Custom labels (optional)</label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. Court 2, Court 4"
+                                                value={editCourtFields.customCourtLabels}
+                                                onChange={e => {
+                                                    const customCourtLabels = e.target.value;
+                                                    const courts = buildCourtLabels(editCourtFields.courtCount, editCourtFields.courtStartNumber, customCourtLabels);
+                                                    setEditCourtFields(prev => ({ ...prev, customCourtLabels }));
+                                                    setEditingSession(prev => prev ? {
+                                                        ...prev,
+                                                        maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                    } : prev);
+                                                }}
+                                                className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                            />
+                                        </div>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className="text-xs font-semibold text-gray-500 uppercase">Preview:</span>
+                                            {buildCourtLabels(editCourtFields.courtCount, editCourtFields.courtStartNumber, editCourtFields.customCourtLabels).map(court => (
+                                                <span key={court} className="text-xs font-bold px-2 py-0.5 rounded-full bg-wimbledon-navy/10 text-wimbledon-navy dark:text-wimbledon-gold">
+                                                    {court}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Max Capacity</label>
