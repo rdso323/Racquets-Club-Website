@@ -18,7 +18,9 @@ export interface TabPreference {
 const DEFAULT_TABS: TabPreference[] = [
     { id: 'Tennis', visible: true },
     { id: 'Badminton', visible: true },
-    { id: 'Squash', visible: true }
+    { id: 'Squash', visible: true },
+    { id: 'Pickleball', visible: true },
+    { id: 'Table Tennis', visible: true },
 ];
 
 interface AuthContextType {

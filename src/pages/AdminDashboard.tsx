@@ -1,27 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, onSnapshot, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-    Save, Plus, EyeOff, XCircle, CheckCircle2, Trash2, AlertTriangle, Sparkles, MessageSquare, 
-    Calendar, MapPin, Clock, Edit, Sliders, ArrowLeft, Users, X, UserPlus, Shield
-} from 'lucide-react';
-
-type SessionStatus = 'active' | 'hidden' | 'cancelled';
-type SessionType = 'coaching' | 'court';
-
-interface Session {
-    id: string;
-    title: string;
-    type: SessionType;
-    date: string;
-    time: string;
-    maxAttendees: number;
-    attendees: string[]; // array of uid|name|email or uid|name|email|court
-    coach?: string | null;
-    coachId?: string | null;
-    sport?: string;
-}
+import { SPORTS, SPORT_FILTER_TABS, SESSION_STATUS_CATEGORIES } from '../lib/sports';
+import {
+    type Session,
+    type SessionStatus,
+    type SessionType,
+    parseAttendee,
+    getOpenPlayInstancesWithinHorizon,
+    filterRegularSessionsForDisplay,
+    isLegacyBundledOpenPlay,
+    getActiveCourtAttendees,
+    getDefaultMaxAttendees,
+    inferSport,
+} from '../lib/sessions';
 
 interface Event {
     id: string;
@@ -42,14 +35,12 @@ interface FeedbackItem {
     createdAt?: any;
 }
 
-const CATEGORIES = [
-    { id: 'Tennis_OpenPlay', label: 'Tennis Open Play' },
-    { id: 'Tennis_Clinic', label: 'Tennis Clinic' },
-    { id: 'Badminton_OpenPlay', label: 'Badminton Open Play' },
-    { id: 'Badminton_Clinic', label: 'Badminton Clinic' },
-    { id: 'Squash_OpenPlay', label: 'Squash Open Play' },
-    { id: 'Squash_Clinic', label: 'Squash Clinic' }
-];
+import { 
+    Save, Plus, EyeOff, XCircle, CheckCircle2, Trash2, AlertTriangle, Sparkles, MessageSquare, 
+    Calendar, MapPin, Clock, Edit, Sliders, ArrowLeft, Users, X, UserPlus, Shield
+} from 'lucide-react';
+
+const CATEGORIES = SESSION_STATUS_CATEGORIES;
 
 const AdminDashboard = () => {
     const { user } = useAuth();
@@ -78,7 +69,7 @@ const AdminDashboard = () => {
         type: 'court' as SessionType,
         date: '', 
         time: '', 
-        maxAttendees: 4,
+        maxAttendees: getDefaultMaxAttendees('court'),
         coach: '',
     });
     const [sessionDateInput, setSessionDateInput] = useState(''); // helper YYYY-MM-DD
@@ -109,6 +100,66 @@ const AdminDashboard = () => {
     
     // Refs for scrolling to Create Session form
     const createSessionFormRef = useRef<HTMLDivElement>(null);
+
+    // Bind sport dropdown to active filter tab
+    useEffect(() => {
+        if (sessionsSportFilter !== 'All') {
+            setNewSession(prev => ({ ...prev, sport: sessionsSportFilter }));
+        }
+    }, [sessionsSportFilter]);
+
+    const adminDisplaySessions = useMemo(() => {
+        const sportFilter = sessionsSportFilter === 'All' ? null : sessionsSportFilter;
+        const sportsToShow = sportFilter ? [sportFilter] : [...SPORTS];
+
+        const openPlayResolved: Session[] = [];
+        for (const sport of sportsToShow) {
+            const instances = getOpenPlayInstancesWithinHorizon(sessionsList, sport as typeof SPORTS[number]);
+            openPlayResolved.push(...instances.map(({ session }) => session));
+        }
+
+        const regularSessions = sportsToShow.flatMap((sport) =>
+            filterRegularSessionsForDisplay(sessionsList, sport as typeof SPORTS[number]),
+        );
+
+        const customSessions = sessionsList.filter((s) => {
+            if (isLegacyBundledOpenPlay(s)) return false;
+            if (s.type === 'court' && s.title.toLowerCase().includes('open play') && s.id.startsWith('open_play_')) {
+                return false;
+            }
+            const sport = inferSport(s);
+            if (sportFilter && sport !== sportFilter) return false;
+            if (s.type === 'court' && s.title.toLowerCase().includes('open play')) return false;
+            if (regularSessions.some((r) => r.id === s.id)) return false;
+            return true;
+        });
+
+        const combined = [...openPlayResolved, ...regularSessions, ...customSessions];
+        const seen = new Set<string>();
+        return combined.filter((s) => {
+            if (seen.has(s.id)) return false;
+            seen.add(s.id);
+            return true;
+        });
+    }, [sessionsList, sessionsSportFilter]);
+
+    const getSessionRoster = (session: Session): string[] => {
+        const sport = inferSport(session);
+        const isOpenPlay = session.title.toLowerCase().includes('open play') || session.id.startsWith('open_play_');
+
+        if (!isOpenPlay) {
+            return session.attendees || [];
+        }
+
+        const schedule = getOpenPlayInstancesWithinHorizon(sessionsList, sport)
+            .find(({ session: resolved }) => resolved.id === session.id);
+
+        if (schedule) {
+            return getActiveCourtAttendees(session.attendees || [], schedule.config.courts);
+        }
+
+        return getActiveCourtAttendees(session.attendees || [], []);
+    };
 
     // Fetch and sync data
     useEffect(() => {
@@ -306,11 +357,11 @@ const AdminDashboard = () => {
             // Reset form
             setNewSession({
                 title: '',
-                sport: 'Tennis',
+                sport: sessionsSportFilter !== 'All' ? sessionsSportFilter : 'Tennis',
                 type: 'court',
                 date: '',
                 time: '',
-                maxAttendees: 4,
+                maxAttendees: getDefaultMaxAttendees('court'),
                 coach: ''
             });
             setSessionDateInput('');
@@ -441,15 +492,8 @@ const AdminDashboard = () => {
         }
     };
 
-    // Parse attendee string utility
-    const parseAttendee = (attendeeStr: string) => {
-        const parts = attendeeStr.split('|');
-        const uid = parts[0] || '';
-        const name = parts[1] || 'Unknown Player';
-        const email = parts[2] || 'No Email';
-        const court = parts[3] || '';
-        return { uid, name, email, court, raw: attendeeStr };
-    };
+    // Parse attendee string utility — uses shared parser
+    const parseAttendeeLocal = parseAttendee;
 
     if (loading) return <div className="p-8 text-center text-gray-500">Loading admin terminal...</div>;
 
@@ -663,8 +707,8 @@ const AdminDashboard = () => {
                                         <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Add attendees, edit capacities or remove sessions live on the website.</p>
                                     </div>
                                     
-                                    <div className="flex bg-gray-105 dark:bg-club-bg p-1 rounded-full border border-gray-200 dark:border-gray-800">
-                                        {['All', 'Tennis', 'Badminton', 'Squash'].map(sport => (
+                                    <div className="flex bg-gray-105 dark:bg-club-bg p-1 rounded-full border border-gray-200 dark:border-gray-800 overflow-x-auto">
+                                        {SPORT_FILTER_TABS.map(sport => (
                                             <button
                                                 key={sport}
                                                 onClick={() => setSessionsSportFilter(sport)}
@@ -680,17 +724,16 @@ const AdminDashboard = () => {
                                     </div>
                                 </div>
 
-                                {sessionsList.length === 0 ? (
+                                {adminDisplaySessions.length === 0 ? (
                                     <div className="text-center py-12 border border-dashed border-gray-200 dark:border-gray-800 rounded-2xl text-gray-400 dark:text-gray-500">
                                         <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
                                         <p className="text-sm">No scheduled sessions in Firestore database.</p>
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {sessionsList
-                                            .filter(s => sessionsSportFilter === 'All' || s.sport?.toLowerCase() === sessionsSportFilter.toLowerCase())
-                                            .map(session => {
-                                                const enrolledCount = session.attendees?.length || 0;
+                                        {adminDisplaySessions.map(session => {
+                                                const rosterAttendees = getSessionRoster(session);
+                                                const enrolledCount = rosterAttendees.length;
                                                 const isFull = enrolledCount >= session.maxAttendees;
 
                                                 return (
@@ -743,8 +786,8 @@ const AdminDashboard = () => {
                                                                     <p className="text-xs text-gray-400 dark:text-gray-500 italic p-3 text-center border border-dashed border-gray-200 dark:border-gray-800 rounded-xl bg-white/10 dark:bg-black/10">No players registered.</p>
                                                                 ) : (
                                                                     <div className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
-                                                                        {session.attendees.map((attString, i) => {
-                                                                            const player = parseAttendee(attString);
+                                                                        {rosterAttendees.map((attString, i) => {
+                                                                            const player = parseAttendeeLocal(attString);
                                                                             return (
                                                                                 <div key={i} className="flex justify-between items-center text-xs bg-white dark:bg-club-surface/60 border border-gray-150 dark:border-gray-800/60 p-2 rounded-lg group/item">
                                                                                     <div className="truncate pr-2">
@@ -778,7 +821,7 @@ const AdminDashboard = () => {
                                                                 />
                                                                 
                                                                 {/* Optional court selector for Tennis/Badminton */}
-                                                                {(session.sport === 'Tennis' || session.sport === 'Badminton' || session.sport === 'Squash') && (
+                                                                {(session.sport === 'Tennis' || session.sport === 'Badminton' || session.sport === 'Squash' || session.sport === 'Pickleball' || session.sport === 'Table Tennis') && (
                                                                     <select
                                                                         value={newAttendeeCourt[session.id] || ''}
                                                                         onChange={e => setNewAttendeeCourt(prev => ({ ...prev, [session.id]: e.target.value }))}
@@ -863,16 +906,23 @@ const AdminDashboard = () => {
                                                     onChange={e => setNewSession({ ...newSession, sport: e.target.value })}
                                                     className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
                                                 >
-                                                    <option value="Tennis">Tennis</option>
-                                                    <option value="Badminton">Badminton</option>
-                                                    <option value="Squash">Squash</option>
+                                                    {SPORTS.map(sport => (
+                                                        <option key={sport} value={sport}>{sport}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Session Type</label>
                                                 <select 
                                                     value={newSession.type}
-                                                    onChange={e => setNewSession({ ...newSession, type: e.target.value as SessionType })}
+                                                    onChange={e => {
+                                                        const type = e.target.value as SessionType;
+                                                        setNewSession({
+                                                            ...newSession,
+                                                            type,
+                                                            maxAttendees: getDefaultMaxAttendees(type),
+                                                        });
+                                                    }}
                                                     className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
                                                 >
                                                     <option value="court">Court Open Play</option>
@@ -926,7 +976,7 @@ const AdminDashboard = () => {
                                                 type="number" 
                                                 required
                                                 min={1}
-                                                placeholder="4"
+                                                placeholder="8"
                                                 value={newSession.maxAttendees}
                                                 onChange={e => setNewSession({ ...newSession, maxAttendees: Number(e.target.value) })}
                                                 className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
@@ -1255,9 +1305,9 @@ const AdminDashboard = () => {
                                         onChange={e => setEditingSession({ ...editingSession, sport: e.target.value })}
                                         className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
                                     >
-                                        <option value="Tennis">Tennis</option>
-                                        <option value="Badminton">Badminton</option>
-                                        <option value="Squash">Squash</option>
+                                        {SPORTS.map(sport => (
+                                            <option key={sport} value={sport}>{sport}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div>

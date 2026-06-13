@@ -15,6 +15,13 @@ export default {
           gold: '#C9A84C',       /* Stitch Dark mode accent */
           green_accent: '#10B981', /* Pop green for dark mode */
         },
+        sport: {
+          tennis: '#006400',
+          badminton: '#001A57',
+          squash: '#4B0082',
+          pickleball: '#C9A84C',
+          tabletennis: '#10B981',
+        },
         club: {
           bg: '#0A101D',
           surface: '#111827',
