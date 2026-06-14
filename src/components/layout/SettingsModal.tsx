@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect, useCallback } from 'react';
 import { Reorder, useDragControls } from 'framer-motion';
 import { useAuth, type TabPreference } from '../../contexts/AuthContext';
 import { X, Eye, EyeOff, GripVertical } from 'lucide-react';
@@ -13,39 +13,64 @@ interface SortableTabRowProps {
     onToggleVisibility: () => void;
 }
 
-const SortableTabRow = ({ tab, onToggleVisibility }: SortableTabRowProps) => {
+const LAYOUT_TRANSITION = { type: 'spring' as const, stiffness: 900, damping: 50, mass: 0.4 };
+const DRAG_TRANSITION = { power: 0.05, timeConstant: 60 };
+
+const SortableTabRow = memo(({ tab, onToggleVisibility }: SortableTabRowProps) => {
     const dragControls = useDragControls();
+    const [isDragging, setIsDragging] = useState(false);
+
+    const handleDragStart = useCallback(() => setIsDragging(true), []);
+    const handleDragEnd = useCallback(() => setIsDragging(false), []);
+
+    const handleGripPointerDown = useCallback(
+        (e: React.PointerEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            dragControls.start(e);
+        },
+        [dragControls],
+    );
+
+    const handleGripPointerUp = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
+        e.currentTarget.blur();
+    }, []);
 
     return (
         <Reorder.Item
             value={tab}
             dragListener={false}
             dragControls={dragControls}
-            className={`flex items-center justify-between p-3 border rounded-xl select-none list-none ${
-                tab.visible ? 'bg-white border-gray-200 shadow-sm' : 'bg-gray-50 border-gray-100 opacity-60'
+            dragTransition={DRAG_TRANSITION}
+            layout="position"
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            className={`flex items-center justify-between p-3 border rounded-xl select-none list-none transition-shadow duration-100 ${
+                isDragging
+                    ? 'z-50 shadow-md border-gray-300 bg-white'
+                    : tab.visible
+                      ? 'bg-white border-gray-200 shadow-sm'
+                      : 'bg-gray-50 border-gray-100 opacity-60'
             }`}
-            whileDrag={{
-                scale: 1.03,
-                boxShadow: '0 12px 28px rgba(0, 26, 87, 0.15)',
-                zIndex: 50,
-                cursor: 'grabbing',
-            }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            style={{ touchAction: 'none' }}
+            transition={LAYOUT_TRANSITION}
         >
             <div className="flex items-center gap-3 min-w-0 flex-1">
                 <button
                     type="button"
-                    onPointerDown={(e) => dragControls.start(e)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-grab active:cursor-grabbing transition-colors touch-none"
+                    tabIndex={-1}
+                    onPointerDown={handleGripPointerDown}
+                    onPointerUp={handleGripPointerUp}
+                    onPointerCancel={handleGripPointerUp}
+                    className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 cursor-grab active:cursor-grabbing touch-none outline-none focus:outline-none"
                     title="Drag to reorder"
                     aria-label={`Drag to reorder ${tab.id}`}
                 >
-                    <GripVertical className="w-5 h-5" />
+                    <GripVertical className="w-5 h-5 pointer-events-none" />
                 </button>
                 <button
                     type="button"
                     onClick={onToggleVisibility}
-                    className={`p-1.5 rounded-lg transition-colors ${tab.visible ? 'text-wimbledon-green hover:bg-green-50' : 'text-gray-400 hover:bg-gray-200'}`}
+                    className={`p-1.5 rounded-lg outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-wimbledon-navy/30 ${tab.visible ? 'text-wimbledon-green hover:bg-green-50' : 'text-gray-400 hover:bg-gray-200'}`}
                     title={tab.visible ? 'Hide tab' : 'Show tab'}
                 >
                     {tab.visible ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
@@ -56,7 +81,9 @@ const SortableTabRow = ({ tab, onToggleVisibility }: SortableTabRowProps) => {
             </div>
         </Reorder.Item>
     );
-};
+});
+
+SortableTabRow.displayName = 'SortableTabRow';
 
 const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     const { tabPreferences, updateTabPreferences } = useAuth();
@@ -82,7 +109,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col mt-10 md:mt-0 animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50/50">
                     <h2 className="text-xl font-semibold text-wimbledon-navy">Booking Engine Settings</h2>
