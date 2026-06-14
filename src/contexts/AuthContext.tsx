@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
     onAuthStateChanged,
     signInWithEmailAndPassword,
@@ -8,7 +8,7 @@ import {
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { SPORTS } from '../lib/sports';
 
 export interface TabPreference {
@@ -17,6 +17,27 @@ export interface TabPreference {
 }
 
 const DEFAULT_TABS: TabPreference[] = SPORTS.map((id) => ({ id, visible: true }));
+const LEGACY_TAB_PREFS_KEY = 'booking_tabs_preferences';
+
+const tabPrefsCacheKey = (uid: string) => `booking_tabs_preferences_${uid}`;
+
+const readCachedTabPreferences = (uid: string): TabPreference[] | null => {
+    try {
+        const raw = localStorage.getItem(tabPrefsCacheKey(uid));
+        if (!raw) return null;
+        return JSON.parse(raw) as TabPreference[];
+    } catch {
+        return null;
+    }
+};
+
+const writeCachedTabPreferences = (uid: string, tabs: TabPreference[]) => {
+    try {
+        localStorage.setItem(tabPrefsCacheKey(uid), JSON.stringify(tabs));
+    } catch (err) {
+        console.error('Error caching tab preferences:', err);
+    }
+};
 
 /** Merge saved preferences with current defaults so new sports appear automatically. */
 export const mergeTabPreferences = (saved: TabPreference[]): TabPreference[] => {
@@ -43,6 +64,16 @@ const tabsNeedSync = (saved: TabPreference[], merged: TabPreference[]): boolean 
     return merged.some((tab, i) => tab.id !== saved[i]?.id);
 };
 
+const readLegacyTabPreferences = (): TabPreference[] | null => {
+    try {
+        const raw = localStorage.getItem(LEGACY_TAB_PREFS_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw) as TabPreference[];
+    } catch {
+        return null;
+    }
+};
+
 interface AuthContextType {
     user: User | null;
     loading: boolean;
@@ -58,13 +89,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 // Using a specific ID or email for the admin, or a generic check.
-const ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu', 'fuqua-racquets@duke.edu']; // Assuming we can use these for admin check
+const ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu', '[REDACTED]@duke.edu']; // Assuming we can use these for admin check
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
+    const migrationAttemptedRef = useRef<string | null>(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -90,40 +122,74 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setUser(currentUser);
                     setError(null);
 
-                    // Fetch settings once on login
-                    try {
-                        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-                        if (userDoc.exists() && userDoc.data().tabPreferences) {
-                            const saved = userDoc.data().tabPreferences as TabPreference[];
-                            const merged = mergeTabPreferences(saved);
-                            setTabPreferences(merged);
-                            if (tabsNeedSync(saved, merged)) {
-                                await setDoc(doc(db, 'users', currentUser.uid), { tabPreferences: merged }, { merge: true });
-                            }
-                        } else {
-                            const local = localStorage.getItem('booking_tabs_preferences');
-                            if (local) {
-                                try {
-                                    const parsed = JSON.parse(local) as TabPreference[];
-                                    const merged = mergeTabPreferences(parsed);
-                                    setTabPreferences(merged);
-                                    await setDoc(doc(db, 'users', currentUser.uid), { tabPreferences: merged }, { merge: true });
-                                } catch (e) { }
-                            }
-                        }
-                    } catch (err) {
-                        console.error("Error fetching user settings:", err);
+                    const cached = readCachedTabPreferences(currentUser.uid);
+                    if (cached) {
+                        setTabPreferences(mergeTabPreferences(cached));
                     }
                 }
             } else {
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
+                migrationAttemptedRef.current = null;
             }
             setLoading(false);
         });
 
         return unsubscribe;
     }, []);
+
+    useEffect(() => {
+        if (!user) return;
+
+        const userRef = doc(db, 'users', user.uid);
+
+        const unsubscribe = onSnapshot(
+            userRef,
+            async (snapshot) => {
+                if (snapshot.exists() && snapshot.data().tabPreferences) {
+                    const saved = snapshot.data().tabPreferences as TabPreference[];
+                    const merged = mergeTabPreferences(saved);
+                    setTabPreferences(merged);
+                    writeCachedTabPreferences(user.uid, merged);
+
+                    if (tabsNeedSync(saved, merged)) {
+                        try {
+                            await setDoc(userRef, { tabPreferences: merged }, { merge: true });
+                        } catch (err) {
+                            console.error('Error syncing tab preferences:', err);
+                        }
+                    }
+                    return;
+                }
+
+                if (migrationAttemptedRef.current === user.uid) return;
+                migrationAttemptedRef.current = user.uid;
+
+                const legacy = readLegacyTabPreferences();
+                const cached = readCachedTabPreferences(user.uid);
+                const source = legacy ?? cached;
+                if (!source) return;
+
+                const merged = mergeTabPreferences(source);
+                setTabPreferences(merged);
+                writeCachedTabPreferences(user.uid, merged);
+
+                try {
+                    await setDoc(userRef, { tabPreferences: merged }, { merge: true });
+                    if (legacy) {
+                        localStorage.removeItem(LEGACY_TAB_PREFS_KEY);
+                    }
+                } catch (err) {
+                    console.error('Error migrating tab preferences:', err);
+                }
+            },
+            (err) => {
+                console.error('Error listening to user settings:', err);
+            },
+        );
+
+        return unsubscribe;
+    }, [user]);
 
     const signInWithEmail = async (email: string, pass: string) => {
         setError(null);
@@ -191,12 +257,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const updateTabPreferences = async (newTabs: TabPreference[]) => {
         const merged = mergeTabPreferences(newTabs);
         setTabPreferences(merged);
-        if (user) {
-            try {
-                await setDoc(doc(db, 'users', user.uid), { tabPreferences: merged }, { merge: true });
-            } catch (err) {
-                console.error("Error saving preferences:", err);
-            }
+
+        if (!user) return;
+
+        writeCachedTabPreferences(user.uid, merged);
+
+        try {
+            await setDoc(doc(db, 'users', user.uid), { tabPreferences: merged }, { merge: true });
+        } catch (err) {
+            console.error("Error saving preferences:", err);
         }
     };
 
