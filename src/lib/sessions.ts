@@ -10,6 +10,7 @@ import {
 } from './sports';
 
 export const BOOKING_HORIZON_DAYS = 14;
+export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = "Next week's sessions lock until Sunday 5:00 PM";
 
 export type SessionStatus = 'active' | 'hidden' | 'cancelled';
 export type SessionType = 'coaching' | 'court';

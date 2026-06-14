@@ -28,6 +28,7 @@ import {
     findUserAttendeeEntry,
     findUserWaitlistEntry,
     isSessionEnrollmentFull,
+    NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
@@ -429,7 +430,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
                         {isLocked && !isCancelled && (
                             <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
-                                Locked until Sunday 5:00 PM
+                                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
                             </div>
                         )}
 
@@ -619,7 +620,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
                         {isLocked && !isCancelled && (
                             <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
-                                Next week's sessions lock Sunday at 5:00 PM
+                                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
                             </div>
                         )}
 
