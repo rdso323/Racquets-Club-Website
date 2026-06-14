@@ -5,10 +5,11 @@ import { useLenis } from 'lenis/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
 import { SPORTS } from '../../lib/sports';
+import { GripVertical } from 'lucide-react';
 
 const MenuOverlay = () => {
     const { user, isAdmin, signOut, tabPreferences, updateTabPreferences } = useAuth();
-    const { menuOpen, setMenuOpen, openFeedback } = useUI();
+    const { menuOpen, setMenuOpen, openFeedback, openSettings } = useUI();
     const location = useLocation();
     const navigate = useNavigate();
     const lenis = useLenis();
@@ -134,6 +135,17 @@ const MenuOverlay = () => {
                                     );
                                 })}
                             </div>
+                            {user && (
+                                <button
+                                    type="button"
+                                    onClick={() => closeAnd(openSettings)}
+                                    data-cursor
+                                    className="mt-4 flex w-full items-center justify-center gap-2 border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:border-wimbledon-navy/30 hover:text-wimbledon-navy dark:border-chalk/10 dark:text-chalk/60 dark:hover:border-chalk/25 dark:hover:text-chalk"
+                                >
+                                    <GripVertical className="h-4 w-4" />
+                                    Reorder sports
+                                </button>
+                            )}
                             <p className="mt-6 hud-label text-gray-400 dark:text-chalk/30">
                                 Fuqua School of Business · Duke University
                             </p>

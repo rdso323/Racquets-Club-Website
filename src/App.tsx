@@ -9,6 +9,7 @@ import TopBar from './components/system/TopBar';
 import MenuOverlay from './components/system/MenuOverlay';
 import PointerSurface from './components/system/PointerSurface';
 import FeedbackModal from './components/layout/FeedbackModal';
+import SettingsModal from './components/layout/SettingsModal';
 import { usePointerVars } from './hooks/usePointerVars';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import Home from './pages/Home';
@@ -59,7 +60,7 @@ const ScrollReset = () => {
 
 const AppRoutes = () => {
     const { user, loading } = useAuth();
-    const { feedbackOpen, closeFeedback } = useUI();
+    const { feedbackOpen, closeFeedback, settingsOpen, closeSettings } = useUI();
 
     return (
         <>
@@ -83,6 +84,7 @@ const AppRoutes = () => {
                 />
             </Routes>
             <FeedbackModal isOpen={feedbackOpen} onClose={closeFeedback} />
+            <SettingsModal isOpen={settingsOpen} onClose={closeSettings} />
         </>
     );
 };
