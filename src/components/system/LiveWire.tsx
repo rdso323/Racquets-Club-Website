@@ -38,7 +38,7 @@ const LiveWire = ({ dismissOnScroll = false, flipped = false }: LiveWireProps) =
             style={dismissOnScroll ? { y, opacity } : undefined}
         >
             <VelocityMarquee
-                baseVelocity={flipped ? 0.6 : -0.6}
+                baseVelocity={flipped ? -0.6 : 0.6}
                 itemClassName="pr-12"
                 copies={4}
                 skew={false}
