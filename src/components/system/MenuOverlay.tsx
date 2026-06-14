@@ -105,20 +105,20 @@ const MenuOverlay = () => {
 
                     <motion.aside
                         data-lenis-prevent
-                        className="glass-deep fixed left-0 top-0 z-[145] flex h-[100dvh] w-[min(100vw-2.5rem,20rem)] flex-col border-r border-gray-200/80 shadow-xl dark:border-chalk/10 sm:w-80"
+                        className="glass-deep fixed left-0 top-0 z-[145] flex h-[100dvh] w-[min(92vw,26rem)] flex-col border-r border-gray-200/80 shadow-xl dark:border-chalk/10 sm:w-[min(88vw,30rem)] md:w-[min(48vw,34rem)] lg:w-[min(42vw,38rem)]"
                         initial={{ x: '-100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '-100%' }}
                         transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
                     >
-                        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-5 pb-8 pt-24">
+                        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-6 pb-10 pt-24 md:px-10 md:pt-28">
                             <nav className="flex flex-col gap-1">
                                 {menuItems.map((item, i) => (
                                     <div key={item.label} className="overflow-hidden py-0.5">
                                         <motion.button
                                             onClick={item.action}
                                             data-cursor
-                                            className="group flex w-full items-baseline gap-3 py-1.5 text-left"
+                                            className="group flex w-full items-baseline gap-4 py-2 text-left"
                                             initial={{ opacity: 0, x: -12 }}
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.04 + i * 0.04, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
