@@ -1,71 +1,72 @@
 import { useLenis } from 'lenis/react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { useUI } from '../system/UIProvider';
-import { VelocityMarquee } from '../system/kinetic';
 
 const Footer = () => {
     const { user, isAdmin } = useAuth();
     const { openFeedback } = useUI();
+    const { theme } = useTheme();
     const navigate = useNavigate();
     const lenis = useLenis();
 
-    const scrollToBooking = () => {
-        const el = document.getElementById('booking-section');
+    const scrollToId = (id: string) => {
+        const el = document.getElementById(id);
         if (el) lenis?.scrollTo(el, { duration: 1.4, offset: -80 });
     };
 
-    return (
-        <footer className="relative overflow-hidden pt-16">
-            <VelocityMarquee baseVelocity={-2} itemClassName="pr-10" copies={3} className="hairline-t hairline-b py-4">
-                <span className="font-display text-3xl italic text-chalk/20 md:text-5xl">
-                    Fuqua Racquets Club — See you on court —&nbsp;
-                </span>
-            </VelocityMarquee>
+    const links = [
+        { label: 'Book a Court', action: () => scrollToId('booking-section') },
+        { label: 'Events', action: () => scrollToId('events-section') },
+        { label: 'News', action: () => scrollToId('news-section') },
+        { label: 'Feedback', action: openFeedback },
+        ...(isAdmin ? [{ label: 'Admin', action: () => navigate('/admin') }] : []),
+        user
+            ? { label: 'Back to Top', action: () => lenis?.scrollTo(0, { duration: 1.5 }) }
+            : { label: 'Member Sign In', action: () => navigate('/login') },
+    ];
 
-            <div className="px-5 py-16 md:px-10 md:py-24">
-                <div className="flex flex-col items-start justify-between gap-12 md:flex-row md:items-end">
-                    <div>
-                        <p className="hud-label mb-4 text-court-accent">Join the community</p>
-                        <h2 className="font-display text-[clamp(2.5rem,8vw,5.5rem)] leading-tight text-chalk">
-                            Bring your
-                            <br />
-                            <span className="italic text-clay-300">best game.</span>
-                        </h2>
-                        <button
-                            onClick={user ? scrollToBooking : () => navigate('/login')}
-                            data-cursor="hover"
-                            className="clay-gradient mt-8 rounded-full px-8 py-4 text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.02]"
-                        >
-                            {user ? 'Book a Session' : 'Member Sign In'}
-                        </button>
+    return (
+        <footer className="border-t border-gray-200 dark:border-chalk/10">
+            <div className="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20">
+                <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
+                    {/* Brand */}
+                    <div className="max-w-sm">
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={theme === 'dark' ? '/logo_dark.png' : '/logo_light.png'}
+                                alt="Fuqua Racquets Club"
+                                className="h-10 w-10 object-contain"
+                            />
+                            <span className="font-display text-xl text-gray-900 dark:text-chalk">
+                                Fuqua Racquets Club
+                            </span>
+                        </div>
+                        <p className="mt-5 text-sm leading-relaxed text-gray-500 dark:text-chalk/50">
+                            A community for racquet sports players of every level across the Fuqua,
+                            Duke, and greater Durham communities.
+                        </p>
                     </div>
 
-                    <div className="grid w-full max-w-md grid-cols-2 gap-px bg-chalk/10">
-                        {[
-                            { label: 'Feedback', sub: 'Share ideas', action: openFeedback },
-                            user
-                                ? { label: 'Signed In', sub: user.email || '', action: scrollToBooking }
-                                : { label: 'Sign In', sub: '@duke.edu', action: () => navigate('/login') },
-                            ...(isAdmin
-                                ? [{ label: 'Admin', sub: 'Operations', action: () => navigate('/admin') }]
-                                : []),
-                            { label: 'Back to Top', sub: 'Scroll up', action: () => lenis?.scrollTo(0, { duration: 1.5 }) },
-                        ].map((item) => (
+                    {/* Options */}
+                    <nav className="grid grid-cols-2 gap-x-12 gap-y-3 sm:gap-x-20">
+                        {links.map((link) => (
                             <button
-                                key={item.label}
-                                onClick={item.action}
-                                data-cursor="hover"
-                                className="flex flex-col gap-2 bg-court-950 p-5 text-left transition-colors hover:bg-carbon"
+                                key={link.label}
+                                onClick={link.action}
+                                data-cursor
+                                className="group flex items-center gap-1.5 text-left text-sm font-medium text-gray-600 transition-colors hover:text-clay-600 dark:text-chalk/70 dark:hover:text-clay-300"
                             >
-                                <span className="text-sm font-semibold text-chalk">{item.label}</span>
-                                <span className="hud-label truncate text-[9px] text-chalk/40">{item.sub}</span>
+                                {link.label}
+                                <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
                             </button>
                         ))}
-                    </div>
+                    </nav>
                 </div>
 
-                <div className="hairline-t mt-16 flex flex-col gap-2 pt-6 text-chalk/40 md:flex-row md:items-center md:justify-between">
+                <div className="mt-14 flex flex-col gap-2 border-t border-gray-200 pt-6 text-gray-400 dark:border-chalk/10 dark:text-chalk/40 md:flex-row md:items-center md:justify-between">
                     <span className="text-xs">
                         © {new Date().getFullYear()} Fuqua Racquets Club. All rights reserved.
                     </span>

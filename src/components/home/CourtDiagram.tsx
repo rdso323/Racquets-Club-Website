@@ -28,9 +28,8 @@ const slotPosition = (index: number, total: number) => {
 };
 
 const CourtMarkings = ({ sport }: { sport: string }) => {
-    const stroke = 'var(--accent)';
     const common = {
-        stroke,
+        stroke: 'currentColor',
         strokeWidth: 1.5,
         fill: 'none' as const,
         vectorEffect: 'non-scaling-stroke' as const,
@@ -121,22 +120,22 @@ const CourtDiagram = ({
     const filled = slots.filter(Boolean).length;
 
     return (
-        <div className="court-apron flex flex-col gap-4">
+        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="hud-label text-chalk/45">{sport}</p>
-                    <h4 className="font-display text-lg text-chalk">{courtName}</h4>
+                    <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
+                    <h4 className="font-display text-lg text-gray-900 dark:text-chalk">{courtName}</h4>
                 </div>
                 <div className="text-right">
                     <p className="text-sm font-semibold accent-text">{filled}/{slots.length}</p>
-                    <p className="hud-label text-chalk/40">{spotsLeft} open</p>
+                    <p className="hud-label text-gray-400 dark:text-chalk/40">{spotsLeft} open</p>
                 </div>
             </div>
 
-            <div className="court-surface overflow-hidden">
+            <div className="court-surface relative mx-auto aspect-[5/8] w-full max-w-[14rem] overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
                 <svg
                     viewBox="0 0 200 340"
-                    className="absolute inset-0 h-full w-full"
+                    className="absolute inset-0 h-full w-full text-emerald-800/45 dark:text-court-line/70"
                     aria-hidden
                 >
                     <CourtMarkings sport={sport} />
@@ -185,12 +184,12 @@ const CourtDiagram = ({
                 type="button"
                 onClick={onAction}
                 disabled={disabled}
-                data-cursor="hover"
+                data-cursor
                 className={`w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
                     userInThisCourt
-                        ? 'border border-red-400/40 bg-red-500/10 text-red-300 hover:bg-red-500/15'
+                        ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
                         : disabled
-                          ? 'cursor-not-allowed border border-chalk/10 bg-carbon text-chalk/30'
+                          ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                           : 'accent-bg text-court-950 hover:brightness-110 accent-glow'
                 }`}
             >

@@ -30,7 +30,7 @@ const MOCK_NEWS: NewsItem[] = [
         title: 'Indian Wells 2026: Zverev, Sabalenka Advance',
         excerpt: 'Alexander Zverev outlasts Brandon Nakashima in three sets while Aryna Sabalenka powers past Jaqueline Cristian.',
         date: '1 day ago',
-        category: 'ATP/WTA Tour',
+        category: 'Tennis',
         link: 'https://www.atptour.com/en/news',
     },
     {
@@ -38,7 +38,7 @@ const MOCK_NEWS: NewsItem[] = [
         title: 'Lin Chun-Yi Claims All England Open Title',
         excerpt: "Chinese Taipei's Lin Chun-Yi defeats India's Lakshya Sen to capture his first men's singles title at the All England Open.",
         date: '2 days ago',
-        category: 'BWF World Tour',
+        category: 'Badminton',
         link: 'https://bwfworldtour.bwfbadminton.com/news',
     },
     {
@@ -46,8 +46,16 @@ const MOCK_NEWS: NewsItem[] = [
         title: 'Paul Coll Dominates to Win New Zealand Open',
         excerpt: 'World No. 2 Paul Coll secures his third consecutive New Zealand Open squash title in Christchurch.',
         date: '3 days ago',
-        category: 'PSA Squash Tour',
+        category: 'Squash',
         link: 'https://www.psasquashtour.com/news/',
+    },
+    {
+        id: 4,
+        title: 'Ben Johns Headlines PPA Tour Championship',
+        excerpt: 'World No. 1 Ben Johns continues his dominant pickleball season, advancing to the PPA Tour Championship final in straight games.',
+        date: '4 days ago',
+        category: 'Pickleball',
+        link: 'https://www.ppatour.com/',
     },
 ];
 
@@ -119,16 +127,16 @@ const Transmissions = () => {
     return (
         <section className="py-20 md:py-28">
             {/* Events carousel */}
-            <div className="mb-20">
+            <div id="events-section" className="mb-20 scroll-mt-24">
                 <RevealLines
                     className="mb-8 px-5 md:px-10"
                     lineClassName="flex items-baseline gap-4"
                     lines={[
-                        <span key="a" className="hud-label text-court-accent">01</span>,
-                        <h2 key="b" className="font-display text-3xl text-chalk md:text-4xl">Club Events</h2>,
+                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">01</span>,
+                        <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">Club Events</h2>,
                     ]}
                 />
-                <p className="mb-8 px-5 text-sm text-chalk/50 md:px-10">
+                <p className="mb-8 px-5 text-sm text-gray-500 dark:text-chalk/50 md:px-10">
                     Social gatherings, mixers, and community play — drag to browse upcoming events.
                 </p>
 
@@ -142,7 +150,7 @@ const Transmissions = () => {
                     {displayEvents.map((event, i) => (
                         <article
                             key={event.id}
-                            data-cursor="hover"
+                            data-cursor
                             className="glass-deep w-[min(85vw,22rem)] shrink-0 overflow-hidden"
                             style={{ borderColor: `${EVENT_ACCENTS[i % EVENT_ACCENTS.length]}33` }}
                         >
@@ -164,13 +172,13 @@ const Transmissions = () => {
                                         background: `linear-gradient(135deg, ${EVENT_ACCENTS[i % EVENT_ACCENTS.length]}22, transparent)`,
                                     }}
                                 >
-                                    <Calendar className="h-8 w-8 text-chalk/30" />
+                                    <Calendar className="h-8 w-8 text-gray-400 dark:text-chalk/30" />
                                 </div>
                             )}
                             <div className="p-5">
-                                <p className="hud-label mb-2 text-chalk/40">{event.date} · {event.time}</p>
-                                <h3 className="font-display text-xl text-chalk">{event.title}</h3>
-                                <p className="mt-2 text-sm text-chalk/55">{event.location}</p>
+                                <p className="hud-label mb-2 text-gray-400 dark:text-chalk/40">{event.date} · {event.time}</p>
+                                <h3 className="font-display text-xl text-gray-900 dark:text-chalk">{event.title}</h3>
+                                <p className="mt-2 text-sm text-gray-500 dark:text-chalk/55">{event.location}</p>
                                 {event.link && (
                                     <a
                                         href={event.link}
@@ -188,38 +196,38 @@ const Transmissions = () => {
             </div>
 
             {/* News rail */}
-            <div id="news-section" className="px-5 md:px-10">
+            <div id="news-section" className="px-5 scroll-mt-24 md:px-10">
                 <RevealLines
                     className="mb-8"
                     lineClassName="flex items-baseline gap-4"
                     lines={[
-                        <span key="a" className="hud-label text-court-accent">02</span>,
-                        <h2 key="b" className="font-display text-3xl text-chalk md:text-4xl">In the News</h2>,
+                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">02</span>,
+                        <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">In the News</h2>,
                     ]}
                 />
-                <div className="grid gap-px bg-chalk/10 md:grid-cols-2">
-                    {news.slice(0, 6).map((item, i) => (
+                <div className="grid gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-chalk/10 dark:bg-chalk/10 sm:grid-cols-2">
+                    {news.slice(0, 4).map((item, i) => (
                         <motion.a
                             key={item.id}
                             href={item.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            data-cursor="hover"
-                            className="group flex flex-col gap-2 bg-court-950 p-6 transition-colors hover:bg-carbon"
+                            data-cursor
+                            className="group flex flex-col gap-2 bg-white p-6 transition-colors hover:bg-gray-50 dark:bg-court-950 dark:hover:bg-carbon"
                             initial={{ opacity: 0, y: 16 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: '-5%' }}
                             transition={{ delay: i * 0.05 }}
                         >
                             <div className="flex items-center gap-3">
-                                <span className="hud-label text-chalk/30">{String(i + 1).padStart(2, '0')}</span>
-                                <span className="hud-label text-court-accent/70">{item.category}</span>
-                                <span className="hud-label ml-auto text-chalk/30">{item.date}</span>
+                                <span className="hud-label text-gray-300 dark:text-chalk/30">{String(i + 1).padStart(2, '0')}</span>
+                                <span className="hud-label text-emerald-600/80 dark:text-court-accent/70">{item.category}</span>
+                                <span className="hud-label ml-auto text-gray-400 dark:text-chalk/30">{item.date}</span>
                             </div>
-                            <h3 className="font-display text-lg text-chalk group-hover:text-clay-300 transition-colors">
+                            <h3 className="font-display text-lg text-gray-900 transition-colors group-hover:text-clay-600 dark:text-chalk dark:group-hover:text-clay-300">
                                 {item.title}
                             </h3>
-                            <p className="text-sm leading-relaxed text-chalk/50">{item.excerpt}</p>
+                            <p className="text-sm leading-relaxed text-gray-500 dark:text-chalk/50">{item.excerpt}</p>
                         </motion.a>
                     ))}
                 </div>

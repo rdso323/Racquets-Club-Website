@@ -14,6 +14,12 @@ import Home from './pages/Home';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 
+const RouteLoader = () => (
+    <div className="flex min-h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-court-accent border-t-transparent" />
+    </div>
+);
+
 const ProtectedRoute = ({
     children,
     requireAdmin = false,
@@ -21,7 +27,8 @@ const ProtectedRoute = ({
     children: React.ReactNode;
     requireAdmin?: boolean;
 }) => {
-    const { user, isAdmin } = useAuth();
+    const { user, isAdmin, loading } = useAuth();
+    if (loading) return <RouteLoader />;
     if (!user) return <Navigate to="/login" replace />;
     if (requireAdmin && !isAdmin) return <Navigate to="/" replace />;
     return <>{children}</>;
@@ -47,13 +54,16 @@ const ScrollReset = () => {
 };
 
 const AppRoutes = () => {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const { feedbackOpen, closeFeedback } = useUI();
 
     return (
         <>
             <Routes>
-                <Route path="/login" element={!user ? <Login /> : <Navigate to="/" replace />} />
+                <Route
+                    path="/login"
+                    element={loading ? <RouteLoader /> : !user ? <Login /> : <Navigate to="/" replace />}
+                />
                 <Route path="/" element={<Home />} />
                 <Route
                     path="/admin"

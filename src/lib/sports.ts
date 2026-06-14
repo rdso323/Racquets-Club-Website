@@ -118,3 +118,16 @@ export const SPORT_THEME: Record<Sport, SportTheme> = {
 
 export const getSportTheme = (sport: string): SportTheme =>
     SPORT_THEME[sport as Sport] ?? SPORT_THEME.Tennis;
+
+/**
+ * Deterministic daily rotation across all sports. Returns SPORTS reordered so the
+ * "focus" sport advances by one each day — used by the scheduled news/ticker task
+ * to cycle coverage evenly across the five club sports.
+ */
+export const getDailySportRotation = (date = new Date()): Sport[] => {
+    const dayOfYear = Math.floor(
+        (date.getTime() - new Date(date.getFullYear(), 0, 0).getTime()) / 86_400_000,
+    );
+    const offset = dayOfYear % SPORTS.length;
+    return [...SPORTS.slice(offset), ...SPORTS.slice(0, offset)];
+};

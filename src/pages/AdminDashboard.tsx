@@ -545,30 +545,35 @@ const AdminDashboard = () => {
     if (loading) return <div className="p-8 text-center text-gray-500">Loading admin terminal...</div>;
 
     return (
-        <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300">
+        <div className="min-h-screen text-gray-900 dark:text-chalk transition-colors duration-300">
             {/* Upper title grid */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-gray-200 dark:border-gray-800 pb-4">
+            <div className="mb-8 flex flex-col justify-between items-start gap-4 border-b border-gray-200 dark:border-chalk/10 pb-6 md:flex-row md:items-center">
                 <div>
-                    <h1 className="text-3xl font-light text-wimbledon-navy dark:text-gray-100 flex items-center gap-3">
-                        <Shield className="w-8 h-8 text-wimbledon-gold animate-pulse" />
-                        Admin Operations Terminal
+                    <p className="hud-label mb-2 flex items-center gap-2 text-emerald-600 dark:text-court-accent">
+                        <Shield className="h-4 w-4" />
+                        Club Operations
+                    </p>
+                    <h1 className="font-display text-3xl tracking-tight text-wimbledon-navy dark:text-chalk md:text-4xl">
+                        Operations Deck
                     </h1>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Signed in as <span className="font-semibold text-wimbledon-navy dark:text-wimbledon-gold">{user?.email}</span>
+                    <p className="mt-2 text-sm text-gray-500 dark:text-chalk/50">
+                        Signed in as <span className="font-semibold text-clay-600 dark:text-clay-300">{user?.email}</span>
                     </p>
                 </div>
                 
-                <div className="flex gap-3 mt-4 md:mt-0">
+                <div className="flex gap-3">
                     <button 
                         onClick={removeDuplicates} 
-                        className="text-xs bg-red-55 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/30 px-3 py-2 font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                        data-cursor
+                        className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400 dark:hover:bg-red-900/30"
                     >
                         <Trash2 className="w-3.5 h-3.5" />
                         Scan Duplicates
                     </button>
                     <a 
                         href="/" 
-                        className="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-club-surface dark:hover:bg-club-surface_hover text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-800 px-3 py-2 font-medium rounded-lg transition-colors flex items-center gap-1.5"
+                        data-cursor
+                        className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/70 dark:hover:bg-court-800"
                     >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         View Live Website
@@ -580,17 +585,17 @@ const AdminDashboard = () => {
             <div className="flex flex-col lg:flex-row gap-8 items-start">
                 
                 {/* Sidebar Navigation */}
-                <aside className="w-full lg:w-64 shrink-0 bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm flex flex-col gap-2">
-                    <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800/80 mb-2">
-                        <span className="text-xs font-bold uppercase tracking-wider text-wimbledon-gold">Menu Modules</span>
+                <aside className="glass-deep flex w-full shrink-0 flex-col gap-2 p-4 lg:w-64">
+                    <div className="mb-2 border-b border-gray-100 px-3 py-2 dark:border-chalk/10">
+                        <span className="hud-label text-emerald-600 dark:text-court-accent">Modules</span>
                     </div>
 
                     <button
                         onClick={() => setActiveTab('settings')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                             activeTab === 'settings' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
+                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-court-accent border-l-4 border-court-accent shadow-sm' 
+                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-court-800'
                         }`}
                     >
                         <Sliders className="w-4 h-4" />
@@ -601,14 +606,14 @@ const AdminDashboard = () => {
                         onClick={() => setActiveTab('sessions')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                             activeTab === 'sessions' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
+                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-court-accent border-l-4 border-court-accent shadow-sm' 
+                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-court-800'
                         }`}
                     >
                         <Calendar className="w-4 h-4" />
                         Courts & Sessions
                         {sessionsList.length > 0 && (
-                            <span className="ml-auto bg-gray-100 dark:bg-club-bg text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-bold">
+                            <span className="ml-auto bg-gray-100 dark:bg-court-950 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-bold">
                                 {sessionsList.length}
                             </span>
                         )}
@@ -618,14 +623,14 @@ const AdminDashboard = () => {
                         onClick={() => setActiveTab('events')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                             activeTab === 'events' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
+                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-court-accent border-l-4 border-court-accent shadow-sm' 
+                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-court-800'
                         }`}
                     >
                         <Sparkles className="w-4 h-4" />
                         Events Manager
                         {eventsList.length > 0 && (
-                            <span className="ml-auto bg-gray-100 dark:bg-club-bg text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-bold">
+                            <span className="ml-auto bg-gray-100 dark:bg-court-950 text-gray-600 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full font-bold">
                                 {eventsList.length}
                             </span>
                         )}
@@ -635,8 +640,8 @@ const AdminDashboard = () => {
                         onClick={() => setActiveTab('feedback')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                             activeTab === 'feedback' 
-                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-wimbledon-gold border-l-4 border-wimbledon-gold shadow-sm' 
-                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-club-surface_hover'
+                                ? 'bg-wimbledon-navy dark:bg-wimbledon-navy/40 text-white dark:text-court-accent border-l-4 border-court-accent shadow-sm' 
+                                : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-court-800'
                         }`}
                     >
                         <MessageSquare className="w-4 h-4" />
@@ -660,13 +665,13 @@ const AdminDashboard = () => {
                 </aside>
 
                 {/* Main Content Area */}
-                <main className="flex-grow w-full bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 shadow-sm min-h-[600px] transition-colors duration-300">
+                <main className="glass-deep min-h-[600px] w-full flex-grow p-6 transition-colors duration-300 md:p-8">
                     
                     {/* Settings Tab */}
                     {activeTab === 'settings' && (
                         <div className="space-y-8 animate-fadeIn">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors">Edit Live Ticker</h2>
+                                <h2 className="font-display text-2xl text-gray-900 dark:text-chalk transition-colors">Edit Live Ticker</h2>
                                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors">
                                     Change the message scrollbar displayed at the top of the homepage. Use dots • or lines | to split ideas.
                                 </p>
@@ -674,7 +679,7 @@ const AdminDashboard = () => {
                                     <textarea
                                         value={tickerText}
                                         onChange={(e) => setTickerText(e.target.value)}
-                                        className="w-full h-32 p-4 border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-xl focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent resize-none font-mono text-sm transition-colors"
+                                        className="w-full h-32 p-4 border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-xl focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-court-accent focus:border-transparent resize-none font-mono text-sm transition-colors"
                                         placeholder="Type marquee text..."
                                     />
                                     <div className="flex items-center justify-between">
@@ -684,7 +689,7 @@ const AdminDashboard = () => {
                                         <button
                                             onClick={handleSaveTicker}
                                             disabled={savingTicker}
-                                            className="flex items-center bg-wimbledon-navy hover:bg-[#00287a] text-white px-5 py-2 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
+                                            className="flex items-center clay-gradient hover:brightness-110 text-white px-5 py-2 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
                                         >
                                             <Save className="w-4 h-4 mr-2" />
                                             {savingTicker ? 'Saving...' : 'Save Ticker'}
@@ -696,15 +701,15 @@ const AdminDashboard = () => {
                             <hr className="border-gray-150 dark:border-gray-800" />
 
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors">Session Status Manager</h2>
+                                <h2 className="font-display text-2xl text-gray-900 dark:text-chalk transition-colors">Session Status Manager</h2>
                                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-colors">
                                     Manage visibility blocks for weekly recurring category slots in the Booking Engine.
                                 </p>
                                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {CATEGORIES.map(cat => (
-                                        <div key={cat.id} className="p-4 border border-gray-100 dark:border-gray-800/80 rounded-xl bg-gray-50/30 dark:bg-club-bg/50 transition-colors">
+                                        <div key={cat.id} className="p-4 border border-gray-100 dark:border-gray-800/80 rounded-xl bg-gray-50/30 dark:bg-court-950/50 transition-colors">
                                             <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 transition-colors">{cat.label}</label>
-                                            <div className="flex bg-white dark:bg-club-surface p-1 rounded-lg border border-gray-200 dark:border-gray-800 gap-1 shadow-sm">
+                                            <div className="flex bg-white dark:bg-carbon p-1 rounded-lg border border-gray-200 dark:border-gray-800 gap-1 shadow-sm">
                                                 {(['active', 'hidden', 'cancelled'] as SessionStatus[]).map(status => (
                                                     <button
                                                         key={status}
@@ -732,7 +737,7 @@ const AdminDashboard = () => {
                                     <button
                                         onClick={handleSaveStatuses}
                                         disabled={savingStatuses}
-                                        className="flex items-center bg-wimbledon-navy hover:bg-[#00287a] text-white px-5 py-2 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
+                                        className="flex items-center clay-gradient hover:brightness-110 text-white px-5 py-2 rounded-lg text-sm transition-colors font-medium disabled:opacity-50"
                                     >
                                         <Save className="w-4 h-4 mr-2" />
                                         {savingStatuses ? 'Saving...' : 'Save All Statuses'}
@@ -750,18 +755,18 @@ const AdminDashboard = () => {
                             <div>
                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
                                     <div>
-                                        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Live Scheduled Sessions</h2>
+                                        <h2 className="font-display text-2xl text-gray-900 dark:text-chalk">Live Scheduled Sessions</h2>
                                         <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Add attendees, edit capacities or remove sessions live on the website.</p>
                                     </div>
                                     
-                                    <div className="flex bg-gray-105 dark:bg-club-bg p-1 rounded-full border border-gray-200 dark:border-gray-800 overflow-x-auto">
+                                    <div className="flex bg-gray-105 dark:bg-court-950 p-1 rounded-full border border-gray-200 dark:border-gray-800 overflow-x-auto">
                                         {SPORT_FILTER_TABS.map(sport => (
                                             <button
                                                 key={sport}
                                                 onClick={() => setSessionsSportFilter(sport)}
                                                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                                                     sessionsSportFilter === sport 
-                                                        ? 'bg-white dark:bg-club-surface text-wimbledon-navy dark:text-wimbledon-gold shadow-sm font-extrabold' 
+                                                        ? 'bg-white dark:bg-carbon text-wimbledon-navy dark:text-court-accent shadow-sm font-extrabold' 
                                                         : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                                                 }`}
                                             >
@@ -788,15 +793,15 @@ const AdminDashboard = () => {
                                                 return (
                                                     <div 
                                                         key={session.id} 
-                                                        className="bg-gray-50/20 dark:bg-club-bg/30 border border-gray-250/70 dark:border-gray-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-wimbledon-gold/30 hover:shadow-md transition-all duration-200 relative overflow-hidden"
+                                                        className="bg-gray-50/20 dark:bg-court-950/30 border border-gray-250/70 dark:border-gray-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-court-accent/30 hover:shadow-md transition-all duration-200 relative overflow-hidden"
                                                     >
                                                         <div>
                                                             <div className="flex justify-between items-start mb-3">
                                                                 <div>
-                                                                    <span className="text-[10px] font-bold tracking-widest uppercase text-wimbledon-gold bg-wimbledon-navy/10 dark:bg-wimbledon-navy/50 px-2.5 py-1 rounded border border-wimbledon-navy/20 dark:border-wimbledon-gold/10">
+                                                                    <span className="text-[10px] font-bold tracking-widest uppercase text-court-accent bg-wimbledon-navy/10 dark:bg-wimbledon-navy/50 px-2.5 py-1 rounded border border-wimbledon-navy/20 dark:border-court-accent/10">
                                                                         {session.sport || 'Tennis'}
                                                                     </span>
-                                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mt-2 truncate">{session.title}</h3>
+                                                                    <h3 className="text-lg font-bold text-gray-900 dark:text-chalk mt-2 truncate">{session.title}</h3>
                                                                 </div>
                                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
                                                                     session.type === 'coaching' 
@@ -807,7 +812,7 @@ const AdminDashboard = () => {
                                                                 </span>
                                                             </div>
 
-                                                            <div className="flex flex-col gap-1 text-xs text-gray-500 dark:text-gray-400 mb-4 bg-white/40 dark:bg-club-surface/40 p-2.5 rounded-xl border border-gray-150 dark:border-gray-850">
+                                                            <div className="flex flex-col gap-1 text-xs text-gray-500 dark:text-gray-400 mb-4 bg-white/40 dark:bg-carbon/40 p-2.5 rounded-xl border border-gray-150 dark:border-gray-850">
                                                                 <div className="flex items-center gap-1.5">
                                                                     <Calendar className="w-3.5 h-3.5 text-gray-400" />
                                                                     <span>{session.date}</span>
@@ -828,13 +833,13 @@ const AdminDashboard = () => {
                                                                                 placeholder="Assign coach name..."
                                                                                 value={coachValue}
                                                                                 onChange={e => setCoachDraft(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                                                                className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                                                className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                                             />
                                                                             <button
                                                                                 type="button"
                                                                                 onClick={() => handleUpdateCoach(session.id)}
                                                                                 disabled={savingCoach[session.id]}
-                                                                                className="bg-wimbledon-navy hover:bg-[#00287a] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40"
+                                                                                className="clay-gradient hover:brightness-110 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors disabled:opacity-40"
                                                                             >
                                                                                 {savingCoach[session.id] ? 'Saving...' : 'Save Coach'}
                                                                             </button>
@@ -857,7 +862,7 @@ const AdminDashboard = () => {
                                                                         {rosterAttendees.map((attString, i) => {
                                                                             const player = parseAttendeeLocal(attString);
                                                                             return (
-                                                                                <div key={i} className="flex justify-between items-center text-xs bg-white dark:bg-club-surface/60 border border-gray-150 dark:border-gray-800/60 p-2 rounded-lg group/item">
+                                                                                <div key={i} className="flex justify-between items-center text-xs bg-white dark:bg-carbon/60 border border-gray-150 dark:border-gray-800/60 p-2 rounded-lg group/item">
                                                                                     <div className="truncate pr-2">
                                                                                         <p className="font-semibold text-gray-850 dark:text-gray-250 truncate">{player.name}</p>
                                                                                         <p className="text-[10px] text-gray-400 truncate mt-0.5">{player.email} {player.court && `• ${player.court}`}</p>
@@ -885,14 +890,14 @@ const AdminDashboard = () => {
                                                                     placeholder="Add Name..."
                                                                     value={newAttendeeName[session.id] || ''}
                                                                     onChange={e => setNewAttendeeName(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                                                    className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                                    className="flex-grow text-xs p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                                 />
                                                                 
                                                                 {sessionCourts.length > 0 && (
                                                                     <select
                                                                         value={newAttendeeCourt[session.id] || ''}
                                                                         onChange={e => setNewAttendeeCourt(prev => ({ ...prev, [session.id]: e.target.value }))}
-                                                                        className="w-28 text-[10px] p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                                        className="w-28 text-[10px] p-2 border border-gray-350 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                                     >
                                                                         <option value="">Court...</option>
                                                                         {sessionCourts.map(court => (
@@ -904,7 +909,7 @@ const AdminDashboard = () => {
                                                                 <button
                                                                     onClick={() => handleAddAttendee(session)}
                                                                     disabled={!newAttendeeName[session.id] || (sessionCourts.length > 0 && !newAttendeeCourt[session.id])}
-                                                                    className="bg-wimbledon-navy hover:bg-[#00287a] text-white p-2 rounded-lg transition-colors disabled:opacity-40"
+                                                                    className="clay-gradient hover:brightness-110 text-white p-2 rounded-lg transition-colors disabled:opacity-40"
                                                                     title="Register member"
                                                                 >
                                                                     <UserPlus className="w-3.5 h-3.5" />
@@ -914,7 +919,7 @@ const AdminDashboard = () => {
                                                             <div className="flex justify-between items-center pt-2">
                                                                 <button 
                                                                     onClick={() => openEditSession(session)}
-                                                                    className="text-xs text-gray-500 hover:text-wimbledon-gold dark:hover:text-wimbledon-gold flex items-center gap-1 transition-colors font-medium"
+                                                                    className="text-xs text-gray-500 hover:text-court-accent dark:hover:text-court-accent flex items-center gap-1 transition-colors font-medium"
                                                                 >
                                                                     <Edit className="w-3.5 h-3.5" />
                                                                     Edit Details
@@ -938,10 +943,10 @@ const AdminDashboard = () => {
                             <hr className="border-gray-150 dark:border-gray-800" />
 
                             {/* Create Session Form */}
-                            <div ref={createSessionFormRef} className="bg-gray-55/20 dark:bg-club-bg/20 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-1.5 h-full bg-wimbledon-gold"></div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                    <Plus className="w-5 h-5 text-wimbledon-gold" />
+                            <div ref={createSessionFormRef} className="bg-gray-55/20 dark:bg-court-950/20 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1.5 h-full bg-court-accent"></div>
+                                <h3 className="font-display text-2xl text-gray-900 dark:text-chalk flex items-center gap-2">
+                                    <Plus className="w-5 h-5 text-court-accent" />
                                     Schedule New Custom Session
                                 </h3>
                                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-6">Create customized coaching clinics or court booking reservations.</p>
@@ -956,7 +961,7 @@ const AdminDashboard = () => {
                                                 placeholder="e.g. Intermediate Backhand Clinic"
                                                 value={newSession.title}
                                                 onChange={e => setNewSession({ ...newSession, title: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                             />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
@@ -965,7 +970,7 @@ const AdminDashboard = () => {
                                                 <select 
                                                     value={newSession.sport}
                                                     onChange={e => setNewSession({ ...newSession, sport: e.target.value })}
-                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 >
                                                     {SPORTS.map(sport => (
                                                         <option key={sport} value={sport}>{sport}</option>
@@ -989,7 +994,7 @@ const AdminDashboard = () => {
                                                                 : getDefaultMaxAttendees('coaching'),
                                                         });
                                                     }}
-                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 >
                                                     <option value="court">Court Open Play</option>
                                                     <option value="coaching">Clinic / Coaching</option>
@@ -1009,7 +1014,7 @@ const AdminDashboard = () => {
                                                     setSessionDateInput(e.target.value);
                                                     setNewSession(prev => ({ ...prev, date: formatSelectedDate(e.target.value) }));
                                                 }}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold text-gray-500 dark:text-gray-300"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent text-gray-500 dark:text-gray-300"
                                             />
                                         </div>
                                         <div>
@@ -1030,13 +1035,13 @@ const AdminDashboard = () => {
                                                 placeholder="e.g. 9:00 PM - 11:00 PM"
                                                 value={newSession.time}
                                                 onChange={e => setNewSession({ ...newSession, time: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                             />
                                         </div>
                                     </div>
 
                                     {newSession.type === 'court' && (
-                                        <div className="space-y-3 p-4 border border-gray-200 dark:border-gray-800 rounded-xl bg-white/50 dark:bg-club-bg/30">
+                                        <div className="space-y-3 p-4 border border-gray-200 dark:border-gray-800 rounded-xl bg-white/50 dark:bg-court-950/30">
                                             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Courts</p>
                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                                 <div>
@@ -1053,7 +1058,7 @@ const AdminDashboard = () => {
                                                             });
                                                         }}
                                                         disabled={!!newSession.customCourtLabels.trim()}
-                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold disabled:opacity-50"
+                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent disabled:opacity-50"
                                                     >
                                                         {[1, 2, 3, 4, 5].map(n => (
                                                             <option key={n} value={n}>{n}</option>
@@ -1076,7 +1081,7 @@ const AdminDashboard = () => {
                                                             });
                                                         }}
                                                         disabled={!!newSession.customCourtLabels.trim()}
-                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold disabled:opacity-50"
+                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent disabled:opacity-50"
                                                     />
                                                 </div>
                                                 <div>
@@ -1094,14 +1099,14 @@ const AdminDashboard = () => {
                                                                 maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
                                                             });
                                                         }}
-                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                        className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                     />
                                                 </div>
                                             </div>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <span className="text-xs font-semibold text-gray-500 uppercase">Preview:</span>
                                                 {previewCourtLabels.map(court => (
-                                                    <span key={court} className="text-xs font-bold px-2.5 py-1 rounded-full bg-wimbledon-navy/10 text-wimbledon-navy dark:bg-wimbledon-gold/10 dark:text-wimbledon-gold border border-wimbledon-navy/20">
+                                                    <span key={court} className="text-xs font-bold px-2.5 py-1 rounded-full bg-wimbledon-navy/10 text-wimbledon-navy dark:bg-court-accent/10 dark:text-court-accent border border-wimbledon-navy/20">
                                                         {court}
                                                     </span>
                                                 ))}
@@ -1119,7 +1124,7 @@ const AdminDashboard = () => {
                                                 placeholder="8"
                                                 value={newSession.maxAttendees}
                                                 onChange={e => setNewSession({ ...newSession, maxAttendees: Number(e.target.value) })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                             />
                                         </div>
                                         {newSession.type === 'coaching' && (
@@ -1130,7 +1135,7 @@ const AdminDashboard = () => {
                                                     placeholder="Coach's Full Name"
                                                     value={newSession.coach}
                                                     onChange={e => setNewSession({ ...newSession, coach: e.target.value })}
-                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                    className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 />
                                             </div>
                                         )}
@@ -1160,7 +1165,7 @@ const AdminDashboard = () => {
                             
                             {/* Live Events List */}
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Active Events Carousel</h2>
+                                <h2 className="font-display text-2xl text-gray-900 dark:text-chalk mb-2">Active Events Carousel</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Manage cards inside the Upcoming Events slider carousel on the home page.</p>
                                 
                                 {eventsList.length === 0 ? (
@@ -1173,9 +1178,9 @@ const AdminDashboard = () => {
                                         {eventsList.map(event => (
                                             <div 
                                                 key={event.id}
-                                                className="bg-gray-50/20 dark:bg-club-bg/30 border border-gray-250/75 dark:border-gray-800/80 rounded-2xl overflow-hidden shadow-sm flex flex-col group relative"
+                                                className="bg-gray-50/20 dark:bg-court-950/30 border border-gray-250/75 dark:border-gray-800/80 rounded-2xl overflow-hidden shadow-sm flex flex-col group relative"
                                             >
-                                                <div className="h-40 w-full relative overflow-hidden bg-gray-200 dark:bg-club-surface">
+                                                <div className="h-40 w-full relative overflow-hidden bg-gray-200 dark:bg-carbon">
                                                     <img 
                                                         src={event.image} 
                                                         alt={event.title} 
@@ -1184,7 +1189,7 @@ const AdminDashboard = () => {
                                                     <div className="absolute top-2 right-2 flex gap-1.5">
                                                         <button 
                                                             onClick={() => setEditingEvent(event)}
-                                                            className="p-1.5 bg-black/60 backdrop-blur-sm rounded-lg text-white hover:text-wimbledon-gold transition-colors"
+                                                            className="p-1.5 bg-black/60 backdrop-blur-sm rounded-lg text-white hover:text-court-accent transition-colors"
                                                             title="Edit Event"
                                                         >
                                                             <Edit className="w-3.5 h-3.5" />
@@ -1200,7 +1205,7 @@ const AdminDashboard = () => {
                                                 </div>
                                                 <div className="p-4 flex-grow flex flex-col justify-between">
                                                     <div>
-                                                        <h3 className="font-bold text-gray-900 dark:text-gray-100 line-clamp-1" title={event.title}>{event.title}</h3>
+                                                        <h3 className="font-bold text-gray-900 dark:text-chalk line-clamp-1" title={event.title}>{event.title}</h3>
                                                         <div className="flex flex-col gap-1 mt-2.5 text-xs text-gray-500 dark:text-gray-400">
                                                             <div className="flex items-center gap-1.5">
                                                                 <Calendar className="w-3.5 h-3.5 text-gray-400" />
@@ -1225,7 +1230,7 @@ const AdminDashboard = () => {
                                                             href={event.link} 
                                                             target="_blank" 
                                                             rel="noopener noreferrer" 
-                                                            className="mt-4 text-xs font-semibold text-wimbledon-navy dark:text-wimbledon-gold hover:underline truncate"
+                                                            className="mt-4 text-xs font-semibold text-wimbledon-navy dark:text-court-accent hover:underline truncate"
                                                         >
                                                             Link: {event.link.substring(0, 30)}...
                                                         </a>
@@ -1240,10 +1245,10 @@ const AdminDashboard = () => {
                             <hr className="border-gray-150 dark:border-gray-800" />
 
                             {/* Add New Event Form */}
-                            <div className="bg-gray-50/20 dark:bg-club-bg/20 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-1.5 h-full bg-wimbledon-gold"></div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                                    <Plus className="w-5 h-5 text-wimbledon-gold" />
+                            <div className="bg-gray-50/20 dark:bg-court-950/20 border border-gray-200 dark:border-gray-800 p-6 rounded-2xl relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1.5 h-full bg-court-accent"></div>
+                                <h3 className="font-display text-2xl text-gray-900 dark:text-chalk flex items-center gap-2">
+                                    <Plus className="w-5 h-5 text-court-accent" />
                                     Add New Club Event
                                 </h3>
                                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-6">Insert new announcements or matches into Upcoming Events slider.</p>
@@ -1257,7 +1262,7 @@ const AdminDashboard = () => {
                                                 required
                                                 value={newEvent.title}
                                                 onChange={e => setNewEvent({ ...newEvent, title: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 placeholder="e.g. Annual Squash Championship Match"
                                             />
                                         </div>
@@ -1268,7 +1273,7 @@ const AdminDashboard = () => {
                                                 required
                                                 value={newEvent.date}
                                                 onChange={e => setNewEvent({ ...newEvent, date: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 placeholder="e.g. October 14"
                                             />
                                         </div>
@@ -1282,7 +1287,7 @@ const AdminDashboard = () => {
                                                 required
                                                 value={newEvent.time}
                                                 onChange={e => setNewEvent({ ...newEvent, time: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 placeholder="e.g. 9:00 AM EST"
                                             />
                                         </div>
@@ -1293,7 +1298,7 @@ const AdminDashboard = () => {
                                                 required
                                                 value={newEvent.location}
                                                 onChange={e => setNewEvent({ ...newEvent, location: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 placeholder="e.g. Center Courts 1 & 2"
                                             />
                                         </div>
@@ -1307,7 +1312,7 @@ const AdminDashboard = () => {
                                                 required
                                                 value={newEvent.image}
                                                 onChange={e => setNewEvent({ ...newEvent, image: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 placeholder="https://..."
                                             />
                                         </div>
@@ -1317,7 +1322,7 @@ const AdminDashboard = () => {
                                                 type="url"
                                                 value={newEvent.link}
                                                 onChange={e => setNewEvent({ ...newEvent, link: e.target.value })}
-                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg focus:ring-1 focus:ring-wimbledon-gold"
+                                                className="w-full p-2.5 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg focus:ring-1 focus:ring-court-accent"
                                                 placeholder="https://fuquaconnect..."
                                             />
                                         </div>
@@ -1346,10 +1351,10 @@ const AdminDashboard = () => {
                         <div className="space-y-6 animate-fadeIn">
                             <div className="flex justify-between items-center mb-4">
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Feedback Inbox</h2>
+                                    <h2 className="font-display text-2xl text-gray-900 dark:text-chalk">Feedback Inbox</h2>
                                     <p className="text-sm text-gray-500 dark:text-gray-400">Read bugs, suggestions, and submissions sent by members.</p>
                                 </div>
-                                <span className="bg-gray-100 dark:bg-club-bg text-gray-700 dark:text-gray-300 text-xs px-2.5 py-1 rounded-full font-bold">
+                                <span className="bg-gray-100 dark:bg-court-950 text-gray-700 dark:text-gray-300 text-xs px-2.5 py-1 rounded-full font-bold">
                                     {feedbackList.length} Items
                                 </span>
                             </div>
@@ -1372,7 +1377,7 @@ const AdminDashboard = () => {
                                             : 'Recent';
 
                                         return (
-                                            <div key={item.id} className="p-4 border border-gray-150 dark:border-gray-850 rounded-xl bg-gray-50/20 dark:bg-club-bg/40 flex flex-col md:flex-row justify-between gap-4 items-start transition-all hover:border-gray-250 dark:hover:border-gray-750">
+                                            <div key={item.id} className="p-4 border border-gray-150 dark:border-gray-850 rounded-xl bg-gray-50/20 dark:bg-court-950/40 flex flex-col md:flex-row justify-between gap-4 items-start transition-all hover:border-gray-250 dark:hover:border-gray-750">
                                                 <div className="space-y-2 flex-grow">
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         {item.type === 'bug' ? (
@@ -1419,9 +1424,9 @@ const AdminDashboard = () => {
             {/* Edit Session Modal */}
             {editingSession && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-                    <div className="bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-6 max-w-md w-full shadow-xl space-y-4">
+                    <div className="bg-white dark:bg-carbon rounded-2xl border border-gray-200 dark:border-gray-800 p-6 max-w-md w-full shadow-xl space-y-4">
                         <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-800">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Edit Session Details</h3>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-chalk">Edit Session Details</h3>
                             <button onClick={() => setEditingSession(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                                 <X className="w-5 h-5" />
                             </button>
@@ -1434,7 +1439,7 @@ const AdminDashboard = () => {
                                     required
                                     value={editingSession.title}
                                     onChange={e => setEditingSession({ ...editingSession, title: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -1443,7 +1448,7 @@ const AdminDashboard = () => {
                                     <select 
                                         value={editingSession.sport}
                                         onChange={e => setEditingSession({ ...editingSession, sport: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                     >
                                         {SPORTS.map(sport => (
                                             <option key={sport} value={sport}>{sport}</option>
@@ -1455,7 +1460,7 @@ const AdminDashboard = () => {
                                     <select 
                                         value={editingSession.type}
                                         onChange={e => setEditingSession({ ...editingSession, type: e.target.value as SessionType })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                     >
                                         <option value="court">Open Play / Court</option>
                                         <option value="coaching">Clinic / Coaching</option>
@@ -1470,7 +1475,7 @@ const AdminDashboard = () => {
                                         required
                                         value={editingSession.date}
                                         onChange={e => setEditingSession({ ...editingSession, date: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                         placeholder="e.g. Monday, Jun 15"
                                     />
                                 </div>
@@ -1481,13 +1486,13 @@ const AdminDashboard = () => {
                                         required
                                         value={editingSession.time}
                                         onChange={e => setEditingSession({ ...editingSession, time: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                         placeholder="e.g. 9:00 PM - 11:00 PM"
                                     />
                                 </div>
                             </div>
                             {editingSession.type === 'court' && isEditableCustomCourtSession(editingSession) && (
-                                <div className="space-y-3 p-3 border border-gray-200 dark:border-gray-800 rounded-xl bg-gray-50/50 dark:bg-club-bg/30">
+                                <div className="space-y-3 p-3 border border-gray-200 dark:border-gray-800 rounded-xl bg-gray-50/50 dark:bg-court-950/30">
                                     <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Courts</p>
                                     <div className="grid grid-cols-1 gap-3">
                                         <div className="grid grid-cols-2 gap-3">
@@ -1505,7 +1510,7 @@ const AdminDashboard = () => {
                                                         } : prev);
                                                     }}
                                                     disabled={!!editCourtFields.customCourtLabels.trim()}
-                                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                                 >
                                                     {[1, 2, 3, 4, 5].map(n => (
                                                         <option key={n} value={n}>{n}</option>
@@ -1528,7 +1533,7 @@ const AdminDashboard = () => {
                                                         } : prev);
                                                     }}
                                                     disabled={!!editCourtFields.customCourtLabels.trim()}
-                                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                                 />
                                             </div>
                                         </div>
@@ -1547,13 +1552,13 @@ const AdminDashboard = () => {
                                                         maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
                                                     } : prev);
                                                 }}
-                                                className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                                className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                             />
                                         </div>
                                         <div className="flex flex-wrap items-center gap-2">
                                             <span className="text-xs font-semibold text-gray-500 uppercase">Preview:</span>
                                             {buildCourtLabels(editCourtFields.courtCount, editCourtFields.courtStartNumber, editCourtFields.customCourtLabels).map(court => (
-                                                <span key={court} className="text-xs font-bold px-2 py-0.5 rounded-full bg-wimbledon-navy/10 text-wimbledon-navy dark:text-wimbledon-gold">
+                                                <span key={court} className="text-xs font-bold px-2 py-0.5 rounded-full bg-wimbledon-navy/10 text-wimbledon-navy dark:text-court-accent">
                                                     {court}
                                                 </span>
                                             ))}
@@ -1570,7 +1575,7 @@ const AdminDashboard = () => {
                                         min={1}
                                         value={editingSession.maxAttendees}
                                         onChange={e => setEditingSession({ ...editingSession, maxAttendees: Number(e.target.value) })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                     />
                                 </div>
                                 {editingSession.type === 'coaching' && (
@@ -1580,7 +1585,7 @@ const AdminDashboard = () => {
                                             type="text" 
                                             value={editingSession.coach || ''}
                                             onChange={e => setEditingSession({ ...editingSession, coach: e.target.value })}
-                                            className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-905 dark:text-gray-100 rounded-lg"
+                                            className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-905 dark:text-chalk rounded-lg"
                                             placeholder="Coach Name"
                                         />
                                     </div>
@@ -1590,7 +1595,7 @@ const AdminDashboard = () => {
                                 <button type="button" onClick={() => setEditingSession(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                                     Cancel
                                 </button>
-                                <button type="submit" className="px-4 py-2 text-sm bg-wimbledon-navy hover:bg-[#00287a] text-white rounded-lg">
+                                <button type="submit" className="px-4 py-2 text-sm clay-gradient hover:brightness-110 text-white rounded-lg">
                                     Save Changes
                                 </button>
                             </div>
@@ -1602,9 +1607,9 @@ const AdminDashboard = () => {
             {/* Edit Event Modal */}
             {editingEvent && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-                    <div className="bg-white dark:bg-club-surface rounded-2xl border border-gray-200 dark:border-gray-800 p-6 max-w-md w-full shadow-xl space-y-4">
+                    <div className="bg-white dark:bg-carbon rounded-2xl border border-gray-200 dark:border-gray-800 p-6 max-w-md w-full shadow-xl space-y-4">
                         <div className="flex justify-between items-center pb-2 border-b border-gray-200 dark:border-gray-800">
-                            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Edit Event</h3>
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-chalk">Edit Event</h3>
                             <button onClick={() => setEditingEvent(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
                                 <X className="w-5 h-5" />
                             </button>
@@ -1617,7 +1622,7 @@ const AdminDashboard = () => {
                                     required
                                     value={editingEvent.title}
                                     onChange={e => setEditingEvent({ ...editingEvent, title: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
@@ -1628,7 +1633,7 @@ const AdminDashboard = () => {
                                         required
                                         value={editingEvent.date}
                                         onChange={e => setEditingEvent({ ...editingEvent, date: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                     />
                                 </div>
                                 <div>
@@ -1638,7 +1643,7 @@ const AdminDashboard = () => {
                                         required
                                         value={editingEvent.time}
                                         onChange={e => setEditingEvent({ ...editingEvent, time: e.target.value })}
-                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-950 dark:text-gray-100 rounded-lg"
+                                        className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-950 dark:text-chalk rounded-lg"
                                     />
                                 </div>
                             </div>
@@ -1649,7 +1654,7 @@ const AdminDashboard = () => {
                                     required
                                     value={editingEvent.location}
                                     onChange={e => setEditingEvent({ ...editingEvent, location: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                 />
                             </div>
                             <div>
@@ -1659,7 +1664,7 @@ const AdminDashboard = () => {
                                     required
                                     value={editingEvent.image}
                                     onChange={e => setEditingEvent({ ...editingEvent, image: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                 />
                             </div>
                             <div>
@@ -1668,14 +1673,14 @@ const AdminDashboard = () => {
                                     type="url" 
                                     value={editingEvent.link || ''}
                                     onChange={e => setEditingEvent({ ...editingEvent, link: e.target.value })}
-                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 rounded-lg"
+                                    className="w-full p-2 text-sm border border-gray-300 dark:border-gray-700 bg-white dark:bg-court-950 text-gray-900 dark:text-chalk rounded-lg"
                                 />
                             </div>
                             <div className="flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-gray-800">
                                 <button type="button" onClick={() => setEditingEvent(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                                     Cancel
                                 </button>
-                                <button type="submit" className="px-4 py-2 text-sm bg-wimbledon-navy hover:bg-[#00287a] text-white rounded-lg">
+                                <button type="submit" className="px-4 py-2 text-sm clay-gradient hover:brightness-110 text-white rounded-lg">
                                     Save Changes
                                 </button>
                             </div>

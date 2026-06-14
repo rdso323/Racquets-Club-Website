@@ -11,7 +11,6 @@ import {
     getBaseWeekStart,
     isWeekLocked,
     getWeekDateRangeDisplay,
-    bucketAttendeesByCourt,
     getOpenPlayInstancesWithinHorizon,
     filterRegularSessionsForDisplay,
     inferSport,
@@ -289,8 +288,8 @@ const BookingEngine = () => {
         return (
             <div className="my-3 grid grid-cols-1 gap-3">
                 {courts.map((court, courtIdx) => (
-                    <div key={courtIdx} className="bg-gray-50/80 dark:bg-slate-900/50 rounded shadow-sm border border-gray-100 dark:border-slate-800 p-3">
-                        <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-2 flex justify-between">
+                    <div key={courtIdx} className="bg-gray-50/80 dark:bg-court-900/50 rounded shadow-sm border border-gray-100 dark:border-chalk/10 p-3">
+                        <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 dark:text-chalk/40 mb-2 flex justify-between">
                             <span>{courtNames ? courtNames[courtIdx] : `Court ${courtIdx + 1}`}</span>
                             <span>{court.filter(Boolean).length}/{court.length}</span>
                         </p>
@@ -313,7 +312,7 @@ const BookingEngine = () => {
                                     }
                                 }
                                 return (
-                                    <div key={i} className={`text-center py-2 px-1 rounded transition-all duration-300 ${isPresent ? 'bg-wimbledon-green/10 text-wimbledon-green font-semibold border border-wimbledon-green/30 truncate' : 'bg-white border border-dashed border-gray-300 text-gray-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-500'}`} title={isPresent ? tooltip : ''}>
+                                    <div key={i} className={`text-center py-2 px-1 rounded transition-all duration-300 ${isPresent ? 'bg-emerald-500/10 text-emerald-700 dark:text-court-accent font-semibold border border-emerald-500/30 truncate' : 'bg-white border border-dashed border-gray-300 text-gray-400 dark:bg-court-900/50 dark:border-chalk/10 dark:text-chalk/40'}`} title={isPresent ? tooltip : ''}>
                                         {name}
                                     </div>
                                 );
@@ -361,132 +360,143 @@ const BookingEngine = () => {
         const isFull = activeAttendees.length >= totalMax;
         const isJoining = user ? session.attendees.some(a => a.startsWith(user.uid + "|") || a === user.uid) : false;
         const userEntry = user ? session.attendees.find(a => a.startsWith(user.uid + "|") || a === user.uid) : undefined;
-        const orderedAttendees = hasCourtBuckets
-            ? bucketAttendeesByCourt(activeAttendees, sessionCourts, maxPerCourt)
-            : session.attendees;
 
         return (
-            <div key={session.id} className="club-card overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative">
+            <div key={session.id} className="glass-deep relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:accent-glow">
                 {isCancelled && (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center backdrop-blur-[2px] bg-white/30 rounded-xl">
-                        <div className="bg-white border border-red-200 shadow-lg rounded-xl px-5 py-4 flex flex-col items-center text-center max-w-[75%]">
-                            <AlertTriangle className="w-6 h-6 text-red-500 mb-2" />
-                            <p className="text-sm font-bold text-red-700">Cancelled This Week</p>
-                            <p className="text-xs text-gray-500 mt-1 font-medium">This session won't be running this week.</p>
+                    <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
+                        <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
+                            <AlertTriangle className="mb-2 h-6 w-6 text-red-500" />
+                            <p className="text-sm font-bold text-red-700 dark:text-red-300">Cancelled This Week</p>
+                            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/50">This session won't be running this week.</p>
                         </div>
                     </div>
                 )}
 
-                <div className={`p-4 border-b relative transition-colors ${session.type === 'coaching' ? 'bg-gradient-to-r from-blue-50 to-indigo-50/50 border-blue-100 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-900/30' : 'bg-gradient-to-r from-green-50 to-emerald-50/50 border-green-100 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-900/30'} ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
-                    <div className="flex justify-between items-start mb-3">
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-sm text-white shadow-sm transition-colors ${session.type === 'coaching' ? 'bg-wimbledon-navy dark:bg-blue-600' : 'bg-wimbledon-green dark:bg-wimbledon-green-accent'}`}>
-                            {session.type}
+                <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+                    <div className="mb-4 flex items-start justify-between gap-3">
+                        <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
+                            {session.type === 'coaching' ? <Rocket className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />}
+                            {session.type === 'coaching' ? 'Clinic' : 'Session'}
                         </span>
-                        <p className={`text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded shadow-sm border transition-colors ${session.type === 'coaching' ? 'text-wimbledon-navy bg-blue-50/80 border-blue-200 dark:text-blue-200 dark:bg-blue-900/40 dark:border-blue-800/50' : 'text-wimbledon-green bg-green-50/80 border-green-200 dark:text-wimbledon-green-accent dark:bg-green-900/30 dark:border-green-800/50'}`}>
+                        <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
                             {dateRangeDisplay}
                         </p>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 transition-colors">{session.title}</h3>
-                        <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 bg-white/70 dark:bg-black/20 w-fit px-2 py-1 rounded shadow-sm border border-gray-100 dark:border-gray-800/50 whitespace-nowrap transition-colors">{formattedClinicDate} • {session.time || '3:00 PM - 4:00 PM'}</p>
-                    </div>
+                    <h3 className="font-display text-2xl text-gray-900 dark:text-chalk">{session.title}</h3>
+                    <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
+                        {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
+                    </p>
                     {session.type === 'coaching' && (
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 font-medium flex items-center transition-colors">
-                            <Rocket className="w-4 h-4 mr-1.5 text-wimbledon-navy dark:text-blue-400" />
-                            Instructor: <span className="text-wimbledon-navy dark:text-blue-400 ml-1 font-bold">{session.coach || 'TBD'}</span>
+                        <p className="mt-2 flex items-center text-sm font-medium text-gray-600 dark:text-chalk/60">
+                            <Rocket className="mr-1.5 h-4 w-4 accent-text" />
+                            Instructor:
+                            <span className="ml-1 font-bold accent-text">{session.coach || 'TBD'}</span>
                         </p>
                     )}
+                    <div className="mt-4 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-chalk/50">
+                        <span className="flex items-center gap-1.5">
+                            <Users className="h-4 w-4" />
+                            {activeAttendees.length} / {totalMax} enrolled
+                        </span>
+                        <span className={isFull ? 'text-red-500 dark:text-red-400' : 'accent-text'}>
+                            {totalMax - activeAttendees.length} spots left
+                        </span>
+                    </div>
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-chalk/10">
+                        <div
+                            className={`h-full rounded-full transition-all duration-700 ${isFull ? 'bg-red-500' : 'accent-bg'}`}
+                            style={{ width: `${Math.min(100, (activeAttendees.length / totalMax) * 100)}%` }}
+                        />
+                    </div>
                 </div>
 
-                <div className={`p-4 flex-grow flex flex-col justify-between relative text-left ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+                <div className={`relative flex-grow p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     {!user && (
-                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 dark:bg-slate-900/60 backdrop-blur-[2px] rounded-b-xl border-t border-gray-100 dark:border-slate-800">
-                            <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-lg border border-gray-100 dark:border-slate-700 flex flex-col items-center text-center max-w-[80%] mb-10">
-                                <Users className="w-8 h-8 text-wimbledon-navy dark:text-gray-300 mb-2 opacity-80" />
-                                <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-1">Members Only</h4>
-                                <p className="text-xs text-gray-500 font-medium">Please login to view spots and book this session.</p>
+                        <div className="absolute inset-0 z-20 flex items-center justify-center rounded-b-2xl bg-white/60 backdrop-blur-[2px] dark:bg-court-950/60">
+                            <div className="mb-8 flex max-w-[80%] flex-col items-center rounded-xl border border-gray-100 bg-white p-5 text-center shadow-lg dark:border-chalk/10 dark:bg-carbon">
+                                <Users className="mb-2 h-8 w-8 text-wimbledon-navy opacity-80 dark:text-chalk" />
+                                <h4 className="mb-1 text-sm font-bold text-gray-900 dark:text-chalk">Members Only</h4>
+                                <p className="text-xs font-medium text-gray-500 dark:text-chalk/50">Sign in to view availability and book.</p>
                             </div>
                         </div>
                     )}
 
-                    <div className={`${!user ? 'opacity-40 pointer-events-none blur-[1.5px] transition-all' : ''}`}>
-                        <div className="flex items-center justify-between text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">
-                            <span className="flex items-center group relative">
-                                <Users className="w-4 h-4 mr-1.5 text-gray-400" />
-                                {activeAttendees.length} / {totalMax} Enrolled
-                            </span>
-                            <span className={isFull ? 'text-red-500' : 'text-wimbledon-green'}>{totalMax - activeAttendees.length} Spots Left</span>
-                        </div>
-
-                        <div className="w-full bg-gray-100 dark:bg-slate-800 rounded-full h-1.5 mb-2 overflow-hidden">
-                            <div
-                                className={`h-1.5 rounded-full transition-all duration-700 ease-out ${isFull ? 'bg-red-500' : 'bg-gradient-to-r from-wimbledon-green to-emerald-400'}`}
-                                style={{ width: `${Math.min(100, (activeAttendees.length / totalMax) * 100)}%` }}
-                            />
-                        </div>
-
-                        {renderAttendeesList(
-                            hasCourtBuckets ? orderedAttendees : session.attendees,
-                            hasCourtBuckets ? totalMax : session.maxAttendees,
-                            hasCourtBuckets ? sessionCourts : undefined,
-                        )}
-                    </div>
-
-                    <div className={`mt-auto pt-2 space-y-2 relative z-10 w-full ${!user ? 'opacity-30 pointer-events-none blur-[1px]' : ''}`}>
+                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
                         {isLocked && !isCancelled && (
-                            <div className="mb-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-900/50 text-amber-700 dark:text-amber-300 text-xs px-3 py-2 rounded-lg font-medium text-center shadow-sm">
+                            <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
                                 Locked until Sunday 5:00 PM
                             </div>
                         )}
+
                         {hasCourtBuckets ? (
-                            <div className="grid grid-cols-1 gap-3">
+                            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                                 {sessionCourts.map((courtName) => {
                                     const courtAttendees = session.attendees.filter(a => a.endsWith(`|${courtName}`));
                                     const isCourtFull = courtAttendees.length >= maxPerCourt;
-                                    const userInThisCourt = userEntry && (courtAttendees.includes(userEntry) || userEntry.endsWith(`|${courtName}`));
-                                    const userInAnotherCourt = userEntry && !userInThisCourt;
+                                    const userInThisCourt = !!(userEntry && (courtAttendees.includes(userEntry) || userEntry.endsWith(`|${courtName}`)));
+                                    const userInAnotherCourt = !!(userEntry && !userInThisCourt);
+                                    const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
+                                    const disabled = isPast || isLocked || isCancelled || (isCourtFull && !userInThisCourt) || !user;
+
+                                    const actionLabel = isPast
+                                        ? 'Session Ended'
+                                        : isCancelled
+                                          ? 'Cancelled'
+                                          : isLocked
+                                            ? 'Locked'
+                                            : userInThisCourt
+                                              ? `Drop ${courtName}`
+                                              : userInAnotherCourt
+                                                ? `Switch to ${courtName}`
+                                                : isCourtFull
+                                                  ? `${courtName} Full`
+                                                  : `Join ${courtName}`;
 
                                     return (
-                                        <button
+                                        <CourtDiagram
                                             key={courtName}
-                                            onClick={() => handleJoin(session, courtName)}
-                                            disabled={isPast || isLocked || isCancelled || (isCourtFull && !userInThisCourt) || !user}
-                                            className={`w-full py-3 rounded-xl font-semibold tracking-wide text-xs md:text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                                isLocked ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                                    userInThisCourt ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 hover:shadow' :
-                                                        isCourtFull ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                                            'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
-                                                }`}
-                                        >
-                                            {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userInThisCourt ? `Drop ${courtName}` : userInAnotherCourt ? `Switch to ${courtName}` : isCourtFull ? `${courtName} Full` : `Join ${courtName}`}
-                                        </button>
+                                            sport={activeSport}
+                                            courtName={courtName}
+                                            slots={slots}
+                                            spotsLeft={maxPerCourt - courtAttendees.length}
+                                            disabled={disabled}
+                                            actionLabel={actionLabel}
+                                            userInThisCourt={userInThisCourt}
+                                            onAction={() => handleJoin(session, courtName)}
+                                        />
                                     );
                                 })}
                             </div>
                         ) : (
-                            <button
-                                onClick={() => handleJoin(session)}
-                                disabled={isPast || isLocked || isCancelled || (isFull && !isJoining) || !user}
-                                className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${isPast || isCancelled ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                    isLocked ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                        isJoining ? 'bg-red-50 dark:bg-red-900/20 hover:bg-red-100 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 hover:shadow' :
-                                            isFull ? 'bg-gray-100 dark:bg-slate-800 text-gray-400 dark:text-slate-500 cursor-not-allowed border border-gray-200 dark:border-slate-700' :
-                                                'bg-wimbledon-navy hover:bg-[#00287a] text-white hover:shadow-md hover:-translate-y-0.5'
+                            <>
+                                {renderAttendeesList(session.attendees, session.maxAttendees, undefined)}
+                                <button
+                                    onClick={() => handleJoin(session)}
+                                    disabled={isPast || isLocked || isCancelled || (isFull && !isJoining) || !user}
+                                    className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                        isPast || isCancelled || isLocked || (isFull && !isJoining)
+                                            ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+                                            : isJoining
+                                              ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
+                                              : 'accent-bg text-court-950 hover:brightness-110 accent-glow'
                                     }`}
-                            >
-                                {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
-                            </button>
+                                >
+                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
+                                </button>
+                            </>
                         )}
 
                         {session.type === 'coaching' && isAdmin && (
                             <button
                                 onClick={() => handleCoachAction(session)}
-                                className={`w-full py-2.5 rounded-lg font-semibold tracking-wide text-sm transition-all duration-300 flex items-center justify-center shadow-sm ${session.coachId === user?.uid
-                                    ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 hover:shadow'
-                                    : session.coachId
-                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-                                        : 'bg-wimbledon-green hover:bg-[#004d00] text-white hover:shadow-md hover:-translate-y-0.5 dark:bg-[#10B981] dark:hover:bg-emerald-500'
-                                    }`}
+                                className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                    session.coachId === user?.uid
+                                        ? 'border border-amber-300/50 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/20 dark:text-amber-300'
+                                        : session.coachId
+                                          ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+                                          : 'border border-court-accent/40 bg-court-accent/10 text-emerald-700 hover:bg-court-accent/20 dark:text-court-accent'
+                                }`}
                                 disabled={(!!session.coachId && session.coachId !== user?.uid)}
                             >
                                 {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
@@ -712,14 +722,14 @@ const BookingEngine = () => {
             </div>
 
             {error ? (
-                <div className="p-8 bg-red-50 border border-red-100 rounded-xl text-red-600 text-center text-sm shadow-sm">
+                <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600 shadow-sm dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">
                     {error}
                 </div>
             ) : !hasDisplayContent && !isAdmin ? (
-                <div className="p-16 text-center club-card items-center justify-center flex flex-col bg-gray-50/50 border-gray-100">
-                    <Rocket className="w-12 h-12 text-gray-300 mb-4" />
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">No upcoming sessions</h3>
-                    <p className="text-gray-500 text-sm max-w-sm mt-1">Check back later for court availability and coaching clinics.</p>
+                <div className="glass-deep flex flex-col items-center justify-center p-16 text-center">
+                    <Rocket className="mb-4 h-12 w-12 text-gray-300 dark:text-chalk/30" />
+                    <h3 className="mb-2 font-display text-xl text-gray-900 dark:text-chalk">No upcoming sessions</h3>
+                    <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">Check back later for court availability and coaching clinics.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">

@@ -60,6 +60,8 @@ export const VelocityMarquee = ({
     itemClassName = '',
     copies = 4,
     style,
+    skew = true,
+    velocityBoost = 1.2,
 }: {
     children: ReactNode;
     baseVelocity?: number;
@@ -67,13 +69,15 @@ export const VelocityMarquee = ({
     itemClassName?: string;
     copies?: number;
     style?: CSSProperties;
+    skew?: boolean;
+    velocityBoost?: number;
 }) => {
     const baseX = useMotionValue(0);
     const { scrollY } = useScroll();
     const scrollVelocity = useVelocity(scrollY);
     const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 380 });
-    const velocityFactor = useTransform(smoothVelocity, [0, 1200], [0, 4.5], { clamp: false });
-    const skewX = useTransform(smoothVelocity, [-1500, 1500], [8, -8]);
+    const velocityFactor = useTransform(smoothVelocity, [0, 1200], [0, velocityBoost], { clamp: true });
+    const skewX = useTransform(smoothVelocity, [-1500, 1500], skew ? [4, -4] : [0, 0]);
     const directionFactor = useRef<number>(1);
 
     const period = 100 / copies;

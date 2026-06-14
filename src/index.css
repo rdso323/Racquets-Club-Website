@@ -119,28 +119,28 @@
     box-shadow: 0 0 24px var(--accent-dim);
   }
 
-  .court-line {
-    @apply bg-court-line/80;
-  }
-
-  .court-apron {
-    @apply rounded-lg bg-court-800/40 dark:bg-court-900/60 p-4;
-  }
-
-  .court-surface {
-    @apply relative aspect-[5/8] w-full max-w-sm mx-auto rounded-md bg-court-700/30 dark:bg-court-800/50;
-  }
-
   .player-slot--open {
-    @apply border border-dashed border-court-line/40 text-court-line/50;
+    @apply border border-dashed border-gray-400/60 bg-white/70 text-gray-500;
+  }
+
+  .dark .player-slot--open {
+    @apply border-court-line/40 bg-court-950/40 text-court-line/50;
   }
 
   .player-slot--filled {
-    @apply border border-court-line/30 bg-court-accent/10 text-court-line font-medium;
+    @apply border border-emerald-500/40 bg-emerald-500/15 font-medium text-emerald-800;
+  }
+
+  .dark .player-slot--filled {
+    @apply border-court-line/30 bg-court-accent/15 text-court-line;
   }
 
   .player-slot--mine {
-    @apply border-2 border-clay-400 bg-clay-500/20 text-clay-100 font-semibold;
+    @apply border-2 border-clay-400 bg-clay-500/25 font-semibold text-clay-700;
+  }
+
+  .dark .player-slot--mine {
+    @apply text-clay-100;
   }
 
   .scroll-rise {
@@ -168,27 +168,46 @@
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  .cursor-none-host,
-  .cursor-none-host * {
+  .cursor-active,
+  .cursor-active * {
     cursor: none !important;
   }
 
   .pointer-dot {
-    transform: translate(calc(var(--mouse-x) - 50%), calc(var(--mouse-y) - 50%));
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 7px;
+    width: 7px;
+    border-radius: 9999px;
+    background-color: var(--accent);
+    transform: translate3d(calc(var(--mouse-x, 50vw) - 50%), calc(var(--mouse-y, 50vh) - 50%), 0);
     will-change: transform;
   }
 
   .pointer-ring {
-    transform: translate(calc(var(--mouse-x) - 50%), calc(var(--mouse-y) - 50%));
-    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1.9rem;
+    width: 1.9rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    transform: translate3d(calc(var(--ring-x, 50vw) - 50%), calc(var(--ring-y, 50vh) - 50%), 0);
+    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
     will-change: transform;
   }
 
-  html:has([data-cursor='hover']:hover) .pointer-ring {
-    width: 3.5rem;
-    height: 3.5rem;
+  .cursor-hover .pointer-ring {
+    width: 3rem;
+    height: 3rem;
     border-color: var(--accent);
-    opacity: 0.85;
+    background-color: var(--accent-dim);
+  }
+
+  .cursor-down .pointer-ring {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   @media (prefers-reduced-motion: reduce) {
