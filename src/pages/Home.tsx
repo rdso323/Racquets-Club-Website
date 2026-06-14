@@ -67,8 +67,8 @@ const Home = () => {
                     className="relative min-h-[88vh] flex items-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 dark:from-court-900 dark:via-court-950 dark:to-court-950"
                 >
                     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-                        <div className="absolute right-[8%] top-0 h-[34rem] w-[34rem] rounded-full bg-court-accent/10 blur-[130px] dark:bg-court-accent/15" />
-                        <div className="absolute -bottom-32 left-[2%] h-[28rem] w-[28rem] rounded-full bg-clay-500/15 blur-[120px] dark:bg-clay-600/20" />
+                        <div className="absolute right-[8%] top-0 h-[34rem] w-[34rem] rounded-full bg-court-accent/10 blur-3xl dark:bg-court-accent/15 md:blur-[80px]" />
+                        <div className="absolute -bottom-32 left-[2%] h-[28rem] w-[28rem] rounded-full bg-clay-500/15 blur-3xl dark:bg-clay-600/20 md:blur-[72px]" />
                         <div className="absolute inset-y-0 right-0 hidden w-1/2 text-court-700 dark:text-court-line md:block">
                             <HeroCourtArt />
                         </div>

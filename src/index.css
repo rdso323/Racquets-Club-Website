@@ -224,6 +224,12 @@
     height: 1.5rem;
   }
 
+  @media (max-width: 767px), (prefers-reduced-motion: reduce) {
+    .grain::before {
+      display: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .scroll-rise {
       animation: none;

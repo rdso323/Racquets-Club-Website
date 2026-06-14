@@ -20,6 +20,9 @@ import {
     getSlotsPerCourt,
 } from '../../lib/sessions';
 
+/** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
+const pendingClinicResets = new Set<string>();
+
 const createICSFile = (session: Session, courtName?: string) => {
     let startDate = new Date();
     let endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
@@ -133,18 +136,26 @@ const BookingEngine = () => {
                     const currentWeekStartStr = baseStartOfWeek.toISOString().split('T')[0];
                     const storedWeekStart = session.weekStartDate;
 
-                    if (storedWeekStart !== currentWeekStartStr) {
-                        try {
-                            const sessionRef = doc(db, 'sessions', session.id);
-                            await updateDoc(sessionRef, {
-                                attendees: [],
-                                coach: null,
-                                coachId: null,
-                                weekStartDate: currentWeekStartStr
-                            });
-                        } catch (e) {
-                            console.error(`Failed to auto-reset weekly session ${session.id}:`, e);
-                        }
+                    if (storedWeekStart === currentWeekStartStr) {
+                        pendingClinicResets.delete(`${session.id}:${currentWeekStartStr}`);
+                        return;
+                    }
+
+                    const resetKey = `${session.id}:${currentWeekStartStr}`;
+                    if (pendingClinicResets.has(resetKey)) return;
+                    pendingClinicResets.add(resetKey);
+
+                    try {
+                        const sessionRef = doc(db, 'sessions', session.id);
+                        await updateDoc(sessionRef, {
+                            attendees: [],
+                            coach: null,
+                            coachId: null,
+                            weekStartDate: currentWeekStartStr,
+                        });
+                    } catch (e) {
+                        pendingClinicResets.delete(resetKey);
+                        console.error(`Failed to auto-reset weekly session ${session.id}:`, e);
                     }
                 }
             });

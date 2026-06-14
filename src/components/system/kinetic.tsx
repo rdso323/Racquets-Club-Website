@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react';
 import {
     motion,
     useMotionValue,
@@ -8,6 +8,7 @@ import {
     useTransform,
     useAnimationFrame,
     useInView,
+    useReducedMotion,
 } from 'framer-motion';
 
 export const RevealLines = ({
@@ -62,6 +63,7 @@ export const VelocityMarquee = ({
     style,
     skew = true,
     velocityBoost = 1.2,
+    paused = false,
 }: {
     children: ReactNode;
     baseVelocity?: number;
@@ -71,7 +73,21 @@ export const VelocityMarquee = ({
     style?: CSSProperties;
     skew?: boolean;
     velocityBoost?: number;
+    paused?: boolean;
 }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const inView = useInView(containerRef, { margin: '80px 0px' });
+    const prefersReducedMotion = useReducedMotion();
+    const [documentHidden, setDocumentHidden] = useState(
+        () => typeof document !== 'undefined' && document.hidden,
+    );
+
+    useEffect(() => {
+        const onVisibility = () => setDocumentHidden(document.hidden);
+        document.addEventListener('visibilitychange', onVisibility);
+        return () => document.removeEventListener('visibilitychange', onVisibility);
+    }, []);
+
     const baseX = useMotionValue(0);
     const { scrollY } = useScroll();
     const scrollVelocity = useVelocity(scrollY);
@@ -83,7 +99,16 @@ export const VelocityMarquee = ({
     const period = 100 / copies;
     const x = useTransform(baseX, (v) => `${wrap(-period, 0, v)}%`);
 
+    const shouldAnimate =
+        !paused &&
+        !prefersReducedMotion &&
+        inView &&
+        !documentHidden &&
+        baseVelocity !== 0;
+
     useAnimationFrame((_, delta) => {
+        if (!shouldAnimate) return;
+
         let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
         const vf = velocityFactor.get();
         if (vf < 0) directionFactor.current = -1;
@@ -93,8 +118,12 @@ export const VelocityMarquee = ({
     });
 
     return (
-        <div className={`overflow-hidden whitespace-nowrap ${className}`} style={style}>
-            <motion.div className="inline-flex w-max will-change-transform" style={{ x, skewX }}>
+        <div
+            ref={containerRef}
+            className={`overflow-hidden whitespace-nowrap ${className}`}
+            style={style}
+        >
+            <motion.div className="inline-flex w-max will-change-transform" style={{ x, skewX: shouldAnimate ? skewX : 0 }}>
                 {Array.from({ length: copies }).map((_, i) => (
                     <div key={i} className={`flex-shrink-0 ${itemClassName}`} aria-hidden={i > 0}>
                         {children}

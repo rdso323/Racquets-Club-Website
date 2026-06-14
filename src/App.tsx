@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ReactLenis, useLenis } from 'lenis/react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -10,9 +10,11 @@ import MenuOverlay from './components/system/MenuOverlay';
 import PointerSurface from './components/system/PointerSurface';
 import FeedbackModal from './components/layout/FeedbackModal';
 import { usePointerVars } from './hooks/usePointerVars';
+import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import Home from './pages/Home';
-import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
+
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 const RouteLoader = () => (
     <div className="flex min-h-screen items-center justify-center">
@@ -68,11 +70,13 @@ const AppRoutes = () => {
                 <Route
                     path="/admin"
                     element={
-                        <ProtectedRoute requireAdmin>
-                            <div className="px-5 py-24 md:px-10">
-                                <AdminDashboard />
-                            </div>
-                        </ProtectedRoute>
+                        <Suspense fallback={<RouteLoader />}>
+                            <ProtectedRoute requireAdmin>
+                                <div className="px-5 py-24 md:px-10">
+                                    <AdminDashboard />
+                                </div>
+                            </ProtectedRoute>
+                        </Suspense>
                     }
                 />
             </Routes>
@@ -105,14 +109,26 @@ const Shell = () => {
     );
 };
 
+const AppWithLenis = ({ reduceMotion }: { reduceMotion: boolean }) => {
+    if (reduceMotion) {
+        return <Shell />;
+    }
+
+    return (
+        <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
+            <Shell />
+        </ReactLenis>
+    );
+};
+
 function App() {
+    const reduceMotion = usePrefersReducedMotion();
+
     return (
         <ThemeProvider>
             <AuthProvider>
                 <Router>
-                    <ReactLenis root options={{ lerp: 0.08, smoothWheel: true }}>
-                        <Shell />
-                    </ReactLenis>
+                    <AppWithLenis reduceMotion={reduceMotion} />
                 </Router>
             </AuthProvider>
         </ThemeProvider>

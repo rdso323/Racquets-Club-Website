@@ -4,6 +4,8 @@ const supportsFinePointer = () =>
     window.matchMedia('(pointer: fine)').matches &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+const IDLE_MS = 2000;
+
 /**
  * Maps pointer position to CSS custom properties with zero React re-renders.
  * The dot tracks instantly; the ring is interpolated in the same rAF loop for a
@@ -22,10 +24,20 @@ export const usePointerVars = () => {
         let ringY = targetY;
         let raf = 0;
         let running = true;
+        let loopActive = false;
+        let lastMoveAt = performance.now();
 
         const loop = () => {
             if (!running) return;
-            // Dot is exact; ring eases toward the target each frame.
+
+            const tabVisible = !document.hidden;
+            const recentlyMoved = performance.now() - lastMoveAt < IDLE_MS;
+
+            if (!tabVisible || !recentlyMoved) {
+                loopActive = false;
+                return;
+            }
+
             ringX += (targetX - ringX) * 0.35;
             ringY += (targetY - ringY) * 0.35;
             root.style.setProperty('--mouse-x', `${targetX}px`);
@@ -35,9 +47,27 @@ export const usePointerVars = () => {
             raf = requestAnimationFrame(loop);
         };
 
+        const startLoop = () => {
+            if (loopActive || !running) return;
+            loopActive = true;
+            raf = requestAnimationFrame(loop);
+        };
+
         const onMove = (e: MouseEvent) => {
             targetX = e.clientX;
             targetY = e.clientY;
+            lastMoveAt = performance.now();
+            startLoop();
+        };
+
+        const onVisibility = () => {
+            if (document.hidden) {
+                loopActive = false;
+                cancelAnimationFrame(raf);
+            } else {
+                lastMoveAt = performance.now();
+                startLoop();
+            }
         };
 
         const onOver = (e: MouseEvent) => {
@@ -54,15 +84,18 @@ export const usePointerVars = () => {
         window.addEventListener('mouseover', onOver, { passive: true });
         window.addEventListener('mousedown', onDown, { passive: true });
         window.addEventListener('mouseup', onUp, { passive: true });
-        raf = requestAnimationFrame(loop);
+        document.addEventListener('visibilitychange', onVisibility);
+        startLoop();
 
         return () => {
             running = false;
+            loopActive = false;
             cancelAnimationFrame(raf);
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('mouseover', onOver);
             window.removeEventListener('mousedown', onDown);
             window.removeEventListener('mouseup', onUp);
+            document.removeEventListener('visibilitychange', onVisibility);
             root.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
         };
     }, []);

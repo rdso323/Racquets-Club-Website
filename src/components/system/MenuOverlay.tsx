@@ -70,7 +70,7 @@ const MenuOverlay = () => {
             {menuOpen && (
                 <motion.div
                     data-lenis-prevent
-                    className="fixed inset-0 z-[145] overflow-y-auto overscroll-contain bg-white/97 backdrop-blur-xl dark:bg-court-950/97"
+                    className="fixed inset-0 z-[145] overflow-y-auto overscroll-contain bg-white/[0.98] backdrop-blur-md dark:bg-court-950/[0.98]"
                     initial={{ clipPath: 'inset(0 0 100% 0)' }}
                     animate={{ clipPath: 'inset(0 0 0% 0)' }}
                     exit={{ clipPath: 'inset(0 0 100% 0)' }}
