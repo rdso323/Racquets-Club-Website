@@ -88,7 +88,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const DEFAULT_ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu'];
+const DEFAULT_ADMIN_EMAILS = [
+    'rohan@duke.edu',
+    'admin@duke.edu',
+    'rohan.dsouza@duke.edu',
+    'fuqua-racquets@duke.edu',
+];
 
 const getAdminEmails = (): string[] => {
     const fromEnv = import.meta.env.VITE_ADMIN_EMAILS as string | undefined;
