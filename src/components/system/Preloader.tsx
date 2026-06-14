@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LOGO_CLASS, LOGO_DARK } from '../../lib/branding';
 
 const prefersReducedMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -52,7 +53,11 @@ const Preloader = ({ onDone }: { onDone: () => void }) => {
                     transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
                 >
                     <div className="flex items-start justify-between">
-                        <span className="hud-label text-chalk/60">Fuqua Racquets Club</span>
+                        <img
+                            src={LOGO_DARK}
+                            alt="Fuqua Racquets Club"
+                            className={LOGO_CLASS.preloader}
+                        />
                         <span className="hud-label text-chalk/60">Durham, NC</span>
                     </div>
 

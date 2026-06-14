@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useUI } from './UIProvider';
+import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 import { Moon, Sun, LogIn } from 'lucide-react';
 
 const TopBar = () => {
@@ -39,7 +40,6 @@ const TopBar = () => {
 
     const memberLabel = user?.displayName?.split(' ')[0] || user?.email?.split('@')[0] || null;
     const onAdminPage = location.pathname === '/admin';
-    const darkLogo = '/logo_dark.png';
 
     const handleBrandClick = (e: MouseEvent<HTMLAnchorElement>) => {
         if (!menuOpen) return;
@@ -65,9 +65,9 @@ const TopBar = () => {
                 className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
             >
                 <img
-                    src={theme === 'dark' ? darkLogo : '/logo_light.png'}
+                    src={logoSrcForTheme(theme)}
                     alt="Fuqua Racquets Club"
-                    className={`object-contain ${theme === 'dark' ? 'h-11 w-auto max-w-[3rem]' : 'h-9 w-9'}`}
+                    className={LOGO_CLASS.nav}
                 />
                 <span className="font-display text-lg tracking-tight text-wimbledon-navy dark:text-chalk md:text-xl">
                     Fuqua Racquets Club

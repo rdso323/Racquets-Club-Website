@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useUI } from '../system/UIProvider';
+import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 
 const Footer = () => {
     const { user, isAdmin } = useAuth();
@@ -36,9 +37,9 @@ const Footer = () => {
                     <div className="max-w-sm">
                         <div className="flex items-center gap-3">
                             <img
-                                src={theme === 'dark' ? '/logo_dark.png' : '/logo_light.png'}
+                                src={logoSrcForTheme(theme)}
                                 alt="Fuqua Racquets Club"
-                                className="h-10 w-10 object-contain"
+                                className={LOGO_CLASS.footer}
                             />
                             <span className="font-display text-xl text-gray-900 dark:text-chalk">
                                 Fuqua Racquets Club

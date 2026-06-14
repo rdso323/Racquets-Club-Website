@@ -16,8 +16,8 @@ interface LiveWireProps {
 const LiveWire = ({ dismissOnScroll = false, flipped = false }: LiveWireProps) => {
     const [tickerText, setTickerText] = useState(HARDCODED_TICKER);
     const { scrollY } = useScroll();
-    const y = useTransform(scrollY, [0, 280], dismissOnScroll ? [0, -72] : [0, 0]);
-    const opacity = useTransform(scrollY, [0, 220], dismissOnScroll ? [1, 0] : [1, 1]);
+    const y = useTransform(scrollY, [120, 620], dismissOnScroll ? [0, -72] : [0, 0]);
+    const opacity = useTransform(scrollY, [120, 520], dismissOnScroll ? [1, 0] : [1, 1]);
 
     useEffect(() => {
         const unsubscribe = onSnapshot(

@@ -1,5 +1,6 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
 import { LogIn, UserPlus, Mail, ArrowLeft, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -15,7 +16,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     // Use the correct logo per theme — same logic as Navbar
-    const logoSrc = theme === 'dark' ? '/logo_dark.png' : '/logo_light.png';
+    const logoSrc = logoSrcForTheme(theme);
 
     // Forgot Password States
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -79,7 +80,7 @@ const Login = () => {
                                 <img
                                     src={logoSrc}
                                     alt="Fuqua Racquets Club Logo"
-                                    className="mx-auto mb-2 h-28 w-auto object-contain"
+                                    className={LOGO_CLASS.login}
                                 />
                                 <p className="hud-label mb-2 text-emerald-600 dark:text-court-accent">Members Access</p>
                                 <h1 className="mb-2 font-display text-3xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk">

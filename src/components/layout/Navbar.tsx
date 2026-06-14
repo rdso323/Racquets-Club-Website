@@ -4,6 +4,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { User, Settings, LogOut, Sun, Moon, LogIn } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 
 const Navbar = () => {
     const { user, signOut, isAdmin } = useAuth();
@@ -32,7 +33,7 @@ const Navbar = () => {
                 <div className="flex justify-between h-20 items-center">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center group mr-4">
-                            <img src={theme === 'dark' ? "/logo_dark.png" : "/logo_light.png"} alt="Fuqua Racquets Club logo" className="h-10 w-auto mr-3" />
+                            <img src={logoSrcForTheme(theme)} alt="Fuqua Racquets Club logo" className={`${LOGO_CLASS.nav} mr-3`} />
                             <span className="text-xl font-semibold font-['Outfit'] text-wimbledon-navy dark:text-white tracking-wide -ml-1 mt-0.5 transition-colors hidden sm:inline-block">
                                 Fuqua Racquets Club
                             </span>

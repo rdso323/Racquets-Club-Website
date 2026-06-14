@@ -33,9 +33,9 @@ const Home = () => {
     const location = useLocation();
     const lenis = useLenis();
     const { scrollY } = useScroll();
-    const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-    const heroY = useTransform(scrollY, [0, 500], [0, 80]);
-    const scrollCueOpacity = useTransform(scrollY, [0, 120], [1, 0]);
+    const heroOpacity = useTransform(scrollY, [140, 780], [1, 0]);
+    const heroY = useTransform(scrollY, [140, 880], [0, 80]);
+    const scrollCueOpacity = useTransform(scrollY, [100, 360], [1, 0]);
 
     useEffect(() => {
         if (location.hash === '#booking-section' || location.hash === '#radar') {
@@ -156,7 +156,7 @@ const Home = () => {
                 />
             </section>
 
-            <LiveWire dismissOnScroll />
+            <LiveWire dismissOnScroll flipped />
 
             <div className="scroll-rise px-5 py-16 md:px-10 md:py-24">
                 <BookingEngine />
