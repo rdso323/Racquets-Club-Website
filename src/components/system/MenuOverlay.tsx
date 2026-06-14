@@ -59,41 +59,14 @@ const MenuOverlay = () => {
         <AnimatePresence>
             {menuOpen && (
                 <motion.div
-                    className="fixed inset-0 z-[145] bg-white/97 backdrop-blur-xl dark:bg-court-950/97"
+                    className="fixed inset-0 z-[145] overflow-y-auto overscroll-contain bg-white/97 backdrop-blur-xl dark:bg-court-950/97"
                     initial={{ clipPath: 'inset(0 0 100% 0)' }}
                     animate={{ clipPath: 'inset(0 0 0% 0)' }}
                     exit={{ clipPath: 'inset(0 0 100% 0)' }}
                     transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
                 >
-                    <div className="flex h-full min-h-0 flex-col overflow-y-auto overscroll-contain px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-28 md:flex-row md:items-end md:gap-10 md:px-12 md:pb-14">
-                        <nav className="flex shrink-0 flex-col gap-1 pb-6 md:pb-0">
-                            {items.map((item, i) => (
-                                <div key={item.label} className="overflow-hidden">
-                                    <motion.button
-                                        onClick={item.action}
-                                        data-cursor
-                                        className="group flex items-baseline gap-4 text-left"
-                                        initial={{ y: '100%' }}
-                                        animate={{ y: '0%' }}
-                                        transition={{ delay: 0.08 + i * 0.05, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                                    >
-                                        <span className="hud-label w-8 text-gray-400 dark:text-chalk/30">{item.index}</span>
-                                        <span
-                                            className={`font-display text-3xl transition-colors md:text-5xl ${
-                                                item.accent
-                                                    ? 'text-emerald-600 group-hover:text-clay-500 dark:text-court-accent dark:group-hover:text-clay-300'
-                                                    : 'text-gray-900 group-hover:text-clay-500 dark:text-chalk dark:group-hover:text-clay-300'
-                                            }`}
-                                        >
-                                            {item.label}
-                                        </span>
-                                        <span className="hidden hud-label text-gray-400 dark:text-chalk/35 md:inline">{item.sub}</span>
-                                    </motion.button>
-                                </div>
-                            ))}
-                        </nav>
-
-                        <div className="mt-10 md:mt-0 md:max-w-xs">
+                    <div className="flex min-h-full flex-col px-5 pb-[max(4rem,env(safe-area-inset-bottom))] pt-28 md:flex-row md:items-end md:justify-between md:gap-16 md:px-12 md:pb-24 md:pt-32">
+                        <div className="order-2 mt-10 md:order-1 md:mt-0 md:max-w-xs md:shrink-0">
                             <p className="hud-label mb-4 text-gray-400 dark:text-chalk/40">Your sports</p>
                             <div className="flex flex-col gap-2">
                                 {tabPreferences.map((tab) => {
@@ -122,6 +95,33 @@ const MenuOverlay = () => {
                                 Fuqua School of Business · Duke University
                             </p>
                         </div>
+
+                        <nav className="order-1 flex shrink-0 flex-col gap-1 pb-4 md:order-2 md:pb-8">
+                            {items.map((item, i) => (
+                                <div key={item.label} className="overflow-hidden">
+                                    <motion.button
+                                        onClick={item.action}
+                                        data-cursor
+                                        className="group flex items-baseline gap-4 text-left"
+                                        initial={{ y: '100%' }}
+                                        animate={{ y: '0%' }}
+                                        transition={{ delay: 0.08 + i * 0.05, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                                    >
+                                        <span className="hud-label w-8 text-gray-400 dark:text-chalk/30">{item.index}</span>
+                                        <span
+                                            className={`font-display text-3xl transition-colors md:text-5xl ${
+                                                item.accent
+                                                    ? 'text-emerald-600 group-hover:text-clay-500 dark:text-court-accent dark:group-hover:text-clay-300'
+                                                    : 'text-gray-900 group-hover:text-clay-500 dark:text-chalk dark:group-hover:text-clay-300'
+                                            }`}
+                                        >
+                                            {item.label}
+                                        </span>
+                                        <span className="hidden hud-label text-gray-400 dark:text-chalk/35 md:inline">{item.sub}</span>
+                                    </motion.button>
+                                </div>
+                            ))}
+                        </nav>
                     </div>
                 </motion.div>
             )}
