@@ -92,9 +92,9 @@ const Home = () => {
                                 {...rise(0.08)}
                                 className="font-display text-5xl leading-[1.02] tracking-tight text-wimbledon-navy dark:text-court-line sm:text-7xl lg:text-8xl"
                             >
-                                The court
+                                Five sports.
                                 <br />
-                                is <em className="italic text-clay-500 text-glow-gold dark:text-clay-300">calling.</em>
+                                <em className="italic text-clay-500 text-glow-gold dark:text-clay-300">One club.</em>
                             </motion.h1>
 
                             <motion.p
