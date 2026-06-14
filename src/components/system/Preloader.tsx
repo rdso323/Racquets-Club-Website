@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LOGO_CLASS, LOGO_DARK } from '../../lib/branding';
+import { useTheme } from '../../contexts/ThemeContext';
+import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 
 const prefersReducedMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -12,6 +13,8 @@ const STATUS_LINES = [
 ];
 
 const Preloader = ({ onDone }: { onDone: () => void }) => {
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const [reduced] = useState(prefersReducedMotion);
     const [count, setCount] = useState(0);
     const [statusIndex, setStatusIndex] = useState(0);
@@ -48,23 +51,27 @@ const Preloader = ({ onDone }: { onDone: () => void }) => {
         <AnimatePresence onExitComplete={onDone}>
             {!exiting && (
                 <motion.div
-                    className="fixed inset-0 z-[250] flex flex-col justify-between bg-court-950 px-6 py-8 md:px-10"
+                    className={`fixed inset-0 z-[250] flex flex-col justify-between px-6 py-8 md:px-10 ${
+                        isDark ? 'bg-court-950' : 'bg-[#F3F0E8]'
+                    }`}
                     exit={{ y: '-100%' }}
                     transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
                 >
                     <div className="flex items-start justify-between">
                         <img
-                            src={LOGO_DARK}
+                            src={logoSrcForTheme(theme)}
                             alt="Fuqua Racquets Club"
                             className={LOGO_CLASS.preloader}
                         />
-                        <span className="hud-label text-chalk/60">Durham, NC</span>
+                        <span className={`hud-label ${isDark ? 'text-chalk/60' : 'text-gray-500'}`}>
+                            Durham, NC
+                        </span>
                     </div>
 
                     <div className="flex items-end justify-between gap-8">
                         <div>
                             <motion.p
-                                className="hud-label mb-4 text-court-accent"
+                                className={`hud-label mb-4 ${isDark ? 'text-court-accent' : 'text-emerald-700'}`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.15 }}
@@ -73,37 +80,49 @@ const Preloader = ({ onDone }: { onDone: () => void }) => {
                             </motion.p>
                             <div className="overflow-hidden">
                                 <motion.h1
-                                    className="display-tight text-[clamp(2.4rem,7vw,6.5rem)] text-chalk"
+                                    className={`display-tight text-[clamp(2.4rem,7vw,6.5rem)] ${
+                                        isDark ? 'text-chalk' : 'text-wimbledon-navy'
+                                    }`}
                                     initial={{ y: '110%' }}
                                     animate={{ y: '0%' }}
                                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                                 >
-                                    The court
+                                    Five sports.
                                 </motion.h1>
                             </div>
                             <div className="overflow-hidden">
                                 <motion.h1
-                                    className="display-tight text-[clamp(2.4rem,7vw,6.5rem)] italic text-clay-300"
+                                    className={`display-tight text-[clamp(2.4rem,7vw,6.5rem)] italic ${
+                                        isDark ? 'text-clay-300' : 'text-clay-600'
+                                    }`}
                                     initial={{ y: '110%' }}
                                     animate={{ y: '0%' }}
                                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
                                 >
-                                    is calling.
+                                    One club.
                                 </motion.h1>
                             </div>
                         </div>
 
-                        <div className="text-right shrink-0">
-                            <span className="display-tight block text-[clamp(2.5rem,8vw,7rem)] leading-none text-court-accent tabular-nums">
+                        <div className="shrink-0 text-right">
+                            <span
+                                className={`display-tight block text-[clamp(2.5rem,8vw,7rem)] leading-none tabular-nums ${
+                                    isDark ? 'text-court-accent' : 'text-emerald-600'
+                                }`}
+                            >
                                 {String(count).padStart(3, '0')}
                             </span>
-                            <span className="hud-label text-chalk/45">Loading</span>
+                            <span className={`hud-label ${isDark ? 'text-chalk/45' : 'text-gray-500'}`}>
+                                Loading
+                            </span>
                         </div>
                     </div>
 
-                    <div className="h-px w-full bg-chalk/10">
+                    <div className={`h-px w-full ${isDark ? 'bg-chalk/10' : 'bg-gray-300/70'}`}>
                         <div
-                            className="h-px bg-court-accent transition-[width] duration-100"
+                            className={`h-px transition-[width] duration-100 ${
+                                isDark ? 'bg-court-accent' : 'bg-emerald-600'
+                            }`}
                             style={{ width: `${count}%` }}
                         />
                     </div>

@@ -1,10 +1,17 @@
 import { useState, useEffect, type CSSProperties } from 'react';
-import { collection, onSnapshot, doc, updateDoc, arrayUnion, arrayRemove, setDoc, getDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Users, CalendarDays, Rocket, AlertTriangle } from 'lucide-react';
-import { type Sport, SPORTS, getSportTheme } from '../../lib/sports';
+import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig } from '../../lib/sports';
 import CourtDiagram, { type CourtSlot } from './CourtDiagram';
+import WaitlistPanel from './WaitlistPanel';
+import {
+    joinSessionCourt,
+    joinWaitlist,
+    leaveWaitlist,
+    toBookingProfile,
+} from '../../lib/bookingActions';
 import {
     type Session,
     type SessionStatus,
@@ -18,6 +25,10 @@ import {
     isWithinBookingHorizon,
     getCourtsForSession,
     getSlotsPerCourt,
+    findUserAttendeeEntry,
+    findUserWaitlistEntry,
+    isSessionEnrollmentFull,
+    NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
@@ -113,6 +124,7 @@ const BookingEngine = () => {
     const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
+    const [bookingBusy, setBookingBusy] = useState<string | null>(null);
 
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
@@ -185,73 +197,53 @@ const BookingEngine = () => {
 
     const handleJoin = async (sessionToJoin: Session, courtName?: string) => {
         if (!user) return;
-        const sessionRef = doc(db, 'sessions', sessionToJoin.id);
-
-        let formattedName = 'Player';
-        if (user.displayName) {
-            const parts = user.displayName.split(' ');
-            if (parts.length > 1) {
-                formattedName = `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
-            } else {
-                formattedName = parts[0];
-            }
-        } else if (user.email) {
-            const emailPart = user.email.split('@')[0];
-            const parts = emailPart.split('.');
-            if (parts.length > 1) {
-                const first = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-                const lastI = parts[1].charAt(0).toUpperCase() + '.';
-                formattedName = `${first} ${lastI}`;
-            } else {
-                formattedName = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-            }
-        }
-
-        const emailStr = user.email || 'Unknown Email';
-        const attendeeString = courtName ? `${user.uid}|${formattedName}|${emailStr}|${courtName}` : `${user.uid}|${formattedName}|${emailStr}`;
+        setBookingBusy(sessionToJoin.id);
+        const profile = toBookingProfile(user);
 
         try {
-            const existingEntry = sessionToJoin.attendees.find(a => a.startsWith(user.uid + "|") || a === user.uid);
+            const result = await joinSessionCourt(sessionToJoin, profile, courtName, activeSport);
 
-            if (existingEntry) {
-                if (courtName && !existingEntry.endsWith(`|${courtName}`)) {
-                    await updateDoc(sessionRef, {
-                        attendees: arrayRemove(existingEntry)
-                    });
-                    await updateDoc(sessionRef, {
-                        attendees: arrayUnion(attendeeString)
-                    });
-                    if (window.confirm("Successfully switched courts! Would you like to download a calendar invite?")) {
-                        createICSFile(sessionToJoin, courtName);
-                    }
-                    return;
-                }
-
-                await updateDoc(sessionRef, {
-                    attendees: arrayRemove(existingEntry)
-                });
-            } else {
-                await setDoc(sessionRef, {
-                    title: sessionToJoin.title,
-                    type: sessionToJoin.type,
-                    date: sessionToJoin.date,
-                    time: sessionToJoin.time,
-                    maxAttendees: sessionToJoin.maxAttendees,
-                    attendees: arrayUnion(attendeeString),
-                    sport: activeSport,
-                    ...(sessionToJoin.courts?.length ? {
-                        courts: sessionToJoin.courts,
-                        slotsPerCourt: sessionToJoin.slotsPerCourt ?? getSlotsPerCourt(sessionToJoin),
-                    } : {}),
-                }, { merge: true });
-
-                if (window.confirm("Successfully joined! Would you like to download a calendar invite?")) {
-                    createICSFile(sessionToJoin, courtName);
-                }
+            if (result === 'joined' && window.confirm('Successfully joined! Would you like to download a calendar invite?')) {
+                createICSFile(sessionToJoin, courtName);
+            } else if (result === 'switched' && window.confirm('Successfully switched courts! Would you like to download a calendar invite?')) {
+                createICSFile(sessionToJoin, courtName);
             }
         } catch (error) {
-            console.error("Error updating session", error);
-            alert("Failed to update booking. Make sure you have the right permissions.");
+            console.error('Error updating session', error);
+            alert(error instanceof Error ? error.message : 'Failed to update booking. Make sure you have the right permissions.');
+        } finally {
+            setBookingBusy(null);
+        }
+    };
+
+    const handleJoinWaitlist = async (sessionToJoin: Session, openPlayConfig?: OpenPlayDayConfig | null) => {
+        if (!user) return;
+        setBookingBusy(`${sessionToJoin.id}:waitlist`);
+        const profile = toBookingProfile(user);
+
+        try {
+            await joinWaitlist(sessionToJoin, profile, openPlayConfig, activeSport);
+            alert("You're on the waitlist. We'll add you automatically when a spot opens.");
+        } catch (error) {
+            console.error('Error joining waitlist', error);
+            alert(error instanceof Error ? error.message : 'Failed to join the waitlist.');
+        } finally {
+            setBookingBusy(null);
+        }
+    };
+
+    const handleLeaveWaitlist = async (sessionToJoin: Session) => {
+        if (!user) return;
+        setBookingBusy(`${sessionToJoin.id}:waitlist`);
+        const profile = toBookingProfile(user);
+
+        try {
+            await leaveWaitlist(sessionToJoin, profile, activeSport);
+        } catch (error) {
+            console.error('Error leaving waitlist', error);
+            alert(error instanceof Error ? error.message : 'Failed to leave the waitlist.');
+        } finally {
+            setBookingBusy(null);
         }
     };
 
@@ -368,9 +360,11 @@ const BookingEngine = () => {
             ? session.attendees.filter((a) => sessionCourts.some((court) => a.endsWith(`|${court}`)))
             : session.attendees;
 
-        const isFull = activeAttendees.length >= totalMax;
-        const isJoining = user ? session.attendees.some(a => a.startsWith(user.uid + "|") || a === user.uid) : false;
-        const userEntry = user ? session.attendees.find(a => a.startsWith(user.uid + "|") || a === user.uid) : undefined;
+        const isFull = isSessionEnrollmentFull(session, sessionCourts, maxPerCourt);
+        const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
+        const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
+        const isJoining = !!userEntry;
+        const sessionDisabled = isPast || isLocked || isCancelled || !user;
 
         return (
             <div key={session.id} className="glass-deep relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:accent-glow">
@@ -436,7 +430,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
                         {isLocked && !isCancelled && (
                             <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
-                                Locked until Sunday 5:00 PM
+                                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
                             </div>
                         )}
 
@@ -448,7 +442,11 @@ const BookingEngine = () => {
                                     const userInThisCourt = !!(userEntry && (courtAttendees.includes(userEntry) || userEntry.endsWith(`|${courtName}`)));
                                     const userInAnotherCourt = !!(userEntry && !userInThisCourt);
                                     const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
-                                    const disabled = isPast || isLocked || isCancelled || (isCourtFull && !userInThisCourt) || !user;
+                                    const disabled =
+                                        sessionDisabled ||
+                                        userOnWaitlist ||
+                                        (isCourtFull && !userInThisCourt) ||
+                                        bookingBusy === session.id;
 
                                     const actionLabel = isPast
                                         ? 'Session Ended'
@@ -484,19 +482,30 @@ const BookingEngine = () => {
                                 {renderAttendeesList(session.attendees, session.maxAttendees, undefined)}
                                 <button
                                     onClick={() => handleJoin(session)}
-                                    disabled={isPast || isLocked || isCancelled || (isFull && !isJoining) || !user}
+                                    disabled={sessionDisabled || userOnWaitlist || (isFull && !isJoining) || bookingBusy === session.id}
                                     className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                                        isPast || isCancelled || isLocked || (isFull && !isJoining)
+                                        isPast || isCancelled || isLocked || (isFull && !isJoining) || userOnWaitlist
                                             ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                             : isJoining
                                               ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
                                               : 'accent-bg text-court-950 hover:brightness-110 accent-glow'
                                     }`}
                                 >
-                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
+                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userOnWaitlist ? 'On Waitlist' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
                                 </button>
                             </>
                         )}
+
+                        <WaitlistPanel
+                            session={session}
+                            courts={sessionCourts}
+                            maxPerCourt={maxPerCourt}
+                            userId={user?.uid}
+                            disabled={sessionDisabled}
+                            busy={bookingBusy === `${session.id}:waitlist`}
+                            onJoinWaitlist={() => handleJoinWaitlist(session)}
+                            onLeaveWaitlist={() => handleLeaveWaitlist(session)}
+                        />
 
                         {session.type === 'coaching' && isAdmin && (
                             <button
@@ -543,9 +552,11 @@ const BookingEngine = () => {
             courtsForDay.some((court) => a.endsWith(`|${court}`)),
         );
 
-        const isFull = activeAttendees.length >= totalMax;
-        const userEntry = user ? session.attendees.find(a => a.startsWith(user.uid + "|") || a === user.uid) : undefined;
+        const isFull = isSessionEnrollmentFull(session, courtsForDay, maxPerCourt);
+        const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
+        const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
         const isPast = playDate.getTime() + 24 * 60 * 60 * 1000 < new Date().getTime();
+        const sessionDisabled = isPast || isLocked || isCancelled || !user;
 
         const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
@@ -609,7 +620,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
                         {isLocked && !isCancelled && (
                             <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
-                                Next week's sessions lock Sunday at 5:00 PM
+                                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
                             </div>
                         )}
 
@@ -621,7 +632,10 @@ const BookingEngine = () => {
                                 const userInAnotherCourt = !!(userEntry && !userInThisCourt);
                                 const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
                                 const disabled =
-                                    isPast || isLocked || isCancelled || (isCourtFull && !userInThisCourt) || !user;
+                                    sessionDisabled ||
+                                    userOnWaitlist ||
+                                    (isCourtFull && !userInThisCourt) ||
+                                    bookingBusy === session.id;
 
                                 const actionLabel = isPast
                                     ? 'Session Ended'
@@ -652,6 +666,18 @@ const BookingEngine = () => {
                                 );
                             })}
                         </div>
+
+                        <WaitlistPanel
+                            session={session}
+                            courts={courtsForDay}
+                            maxPerCourt={maxPerCourt}
+                            openPlayConfig={config}
+                            userId={user?.uid}
+                            disabled={sessionDisabled}
+                            busy={bookingBusy === `${session.id}:waitlist`}
+                            onJoinWaitlist={() => handleJoinWaitlist(session, config)}
+                            onLeaveWaitlist={() => handleLeaveWaitlist(session)}
+                        />
                     </div>
                 </div>
             </div>

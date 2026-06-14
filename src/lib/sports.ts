@@ -5,6 +5,8 @@ export const SPORT_FILTER_TABS = ['All', ...SPORTS] as const;
 
 export const DEFAULT_OPEN_PLAY_CAPACITY = 8;
 export const SLOTS_PER_COURT = 4;
+/** Default waitlist slots per court when session has no explicit maxWaitlistSize */
+export const DEFAULT_WAITLIST_PER_COURT = 4;
 
 export type DayName = 'monday' | 'tuesday' | 'wednesday' | 'thursday';
 
@@ -14,6 +16,8 @@ export interface OpenPlayDayConfig {
     courts: string[];
     maxPerCourt: number;
     time: string;
+    /** Session-level waitlist cap override (common queue for all courts) */
+    maxWaitlistSize?: number;
 }
 
 export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {

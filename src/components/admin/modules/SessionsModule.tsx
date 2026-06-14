@@ -7,11 +7,10 @@ import {
     updateDoc,
     setDoc,
     arrayUnion,
-    arrayRemove,
 } from 'firebase/firestore';
 import { Calendar, Plus } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { SPORTS, SPORT_FILTER_TABS, SLOTS_PER_COURT } from '../../../lib/sports';
+import { SPORTS, SPORT_FILTER_TABS, SLOTS_PER_COURT, DEFAULT_WAITLIST_PER_COURT } from '../../../lib/sports';
 import {
     type Session,
     type SessionType,
@@ -23,7 +22,10 @@ import {
     buildCourtLabels,
     suggestedCapacityForCourts,
     courtFieldsFromSession,
+    parseWaitlistEntry,
+    getMaxWaitlistSize,
 } from '../../../lib/sessions';
+import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
 import SessionOpsCard from '../cards/SessionOpsCard';
 import EditSessionModal, { type EditCourtFields } from '../modals/EditSessionModal';
 
@@ -59,6 +61,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             date: '',
             time: '',
             maxAttendees: getDefaultMaxAttendees('court'),
+            maxWaitlistSize: DEFAULT_WAITLIST_PER_COURT * 2,
             coach: '',
             courtCount: 2,
             courtStartNumber: 1,
@@ -148,6 +151,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                 if (newSession.type === 'court' && courts.length > 0) {
                     sessionData.courts = courts;
                     sessionData.slotsPerCourt = SLOTS_PER_COURT;
+                    sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                    sessionData.waitlist = [];
+                } else if (newSession.type === 'coaching') {
+                    sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                    sessionData.waitlist = [];
                 }
 
                 await addDoc(collection(db, 'sessions'), sessionData);
@@ -163,6 +171,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     courtCount: 2,
                     courtStartNumber: 1,
                     customCourtLabels: '',
+                    maxWaitlistSize: DEFAULT_WAITLIST_PER_COURT * 2,
                 });
                 setSessionDateInput('');
                 window.setTimeout(() => setNewSessionMsg(''), 3000);
@@ -194,6 +203,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     date: editingSession.date,
                     time: editingSession.time,
                     maxAttendees: Number(editingSession.maxAttendees),
+                    maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
                     coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
                 };
 
@@ -283,17 +293,30 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             }
         };
 
-        const handleRemoveAttendee = async (sessionId: string, attendeeStr: string) => {
+        const handleRemoveAttendee = async (session: Session, attendeeStr: string) => {
             const parts = attendeeStr.split('|');
             const name = parts[1] || 'Player';
             if (!window.confirm(`Are you sure you want to remove ${name} from this session?`)) return;
             try {
-                await updateDoc(doc(db, 'sessions', sessionId), {
-                    attendees: arrayRemove(attendeeStr),
-                });
+                const result = await removeAttendeeWithPromotion(session, attendeeStr);
+                if (result.promoted) {
+                    const courtNote = result.promotedCourt ? ` on ${result.promotedCourt}` : '';
+                    window.alert(`${result.promotedName} was promoted from the waitlist${courtNote}.`);
+                }
             } catch (err) {
                 console.error('Error removing attendee: ', err);
                 window.alert('Failed to remove attendee.');
+            }
+        };
+
+        const handleRemoveWaitlistEntry = async (sessionId: string, waitlistEntry: string) => {
+            const name = parseWaitlistEntry(waitlistEntry).name;
+            if (!window.confirm(`Remove ${name} from the waitlist?`)) return;
+            try {
+                await removeWaitlistEntry(sessionId, waitlistEntry);
+            } catch (err) {
+                console.error('Error removing waitlist entry: ', err);
+                window.alert('Failed to remove waitlist entry.');
             }
         };
 
@@ -360,8 +383,13 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         }
                                         onAddAttendee={() => handleAddAttendee(session)}
                                         onRemoveAttendee={(attendeeStr) =>
-                                            handleRemoveAttendee(session.id, attendeeStr)
+                                            handleRemoveAttendee(session, attendeeStr)
                                         }
+                                        onRemoveWaitlistEntry={(waitlistEntry) =>
+                                            handleRemoveWaitlistEntry(session.id, waitlistEntry)
+                                        }
+                                        waitlist={session.waitlist || []}
+                                        maxWaitlistSize={getMaxWaitlistSize(session)}
                                         onEdit={() => openEditSession(session)}
                                         onDelete={() => handleDeleteSession(session.id)}
                                     />
@@ -532,6 +560,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                                 courts,
                                                                 SLOTS_PER_COURT,
                                                             ),
+                                                            maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
                                                         });
                                                     }}
                                                     disabled={!!newSession.customCourtLabels.trim()}
@@ -566,6 +595,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                                 courts,
                                                                 SLOTS_PER_COURT,
                                                             ),
+                                                            maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
                                                         });
                                                     }}
                                                     disabled={!!newSession.customCourtLabels.trim()}
@@ -594,6 +624,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                                 courts,
                                                                 SLOTS_PER_COURT,
                                                             ),
+                                                            maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
                                                         });
                                                     }}
                                                     className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -635,6 +666,26 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
+                                    </div>
+                                    <div>
+                                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                            Max waitlist size
+                                        </label>
+                                        <input
+                                            type="number"
+                                            required
+                                            min={0}
+                                            placeholder="8"
+                                            value={newSession.maxWaitlistSize}
+                                            onChange={(e) =>
+                                                setNewSession({
+                                                    ...newSession,
+                                                    maxWaitlistSize: Number(e.target.value),
+                                                })
+                                            }
+                                            className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                                        />
+                                        <p className="mt-1 text-[10px] text-gray-400">0 disables waitlist. Default is 4 per court.</p>
                                     </div>
                                     {newSession.type === 'coaching' && (
                                         <div>

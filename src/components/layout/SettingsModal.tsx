@@ -109,7 +109,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/50" data-lenis-prevent>
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col mt-10 md:mt-0 animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50/50">
                     <h2 className="text-xl font-semibold text-wimbledon-navy">Booking Engine Settings</h2>

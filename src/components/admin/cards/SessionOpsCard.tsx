@@ -1,9 +1,10 @@
 import { memo } from 'react';
-import { Calendar, Clock, Edit, Trash2, UserPlus, Users, X } from 'lucide-react';
+import { Calendar, Clock, Edit, ListOrdered, Trash2, UserPlus, Users, X } from 'lucide-react';
 import { getSportTheme } from '../../../lib/sports';
 import {
     type Session,
     parseAttendee,
+    parseWaitlistEntry,
     getCourtsForSession,
     inferSport,
 } from '../../../lib/sessions';
@@ -11,6 +12,8 @@ import {
 export interface SessionOpsCardProps {
     session: Session;
     rosterAttendees: string[];
+    waitlist: string[];
+    maxWaitlistSize: number;
     coachValue: string;
     newAttendeeName: string;
     newAttendeeCourt: string;
@@ -21,6 +24,7 @@ export interface SessionOpsCardProps {
     onNewAttendeeCourtChange: (value: string) => void;
     onAddAttendee: () => void;
     onRemoveAttendee: (attendeeStr: string) => void;
+    onRemoveWaitlistEntry: (waitlistEntry: string) => void;
     onEdit: () => void;
     onDelete: () => void;
 }
@@ -28,6 +32,8 @@ export interface SessionOpsCardProps {
 const SessionOpsCard = memo(({
     session,
     rosterAttendees,
+    waitlist,
+    maxWaitlistSize,
     coachValue,
     newAttendeeName,
     newAttendeeCourt,
@@ -38,6 +44,7 @@ const SessionOpsCard = memo(({
     onNewAttendeeCourtChange,
     onAddAttendee,
     onRemoveAttendee,
+    onRemoveWaitlistEntry,
     onEdit,
     onDelete,
 }: SessionOpsCardProps) => {
@@ -167,6 +174,51 @@ const SessionOpsCard = memo(({
                         </div>
                     )}
                 </div>
+
+                {maxWaitlistSize > 0 && (
+                    <div className="mb-4 space-y-2">
+                        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                            <span className="flex items-center gap-1">
+                                <ListOrdered className="h-3 w-3" />
+                                Waitlist ({waitlist.length} / {maxWaitlistSize})
+                            </span>
+                        </div>
+                        {waitlist.length === 0 ? (
+                            <p className="rounded-xl border border-dashed border-gray-200 bg-white/10 p-3 text-center text-xs italic text-gray-400 dark:border-gray-800 dark:bg-black/10 dark:text-gray-500">
+                                No one on the waitlist.
+                            </p>
+                        ) : (
+                            <div className="max-h-[120px] space-y-1.5 overflow-y-auto pr-1">
+                                {waitlist.map((entry, i) => {
+                                    const person = parseWaitlistEntry(entry);
+                                    return (
+                                        <div
+                                            key={entry}
+                                            className="group/item flex items-center justify-between rounded-lg border border-amber-100 bg-amber-50/50 p-2 text-xs dark:border-amber-900/30 dark:bg-amber-950/20"
+                                        >
+                                            <div className="truncate pr-2">
+                                                <p className="truncate font-semibold text-amber-900 dark:text-amber-100">
+                                                    #{i + 1} {person.name}
+                                                </p>
+                                                <p className="mt-0.5 truncate text-[10px] text-amber-700/70 dark:text-amber-300/60">
+                                                    {person.email}
+                                                </p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => onRemoveWaitlistEntry(entry)}
+                                                className="rounded p-1 text-amber-600 transition-colors hover:bg-amber-100 hover:text-red-500 dark:hover:bg-amber-950/40"
+                                                title="Remove from waitlist"
+                                            >
+                                                <X className="h-3.5 w-3.5" />
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <div className="mt-4 space-y-3 border-t border-gray-150 pt-3 dark:border-gray-800/80">
