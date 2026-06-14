@@ -6,9 +6,6 @@ interface UIContextValue {
     feedbackOpen: boolean;
     openFeedback: () => void;
     closeFeedback: () => void;
-    settingsOpen: boolean;
-    openSettings: () => void;
-    closeSettings: () => void;
 }
 
 const UIContext = createContext<UIContextValue | null>(null);
@@ -16,7 +13,6 @@ const UIContext = createContext<UIContextValue | null>(null);
 export const UIProvider = ({ children }: { children: ReactNode }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
-    const [settingsOpen, setSettingsOpen] = useState(false);
 
     return (
         <UIContext.Provider
@@ -26,9 +22,6 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
                 feedbackOpen,
                 openFeedback: () => setFeedbackOpen(true),
                 closeFeedback: () => setFeedbackOpen(false),
-                settingsOpen,
-                openSettings: () => setSettingsOpen(true),
-                closeSettings: () => setSettingsOpen(false),
             }}
         >
             {children}

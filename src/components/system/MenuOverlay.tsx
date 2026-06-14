@@ -1,18 +1,22 @@
-import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLenis } from 'lenis/react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth, type TabPreference } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
-import { SPORTS } from '../../lib/sports';
-import { GripVertical } from 'lucide-react';
+import SortableSportTabRow from './SortableSportTabRow';
 
 const MenuOverlay = () => {
     const { user, isAdmin, signOut, tabPreferences, updateTabPreferences } = useAuth();
-    const { menuOpen, setMenuOpen, openFeedback, openSettings } = useUI();
+    const { menuOpen, setMenuOpen, openFeedback } = useUI();
+    const [localTabs, setLocalTabs] = useState<TabPreference[]>(tabPreferences);
     const location = useLocation();
     const navigate = useNavigate();
     const lenis = useLenis();
+
+    useEffect(() => {
+        if (menuOpen) setLocalTabs(tabPreferences);
+    }, [menuOpen, tabPreferences]);
 
     useEffect(() => {
         if (!menuOpen) return;
@@ -45,11 +49,19 @@ const MenuOverlay = () => {
 
     const goTo = (path: string) => closeAnd(() => navigate(path));
 
-    const toggleSport = (id: string) => {
-        const next = tabPreferences.map((t) =>
-            t.id === id ? { ...t, visible: !t.visible } : t,
-        );
+    const persistTabs = (next: TabPreference[]) => {
+        setLocalTabs(next);
         if (next.some((t) => t.visible)) updateTabPreferences(next);
+    };
+
+    const toggleSport = (id: string) => {
+        persistTabs(
+            localTabs.map((t) => (t.id === id ? { ...t, visible: !t.visible } : t)),
+        );
+    };
+
+    const handleReorder = (next: TabPreference[]) => {
+        persistTabs(next);
     };
 
     const baseItems = [
@@ -111,41 +123,24 @@ const MenuOverlay = () => {
 
                         {/* Your sports — right on desktop, below nav on mobile */}
                         <aside className="mt-12 w-full shrink-0 md:mt-0 md:w-auto md:max-w-xs md:self-end">
-                            <p className="hud-label mb-4 text-gray-400 dark:text-chalk/40">Your sports</p>
-                            <div className="flex flex-col gap-2">
-                                {tabPreferences.map((tab) => {
-                                    const sport = SPORTS.find((s) => s === tab.id);
-                                    if (!sport) return null;
-                                    return (
-                                        <button
-                                            key={tab.id}
-                                            onClick={() => toggleSport(tab.id)}
-                                            data-cursor
-                                            className={`flex items-center justify-between border px-4 py-3 text-left transition-colors ${
-                                                tab.visible
-                                                    ? 'border-emerald-500/30 bg-emerald-500/5 text-gray-900 dark:border-court-accent/30 dark:bg-court-accent/5 dark:text-chalk'
-                                                    : 'border-gray-200 text-gray-400 hover:border-gray-300 dark:border-chalk/10 dark:text-chalk/40 dark:hover:border-chalk/20'
-                                            }`}
-                                        >
-                                            <span className="text-sm font-medium">{tab.id}</span>
-                                            <span className="hud-label text-[9px]">
-                                                {tab.visible ? 'Visible' : 'Hidden'}
-                                            </span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                            {user && (
-                                <button
-                                    type="button"
-                                    onClick={() => closeAnd(openSettings)}
-                                    data-cursor
-                                    className="mt-4 flex w-full items-center justify-center gap-2 border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:border-wimbledon-navy/30 hover:text-wimbledon-navy dark:border-chalk/10 dark:text-chalk/60 dark:hover:border-chalk/25 dark:hover:text-chalk"
-                                >
-                                    <GripVertical className="h-4 w-4" />
-                                    Reorder sports
-                                </button>
-                            )}
+                            <p className="hud-label mb-1 text-gray-400 dark:text-chalk/40">Your sports</p>
+                            <p className="mb-4 text-xs text-gray-500 dark:text-chalk/45">
+                                Drag to reorder · tap to show or hide
+                            </p>
+                            <Reorder.Group
+                                axis="y"
+                                values={localTabs}
+                                onReorder={handleReorder}
+                                className="flex flex-col gap-2"
+                            >
+                                {localTabs.map((tab) => (
+                                    <SortableSportTabRow
+                                        key={tab.id}
+                                        tab={tab}
+                                        onToggleVisibility={() => toggleSport(tab.id)}
+                                    />
+                                ))}
+                            </Reorder.Group>
                             <p className="mt-6 hud-label text-gray-400 dark:text-chalk/30">
                                 Fuqua School of Business · Duke University
                             </p>
