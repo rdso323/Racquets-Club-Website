@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const supportsFinePointer = () =>
     window.matchMedia('(pointer: fine)').matches &&
@@ -12,7 +13,10 @@ const IDLE_MS = 2000;
  * subtle trailing feel without lagging behind the actual cursor.
  */
 export const usePointerVars = () => {
+    const location = useLocation();
+
     useEffect(() => {
+        if (location.pathname.startsWith('/admin')) return;
         if (!supportsFinePointer()) return;
 
         const root = document.documentElement;
@@ -98,7 +102,7 @@ export const usePointerVars = () => {
             document.removeEventListener('visibilitychange', onVisibility);
             root.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
         };
-    }, []);
+    }, [location.pathname]);
 };
 
 export default usePointerVars;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const supportsFinePointer = () =>
     window.matchMedia('(pointer: fine)').matches &&
@@ -6,11 +7,14 @@ const supportsFinePointer = () =>
 
 /** CSS custom-property cursor — positioned entirely from --mouse/--ring vars (no React state per frame). */
 const PointerSurface = () => {
+    const location = useLocation();
     const [enabled, setEnabled] = useState(false);
 
     useEffect(() => {
-        setEnabled(supportsFinePointer());
-    }, []);
+        setEnabled(
+            supportsFinePointer() && !location.pathname.startsWith('/admin'),
+        );
+    }, [location.pathname]);
 
     if (!enabled) return null;
 

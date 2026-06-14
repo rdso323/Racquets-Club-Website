@@ -38,11 +38,18 @@ const ProtectedRoute = ({
 
 const ScrollLock = () => {
     const { menuOpen } = useUI();
+    const { pathname } = useLocation();
     const lenis = useLenis();
+    const onAdmin = pathname.startsWith('/admin');
+
     useEffect(() => {
+        if (onAdmin) {
+            lenis?.stop();
+            return;
+        }
         if (menuOpen) lenis?.stop();
         else lenis?.start();
-    }, [menuOpen, lenis]);
+    }, [menuOpen, lenis, onAdmin]);
     return null;
 };
 
@@ -50,6 +57,7 @@ const ScrollReset = () => {
     const { pathname } = useLocation();
     const lenis = useLenis();
     useEffect(() => {
+        if (pathname.startsWith('/admin')) return;
         lenis?.scrollTo(0, { immediate: true, force: true });
     }, [pathname, lenis]);
     return null;
