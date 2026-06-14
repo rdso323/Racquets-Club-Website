@@ -15,7 +15,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     // Use the correct logo per theme — same logic as Navbar
-    const logoSrc = theme === 'dark' ? '/logo_dark.png' : '/logo_light.png';
+    const logoSrc = theme === 'dark' ? '/dark_logo.jpg' : '/logo_light.png';
 
     // Forgot Password States
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -63,7 +63,7 @@ const Login = () => {
     };
 
     return (
-        <div className="grain flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-white to-orange-50/40 px-4 py-24 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950">
+        <div className="grain flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 py-24 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950">
             <div className="glass-deep relative flex min-h-[520px] w-full max-w-md flex-col justify-center overflow-hidden p-10">
                 <AnimatePresence mode="wait">
                     {!showForgotPassword ? (

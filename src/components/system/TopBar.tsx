@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -12,6 +12,8 @@ const TopBar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [time, setTime] = useState('');
+
+    const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
         const tick = () => {
@@ -28,20 +30,44 @@ const TopBar = () => {
         return () => window.clearInterval(id);
     }, []);
 
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
     const memberLabel = user?.displayName?.split(' ')[0] || user?.email?.split('@')[0] || null;
     const onAdminPage = location.pathname === '/admin';
+    const darkLogo = '/dark_logo.jpg';
+
+    const handleBrandClick = (e: MouseEvent<HTMLAnchorElement>) => {
+        if (!menuOpen) return;
+        e.preventDefault();
+        setMenuOpen(false);
+        if (location.pathname !== '/') {
+            window.setTimeout(() => navigate('/'), 180);
+        }
+    };
 
     return (
-        <header className="fixed inset-x-0 top-0 z-[150] flex items-center justify-between px-5 py-4 md:px-10">
+        <header
+            className={`fixed inset-x-0 top-0 z-[150] flex items-center justify-between px-5 py-4 transition-[background-color,box-shadow,border-color] duration-300 md:px-10 ${
+                scrolled
+                    ? 'border-b border-gray-200/80 bg-[#F3F0E8]/94 shadow-sm backdrop-blur-md dark:border-chalk/10 dark:bg-court-950/94'
+                    : 'border-b border-transparent bg-transparent'
+            }`}
+        >
             <Link
                 to="/"
+                onClick={handleBrandClick}
                 data-cursor
                 className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
             >
                 <img
-                    src={theme === 'dark' ? '/logo_dark.png' : '/logo_light.png'}
+                    src={theme === 'dark' ? darkLogo : '/logo_light.png'}
                     alt="Fuqua Racquets Club"
-                    className="h-9 w-9 object-contain"
+                    className={`object-contain ${theme === 'dark' ? 'h-10 w-auto max-w-[2.75rem]' : 'h-9 w-9'}`}
                 />
                 <span className="font-display text-lg tracking-tight text-wimbledon-navy dark:text-chalk md:text-xl">
                     Fuqua Racquets Club

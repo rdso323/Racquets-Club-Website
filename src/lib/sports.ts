@@ -77,7 +77,10 @@ export const SESSION_STATUS_CATEGORIES = SPORTS.flatMap((sport) => [
 ]);
 
 export interface SportTheme {
+    /** Bright accent for dark backgrounds */
     accent: string;
+    /** Readable accent on light backgrounds */
+    accentLight: string;
     dim: string;
     secondary: string;
     code: string;
@@ -86,30 +89,35 @@ export interface SportTheme {
 export const SPORT_THEME: Record<Sport, SportTheme> = {
     Tennis: {
         accent: '#BEF264',
+        accentLight: '#3F6212',
         dim: 'rgba(190, 242, 100, 0.14)',
         secondary: '#34D399',
         code: 'TNS',
     },
     Badminton: {
         accent: '#F4EFE2',
+        accentLight: '#0F766E',
         dim: 'rgba(244, 239, 226, 0.12)',
         secondary: '#22D3EE',
         code: 'BDM',
     },
     Squash: {
         accent: '#FFBF00',
+        accentLight: '#B45309',
         dim: 'rgba(255, 191, 0, 0.16)',
         secondary: '#FACC15',
         code: 'SQH',
     },
     Pickleball: {
         accent: '#CCFF00',
+        accentLight: '#4D7C0F',
         dim: 'rgba(204, 255, 0, 0.14)',
         secondary: '#3B82F6',
         code: 'PKL',
     },
     'Table Tennis': {
-        accent: '#1E3A8A',
+        accent: '#93C5FD',
+        accentLight: '#1E3A8A',
         dim: 'rgba(30, 58, 138, 0.18)',
         secondary: '#F97316',
         code: 'TBL',

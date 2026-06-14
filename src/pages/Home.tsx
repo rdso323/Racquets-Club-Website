@@ -64,7 +64,7 @@ const Home = () => {
             <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip">
                 <motion.div
                     style={prefersReducedMotion ? undefined : { opacity: heroOpacity, y: heroY }}
-                    className="relative min-h-[88vh] flex items-center bg-gradient-to-br from-emerald-50/70 via-white to-orange-50/40 dark:from-court-900 dark:via-court-950 dark:to-court-950"
+                    className="relative min-h-[88vh] flex items-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 dark:from-court-900 dark:via-court-950 dark:to-court-950"
                 >
                     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
                         <div className="absolute right-[8%] top-0 h-[34rem] w-[34rem] rounded-full bg-court-accent/10 blur-[130px] dark:bg-court-accent/15" />

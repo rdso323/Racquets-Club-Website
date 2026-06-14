@@ -65,8 +65,8 @@ const MenuOverlay = () => {
                     exit={{ clipPath: 'inset(0 0 100% 0)' }}
                     transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
                 >
-                    <div className="flex h-full flex-col justify-between px-5 pb-10 pt-28 md:flex-row md:items-end md:px-12 md:pb-14">
-                        <nav className="flex flex-col gap-1">
+                    <div className="flex h-full min-h-0 flex-col overflow-y-auto overscroll-contain px-5 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-28 md:flex-row md:items-end md:gap-10 md:px-12 md:pb-14">
+                        <nav className="flex shrink-0 flex-col gap-1 pb-6 md:pb-0">
                             {items.map((item, i) => (
                                 <div key={item.label} className="overflow-hidden">
                                     <motion.button

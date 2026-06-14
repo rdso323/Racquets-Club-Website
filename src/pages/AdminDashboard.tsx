@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { doc, getDoc, setDoc, addDoc, collection, getDocs, onSnapshot, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { doc, getDoc, setDoc, addDoc, collection, onSnapshot, deleteDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import { SPORTS, SPORT_FILTER_TABS, SESSION_STATUS_CATEGORIES, SLOTS_PER_COURT } from '../lib/sports';
@@ -274,39 +274,6 @@ const AdminDashboard = () => {
         }
     };
 
-    // scanning for and removing duplicates
-    const removeDuplicates = async () => {
-        if (!window.confirm("Are you sure you want to scan for and delete duplicate events and sessions?")) return;
-        setStatusMessage('Scanning for duplicates...');
-        try {
-            const removeDupesInCol = async (colName: string) => {
-                const snap = await getDocs(collection(db, colName));
-                const seen = new Set<string>();
-                let deletedCount = 0;
-                for (const docSnap of snap.docs) {
-                    const data = docSnap.data();
-                    const key = `${data.title}-${data.date}`; // use title and date as unique key
-                    if (seen.has(key)) {
-                        await deleteDoc(doc(db, colName, docSnap.id));
-                        deletedCount++;
-                    } else {
-                        seen.add(key);
-                    }
-                }
-                return deletedCount;
-            };
-
-            const deletedEvents = await removeDupesInCol('events');
-            const deletedSessions = await removeDupesInCol('sessions');
-
-            setStatusMessage(`Removed ${deletedEvents} duplicate events and ${deletedSessions} duplicate sessions.`);
-            setTimeout(() => setStatusMessage(''), 5000);
-        } catch (error) {
-            console.error(error);
-            setStatusMessage('Error while attempting to remove duplicates.');
-        }
-    };
-
     // Helper date formatter YYYY-MM-DD to "weekday, month day"
     const formatSelectedDate = (dateStr: string) => {
         if (!dateStr) return '';
@@ -562,14 +529,6 @@ const AdminDashboard = () => {
                 </div>
                 
                 <div className="flex gap-3">
-                    <button 
-                        onClick={removeDuplicates} 
-                        data-cursor
-                        className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400 dark:hover:bg-red-900/30"
-                    >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        Scan Duplicates
-                    </button>
                     <a 
                         href="/" 
                         data-cursor

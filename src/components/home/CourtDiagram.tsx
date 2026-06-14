@@ -127,7 +127,7 @@ const CourtDiagram = ({
                     <h4 className="font-display text-lg text-gray-900 dark:text-chalk">{courtName}</h4>
                 </div>
                 <div className="text-right">
-                    <p className="text-sm font-semibold accent-text">{filled}/{slots.length}</p>
+                    <p className="text-sm font-semibold text-emerald-900 dark:accent-text">{filled}/{slots.length}</p>
                     <p className="hud-label text-gray-400 dark:text-chalk/40">{spotsLeft} open</p>
                 </div>
             </div>

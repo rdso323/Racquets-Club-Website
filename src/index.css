@@ -11,7 +11,7 @@
   }
 
   body {
-    @apply bg-white text-gray-900 transition-colors duration-300;
+    @apply bg-[#F3F0E8] text-gray-900 transition-colors duration-300;
     font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   }
 
@@ -28,7 +28,7 @@
 
 @layer utilities {
   .club-card {
-    @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300;
+    @apply rounded-xl border border-gray-200/90 bg-[#FAF8F3] shadow-sm transition-shadow duration-300 hover:shadow-md;
   }
 
   .dark .club-card {
@@ -51,7 +51,7 @@
   }
 
   .glass-deep {
-    @apply rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-xl shadow-sm;
+    @apply rounded-2xl border border-gray-200/60 bg-[#FAF8F3]/90 backdrop-blur-xl shadow-sm;
   }
 
   .dark .glass-deep {
@@ -104,14 +104,28 @@
   }
 
   .accent-text {
+    color: var(--accent-light, var(--accent));
+  }
+
+  .dark .accent-text {
     color: var(--accent);
   }
 
   .accent-bg {
+    background-color: var(--accent-light, var(--accent));
+    color: #f8fafc;
+  }
+
+  .dark .accent-bg {
     background-color: var(--accent);
+    color: #050a07;
   }
 
   .accent-border {
+    border-color: var(--accent-light, var(--accent));
+  }
+
+  .dark .accent-border {
     border-color: var(--accent);
   }
 

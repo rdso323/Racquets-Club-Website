@@ -560,14 +560,14 @@ const BookingEngine = () => {
                             <h3 className="mt-3 font-display text-2xl text-gray-900 dark:text-chalk">{config.title}</h3>
                             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
                         </div>
-                        <p className="hud-label mt-1 w-fit border border-chalk/10 px-2 py-1.5 text-chalk/50 sm:mt-0">
+                        <p className="hud-label mt-1 w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50 sm:mt-0">
                             {dateRangeDisplay}
                         </p>
                     </div>
                     <p className="text-sm font-medium text-wimbledon-navy dark:text-chalk/70">
                         {session.date} · {session.time}
                     </p>
-                    <div className="mt-4 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-chalk/50">
+                    <div className="mt-4 flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-chalk/50">
                         <span className="flex items-center gap-1.5">
                             <Users className="h-4 w-4" />
                             {activeAttendees.length} / {totalMax} enrolled
@@ -676,7 +676,11 @@ const BookingEngine = () => {
     const openPlayInstances = getOpenPlayInstancesWithinHorizon(sessions, activeSport);
     const hasDisplayContent = openPlayInstances.length > 0 || regularSessions.length > 0;
     const theme = getSportTheme(activeSport);
-    const accentStyle = { '--accent': theme.accent, '--accent-dim': theme.dim } as CSSProperties;
+    const accentStyle = {
+        '--accent': theme.accent,
+        '--accent-light': theme.accentLight,
+        '--accent-dim': theme.dim,
+    } as CSSProperties;
 
     return (
         <section id="booking-section" style={accentStyle} className="transition-[--accent] duration-500">
@@ -690,7 +694,7 @@ const BookingEngine = () => {
                         Browse open play and clinic sessions across all {SPORTS.length} club sports.
                     </p>
                 </div>
-                <p className="hud-label text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
+                <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
             </div>
 
             <div className="mb-10 flex justify-start overflow-x-auto pb-2 scrollbar-hide">
@@ -708,11 +712,10 @@ const BookingEngine = () => {
                                         ? 'bg-white text-gray-900 shadow-sm dark:bg-court-800 dark:text-chalk accent-glow'
                                         : 'text-gray-500 hover:text-gray-800 dark:text-chalk/50 dark:hover:text-chalk'
                                 }`}
-                                style={active ? { '--accent': t.accent } as CSSProperties : undefined}
+                                style={active ? { '--accent': t.accent, '--accent-light': t.accentLight } as CSSProperties : undefined}
                             >
                                 <span
-                                    className={`h-2 w-2 rounded-full ${active ? 'animate-blink' : ''}`}
-                                    style={{ backgroundColor: t.accent }}
+                                    className={`h-2 w-2 rounded-full ${active ? 'animate-blink accent-bg' : 'bg-gray-400 dark:bg-chalk/30'}`}
                                 />
                                 {sport}
                             </button>
