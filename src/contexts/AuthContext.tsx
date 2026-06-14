@@ -88,11 +88,13 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+const CLUB_ADMIN_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
+
 const DEFAULT_ADMIN_EMAILS = [
     'rohan@duke.edu',
     'admin@duke.edu',
     'rohan.dsouza@duke.edu',
-    'fuqua-racquets@duke.edu',
+    CLUB_ADMIN_EMAIL,
 ];
 
 const getAdminEmails = (): string[] => {
