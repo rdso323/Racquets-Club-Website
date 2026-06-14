@@ -40,7 +40,7 @@ const Navbar = () => {
                     </div>
                     
                     {/* Action buttons scrollable row */}
-                    <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1 pr-1 max-w-[65vw] sm:max-w-none scroll-smooth">
+                    <div className="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1 pr-1 scroll-smooth">
                         <button
                             onClick={toggleTheme}
                             className="text-gray-500 dark:text-gray-400 hover:text-wimbledon-navy dark:hover:text-white transition-colors p-2 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 flex-shrink-0"
@@ -58,14 +58,6 @@ const Navbar = () => {
                                     </span>
                                 </div>
                                 
-                                <button
-                                    onClick={() => setIsSettingsOpen(true)}
-                                    className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-1.5 focus:outline-none flex-shrink-0"
-                                    title="Preferences"
-                                >
-                                    <Settings className="w-5 h-5" strokeWidth={2} />
-                                </button>
-                                
                                 {isAdmin && (
                                     <Link
                                         to={location.pathname === '/admin' ? '/' : '/admin'}
@@ -74,6 +66,14 @@ const Navbar = () => {
                                         {location.pathname === '/admin' ? 'Hub' : 'Admin'}
                                     </Link>
                                 )}
+
+                                <button
+                                    onClick={() => setIsSettingsOpen(true)}
+                                    className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-1.5 focus:outline-none flex-shrink-0"
+                                    title="Preferences"
+                                >
+                                    <Settings className="w-5 h-5" strokeWidth={2} />
+                                </button>
                                 
                                 <button
                                     onClick={handleSignOut}

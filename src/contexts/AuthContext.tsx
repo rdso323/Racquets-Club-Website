@@ -88,14 +88,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-// Using a specific ID or email for the admin, or a generic check.
-const ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu', '[REDACTED]@duke.edu']; // Assuming we can use these for admin check
+const DEFAULT_ADMIN_EMAILS = ['rohan@duke.edu', 'admin@duke.edu', 'rohan.dsouza@duke.edu'];
+
+const getAdminEmails = (): string[] => {
+    const fromEnv = import.meta.env.VITE_ADMIN_EMAILS as string | undefined;
+    const extras = fromEnv
+        ? fromEnv.split(',').map((email) => email.trim().toLowerCase()).filter(Boolean)
+        : [];
+    return [...new Set([...DEFAULT_ADMIN_EMAILS.map((email) => email.toLowerCase()), ...extras])];
+};
+
+const ADMIN_EMAILS = getAdminEmails();
+
+const isAdminEmail = (email: string | null | undefined) =>
+    !!email && ADMIN_EMAILS.includes(email.toLowerCase());
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
+    const [firestoreIsAdmin, setFirestoreIsAdmin] = useState(false);
     const migrationAttemptedRef = useRef<string | null>(null);
 
     useEffect(() => {
@@ -121,6 +134,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 } else {
                     setUser(currentUser);
                     setError(null);
+                    setFirestoreIsAdmin(isAdminEmail(currentUser.email));
 
                     const cached = readCachedTabPreferences(currentUser.uid);
                     if (cached) {
@@ -130,6 +144,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
+                setFirestoreIsAdmin(false);
                 migrationAttemptedRef.current = null;
             }
             setLoading(false);
@@ -146,8 +161,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const unsubscribe = onSnapshot(
             userRef,
             async (snapshot) => {
-                if (snapshot.exists() && snapshot.data().tabPreferences) {
-                    const saved = snapshot.data().tabPreferences as TabPreference[];
+                const data = snapshot.exists() ? snapshot.data() : null;
+
+                if (data?.isAdmin === true) {
+                    setFirestoreIsAdmin(true);
+                } else if (isAdminEmail(user.email)) {
+                    setFirestoreIsAdmin(true);
+                    try {
+                        await setDoc(userRef, { isAdmin: true }, { merge: true });
+                    } catch (err) {
+                        console.error('Error bootstrapping admin flag:', err);
+                    }
+                } else {
+                    setFirestoreIsAdmin(false);
+                }
+
+                if (data?.tabPreferences) {
+                    const saved = data.tabPreferences as TabPreference[];
                     const merged = mergeTabPreferences(saved);
                     setTabPreferences(merged);
                     writeCachedTabPreferences(user.uid, merged);
@@ -269,7 +299,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAdmin = user ? ADMIN_EMAILS.includes(user.email?.toLowerCase() || '') : false;
+    const isAdmin = user
+        ? isAdminEmail(user.email) || firestoreIsAdmin
+        : false;
 
     return (
         <AuthContext.Provider value={{
