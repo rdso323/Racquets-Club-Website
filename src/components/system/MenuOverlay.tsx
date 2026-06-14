@@ -123,12 +123,12 @@ const MenuOverlay = () => {
                                             animate={{ opacity: 1, x: 0 }}
                                             transition={{ delay: 0.04 + i * 0.04, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                                         >
-                                            <span className="hud-label w-7 shrink-0 text-gray-400 dark:text-chalk/30">
+                                            <span className="hud-label w-8 shrink-0 text-gray-400 dark:text-chalk/30">
                                                 {item.index}
                                             </span>
                                             <span className="min-w-0 flex-1">
                                                 <span
-                                                    className={`block font-display text-2xl leading-tight transition-colors sm:text-[1.65rem] ${
+                                                    className={`block font-display text-2xl leading-tight transition-colors sm:text-3xl md:text-4xl ${
                                                         item.accent
                                                             ? 'text-emerald-600 group-hover:text-clay-500 dark:text-court-accent dark:group-hover:text-clay-300'
                                                             : 'text-gray-900 group-hover:text-clay-500 dark:text-chalk dark:group-hover:text-clay-300'
