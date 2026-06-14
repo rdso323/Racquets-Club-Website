@@ -1,5 +1,6 @@
 import {
     DEFAULT_OPEN_PLAY_CAPACITY,
+    DEFAULT_WAITLIST_PER_COURT,
     OPEN_PLAY_SCHEDULE,
     SLOTS_PER_COURT,
     type DayName,
@@ -21,6 +22,10 @@ export interface Session {
     time: string;
     maxAttendees: number;
     attendees: string[];
+    /** FIFO session-level waitlist (common across all courts in a session) */
+    waitlist?: string[];
+    /** Max waitlist size; 0 disables waitlist */
+    maxWaitlistSize?: number;
     coach?: string | null;
     coachId?: string | null;
     sport?: string;
@@ -37,6 +42,14 @@ export interface ParsedAttendee {
     raw: string;
 }
 
+export interface ParsedWaitlistEntry {
+    uid: string;
+    name: string;
+    email: string;
+    joinedAtMs: number;
+    raw: string;
+}
+
 const DAY_NAMES = [
     'Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays',
     'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
@@ -50,6 +63,55 @@ export const parseAttendee = (attendeeStr: string): ParsedAttendee => {
         email: parts[2] || 'No Email',
         court: parts[3] || '',
         raw: attendeeStr,
+    };
+};
+
+export const parseWaitlistEntry = (entryStr: string): ParsedWaitlistEntry => {
+    const parts = entryStr.split('|');
+    return {
+        uid: parts[0] || '',
+        name: parts[1] || 'Unknown Player',
+        email: parts[2] || 'No Email',
+        joinedAtMs: Number(parts[3]) || 0,
+        raw: entryStr,
+    };
+};
+
+export const formatAttendee = (uid: string, name: string, email: string, court?: string): string =>
+    court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
+
+export const formatWaitlistEntry = (uid: string, name: string, email: string, joinedAtMs = Date.now()): string =>
+    `${uid}|${name}|${email}|${joinedAtMs}`;
+
+export const findUserAttendeeEntry = (attendees: string[], uid: string): string | undefined =>
+    attendees.find((a) => a.startsWith(`${uid}|`) || a === uid);
+
+export const findUserWaitlistEntry = (waitlist: string[] | undefined, uid: string): string | undefined =>
+    (waitlist || []).find((a) => a.startsWith(`${uid}|`) || a === uid);
+
+export const getWaitlistPosition = (waitlist: string[] | undefined, uid: string): number => {
+    const list = waitlist || [];
+    const idx = list.findIndex((a) => a.startsWith(`${uid}|`) || a === uid);
+    return idx >= 0 ? idx + 1 : 0;
+};
+
+export const promoteFromWaitlist = (
+    attendees: string[],
+    waitlist: string[],
+    courtName?: string,
+): { attendees: string[]; waitlist: string[]; promotedEntry: ParsedWaitlistEntry | null } => {
+    if (waitlist.length === 0) {
+        return { attendees, waitlist, promotedEntry: null };
+    }
+
+    const head = waitlist[0];
+    const parsed = parseWaitlistEntry(head);
+    const promotedAttendee = formatAttendee(parsed.uid, parsed.name, parsed.email, courtName || undefined);
+
+    return {
+        attendees: [...attendees, promotedAttendee],
+        waitlist: waitlist.slice(1),
+        promotedEntry: parsed,
     };
 };
 
@@ -207,12 +269,13 @@ export const resolveOpenPlaySession = (
     const dbSession = sessions.find((s) => s.id === sessionId);
     const totalMax = config.courts.length * config.maxPerCourt;
 
-    if (dbSession) {
+        if (dbSession) {
         return {
             ...dbSession,
             title: config.title,
             maxAttendees: totalMax,
             sport,
+            maxWaitlistSize: dbSession.maxWaitlistSize ?? config.maxWaitlistSize ?? config.courts.length * DEFAULT_WAITLIST_PER_COURT,
         };
     }
 
@@ -224,6 +287,8 @@ export const resolveOpenPlaySession = (
         time: config.time,
         maxAttendees: totalMax,
         attendees: [],
+        waitlist: [],
+        maxWaitlistSize: config.maxWaitlistSize ?? config.courts.length * DEFAULT_WAITLIST_PER_COURT,
         sport,
     };
 };
@@ -394,6 +459,35 @@ export const getCourtsForSession = (session: Session): string[] => {
     if (session.courts && session.courts.length > 0) return session.courts;
 
     return [];
+};
+
+export const isSessionEnrollmentFull = (
+    session: Session,
+    courts: string[],
+    maxPerCourt: number,
+): boolean => {
+    if (courts.length > 0) {
+        return getActiveCourtAttendees(session.attendees || [], courts).length >= courts.length * maxPerCourt;
+    }
+    return (session.attendees || []).length >= session.maxAttendees;
+};
+
+export const getMaxWaitlistSize = (session: Session, openPlayConfig?: OpenPlayDayConfig | null): number => {
+    if (session.maxWaitlistSize != null) return session.maxWaitlistSize;
+    if (openPlayConfig?.maxWaitlistSize != null) return openPlayConfig.maxWaitlistSize;
+
+    const courts = getCourtsForSession(session);
+    if (courts.length > 0) return courts.length * DEFAULT_WAITLIST_PER_COURT;
+    return DEFAULT_WAITLIST_PER_COURT * 2;
+};
+
+export const isWaitlistEnabled = (session: Session, openPlayConfig?: OpenPlayDayConfig | null): boolean =>
+    getMaxWaitlistSize(session, openPlayConfig) > 0;
+
+export const isWaitlistFull = (session: Session, openPlayConfig?: OpenPlayDayConfig | null): boolean => {
+    const max = getMaxWaitlistSize(session, openPlayConfig);
+    if (max <= 0) return true;
+    return (session.waitlist || []).length >= max;
 };
 
 const sortSessionsWithinSport = (a: Session, b: Session): number => {

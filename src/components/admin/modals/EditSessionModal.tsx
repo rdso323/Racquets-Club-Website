@@ -230,6 +230,21 @@ const EditSessionModal = ({
                             className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                         />
                     </div>
+                    <div>
+                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                            Max Waitlist
+                        </label>
+                        <input
+                            type="number"
+                            required
+                            min={0}
+                            value={session.maxWaitlistSize ?? 0}
+                            onChange={(e) =>
+                                onSessionChange({ ...session, maxWaitlistSize: Number(e.target.value) })
+                            }
+                            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                        />
+                    </div>
                     {session.type === 'coaching' && (
                         <div>
                             <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
