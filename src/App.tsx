@@ -38,18 +38,12 @@ const ProtectedRoute = ({
 
 const ScrollLock = () => {
     const { menuOpen } = useUI();
-    const { pathname } = useLocation();
     const lenis = useLenis();
-    const onAdmin = pathname.startsWith('/admin');
 
     useEffect(() => {
-        if (onAdmin) {
-            lenis?.stop();
-            return;
-        }
         if (menuOpen) lenis?.stop();
         else lenis?.start();
-    }, [menuOpen, lenis, onAdmin]);
+    }, [menuOpen, lenis]);
     return null;
 };
 
@@ -80,7 +74,7 @@ const AppRoutes = () => {
                     element={
                         <Suspense fallback={<RouteLoader />}>
                             <ProtectedRoute requireAdmin>
-                                <div className="px-5 py-24 md:px-10">
+                                <div className="px-5 py-24 md:px-10" data-lenis-prevent>
                                     <AdminDashboard />
                                 </div>
                             </ProtectedRoute>
