@@ -15,7 +15,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     // Use the correct logo per theme — same logic as Navbar
-    const logoSrc = theme === 'dark' ? '/dark_logo.jpg' : '/logo_light.png';
+    const logoSrc = theme === 'dark' ? '/logo_dark.png' : '/logo_light.png';
 
     // Forgot Password States
     const [showForgotPassword, setShowForgotPassword] = useState(false);

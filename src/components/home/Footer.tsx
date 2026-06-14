@@ -36,7 +36,7 @@ const Footer = () => {
                     <div className="max-w-sm">
                         <div className="flex items-center gap-3">
                             <img
-                                src={theme === 'dark' ? '/dark_logo.jpg' : '/logo_light.png'}
+                                src={theme === 'dark' ? '/logo_dark.png' : '/logo_light.png'}
                                 alt="Fuqua Racquets Club"
                                 className="h-10 w-10 object-contain"
                             />
