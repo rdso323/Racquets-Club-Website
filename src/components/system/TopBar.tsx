@@ -41,11 +41,11 @@ const TopBar = () => {
     const memberLabel = user?.displayName?.split(' ')[0] || user?.email?.split('@')[0] || null;
     const onAdminPage = location.pathname === '/admin';
 
-    const handleBrandClick = (e: MouseEvent<HTMLAnchorElement>) => {
-        if (!menuOpen) return;
+    const handleBrandClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        setMenuOpen(false);
-        if (location.pathname !== '/') {
+        const nextOpen = !menuOpen;
+        setMenuOpen(nextOpen);
+        if (!nextOpen && location.pathname !== '/') {
             window.setTimeout(() => navigate('/'), 180);
         }
     };
@@ -58,11 +58,13 @@ const TopBar = () => {
                     : 'border-b border-transparent bg-transparent'
             }`}
         >
-            <Link
-                to="/"
+            <button
+                type="button"
                 onClick={handleBrandClick}
                 data-cursor
-                className="flex items-center gap-2.5 transition-opacity hover:opacity-80"
+                aria-expanded={menuOpen}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                className="flex items-center gap-2.5 text-left transition-opacity hover:opacity-80"
             >
                 <img
                     src={logoSrcForTheme(theme)}
@@ -72,7 +74,7 @@ const TopBar = () => {
                 <span className="font-display text-lg tracking-tight text-wimbledon-navy dark:text-chalk md:text-xl">
                     Fuqua Racquets Club
                 </span>
-            </Link>
+            </button>
 
             <div className="flex items-center gap-3 md:gap-5">
                 <span className="hidden hud-label text-gray-400 lg:inline dark:text-chalk/40">{time} ET</span>
