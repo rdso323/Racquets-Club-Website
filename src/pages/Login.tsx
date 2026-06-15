@@ -1,5 +1,6 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
 import { LogIn, UserPlus, Mail, ArrowLeft, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
@@ -15,7 +16,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     // Use the correct logo per theme — same logic as Navbar
-    const logoSrc = theme === 'dark' ? '/logo_dark.png' : '/logo_light.png';
+    const logoSrc = logoSrcForTheme(theme);
 
     // Forgot Password States
     const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -63,8 +64,8 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-950 flex-col px-4 text-center transition-colors duration-300">
-            <div className="bg-white dark:bg-club-surface p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 max-w-md w-full transition-colors relative overflow-hidden min-h-[520px] flex flex-col justify-center">
+        <div className="grain flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 py-24 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950">
+            <div className="glass-deep relative flex min-h-[520px] w-full max-w-md flex-col justify-center overflow-hidden p-10">
                 <AnimatePresence mode="wait">
                     {!showForgotPassword ? (
                         <motion.div
@@ -73,20 +74,20 @@ const Login = () => {
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
                             transition={{ duration: 0.25 }}
-                            className="w-full flex flex-col justify-between h-full"
+                            className="flex h-full w-full flex-col justify-between"
                         >
                             <div>
                                 <img
                                     src={logoSrc}
                                     alt="Fuqua Racquets Club Logo"
-                                    className="mx-auto h-56 w-auto -mb-6 object-contain relative z-0"
-                                    style={theme === 'dark' ? { mixBlendMode: 'screen' } : {}}
+                                    className={LOGO_CLASS.login}
                                 />
-                                <h1 className="text-3xl font-light text-wimbledon-navy dark:text-gray-100 mb-2 tracking-tight -mt-4 transition-colors relative z-10">
-                                    Digital Clubhouse
+                                <p className="hud-label mb-2 text-emerald-600 dark:text-court-accent">Members Access</p>
+                                <h1 className="mb-2 font-display text-3xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk">
+                                    Welcome back
                                 </h1>
-                                <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm transition-colors relative z-10">
-                                    Exclusive access for Fuqua members.
+                                <p className="mb-6 text-sm text-gray-500 transition-colors dark:text-chalk/50">
+                                    Exclusive access for verified Duke members.
                                 </p>
 
                                 {error && (
@@ -118,7 +119,7 @@ const Login = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Email (@duke.edu)"
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all"
+                                            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                         />
                                     </div>
                                     <div>
@@ -129,7 +130,7 @@ const Login = () => {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="Password"
-                                                className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all"
+                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pr-12 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                             />
                                             <button
                                                 type="button"
@@ -149,7 +150,7 @@ const Login = () => {
                                                         setResetError(null);
                                                         setResetSuccess(false);
                                                     }}
-                                                    className="text-xs font-medium text-wimbledon-navy dark:text-wimbledon-gold hover:underline focus:outline-none transition-colors"
+                                                    className="text-xs font-medium text-clay-600 hover:underline focus:outline-none transition-colors dark:text-clay-300"
                                                 >
                                                     Forgot Password?
                                                 </button>
@@ -159,7 +160,8 @@ const Login = () => {
 
                                     <button
                                         type="submit"
-                                        className="w-full flex items-center justify-center bg-wimbledon-navy hover:bg-[#00287a] text-white py-3 px-4 rounded-xl transition duration-300 ease-in-out font-medium mt-6"
+                                        data-cursor
+                                        className="clay-gradient mt-6 flex w-full items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01]"
                                     >
                                         {isSignUp ? <UserPlus className="w-5 h-5 mr-2" /> : <LogIn className="w-5 h-5 mr-2" />}
                                         {isSignUp ? 'Create Account' : 'Sign In'}
@@ -169,7 +171,7 @@ const Login = () => {
                                 <div className="mt-6 flex justify-between text-sm">
                                     <button
                                         onClick={() => setIsSignUp(!isSignUp)}
-                                        className="text-wimbledon-navy dark:text-wimbledon-gold hover:underline focus:outline-none transition-colors mx-auto"
+                                        className="mx-auto text-clay-600 hover:underline focus:outline-none transition-colors dark:text-clay-300"
                                     >
                                         {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
                                     </button>
@@ -190,10 +192,10 @@ const Login = () => {
                             className="w-full flex flex-col justify-between h-full"
                         >
                             <div>
-                                <div className="mx-auto w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4 border border-blue-100 dark:border-blue-900/30">
-                                    <KeyRound className="w-6 h-6 text-wimbledon-navy dark:text-wimbledon-gold" />
+                                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 dark:border-court-accent/30 dark:bg-court-accent/10">
+                                    <KeyRound className="h-6 w-6 text-emerald-600 dark:text-court-accent" />
                                 </div>
-                                <h1 className="text-2xl font-semibold text-wimbledon-navy dark:text-gray-100 mb-2 tracking-tight transition-colors">
+                                <h1 className="mb-2 font-display text-2xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk">
                                     Reset Password
                                 </h1>
                                 <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm transition-colors max-w-xs mx-auto leading-relaxed">
@@ -230,14 +232,15 @@ const Login = () => {
                                                 value={resetEmail}
                                                 onChange={(e) => setResetEmail(e.target.value)}
                                                 placeholder="Email (@duke.edu)"
-                                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-club-bg text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-wimbledon-navy dark:focus:ring-wimbledon-gold focus:border-transparent transition-all"
+                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                             />
                                         </div>
 
                                         <button
                                             type="submit"
                                             disabled={isResetLoading}
-                                            className="w-full flex items-center justify-center bg-wimbledon-navy hover:bg-[#00287a] text-white py-3 px-4 rounded-xl transition duration-300 ease-in-out font-medium mt-6 disabled:opacity-50"
+                                            data-cursor
+                                            className="clay-gradient mt-6 flex w-full items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50"
                                         >
                                             <Mail className="w-5 h-5 mr-2" />
                                             {isResetLoading ? 'Sending Link...' : 'Send Reset Link'}
@@ -253,7 +256,7 @@ const Login = () => {
                                             setResetError(null);
                                             setResetSuccess(false);
                                         }}
-                                        className="text-sm font-medium text-wimbledon-navy dark:text-wimbledon-gold hover:underline focus:outline-none transition-colors inline-flex items-center"
+                                        className="inline-flex items-center text-sm font-medium text-clay-600 hover:underline focus:outline-none transition-colors dark:text-clay-300"
                                     >
                                         <ArrowLeft className="w-4 h-4 mr-1.5" />
                                         Back to Sign In

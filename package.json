@@ -13,6 +13,7 @@
   "dependencies": {
     "firebase": "^12.10.0",
     "framer-motion": "^12.34.4",
+    "lenis": "^1.3.23",
     "lucide-react": "^0.576.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

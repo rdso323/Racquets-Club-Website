@@ -14,7 +14,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const savedTheme = localStorage.getItem('theme');
     // Default to light mode for now since the original site was light mode,
     // though we could default to system preference if desired.
-    return (savedTheme as Theme) || 'light';
+    return (savedTheme as Theme) || 'dark';
   });
 
   useEffect(() => {
