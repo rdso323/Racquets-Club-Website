@@ -95,7 +95,7 @@ const Shell = () => {
 
     return (
         <UIProvider>
-            <div className="grain min-h-screen bg-white text-gray-900 dark:bg-court-950 dark:text-chalk">
+            <div className="grain min-h-screen overflow-x-hidden bg-white text-gray-900 dark:bg-court-950 dark:text-chalk">
                 {!booted && <Preloader onDone={() => setBooted(true)} />}
 
                 {booted && (

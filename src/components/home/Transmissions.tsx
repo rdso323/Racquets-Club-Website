@@ -140,13 +140,14 @@ const Transmissions = () => {
                     Social gatherings, mixers, and community play — drag to browse upcoming events.
                 </p>
 
-                <motion.div
-                    ref={trackRef}
-                    drag="x"
-                    dragConstraints={{ left: -dragLimit, right: 0 }}
-                    dragElastic={0.06}
-                    className="flex cursor-grab gap-5 overflow-visible px-5 active:cursor-grabbing md:px-10"
-                >
+                <div className="overflow-x-hidden">
+                    <motion.div
+                        ref={trackRef}
+                        drag="x"
+                        dragConstraints={{ left: -dragLimit, right: 0 }}
+                        dragElastic={0.06}
+                        className="flex cursor-grab gap-5 px-5 active:cursor-grabbing md:px-10"
+                    >
                     {displayEvents.map((event, i) => (
                         <article
                             key={event.id}
@@ -192,7 +193,8 @@ const Transmissions = () => {
                             </div>
                         </article>
                     ))}
-                </motion.div>
+                    </motion.div>
+                </div>
             </div>
 
             {/* News rail */}

@@ -61,7 +61,7 @@ const Home = () => {
     return (
         <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             {/* Hero — editorial full-bleed */}
-            <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip">
+            <section className="relative w-full overflow-hidden">
                 <motion.div
                     style={prefersReducedMotion ? undefined : { opacity: heroOpacity, y: heroY }}
                     className="relative min-h-[88vh] flex items-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 dark:from-court-900 dark:via-court-950 dark:to-court-950"
