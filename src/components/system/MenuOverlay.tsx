@@ -7,7 +7,7 @@ import { useUI } from './UIProvider';
 import SortableSportTabRow from './SortableSportTabRow';
 
 const MenuOverlay = () => {
-    const { user, isAdmin, signOut, tabPreferences, updateTabPreferences } = useAuth();
+    const { user, signOut, tabPreferences, updateTabPreferences } = useAuth();
     const { menuOpen, setMenuOpen, openFeedback } = useUI();
     const [localTabs, setLocalTabs] = useState<TabPreference[]>(tabPreferences);
     const location = useLocation();
@@ -74,7 +74,7 @@ const MenuOverlay = () => {
         { label: 'Book a Court', sub: 'Session availability', action: () => scrollToId('booking-section'), accent: true },
         { label: 'Events', sub: 'Socials & mixers', action: () => scrollToId('events-section') },
         { label: 'News', sub: 'Latest results', action: () => scrollToId('news-section') },
-        ...(isAdmin ? [{ label: 'Admin', sub: 'Club operations', action: () => goTo('/admin') }] : []),
+        { label: 'Help', sub: 'Booking FAQ', action: () => goTo('/help') },
         { label: 'Feedback', sub: 'Share your thoughts', action: () => closeAnd(openFeedback) },
     ];
 

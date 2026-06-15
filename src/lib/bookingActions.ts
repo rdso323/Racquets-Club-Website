@@ -4,12 +4,16 @@ import { db } from './firebase';
 import type { OpenPlayDayConfig } from './sports';
 import {
     type Session,
+    filterAttendeesByCourt,
     findUserAttendeeEntry,
     findUserWaitlistEntry,
     formatAttendee,
     formatWaitlistEntry,
+    firstOpenCourtSlot,
     getCourtsForSession,
     getSlotsPerCourt,
+    isAttendeeOnCourt,
+    isCourtSlotTaken,
     isSessionEnrollmentFull,
     isWaitlistFull,
     parseAttendee,
@@ -77,14 +81,17 @@ const readSessionData = (session: Session, snapData: Record<string, unknown> | u
     waitlist: (snapData?.waitlist as string[]) || session.waitlist || [],
 });
 
+const courtAttendeesFor = (attendees: string[], courtName: string) =>
+    filterAttendeesByCourt(attendees, courtName);
+
 export const joinSessionCourt = async (
     session: Session,
     profile: BookingUserProfile,
     courtName: string | undefined,
     activeSport?: string,
+    slotIndex?: number,
 ): Promise<'joined' | 'left' | 'switched'> => {
     const sessionRef = doc(db, 'sessions', session.id);
-    const attendeeString = formatAttendee(profile.uid, profile.displayName, profile.email, courtName);
 
     const snap = await runTransaction(db, async (tx) => {
         const docSnap = await tx.get(sessionRef);
@@ -98,7 +105,22 @@ export const joinSessionCourt = async (
         const waitlistEntry = findUserWaitlistEntry(waitlist, profile.uid);
 
         if (existingEntry) {
-            if (courtName && !existingEntry.endsWith(`|${courtName}`)) {
+            if (courtName && !isAttendeeOnCourt(existingEntry, courtName)) {
+                const targetCourtAttendees = courtAttendeesFor(attendees, courtName);
+                let targetSlot = slotIndex;
+                if (targetSlot == null) {
+                    targetSlot = firstOpenCourtSlot(targetCourtAttendees, maxPerCourt) ?? undefined;
+                }
+                if (targetSlot == null || isCourtSlotTaken(targetCourtAttendees, maxPerCourt, targetSlot)) {
+                    throw new Error('This spot is not available.');
+                }
+                const attendeeString = formatAttendee(
+                    profile.uid,
+                    profile.displayName,
+                    profile.email,
+                    courtName,
+                    targetSlot,
+                );
                 attendees = attendees.filter((a) => a !== existingEntry);
                 attendees.push(attendeeString);
                 tx.set(sessionRef, { ...sessionSeedFields(data, activeSport), attendees, waitlist }, { merge: true });
@@ -111,7 +133,12 @@ export const joinSessionCourt = async (
             let nextWaitlist = waitlist;
 
             if (waitlist.length > 0) {
-                const promoted = promoteFromWaitlist(nextAttendees, nextWaitlist, freedCourt || undefined);
+                const promoted = promoteFromWaitlist(
+                    nextAttendees,
+                    nextWaitlist,
+                    freedCourt || undefined,
+                    maxPerCourt,
+                );
                 nextAttendees = promoted.attendees;
                 nextWaitlist = promoted.waitlist;
             }
@@ -129,15 +156,31 @@ export const joinSessionCourt = async (
         }
 
         if (courtName && courts.length > 0) {
-            const courtAttendees = attendees.filter((a) => a.endsWith(`|${courtName}`));
-            if (courtAttendees.length >= maxPerCourt) {
+            const targetCourtAttendees = courtAttendeesFor(attendees, courtName);
+            let targetSlot = slotIndex;
+            if (targetSlot == null) {
+                targetSlot = firstOpenCourtSlot(targetCourtAttendees, maxPerCourt) ?? undefined;
+            }
+            if (targetSlot == null) {
                 throw new Error('This court is full.');
             }
+            if (isCourtSlotTaken(targetCourtAttendees, maxPerCourt, targetSlot)) {
+                throw new Error('This spot is already taken.');
+            }
+            const attendeeString = formatAttendee(
+                profile.uid,
+                profile.displayName,
+                profile.email,
+                courtName,
+                targetSlot,
+            );
+            attendees.push(attendeeString);
         } else if (isSessionEnrollmentFull(data, courts, maxPerCourt)) {
             throw new Error('This session is full.');
+        } else {
+            attendees.push(formatAttendee(profile.uid, profile.displayName, profile.email));
         }
 
-        attendees.push(attendeeString);
         tx.set(sessionRef, { ...sessionSeedFields(data, activeSport), attendees, waitlist }, { merge: true });
         return 'joined' as const;
     });
@@ -218,6 +261,7 @@ export const removeAttendeeWithPromotion = async (
         const docSnap = await tx.get(sessionRef);
         const data = readSessionData(session, docSnap.data());
         const courts = getCourtsForSession(data);
+        const maxPerCourt = getSlotsPerCourt(data);
         let attendees = [...(data.attendees || [])];
         let waitlist = [...(data.waitlist || [])];
 
@@ -227,6 +271,7 @@ export const removeAttendeeWithPromotion = async (
 
         attendees = attendees.filter((a) => a !== attendeeStr);
         const freedCourt = parseAttendee(attendeeStr).court;
+        const freedSlot = parseAttendee(attendeeStr).slotIndex;
 
         let promoted: PromotionResult = { promoted: false };
         if (waitlist.length > 0) {
@@ -234,9 +279,23 @@ export const removeAttendeeWithPromotion = async (
                 attendees,
                 waitlist,
                 courts.length > 0 ? freedCourt || undefined : undefined,
+                maxPerCourt,
             );
             attendees = result.attendees;
             waitlist = result.waitlist;
+            if (result.promotedEntry && courts.length > 0 && freedCourt) {
+                const promotedIdx = attendees.findIndex((a) => a.startsWith(`${result.promotedEntry!.uid}|`));
+                if (promotedIdx >= 0 && freedSlot != null) {
+                    const p = result.promotedEntry;
+                    attendees[promotedIdx] = formatAttendee(
+                        p.uid,
+                        p.name,
+                        p.email,
+                        freedCourt,
+                        freedSlot,
+                    );
+                }
+            }
             if (result.promotedEntry) {
                 promoted = {
                     promoted: true,

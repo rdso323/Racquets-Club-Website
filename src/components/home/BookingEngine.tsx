@@ -25,9 +25,13 @@ import {
     isWithinBookingHorizon,
     getCourtsForSession,
     getSlotsPerCourt,
+    filterAttendeesByCourt,
     findUserAttendeeEntry,
     findUserWaitlistEntry,
+    isAttendeeOnCourt,
     isSessionEnrollmentFull,
+    mapAttendeesToCourtSlots,
+    parseAttendee,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 
@@ -195,13 +199,13 @@ const BookingEngine = () => {
         return () => unsubscribe();
     }, []);
 
-    const handleJoin = async (sessionToJoin: Session, courtName?: string) => {
+    const handleJoin = async (sessionToJoin: Session, courtName?: string, slotIndex?: number) => {
         if (!user) return;
         setBookingBusy(sessionToJoin.id);
         const profile = toBookingProfile(user);
 
         try {
-            const result = await joinSessionCourt(sessionToJoin, profile, courtName, activeSport);
+            const result = await joinSessionCourt(sessionToJoin, profile, courtName, activeSport, slotIndex);
 
             if (result === 'joined' && window.confirm('Successfully joined! Would you like to download a calendar invite?')) {
                 createICSFile(sessionToJoin, courtName);
@@ -357,7 +361,7 @@ const BookingEngine = () => {
         const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
 
         const activeAttendees = hasCourtBuckets
-            ? session.attendees.filter((a) => sessionCourts.some((court) => a.endsWith(`|${court}`)))
+            ? session.attendees.filter((a) => sessionCourts.some((court) => isAttendeeOnCourt(a, court)))
             : session.attendees;
 
         const isFull = isSessionEnrollmentFull(session, sessionCourts, maxPerCourt);
@@ -437,9 +441,9 @@ const BookingEngine = () => {
                         {hasCourtBuckets ? (
                             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                                 {sessionCourts.map((courtName) => {
-                                    const courtAttendees = session.attendees.filter(a => a.endsWith(`|${courtName}`));
+                                    const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
                                     const isCourtFull = courtAttendees.length >= maxPerCourt;
-                                    const userInThisCourt = !!(userEntry && (courtAttendees.includes(userEntry) || userEntry.endsWith(`|${courtName}`)));
+                                    const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                     const userInAnotherCourt = !!(userEntry && !userInThisCourt);
                                     const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
                                     const disabled =
@@ -473,6 +477,7 @@ const BookingEngine = () => {
                                             actionLabel={actionLabel}
                                             userInThisCourt={userInThisCourt}
                                             onAction={() => handleJoin(session, courtName)}
+                                            onJoinSlot={(slotIndex) => handleJoin(session, courtName, slotIndex)}
                                         />
                                     );
                                 })}
@@ -549,7 +554,7 @@ const BookingEngine = () => {
         const totalMax = courtsForDay.length * maxPerCourt;
 
         const activeAttendees = session.attendees.filter((a) =>
-            courtsForDay.some((court) => a.endsWith(`|${court}`)),
+            courtsForDay.some((court) => isAttendeeOnCourt(a, court)),
         );
 
         const isFull = isSessionEnrollmentFull(session, courtsForDay, maxPerCourt);
@@ -626,9 +631,9 @@ const BookingEngine = () => {
 
                         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                             {courtsForDay.map((courtName) => {
-                                const courtAttendees = session.attendees.filter((a) => a.endsWith(`|${courtName}`));
+                                const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;
-                                const userInThisCourt = !!(userEntry && (courtAttendees.includes(userEntry) || userEntry.endsWith(`|${courtName}`)));
+                                const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                 const userInAnotherCourt = !!(userEntry && !userInThisCourt);
                                 const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
                                 const disabled =
@@ -662,6 +667,7 @@ const BookingEngine = () => {
                                         actionLabel={actionLabel}
                                         userInThisCourt={userInThisCourt}
                                         onAction={() => handleJoin(session, courtName)}
+                                        onJoinSlot={(slotIndex) => handleJoin(session, courtName, slotIndex)}
                                     />
                                 );
                             })}
@@ -689,16 +695,18 @@ const BookingEngine = () => {
         courtAttendees: string[],
         maxPerCourt: number,
     ): (CourtSlot | null)[] => {
-        const slots: (CourtSlot | null)[] = Array(maxPerCourt).fill(null);
-        courtAttendees.forEach((entry, i) => {
-            if (i >= maxPerCourt) return;
-            const parts = entry.split('|');
-            const name = parts[1] || 'Player';
-            const email = parts[2] || '';
-            const isMine = user ? entry.startsWith(user.uid + '|') || entry === user.uid : false;
-            slots[i] = { name, tooltip: email.includes('@') ? email : name, isMine };
+        const mapped = mapAttendeesToCourtSlots(courtAttendees, maxPerCourt);
+        return mapped.map((entry) => {
+            if (!entry) return null;
+            const { name, email, uid } = parseAttendee(entry);
+            const isMine = user ? entry.startsWith(`${uid}|`) || entry === uid : false;
+            return {
+                name,
+                email,
+                tooltip: email.includes('@') ? email : name,
+                isMine,
+            };
         });
-        return slots;
     };
 
     if (loading) {

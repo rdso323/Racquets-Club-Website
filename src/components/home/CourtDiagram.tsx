@@ -1,8 +1,9 @@
-import { Plus, User } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import type { Sport } from '../../lib/sports';
 
 export interface CourtSlot {
     name: string;
+    email: string;
     tooltip: string;
     isMine: boolean;
 }
@@ -16,6 +17,7 @@ interface CourtDiagramProps {
     actionLabel: string;
     userInThisCourt: boolean;
     onAction: () => void;
+    onJoinSlot: (slotIndex: number) => void;
 }
 
 const slotPosition = (index: number, total: number) => {
@@ -99,13 +101,19 @@ const CourtMarkings = ({ sport }: { sport: string }) => {
     );
 };
 
-const initialsOf = (name: string) =>
-    name
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((p) => p.charAt(0).toUpperCase())
-        .join('');
+const displayInitials = (name: string, email: string): string => {
+    const trimmed = name.trim();
+    if (trimmed) {
+        const parts = trimmed.split(/\s+/).filter(Boolean);
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return trimmed.slice(0, 2).toUpperCase();
+    }
+    const local = email.split('@')[0]?.trim() ?? '';
+    if (local.length >= 2) return local.slice(0, 2).toUpperCase();
+    return local.slice(0, 1).toUpperCase() || '?';
+};
 
 const CourtDiagram = ({
     sport,
@@ -116,6 +124,7 @@ const CourtDiagram = ({
     actionLabel,
     userInThisCourt,
     onAction,
+    onJoinSlot,
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
@@ -151,10 +160,10 @@ const CourtDiagram = ({
                                 key={index}
                                 type="button"
                                 disabled={disabled}
-                                onClick={onAction}
+                                onClick={() => onJoinSlot(index)}
                                 style={style}
                                 className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs transition-transform hover:scale-110 disabled:cursor-not-allowed disabled:opacity-40"
-                                title="Open spot"
+                                title={`Join spot ${index + 1}`}
                             >
                                 <Plus className="h-3.5 w-3.5" />
                             </button>
@@ -166,15 +175,11 @@ const CourtDiagram = ({
                             key={index}
                             style={style}
                             title={slot.tooltip}
-                            className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] ${
+                            className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-semibold ${
                                 slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
                             }`}
                         >
-                            {slot.isMine ? (
-                                <User className="h-3.5 w-3.5" />
-                            ) : (
-                                initialsOf(slot.name)
-                            )}
+                            {displayInitials(slot.name, slot.email)}
                         </div>
                     );
                 })}

@@ -40,6 +40,8 @@ export interface ParsedAttendee {
     name: string;
     email: string;
     court: string;
+    /** Zero-based position on the court diagram, if stored */
+    slotIndex?: number;
     raw: string;
 }
 
@@ -58,14 +60,24 @@ const DAY_NAMES = [
 
 export const parseAttendee = (attendeeStr: string): ParsedAttendee => {
     const parts = attendeeStr.split('|');
+    const slotPart = parts[4];
+    const slotIndex =
+        slotPart !== undefined && /^\d+$/.test(slotPart) ? Number(slotPart) : undefined;
     return {
         uid: parts[0] || '',
         name: parts[1] || 'Unknown Player',
         email: parts[2] || 'No Email',
         court: parts[3] || '',
+        slotIndex,
         raw: attendeeStr,
     };
 };
+
+export const isAttendeeOnCourt = (entry: string, courtName: string): boolean =>
+    parseAttendee(entry).court === courtName;
+
+export const filterAttendeesByCourt = (attendees: string[], courtName: string): string[] =>
+    attendees.filter((a) => isAttendeeOnCourt(a, courtName));
 
 export const parseWaitlistEntry = (entryStr: string): ParsedWaitlistEntry => {
     const parts = entryStr.split('|');
@@ -78,8 +90,66 @@ export const parseWaitlistEntry = (entryStr: string): ParsedWaitlistEntry => {
     };
 };
 
-export const formatAttendee = (uid: string, name: string, email: string, court?: string): string =>
-    court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
+export const formatAttendee = (
+    uid: string,
+    name: string,
+    email: string,
+    court?: string,
+    slotIndex?: number,
+): string => {
+    const base = court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
+    if (court && slotIndex != null && slotIndex >= 0) {
+        return `${base}|${slotIndex}`;
+    }
+    return base;
+};
+
+export const mapAttendeesToCourtSlots = (
+    courtAttendees: string[],
+    maxPerCourt: number,
+): (string | null)[] => {
+    const slots: (string | null)[] = Array(maxPerCourt).fill(null);
+    const unassigned: string[] = [];
+
+    for (const entry of courtAttendees) {
+        const { slotIndex } = parseAttendee(entry);
+        if (
+            slotIndex != null &&
+            slotIndex >= 0 &&
+            slotIndex < maxPerCourt &&
+            slots[slotIndex] === null
+        ) {
+            slots[slotIndex] = entry;
+        } else {
+            unassigned.push(entry);
+        }
+    }
+
+    for (const entry of unassigned) {
+        const firstEmpty = slots.findIndex((s) => s === null);
+        if (firstEmpty >= 0) slots[firstEmpty] = entry;
+    }
+
+    return slots;
+};
+
+export const firstOpenCourtSlot = (
+    courtAttendees: string[],
+    maxPerCourt: number,
+): number | null => {
+    const slots = mapAttendeesToCourtSlots(courtAttendees, maxPerCourt);
+    const idx = slots.findIndex((s) => s === null);
+    return idx >= 0 ? idx : null;
+};
+
+export const isCourtSlotTaken = (
+    courtAttendees: string[],
+    maxPerCourt: number,
+    slotIndex: number,
+): boolean => {
+    const slots = mapAttendeesToCourtSlots(courtAttendees, maxPerCourt);
+    return slotIndex < 0 || slotIndex >= maxPerCourt || slots[slotIndex] !== null;
+};
 
 export const formatWaitlistEntry = (uid: string, name: string, email: string, joinedAtMs = Date.now()): string =>
     `${uid}|${name}|${email}|${joinedAtMs}`;
@@ -100,6 +170,7 @@ export const promoteFromWaitlist = (
     attendees: string[],
     waitlist: string[],
     courtName?: string,
+    maxPerCourt = 4,
 ): { attendees: string[]; waitlist: string[]; promotedEntry: ParsedWaitlistEntry | null } => {
     if (waitlist.length === 0) {
         return { attendees, waitlist, promotedEntry: null };
@@ -107,7 +178,18 @@ export const promoteFromWaitlist = (
 
     const head = waitlist[0];
     const parsed = parseWaitlistEntry(head);
-    const promotedAttendee = formatAttendee(parsed.uid, parsed.name, parsed.email, courtName || undefined);
+    let promotedSlot: number | undefined;
+    if (courtName) {
+        const courtAttendees = filterAttendeesByCourt(attendees, courtName);
+        promotedSlot = firstOpenCourtSlot(courtAttendees, maxPerCourt) ?? undefined;
+    }
+    const promotedAttendee = formatAttendee(
+        parsed.uid,
+        parsed.name,
+        parsed.email,
+        courtName || undefined,
+        promotedSlot,
+    );
 
     return {
         attendees: [...attendees, promotedAttendee],
@@ -299,9 +381,7 @@ export const bucketAttendeesByCourt = (
     courts: string[],
     maxPerCourt: number,
 ): string[] => {
-    const courtAttendeeBuckets = courts.map((c) =>
-        attendees.filter((a) => a.endsWith(`|${c}`)),
-    );
+    const courtAttendeeBuckets = courts.map((c) => filterAttendeesByCourt(attendees, c));
     const assignedAttendees = courtAttendeeBuckets.flat();
     const unassignedAttendees = attendees.filter((a) => !assignedAttendees.includes(a));
 
@@ -333,7 +413,7 @@ export const getActiveCourtAttendees = (
     courts: string[],
 ): string[] => {
     if (courts.length === 0) return attendees;
-    return attendees.filter((a) => courts.some((court) => a.endsWith(`|${court}`)));
+    return attendees.filter((a) => courts.some((court) => isAttendeeOnCourt(a, court)));
 };
 
 export const getOpenPlayInstancesWithinHorizon = (
