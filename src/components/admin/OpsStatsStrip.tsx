@@ -34,17 +34,17 @@ const OpsStatsStrip = ({
     <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
         <StatTile
             label="Live sessions"
-            value={sessionCount || '—'}
+            value={sessionCount}
             icon={<Users className="h-4 w-4" />}
         />
         <StatTile
             label="Active events"
-            value={eventCount || '—'}
+            value={eventCount}
             icon={<Calendar className="h-4 w-4" />}
         />
         <StatTile
             label="Feedback queue"
-            value={feedbackCount || '—'}
+            value={feedbackCount}
             icon={<MessageSquare className="h-4 w-4" />}
             accent="text-clay-600 dark:text-clay-300"
         />
