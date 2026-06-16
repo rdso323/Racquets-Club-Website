@@ -205,8 +205,8 @@ const Transmissions = () => {
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">In the News</h2>,
                     ]}
                 />
-                <div className="grid gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-chalk/10 dark:bg-chalk/10 sm:grid-cols-2">
-                    {news.slice(0, 4).map((item, i) => (
+                <div className="grid gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-chalk/10 dark:bg-chalk/10 sm:grid-cols-2 lg:grid-cols-3">
+                    {news.slice(0, 5).map((item, i) => (
                         <motion.a
                             key={item.id}
                             href={item.link}
