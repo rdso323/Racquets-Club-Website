@@ -11,16 +11,17 @@ const IDLE_MS = 2000;
 const INTERACTIVE_SELECTOR =
     'a, button, [data-cursor], input, textarea, select, [role="button"]';
 
-const isHomeHeroZone = (pathname: string): boolean => {
+/** Custom cursor when pointer is above the first home-page ticker line. */
+const shouldUseCustomCursor = (pathname: string, clientY: number): boolean => {
     if (pathname !== '/') return false;
     const ticker = document.getElementById('primary-ticker');
     if (!ticker) return true;
-    return ticker.getBoundingClientRect().top > 0;
+    return clientY < ticker.getBoundingClientRect().top;
 };
 
 /**
- * Custom cursor (green dot + ring) only on the home hero — above the first ticker.
- * Everywhere else uses the native system cursor.
+ * Custom cursor (green dot + ring) on the home hero while the mouse is above the first ticker.
+ * Below that line (or on other pages) uses the native system cursor.
  */
 export const usePointerVars = () => {
     const location = useLocation();
@@ -64,8 +65,8 @@ export const usePointerVars = () => {
             }
         };
 
-        const syncCursorZone = () => {
-            setCustomCursor(isHomeHeroZone(location.pathname));
+        const syncCursorZone = (clientY = targetY) => {
+            setCustomCursor(shouldUseCustomCursor(location.pathname, clientY));
         };
 
         const setHover = (hover: boolean) => {
@@ -105,6 +106,8 @@ export const usePointerVars = () => {
             targetY = e.clientY;
             lastMoveAt = performance.now();
 
+            syncCursorZone(e.clientY);
+
             if (!customCursorOn) return;
 
             const interactive = (e.target as HTMLElement)?.closest?.(INTERACTIVE_SELECTOR);
@@ -112,7 +115,7 @@ export const usePointerVars = () => {
             startLoop();
         };
 
-        const onScroll = () => syncCursorZone();
+        const onLayoutChange = () => syncCursorZone();
 
         const onVisibility = () => {
             if (document.hidden) {
@@ -132,9 +135,9 @@ export const usePointerVars = () => {
 
         syncCursorZone();
         window.addEventListener('mousemove', onMove, { passive: true });
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onScroll, { passive: true });
-        lenis?.on('scroll', onScroll);
+        window.addEventListener('scroll', onLayoutChange, { passive: true });
+        window.addEventListener('resize', onLayoutChange, { passive: true });
+        lenis?.on('scroll', onLayoutChange);
         window.addEventListener('mousedown', onDown, { passive: true });
         window.addEventListener('mouseup', onUp, { passive: true });
         document.addEventListener('visibilitychange', onVisibility);
@@ -144,9 +147,9 @@ export const usePointerVars = () => {
             loopActive = false;
             cancelAnimationFrame(raf);
             window.removeEventListener('mousemove', onMove);
-            window.removeEventListener('scroll', onScroll);
-            window.removeEventListener('resize', onScroll);
-            lenis?.off('scroll', onScroll);
+            window.removeEventListener('scroll', onLayoutChange);
+            window.removeEventListener('resize', onLayoutChange);
+            lenis?.off('scroll', onLayoutChange);
             window.removeEventListener('mousedown', onDown);
             window.removeEventListener('mouseup', onUp);
             document.removeEventListener('visibilitychange', onVisibility);
