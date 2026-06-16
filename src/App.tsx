@@ -90,15 +90,21 @@ const AppRoutes = () => {
 };
 
 const Shell = () => {
-    const [booted, setBooted] = useState(false);
+    const [revealed, setRevealed] = useState(false);
+    const [preloaderDone, setPreloaderDone] = useState(false);
     usePointerVars();
 
     return (
         <UIProvider>
             <div className="grain min-h-screen overflow-x-hidden bg-white text-gray-900 dark:bg-court-950 dark:text-chalk">
-                {!booted && <Preloader onDone={() => setBooted(true)} />}
+                {!preloaderDone && (
+                    <Preloader
+                        onReveal={() => setRevealed(true)}
+                        onDone={() => setPreloaderDone(true)}
+                    />
+                )}
 
-                {booted && (
+                {revealed && (
                     <>
                         <ScrollLock />
                         <ScrollReset />

@@ -59,7 +59,7 @@ const Home = () => {
     });
 
     return (
-        <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <motion.main initial={false}>
             {/* Hero — editorial full-bleed */}
             <section className="relative w-full overflow-hidden">
                 <motion.div

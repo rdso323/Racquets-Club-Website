@@ -4,7 +4,7 @@ import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Users, CalendarDays, Rocket, AlertTriangle } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig } from '../../lib/sports';
-import CourtDiagram, { type CourtSlot } from './CourtDiagram';
+import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
 import {
     joinSessionCourt,
@@ -30,10 +30,9 @@ import {
     findUserWaitlistEntry,
     isAttendeeOnCourt,
     isSessionEnrollmentFull,
-    mapAttendeesToCourtSlots,
-    parseAttendee,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
+import { buildCourtSlots } from '../../lib/courtSlots';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
@@ -145,37 +144,6 @@ const BookingEngine = () => {
                 ...docSnap.data()
             })) as Session[];
 
-            sessionsData.forEach(async (session) => {
-                if (session.type === 'coaching' || session.title.toLowerCase().includes('clinic')) {
-                    const sport = inferSport(session);
-                    const baseStartOfWeek = getBaseWeekStart(sport);
-                    const currentWeekStartStr = baseStartOfWeek.toISOString().split('T')[0];
-                    const storedWeekStart = session.weekStartDate;
-
-                    if (storedWeekStart === currentWeekStartStr) {
-                        pendingClinicResets.delete(`${session.id}:${currentWeekStartStr}`);
-                        return;
-                    }
-
-                    const resetKey = `${session.id}:${currentWeekStartStr}`;
-                    if (pendingClinicResets.has(resetKey)) return;
-                    pendingClinicResets.add(resetKey);
-
-                    try {
-                        const sessionRef = doc(db, 'sessions', session.id);
-                        await updateDoc(sessionRef, {
-                            attendees: [],
-                            coach: null,
-                            coachId: null,
-                            weekStartDate: currentWeekStartStr,
-                        });
-                    } catch (e) {
-                        pendingClinicResets.delete(resetKey);
-                        console.error(`Failed to auto-reset weekly session ${session.id}:`, e);
-                    }
-                }
-            });
-
             setSessions(sessionsData);
             setLoading(false);
         }, (err) => {
@@ -198,6 +166,39 @@ const BookingEngine = () => {
 
         return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+        sessions.forEach(async (session) => {
+            if (session.type === 'coaching' || session.title.toLowerCase().includes('clinic')) {
+                const sport = inferSport(session);
+                const baseStartOfWeek = getBaseWeekStart(sport);
+                const currentWeekStartStr = baseStartOfWeek.toISOString().split('T')[0];
+                const storedWeekStart = session.weekStartDate;
+
+                if (storedWeekStart === currentWeekStartStr) {
+                    pendingClinicResets.delete(`${session.id}:${currentWeekStartStr}`);
+                    return;
+                }
+
+                const resetKey = `${session.id}:${currentWeekStartStr}`;
+                if (pendingClinicResets.has(resetKey)) return;
+                pendingClinicResets.add(resetKey);
+
+                try {
+                    const sessionRef = doc(db, 'sessions', session.id);
+                    await updateDoc(sessionRef, {
+                        attendees: [],
+                        coach: null,
+                        coachId: null,
+                        weekStartDate: currentWeekStartStr,
+                    });
+                } catch (e) {
+                    pendingClinicResets.delete(resetKey);
+                    console.error(`Failed to auto-reset weekly session ${session.id}:`, e);
+                }
+            }
+        });
+    }, [sessions]);
 
     const handleJoin = async (sessionToJoin: Session, courtName?: string, slotIndex?: number) => {
         if (!user) return;
@@ -371,7 +372,7 @@ const BookingEngine = () => {
         const sessionDisabled = isPast || isLocked || isCancelled || !user;
 
         return (
-            <div key={session.id} className="glass-deep relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:accent-glow">
+            <div key={session.id} className="booking-card relative flex h-full flex-col overflow-hidden">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -445,7 +446,7 @@ const BookingEngine = () => {
                                     const isCourtFull = courtAttendees.length >= maxPerCourt;
                                     const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                     const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                    const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
+                                    const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
                                     const disabled =
                                         sessionDisabled ||
                                         userOnWaitlist ||
@@ -493,7 +494,7 @@ const BookingEngine = () => {
                                             ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                             : isJoining
                                               ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
-                                              : 'accent-bg text-court-950 hover:brightness-110 accent-glow'
+                                              : 'accent-bg text-court-950 hover:brightness-110'
                                     }`}
                                 >
                                     {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userOnWaitlist ? 'On Waitlist' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
@@ -566,7 +567,7 @@ const BookingEngine = () => {
         const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
         return (
-            <div key={session.id} className="glass-deep relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:accent-glow">
+            <div key={session.id} className="booking-card relative flex h-full flex-col overflow-hidden">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -635,7 +636,7 @@ const BookingEngine = () => {
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;
                                 const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                 const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                const slots = buildCourtSlots(courtName, courtAttendees, maxPerCourt);
+                                const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
                                 const disabled =
                                     sessionDisabled ||
                                     userOnWaitlist ||
@@ -688,25 +689,6 @@ const BookingEngine = () => {
                 </div>
             </div>
         );
-    };
-
-    const buildCourtSlots = (
-        _courtName: string,
-        courtAttendees: string[],
-        maxPerCourt: number,
-    ): (CourtSlot | null)[] => {
-        const mapped = mapAttendeesToCourtSlots(courtAttendees, maxPerCourt);
-        return mapped.map((entry) => {
-            if (!entry) return null;
-            const { name, email, uid } = parseAttendee(entry);
-            const isMine = user ? entry.startsWith(`${uid}|`) || entry === uid : false;
-            return {
-                name,
-                email,
-                tooltip: email.includes('@') ? email : name,
-                isMine,
-            };
-        });
     };
 
     if (loading) {

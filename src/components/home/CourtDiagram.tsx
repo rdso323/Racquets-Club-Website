@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Plus } from 'lucide-react';
 import type { Sport } from '../../lib/sports';
 
@@ -162,7 +163,7 @@ const CourtDiagram = ({
                                 disabled={disabled}
                                 onClick={() => onJoinSlot(index)}
                                 style={style}
-                                className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs transition-transform hover:scale-110 disabled:cursor-not-allowed disabled:opacity-40"
+                                className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs disabled:cursor-not-allowed disabled:opacity-40"
                                 title={`Join spot ${index + 1}`}
                             >
                                 <Plus className="h-3.5 w-3.5" />
@@ -189,13 +190,12 @@ const CourtDiagram = ({
                 type="button"
                 onClick={onAction}
                 disabled={disabled}
-                data-cursor
-                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
                     userInThisCourt
                         ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
                         : disabled
                           ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
-                          : 'accent-bg text-court-950 hover:brightness-110 accent-glow'
+                          : 'accent-bg text-court-950 hover:brightness-110'
                 }`}
             >
                 {actionLabel}
@@ -204,4 +204,4 @@ const CourtDiagram = ({
     );
 };
 
-export default CourtDiagram;
+export default memo(CourtDiagram);
