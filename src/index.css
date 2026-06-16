@@ -11,7 +11,7 @@
   }
 
   body {
-    @apply bg-[#F3F0E8] text-gray-900 transition-colors duration-300;
+    @apply overflow-x-hidden bg-[#F3F0E8] text-gray-900 transition-colors duration-300;
     font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
   }
 
@@ -52,6 +52,15 @@
 
   .glass-deep {
     @apply rounded-2xl border border-gray-200/60 bg-[#FAF8F3]/90 backdrop-blur-xl shadow-sm;
+  }
+
+  .booking-card {
+    @apply rounded-2xl border border-gray-200/80 bg-[#FAF8F3] shadow-sm;
+  }
+
+  .dark .booking-card {
+    background: linear-gradient(145deg, #0f2016 0%, #0a140e 100%);
+    border-color: rgba(244, 239, 226, 0.08);
   }
 
   .dark .glass-deep {
@@ -134,7 +143,11 @@
   }
 
   .player-slot--open {
-    @apply border border-dashed border-gray-400/60 bg-white/70 text-gray-500;
+    @apply border border-dashed border-gray-400/60 bg-white/70 text-gray-500 transition-colors;
+  }
+
+  .player-slot--open:hover:not(:disabled) {
+    @apply border-emerald-500/70 text-emerald-700 dark:border-court-accent/60 dark:text-court-accent;
   }
 
   .dark .player-slot--open {
@@ -185,6 +198,18 @@
   .cursor-active,
   .cursor-active * {
     cursor: none !important;
+  }
+
+  .pointer-dot,
+  .pointer-ring {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  html.cursor-active .pointer-dot,
+  html.cursor-active .pointer-ring {
+    opacity: 1;
+    visibility: visible;
   }
 
   .pointer-dot {

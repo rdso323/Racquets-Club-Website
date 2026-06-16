@@ -59,9 +59,9 @@ const Home = () => {
     });
 
     return (
-        <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <motion.main initial={false}>
             {/* Hero — editorial full-bleed */}
-            <section className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-clip">
+            <section className="relative w-full overflow-hidden">
                 <motion.div
                     style={prefersReducedMotion ? undefined : { opacity: heroOpacity, y: heroY }}
                     className="relative min-h-[88vh] flex items-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 dark:from-court-900 dark:via-court-950 dark:to-court-950"
@@ -156,9 +156,9 @@ const Home = () => {
                 />
             </section>
 
-            <LiveWire dismissOnScroll flipped />
+            <LiveWire id="primary-ticker" dismissOnScroll flipped />
 
-            <div className="scroll-rise px-5 py-16 md:px-10 md:py-24">
+            <div className="scroll-rise px-5 pt-12 pb-10 md:px-10 md:pt-16 md:pb-12">
                 <BookingEngine />
             </div>
 

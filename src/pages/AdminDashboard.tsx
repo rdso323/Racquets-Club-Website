@@ -15,7 +15,6 @@ const AdminDashboard = () => {
 
     const {
         initialLoading,
-        tabLoading,
         tickerText,
         setTickerText,
         sessionStatuses,
@@ -23,7 +22,7 @@ const AdminDashboard = () => {
         sessionsList,
         eventsList,
         feedbackList,
-    } = useAdminData(activeTab);
+    } = useAdminData();
 
     const triggerQuickSession = () => {
         setActiveTab('sessions');
@@ -32,7 +31,7 @@ const AdminDashboard = () => {
         }, 150);
     };
 
-    if (initialLoading && activeTab === 'settings') {
+    if (initialLoading) {
         return (
             <div className="flex min-h-[40vh] items-center justify-center">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-court-accent border-t-transparent" />
@@ -51,10 +50,6 @@ const AdminDashboard = () => {
             feedbackCount={feedbackList.length}
             tickerConfigured={tickerText.trim().length > 0}
         >
-            {tabLoading && (
-                <p className="hud-label mb-4 text-gray-400 dark:text-chalk/40">Syncing module data…</p>
-            )}
-
             {activeTab === 'settings' && (
                 <SettingsModule
                     tickerText={tickerText}

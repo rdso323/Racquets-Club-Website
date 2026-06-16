@@ -125,14 +125,14 @@ const Transmissions = () => {
     const displayEvents = events.length > 0 ? events : MOCK_EVENTS;
 
     return (
-        <section className="py-20 md:py-28">
+        <section className="pb-16 pt-8 md:pb-24 md:pt-10">
             {/* Events carousel */}
             <div id="events-section" className="mb-20 scroll-mt-24">
                 <RevealLines
                     className="mb-8 px-5 md:px-10"
                     lineClassName="flex items-baseline gap-4"
                     lines={[
-                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">01</span>,
+                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">02</span>,
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">Club Events</h2>,
                     ]}
                 />
@@ -140,13 +140,14 @@ const Transmissions = () => {
                     Social gatherings, mixers, and community play — drag to browse upcoming events.
                 </p>
 
-                <motion.div
-                    ref={trackRef}
-                    drag="x"
-                    dragConstraints={{ left: -dragLimit, right: 0 }}
-                    dragElastic={0.06}
-                    className="flex cursor-grab gap-5 overflow-visible px-5 active:cursor-grabbing md:px-10"
-                >
+                <div className="overflow-x-hidden">
+                    <motion.div
+                        ref={trackRef}
+                        drag="x"
+                        dragConstraints={{ left: -dragLimit, right: 0 }}
+                        dragElastic={0.06}
+                        className="flex cursor-grab gap-5 px-5 active:cursor-grabbing md:px-10"
+                    >
                     {displayEvents.map((event, i) => (
                         <article
                             key={event.id}
@@ -192,7 +193,8 @@ const Transmissions = () => {
                             </div>
                         </article>
                     ))}
-                </motion.div>
+                    </motion.div>
+                </div>
             </div>
 
             {/* News rail */}
@@ -201,7 +203,7 @@ const Transmissions = () => {
                     className="mb-8"
                     lineClassName="flex items-baseline gap-4"
                     lines={[
-                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">02</span>,
+                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">03</span>,
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">In the News</h2>,
                     ]}
                 />

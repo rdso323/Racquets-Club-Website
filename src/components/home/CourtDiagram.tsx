@@ -1,8 +1,10 @@
-import { Plus, User } from 'lucide-react';
+import { memo } from 'react';
+import { Plus } from 'lucide-react';
 import type { Sport } from '../../lib/sports';
 
 export interface CourtSlot {
     name: string;
+    email: string;
     tooltip: string;
     isMine: boolean;
 }
@@ -16,6 +18,7 @@ interface CourtDiagramProps {
     actionLabel: string;
     userInThisCourt: boolean;
     onAction: () => void;
+    onJoinSlot: (slotIndex: number) => void;
 }
 
 const slotPosition = (index: number, total: number) => {
@@ -99,13 +102,19 @@ const CourtMarkings = ({ sport }: { sport: string }) => {
     );
 };
 
-const initialsOf = (name: string) =>
-    name
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((p) => p.charAt(0).toUpperCase())
-        .join('');
+const displayInitials = (name: string, email: string): string => {
+    const trimmed = name.trim();
+    if (trimmed) {
+        const parts = trimmed.split(/\s+/).filter(Boolean);
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return trimmed.slice(0, 2).toUpperCase();
+    }
+    const local = email.split('@')[0]?.trim() ?? '';
+    if (local.length >= 2) return local.slice(0, 2).toUpperCase();
+    return local.slice(0, 1).toUpperCase() || '?';
+};
 
 const CourtDiagram = ({
     sport,
@@ -116,6 +125,7 @@ const CourtDiagram = ({
     actionLabel,
     userInThisCourt,
     onAction,
+    onJoinSlot,
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
@@ -151,10 +161,10 @@ const CourtDiagram = ({
                                 key={index}
                                 type="button"
                                 disabled={disabled}
-                                onClick={onAction}
+                                onClick={() => onJoinSlot(index)}
                                 style={style}
-                                className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs transition-transform hover:scale-110 disabled:cursor-not-allowed disabled:opacity-40"
-                                title="Open spot"
+                                className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                                title={`Join spot ${index + 1}`}
                             >
                                 <Plus className="h-3.5 w-3.5" />
                             </button>
@@ -166,15 +176,11 @@ const CourtDiagram = ({
                             key={index}
                             style={style}
                             title={slot.tooltip}
-                            className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] ${
+                            className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-semibold ${
                                 slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
                             }`}
                         >
-                            {slot.isMine ? (
-                                <User className="h-3.5 w-3.5" />
-                            ) : (
-                                initialsOf(slot.name)
-                            )}
+                            {displayInitials(slot.name, slot.email)}
                         </div>
                     );
                 })}
@@ -184,13 +190,12 @@ const CourtDiagram = ({
                 type="button"
                 onClick={onAction}
                 disabled={disabled}
-                data-cursor
-                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
                     userInThisCourt
                         ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
                         : disabled
                           ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
-                          : 'accent-bg text-court-950 hover:brightness-110 accent-glow'
+                          : 'accent-bg text-court-950 hover:brightness-110'
                 }`}
             >
                 {actionLabel}
@@ -199,4 +204,4 @@ const CourtDiagram = ({
     );
 };
 
-export default CourtDiagram;
+export default memo(CourtDiagram);

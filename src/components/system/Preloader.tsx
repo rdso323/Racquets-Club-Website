@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../contexts/ThemeContext';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
@@ -12,16 +12,23 @@ const STATUS_LINES = [
     'Courts are waiting.',
 ];
 
-const Preloader = ({ onDone }: { onDone: () => void }) => {
+interface PreloaderProps {
+    onReveal: () => void;
+    onDone: () => void;
+}
+
+const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [reduced] = useState(prefersReducedMotion);
     const [count, setCount] = useState(0);
     const [statusIndex, setStatusIndex] = useState(0);
     const [exiting, setExiting] = useState(() => prefersReducedMotion());
+    const revealedRef = useRef(false);
 
     useEffect(() => {
         if (reduced) {
+            onReveal();
             onDone();
             return;
         }
@@ -39,13 +46,19 @@ const Preloader = ({ onDone }: { onDone: () => void }) => {
             if (t < 1) {
                 raf = requestAnimationFrame(tick);
             } else {
-                window.setTimeout(() => setExiting(true), 300);
+                window.setTimeout(() => {
+                    if (!revealedRef.current) {
+                        revealedRef.current = true;
+                        onReveal();
+                    }
+                    setExiting(true);
+                }, 300);
             }
         };
 
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
-    }, [reduced, onDone]);
+    }, [reduced, onReveal, onDone]);
 
     return (
         <AnimatePresence onExitComplete={onDone}>

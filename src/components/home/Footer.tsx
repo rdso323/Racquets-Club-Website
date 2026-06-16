@@ -7,7 +7,7 @@ import { useUI } from '../system/UIProvider';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 
 const Footer = () => {
-    const { user, isAdmin } = useAuth();
+    const { user } = useAuth();
     const { openFeedback } = useUI();
     const { theme } = useTheme();
     const navigate = useNavigate();
@@ -22,8 +22,8 @@ const Footer = () => {
         { label: 'Book a Court', action: () => scrollToId('booking-section') },
         { label: 'Events', action: () => scrollToId('events-section') },
         { label: 'News', action: () => scrollToId('news-section') },
+        { label: 'Help', action: () => navigate('/help') },
         { label: 'Feedback', action: openFeedback },
-        ...(isAdmin ? [{ label: 'Admin', action: () => navigate('/admin') }] : []),
         user
             ? { label: 'Back to Top', action: () => lenis?.scrollTo(0, { duration: 1.5 }) }
             : { label: 'Member Sign In', action: () => navigate('/login') },

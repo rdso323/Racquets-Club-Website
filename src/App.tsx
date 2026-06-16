@@ -12,6 +12,7 @@ import FeedbackModal from './components/layout/FeedbackModal';
 import { usePointerVars } from './hooks/usePointerVars';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import Home from './pages/Home';
+import Help from './pages/Help';
 import Login from './pages/Login';
 
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -69,6 +70,7 @@ const AppRoutes = () => {
                     element={loading ? <RouteLoader /> : !user ? <Login /> : <Navigate to="/" replace />}
                 />
                 <Route path="/" element={<Home />} />
+                <Route path="/help" element={<Help />} />
                 <Route
                     path="/admin"
                     element={
@@ -88,15 +90,21 @@ const AppRoutes = () => {
 };
 
 const Shell = () => {
-    const [booted, setBooted] = useState(false);
+    const [revealed, setRevealed] = useState(false);
+    const [preloaderDone, setPreloaderDone] = useState(false);
     usePointerVars();
 
     return (
         <UIProvider>
-            <div className="grain min-h-screen bg-white text-gray-900 dark:bg-court-950 dark:text-chalk">
-                {!booted && <Preloader onDone={() => setBooted(true)} />}
+            <div className="grain min-h-screen overflow-x-hidden bg-white text-gray-900 dark:bg-court-950 dark:text-chalk">
+                {!preloaderDone && (
+                    <Preloader
+                        onReveal={() => setRevealed(true)}
+                        onDone={() => setPreloaderDone(true)}
+                    />
+                )}
 
-                {booted && (
+                {revealed && (
                     <>
                         <ScrollLock />
                         <ScrollReset />
