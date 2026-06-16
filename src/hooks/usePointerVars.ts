@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useLenis } from 'lenis/react';
 
 const supportsFinePointer = () =>
     window.matchMedia('(pointer: fine)').matches &&
@@ -10,25 +11,26 @@ const IDLE_MS = 2000;
 const INTERACTIVE_SELECTOR =
     'a, button, [data-cursor], input, textarea, select, [role="button"]';
 
-const isInBookingSection = (target: EventTarget | null): boolean => {
-    if (!(target instanceof Element)) return false;
-    return Boolean(target.closest('#booking-section'));
+const isHomeHeroZone = (pathname: string): boolean => {
+    if (pathname !== '/') return false;
+    const ticker = document.getElementById('primary-ticker');
+    if (!ticker) return true;
+    return ticker.getBoundingClientRect().top > 0;
 };
 
 /**
- * Maps pointer position to CSS custom properties with zero React re-renders.
- * The dot tracks instantly; the ring is interpolated in the same rAF loop for a
- * subtle trailing feel without lagging behind the actual cursor.
+ * Custom cursor (green dot + ring) only on the home hero — above the first ticker.
+ * Everywhere else uses the native system cursor.
  */
 export const usePointerVars = () => {
     const location = useLocation();
+    const lenis = useLenis();
 
     useEffect(() => {
         if (location.pathname.startsWith('/admin')) return;
         if (!supportsFinePointer()) return;
 
         const root = document.documentElement;
-        root.classList.add('cursor-active');
 
         let targetX = window.innerWidth / 2;
         let targetY = window.innerHeight / 2;
@@ -39,16 +41,12 @@ export const usePointerVars = () => {
         let loopActive = false;
         let lastMoveAt = performance.now();
         let lastHover = false;
-        let inBookingZone = false;
+        let customCursorOn = false;
 
-        const setBookingZone = (active: boolean) => {
-            if (inBookingZone === active) return;
-            inBookingZone = active;
+        const setCustomCursor = (active: boolean) => {
+            if (customCursorOn === active) return;
+            customCursorOn = active;
             if (active) {
-                root.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
-                loopActive = false;
-                cancelAnimationFrame(raf);
-            } else {
                 ringX = targetX;
                 ringY = targetY;
                 root.style.setProperty('--mouse-x', `${targetX}px`);
@@ -59,7 +57,15 @@ export const usePointerVars = () => {
                 root.classList.remove('cursor-hover', 'cursor-down');
                 root.classList.add('cursor-active');
                 startLoop();
+            } else {
+                root.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
+                loopActive = false;
+                cancelAnimationFrame(raf);
             }
+        };
+
+        const syncCursorZone = () => {
+            setCustomCursor(isHomeHeroZone(location.pathname));
         };
 
         const setHover = (hover: boolean) => {
@@ -74,7 +80,7 @@ export const usePointerVars = () => {
             const tabVisible = !document.hidden;
             const recentlyMoved = performance.now() - lastMoveAt < IDLE_MS;
 
-            if (!tabVisible || !recentlyMoved || inBookingZone) {
+            if (!tabVisible || !recentlyMoved || !customCursorOn) {
                 loopActive = false;
                 return;
             }
@@ -89,7 +95,7 @@ export const usePointerVars = () => {
         };
 
         const startLoop = () => {
-            if (loopActive || !running || inBookingZone) return;
+            if (loopActive || !running || !customCursorOn) return;
             loopActive = true;
             raf = requestAnimationFrame(loop);
         };
@@ -99,18 +105,14 @@ export const usePointerVars = () => {
             targetY = e.clientY;
             lastMoveAt = performance.now();
 
-            const booking = isInBookingSection(e.target);
-            setBookingZone(booking);
-
-            if (booking) {
-                setHover(false);
-                return;
-            }
+            if (!customCursorOn) return;
 
             const interactive = (e.target as HTMLElement)?.closest?.(INTERACTIVE_SELECTOR);
             setHover(!!interactive);
             startLoop();
         };
+
+        const onScroll = () => syncCursorZone();
 
         const onVisibility = () => {
             if (document.hidden) {
@@ -118,32 +120,39 @@ export const usePointerVars = () => {
                 cancelAnimationFrame(raf);
             } else {
                 lastMoveAt = performance.now();
+                syncCursorZone();
                 startLoop();
             }
         };
 
         const onDown = () => {
-            if (!inBookingZone) root.classList.add('cursor-down');
+            if (customCursorOn) root.classList.add('cursor-down');
         };
         const onUp = () => root.classList.remove('cursor-down');
 
+        syncCursorZone();
         window.addEventListener('mousemove', onMove, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        lenis?.on('scroll', onScroll);
         window.addEventListener('mousedown', onDown, { passive: true });
         window.addEventListener('mouseup', onUp, { passive: true });
         document.addEventListener('visibilitychange', onVisibility);
-        startLoop();
 
         return () => {
             running = false;
             loopActive = false;
             cancelAnimationFrame(raf);
             window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+            lenis?.off('scroll', onScroll);
             window.removeEventListener('mousedown', onDown);
             window.removeEventListener('mouseup', onUp);
             document.removeEventListener('visibilitychange', onVisibility);
             root.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
         };
-    }, [location.pathname]);
+    }, [location.pathname, lenis]);
 };
 
 export default usePointerVars;

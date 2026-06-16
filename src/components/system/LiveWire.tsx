@@ -6,9 +6,10 @@ interface LiveWireProps {
     /** When true, ticker slides out on scroll (hero entrance). */
     dismissOnScroll?: boolean;
     flipped?: boolean;
+    id?: string;
 }
 
-const LiveWire = ({ dismissOnScroll = false, flipped = false }: LiveWireProps) => {
+const LiveWire = ({ dismissOnScroll = false, flipped = false, id }: LiveWireProps) => {
     const tickerText = useTickerText();
     const { scrollY } = useScroll();
     const y = useTransform(scrollY, [120, 620], dismissOnScroll ? [0, -72] : [0, 0]);
@@ -16,6 +17,7 @@ const LiveWire = ({ dismissOnScroll = false, flipped = false }: LiveWireProps) =
 
     return (
         <motion.div
+            id={id}
             className="relative border-y border-gray-200 bg-gray-50 py-3 dark:border-chalk/10 dark:bg-court-950"
             style={dismissOnScroll ? { y, opacity } : undefined}
         >
