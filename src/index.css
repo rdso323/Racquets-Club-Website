@@ -200,6 +200,18 @@
     cursor: none !important;
   }
 
+  .pointer-dot,
+  .pointer-ring {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  html.cursor-active .pointer-dot,
+  html.cursor-active .pointer-ring {
+    opacity: 1;
+    visibility: visible;
+  }
+
   .pointer-dot {
     position: absolute;
     top: 0;

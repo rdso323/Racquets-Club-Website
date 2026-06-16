@@ -46,8 +46,19 @@ export const usePointerVars = () => {
             inBookingZone = active;
             if (active) {
                 root.classList.remove('cursor-active', 'cursor-hover', 'cursor-down');
+                loopActive = false;
+                cancelAnimationFrame(raf);
             } else {
+                ringX = targetX;
+                ringY = targetY;
+                root.style.setProperty('--mouse-x', `${targetX}px`);
+                root.style.setProperty('--mouse-y', `${targetY}px`);
+                root.style.setProperty('--ring-x', `${ringX}px`);
+                root.style.setProperty('--ring-y', `${ringY}px`);
+                lastHover = false;
+                root.classList.remove('cursor-hover', 'cursor-down');
                 root.classList.add('cursor-active');
+                startLoop();
             }
         };
 
