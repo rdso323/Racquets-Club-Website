@@ -158,7 +158,7 @@ const Home = () => {
 
             <LiveWire id="primary-ticker" dismissOnScroll flipped />
 
-            <div className="scroll-rise px-5 py-16 md:px-10 md:py-24">
+            <div className="scroll-rise px-5 pt-12 pb-10 md:px-10 md:pt-16 md:pb-12">
                 <BookingEngine />
             </div>
 

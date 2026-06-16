@@ -713,7 +713,7 @@ const BookingEngine = () => {
         <section id="booking-section" style={accentStyle} className="transition-[--accent] duration-500">
             <div id="radar" className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
-                    <p className="hud-label mb-3 text-court-accent">03 — Matchmaker</p>
+                    <p className="hud-label mb-3 text-court-accent">01 — Matchmaker</p>
                     <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
                         Reserve your court
                     </h2>
