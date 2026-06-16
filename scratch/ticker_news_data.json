@@ -1,33 +1,40 @@
 {
-  "tickerText": "[TENNIS] Boss Open (Stuttgart): Alexander Bublik defeats Jan-Lennard Struff (7-6, 3-6, 6-2) to advance to the quarterfinals; Nick Kyrgios makes a winning grass-court comeback against Corentin Moutet (6-3, 6-4). WTA HSBC Championships (London): Iva Jovic, Amanda Anisimova, and Karolina Pliskova advance to the quarterfinals • [BADMINTON] Australian Open (Sydney): PV Sindhu defeats fellow Indian Isharani Baruah (22-20, 21-12) to advance to the quarterfinals, while former champion Lee Zii Jia suffers a first-round shock exit to Lee Chia-hao • [SQUASH] British Open (Birmingham): 18-year-old Amina Orfi makes history as the youngest women's champion ever, defeating Nour El Sherbini; Paul Coll wins his 3rd British Open title, defeating Mostafa Asal. Players now prepare for the PSA Squash Tour Finals in Paris (June 17-20)!",
+  "tickerText": "[TENNIS] Boss Open (Stuttgart): Ben Shelton defeats Taylor Fritz (6-4, 2-6, 6-4) for his first grass-court title — his third of 2026. HSBC Championships (Queen's): Donna Vekic wins women's singles over Emma Raducanu; Tommy Paul and Alex de Minaur advance as men's play continues • [BADMINTON] Australian Open (Sydney): Alwi Farhan defeats Dong Tianyao (21-13, 21-13) for his second Super 500 title; Akane Yamaguchi beats Pornpawee Chochuwong (22-20, 21-18) as China sweeps all three doubles golds • [SQUASH] PSA Squash Tour Finals (Paris, June 17-20): World champions Mostafa Asal and Amina Orfi top the draws at Centquatre-Paris; Marwan ElShorbagy and Tinne Gilis replace injured Youssef Ibrahim and Olivia Weaver • [PICKLEBALL] Boise PPA Challenger concludes in Idaho (June 12-14); PPA Asia 500 China Open begins June 17 in Beijing — Anna Leigh Waters named to TIME100 Sports List • [TABLE TENNIS] Gangneung World Masters Championships conclude (June 12); Kanak Jha climbs to world No. 24 — United States Smash opens June 26 in Los Angeles",
   "newsItems": [
     {
-      "title": "Bublik Outlasts Struff in Stuttgart; Kyrgios Returns Victorious",
-      "excerpt": "Alexander Bublik edged out Jan-Lennard Struff in a three-set thriller at the Boss Open in Stuttgart to advance to the quarterfinals. The tournament also featured a successful comeback for Nick Kyrgios, who defeated Corentin Moutet in straight sets.",
-      "date": "June 11, 2026",
+      "title": "Shelton Claims First Grass Title at Stuttgart Boss Open",
+      "excerpt": "Ben Shelton defeated Taylor Fritz 6-4, 2-6, 6-4 in an all-American final to win the Boss Open in Stuttgart — his first career grass-court title and third of 2026. At Queen's Club, Donna Vekic captured the women's singles crown while the men's ATP 500 draw is underway.",
+      "date": "June 16, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com"
+      "link": "https://www.atptour.com/en/news"
     },
     {
-      "title": "Sindhu Secures Quarterfinals Spot in Sydney; Lee Zii Jia Exits",
-      "excerpt": "Two-time Olympic medalist PV Sindhu defeated Isharani Baruah (22-20, 21-12) to reach the quarterfinals of the Australian Badminton Open. Meanwhile, former champion Lee Zii Jia suffered a shocking straight-sets defeat to Lee Chia-hao in the first round.",
-      "date": "June 11, 2026",
+      "title": "Farhan and Yamaguchi Crowned at Australian Open",
+      "excerpt": "Indonesia's Alwi Farhan swept China's Dong Tianyao 21-13, 21-13 to claim his second BWF Super 500 title of the year at the Sathio Group Australian Open. Akane Yamaguchi won women's singles over Pornpawee Chochuwong as China took all three doubles championships in Sydney.",
+      "date": "June 14, 2026",
       "category": "Badminton",
-      "link": "https://bwfbadminton.com"
+      "link": "https://bwfbadminton.com/news"
     },
     {
-      "title": "Orfi and Coll Claim Historic British Open Championships",
-      "excerpt": "18-year-old Amina Orfi made history as the youngest-ever women's champion at the British Open in Birmingham by defeating world No. 1 Nour El Sherbini. On the men's side, Paul Coll claimed his third title by defeating Mostafa Asal in a physical final match.",
-      "date": "June 7, 2026",
+      "title": "Asal and Orfi Lead Draws for PSA Tour Finals in Paris",
+      "excerpt": "World champions Mostafa Asal and Amina Orfi top the season-ending PSA Squash Tour Finals draws at Centquatre-Paris (June 17-20). Injury withdrawals opened spots for Marwan ElShorbagy and Tinne Gilis, with a record $710,000 prize pool on the line.",
+      "date": "June 16, 2026",
       "category": "Squash",
-      "link": "https://www.psaworldtour.com"
+      "link": "https://www.psasquashtour.com/news/"
     },
     {
-      "title": "Johns Siblings Sweep PPA Tour Stop in Texas",
-      "excerpt": "Ben and Collin Johns continued their dominant pickleball season with a men's doubles title at the latest PPA Tour event, while Anna Leigh Waters extended her win streak in women's singles.",
-      "date": "June 10, 2026",
+      "title": "Boise Challenger Wraps; PPA Asia 500 China Open Up Next",
+      "excerpt": "The Boise PPA Challenger concluded June 14 at The Flying Pickle in Idaho, with rising pros competing for ranking points. The tour shifts to Beijing for the PPA Asia 500 China Open starting June 17, as Anna Leigh Waters earns TIME100 Sports recognition.",
+      "date": "June 16, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com"
+      "link": "https://www.ppatour.com/"
+    },
+    {
+      "title": "Gangneung Masters Conclude; Jha Climbs Rankings Ahead of US Smash",
+      "excerpt": "The XIOM 2026 Gangneung World Masters Table Tennis Championships wrapped June 12 after eight days in South Korea. Kanak Jha jumped six spots to world No. 24 following his Skopje result, with the United States Smash set for Los Angeles starting June 26.",
+      "date": "June 16, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.ittf.com/"
     }
   ]
 }

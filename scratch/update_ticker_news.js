@@ -2,22 +2,50 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 
-// 1. Read token from the Firebase CLI config
-const homeDir = os.homedir();
-const configPath = path.join(homeDir, '.config', 'configstore', 'firebase-tools.json');
-if (!fs.existsSync(configPath)) {
-    console.error("Firebase CLI config not found at", configPath);
-    process.exit(1);
+async function getAccessToken() {
+    const homeDir = os.homedir();
+    const configPath = path.join(homeDir, '.config', 'configstore', 'firebase-tools.json');
+    if (fs.existsSync(configPath)) {
+        const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+        const cliToken = config.tokens?.access_token;
+        if (cliToken) {
+            console.log('Using Firebase CLI access token.');
+            return cliToken;
+        }
+    }
+
+    const email = process.env['Admin Email'];
+    const password = process.env['Admin Password'];
+    const apiKey = process.env.VITE_FIREBASE_API_KEY;
+    if (!email || !password || !apiKey) {
+        throw new Error(
+            'No Firebase credentials found. Log in via firebase-tools or set Admin Email, Admin Password, and VITE_FIREBASE_API_KEY.',
+        );
+    }
+
+    console.log('Signing in via Firebase Auth REST API...');
+    const response = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, returnSecureToken: true }),
+        },
+    );
+    if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Firebase sign-in failed (${response.status}): ${errText}`);
+    }
+
+    const { idToken } = await response.json();
+    if (!idToken) {
+        throw new Error('Firebase sign-in succeeded but no idToken was returned.');
+    }
+
+    return idToken;
 }
 
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-const token = config.tokens?.access_token;
-if (!token) {
-    console.error("No access token found in firebase-tools.json. Please run 'npx firebase-tools login'.");
-    process.exit(1);
-}
-
-// 2. Read input data from the local JSON file
+// Read input data from the local JSON file
 const dataPath = 'scratch/ticker_news_data.json';
 if (!fs.existsSync(dataPath)) {
     console.error(`No update data found in ${dataPath}`);
@@ -33,7 +61,11 @@ if (!tickerText || !Array.isArray(newsItems)) {
     process.exit(1);
 }
 
-const projectId = 'fuqua-racquets-club';
+const projectId = process.env.VITE_FIREBASE_PROJECT_ID;
+if (!projectId) {
+    console.error('VITE_FIREBASE_PROJECT_ID is not set.');
+    process.exit(1);
+}
 const firestoreBaseUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
 
 // Helper to convert JS object to Firestore REST document field structure
@@ -73,7 +105,7 @@ function toFirestoreFields(obj) {
 }
 
 // Helper to write a document using REST API (PATCH creates if not exists)
-async function writeDoc(docPath, fields, updateFields = null) {
+async function writeDoc(token, docPath, fields, updateFields = null) {
     let url = `${firestoreBaseUrl}/${docPath}`;
     if (updateFields && updateFields.length > 0) {
         const queryParams = updateFields.map(f => `updateMask.fieldPaths=${f}`).join('&');
@@ -97,9 +129,11 @@ async function writeDoc(docPath, fields, updateFields = null) {
 }
 
 async function main() {
+    const token = await getAccessToken();
+
     console.log("Updating live ticker text...");
     const tickerFields = toFirestoreFields({ text: tickerText });
-    await writeDoc('settings/ticker', tickerFields, ['text']);
+    await writeDoc(token, 'settings/ticker', tickerFields, ['text']);
     console.log("Ticker updated successfully!");
 
     console.log("Updating news items...");
@@ -114,7 +148,7 @@ async function main() {
             link: item.link
         });
         
-        await writeDoc(`news/${docId}`, newsFields);
+        await writeDoc(token, `news/${docId}`, newsFields);
         console.log(`Updated news slot ${docId}: ${item.title}`);
     }
 
