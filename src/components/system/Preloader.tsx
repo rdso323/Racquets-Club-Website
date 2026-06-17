@@ -91,28 +91,16 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
                             >
                                 {STATUS_LINES[statusIndex]}
                             </motion.p>
-                            <div className="overflow-hidden">
+                            <div className="overflow-hidden pb-[0.12em]">
                                 <motion.h1
-                                    className={`display-tight text-[clamp(2.4rem,7vw,6.5rem)] ${
+                                    className={`display-tight text-[clamp(2.4rem,7vw,6.5rem)] leading-[1.08] ${
                                         isDark ? 'text-chalk' : 'text-wimbledon-navy'
                                     }`}
                                     initial={{ y: '110%' }}
                                     animate={{ y: '0%' }}
                                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                                 >
-                                    Courts are loading.
-                                </motion.h1>
-                            </div>
-                            <div className="overflow-hidden">
-                                <motion.h1
-                                    className={`display-tight text-[clamp(2.4rem,7vw,6.5rem)] italic ${
-                                        isDark ? 'text-clay-300' : 'text-clay-600'
-                                    }`}
-                                    initial={{ y: '110%' }}
-                                    animate={{ y: '0%' }}
-                                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
-                                >
-                                    See you on court.
+                                    Courts are loading
                                 </motion.h1>
                             </div>
                         </div>
