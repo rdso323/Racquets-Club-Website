@@ -7,10 +7,15 @@ import {
     parseWaitlistEntry,
     getCourtsForSession,
     inferSport,
+    isRecurringCourtSession,
+    getOpenPlayConfigForSession,
 } from '../../../lib/sessions';
+import type { AdminRecurringSchedule } from '../../../lib/sports';
+import { formatRecurringDayLabel } from '../../../lib/recurringSchedules';
 
 export interface SessionOpsCardProps {
     session: Session;
+    recurringSchedules?: AdminRecurringSchedule[];
     rosterAttendees: string[];
     waitlist: string[];
     maxWaitlistSize: number;
@@ -31,6 +36,7 @@ export interface SessionOpsCardProps {
 
 const SessionOpsCard = memo(({
     session,
+    recurringSchedules = [],
     rosterAttendees,
     waitlist,
     maxWaitlistSize,
@@ -52,7 +58,9 @@ const SessionOpsCard = memo(({
     const theme = getSportTheme(sport);
     const enrolledCount = rosterAttendees.length;
     const isFull = enrolledCount >= session.maxAttendees;
-    const sessionCourts = getCourtsForSession(session);
+    const sessionCourts = getCourtsForSession(session, recurringSchedules);
+    const isRecurring = isRecurringCourtSession(session);
+    const recurringConfig = isRecurring ? getOpenPlayConfigForSession(session, recurringSchedules) : null;
 
     return (
         <div
@@ -62,28 +70,42 @@ const SessionOpsCard = memo(({
             <div>
                 <div className="mb-3 flex items-start justify-between">
                     <div>
-                        <span
-                            className="rounded border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest"
-                            style={{
-                                color: theme.accentLight,
-                                backgroundColor: theme.dim,
-                                borderColor: `${theme.accent}33`,
-                            }}
-                        >
-                            {sport}
-                        </span>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span
+                                className="rounded border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest"
+                                style={{
+                                    color: theme.accentLight,
+                                    backgroundColor: theme.dim,
+                                    borderColor: `${theme.accent}33`,
+                                }}
+                            >
+                                {sport}
+                            </span>
+                            {isRecurring && (
+                                <span className="rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:border-violet-900/30 dark:bg-violet-950/30 dark:text-violet-300">
+                                    Weekly recurring
+                                </span>
+                            )}
+                        </div>
                         <h3 className="mt-2 truncate text-lg font-bold text-gray-900 dark:text-chalk">
                             {session.title}
                         </h3>
+                        {isRecurring && recurringConfig && (
+                            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                Every {formatRecurringDayLabel(recurringConfig.day)} · {session.time}
+                            </p>
+                        )}
                     </div>
                     <span
                         className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
                             session.type === 'coaching'
                                 ? 'border-blue-100 bg-blue-50 text-blue-600 dark:border-blue-900/20 dark:bg-blue-950/30 dark:text-blue-450'
-                                : 'border-green-100 bg-green-50 text-green-600 dark:border-green-900/20 dark:bg-green-950/30 dark:text-green-400'
+                                : isRecurring
+                                  ? 'border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-900/20 dark:bg-violet-950/30 dark:text-violet-300'
+                                  : 'border-green-100 bg-green-50 text-green-600 dark:border-green-900/20 dark:bg-green-950/30 dark:text-green-400'
                         }`}
                     >
-                        {session.type === 'coaching' ? 'Clinic' : 'Court'}
+                        {session.type === 'coaching' ? 'Clinic' : isRecurring ? 'Recurring' : 'One-time'}
                     </span>
                 </div>
 

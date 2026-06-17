@@ -3,7 +3,7 @@ import { collection, onSnapshot, doc, updateDoc, getDoc } from 'firebase/firesto
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Users, CalendarDays, Rocket, AlertTriangle } from 'lucide-react';
-import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig } from '../../lib/sports';
+import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig, type AdminRecurringSchedule } from '../../lib/sports';
 import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
 import {
@@ -125,6 +125,7 @@ const BookingEngine = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
+    const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
     const [bookingBusy, setBookingBusy] = useState<string | null>(null);
@@ -164,7 +165,25 @@ const BookingEngine = () => {
         };
         fetchStatuses();
 
-        return () => unsubscribe();
+        const unsubRecurring = onSnapshot(
+            doc(db, 'settings', 'recurringSchedules'),
+            (snap) => {
+                if (snap.exists()) {
+                    const data = snap.data();
+                    setRecurringSchedules(
+                        Array.isArray(data.schedules) ? (data.schedules as AdminRecurringSchedule[]) : [],
+                    );
+                } else {
+                    setRecurringSchedules([]);
+                }
+            },
+            (err) => console.error('Error fetching recurring schedules:', err),
+        );
+
+        return () => {
+            unsubscribe();
+            unsubRecurring();
+        };
     }, []);
 
     useEffect(() => {
@@ -700,7 +719,7 @@ const BookingEngine = () => {
     }
 
     const regularSessions = filterRegularSessionsForDisplay(sessions, activeSport);
-    const openPlayInstances = getOpenPlayInstancesWithinHorizon(sessions, activeSport);
+    const openPlayInstances = getOpenPlayInstancesWithinHorizon(sessions, activeSport, recurringSchedules);
     const hasDisplayContent = openPlayInstances.length > 0 || regularSessions.length > 0;
     const theme = getSportTheme(activeSport);
     const accentStyle = {
