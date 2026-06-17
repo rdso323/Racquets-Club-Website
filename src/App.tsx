@@ -7,9 +7,7 @@ import { UIProvider, useUI } from './components/system/UIProvider';
 import Preloader from './components/system/Preloader';
 import TopBar from './components/system/TopBar';
 import MenuOverlay from './components/system/MenuOverlay';
-import PointerSurface from './components/system/PointerSurface';
 import FeedbackModal from './components/layout/FeedbackModal';
-import { usePointerVars } from './hooks/usePointerVars';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
 import Home from './pages/Home';
 import Help from './pages/Help';
@@ -92,7 +90,6 @@ const AppRoutes = () => {
 const Shell = () => {
     const [revealed, setRevealed] = useState(false);
     const [preloaderDone, setPreloaderDone] = useState(false);
-    usePointerVars();
 
     return (
         <UIProvider>
@@ -110,7 +107,6 @@ const Shell = () => {
                         <ScrollReset />
                         <TopBar />
                         <MenuOverlay />
-                        <PointerSurface />
                         <AppRoutes />
                     </>
                 )}

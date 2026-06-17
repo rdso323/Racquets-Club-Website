@@ -6,8 +6,6 @@
   :root {
     --accent: #34d399;
     --accent-dim: rgba(52, 211, 153, 0.14);
-    --mouse-x: 50vw;
-    --mouse-y: 50vh;
   }
 
   body {
@@ -200,60 +198,6 @@
     z-index: 9998;
     opacity: 0.025;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  .cursor-active,
-  .cursor-active * {
-    cursor: none !important;
-  }
-
-  .pointer-dot,
-  .pointer-ring {
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  html.cursor-active .pointer-dot,
-  html.cursor-active .pointer-ring {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .pointer-dot {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 7px;
-    width: 7px;
-    border-radius: 9999px;
-    background-color: var(--accent);
-    transform: translate3d(calc(var(--mouse-x, 50vw) - 50%), calc(var(--mouse-y, 50vh) - 50%), 0);
-    will-change: transform;
-  }
-
-  .pointer-ring {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 1.9rem;
-    width: 1.9rem;
-    border-radius: 9999px;
-    border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
-    transform: translate3d(calc(var(--ring-x, 50vw) - 50%), calc(var(--ring-y, 50vh) - 50%), 0);
-    transition: width 0.18s ease, height 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
-    will-change: transform;
-  }
-
-  .cursor-hover .pointer-ring {
-    width: 3rem;
-    height: 3rem;
-    border-color: var(--accent);
-    background-color: var(--accent-dim);
-  }
-
-  .cursor-down .pointer-ring {
-    width: 1.5rem;
-    height: 1.5rem;
   }
 
   @media (max-width: 767px), (prefers-reduced-motion: reduce) {
