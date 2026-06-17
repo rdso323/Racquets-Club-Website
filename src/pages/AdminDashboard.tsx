@@ -20,6 +20,7 @@ const AdminDashboard = () => {
         sessionStatuses,
         updateStatus,
         sessionsList,
+        recurringSchedules,
         eventsList,
         feedbackList,
     } = useAdminData();
@@ -56,11 +57,12 @@ const AdminDashboard = () => {
                     setTickerText={setTickerText}
                     sessionStatuses={sessionStatuses}
                     updateStatus={updateStatus}
+                    recurringSchedules={recurringSchedules}
                 />
             )}
 
             {activeTab === 'sessions' && (
-                <SessionsModule ref={createSessionFormRef} sessionsList={sessionsList} />
+                <SessionsModule ref={createSessionFormRef} sessionsList={sessionsList} recurringSchedules={recurringSchedules} />
             )}
 
             {activeTab === 'events' && <EventsModule eventsList={eventsList} />}

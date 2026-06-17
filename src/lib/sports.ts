@@ -18,7 +18,30 @@ export interface OpenPlayDayConfig {
     time: string;
     /** Session-level waitlist cap override (common queue for all courts) */
     maxWaitlistSize?: number;
+    /** Admin-created template id; built-in schedules omit this */
+    scheduleId?: string;
+    /** True when created via admin rather than hardcoded defaults */
+    isCustom?: boolean;
 }
+
+/** Admin-managed weekly court booking template stored in Firestore */
+export interface AdminRecurringSchedule {
+    id: string;
+    sport: Sport;
+    day: DayName;
+    title: string;
+    time: string;
+    courts: string[];
+    maxPerCourt: number;
+    maxWaitlistSize?: number;
+}
+
+export const DAY_OPTIONS: { value: DayName; label: string }[] = [
+    { value: 'monday', label: 'Monday' },
+    { value: 'tuesday', label: 'Tuesday' },
+    { value: 'wednesday', label: 'Wednesday' },
+    { value: 'thursday', label: 'Thursday' },
+];
 
 export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
     Tennis: [

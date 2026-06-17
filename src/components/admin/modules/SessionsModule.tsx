@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { Calendar, Plus } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { SPORTS, SPORT_FILTER_TABS, SLOTS_PER_COURT, DEFAULT_WAITLIST_PER_COURT } from '../../../lib/sports';
+import { SPORTS, SPORT_FILTER_TABS, SLOTS_PER_COURT, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
 import {
     type Session,
     type SessionType,
@@ -26,6 +26,7 @@ import {
     getMaxWaitlistSize,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
+import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
 import SessionOpsCard from '../cards/SessionOpsCard';
 import EditSessionModal, { type EditCourtFields } from '../modals/EditSessionModal';
 
@@ -33,7 +34,10 @@ interface SessionsModuleProps {
     sessionsList: Session[];
     showCreateForm?: boolean;
     sportFilter?: string;
+    recurringSchedules?: AdminRecurringSchedule[];
 }
+
+type ScheduleMode = 'one-time' | 'recurring';
 
 const formatSelectedDate = (dateStr: string) => {
     if (!dateStr) return '';
@@ -51,8 +55,9 @@ const isEditableCustomCourtSession = (session: Session) =>
     !session.title.toLowerCase().includes('open play');
 
 const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
-    ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All' }, ref) => {
+    ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [] }, ref) => {
         const [sessionsSportFilter, setSessionsSportFilter] = useState(sportFilterProp);
+        const [scheduleMode, setScheduleMode] = useState<ScheduleMode>('one-time');
 
         const [newSession, setNewSession] = useState({
             title: '',
@@ -66,6 +71,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             courtCount: 2,
             courtStartNumber: 1,
             customCourtLabels: '',
+            recurringDay: 'tuesday' as DayName,
         });
         const [sessionDateInput, setSessionDateInput] = useState('');
         const [newSessionSaving, setNewSessionSaving] = useState(false);
@@ -95,8 +101,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         const adminDisplaySessions = useMemo(() => {
             const sportFilter = sessionsSportFilter === 'All' ? null : sessionsSportFilter;
-            return buildAdminDisplaySessions(sessionsList, sportFilter);
-        }, [sessionsList, sessionsSportFilter]);
+            return buildAdminDisplaySessions(sessionsList, sportFilter, recurringSchedules);
+        }, [sessionsList, sessionsSportFilter, recurringSchedules]);
 
         const previewCourtLabels = buildCourtLabels(
             newSession.courtCount,
@@ -105,7 +111,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         );
 
         const getSessionRoster = (session: Session): string[] => {
-            const courts = getCourtsForSession(session);
+            const courts = getCourtsForSession(session, recurringSchedules);
             if (courts.length > 0) {
                 return getActiveCourtAttendees(session.attendees || [], courts);
             }
@@ -119,8 +125,12 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         const handleAddSession = async (e: React.FormEvent) => {
             e.preventDefault();
-            if (!newSession.title || !newSession.date || !newSession.time) {
+            if (!newSession.title || !newSession.time) {
                 setNewSessionMsg('Please fill in all required fields.');
+                return;
+            }
+            if (scheduleMode === 'one-time' && (!newSession.date || !sessionDateInput)) {
+                setNewSessionMsg('Please pick a date for one-time sessions.');
                 return;
             }
             setNewSessionSaving(true);
@@ -135,31 +145,54 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                           )
                         : [];
 
-                const sessionData: Record<string, unknown> = {
-                    title: newSession.title,
-                    sport: newSession.sport,
-                    type: newSession.type,
-                    date: newSession.date,
-                    time: newSession.time,
-                    maxAttendees: Number(newSession.maxAttendees),
-                    attendees: [],
-                    coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : null,
-                    coachId: null,
-                    weekStartDate: sessionDateInput,
-                };
+                if (scheduleMode === 'recurring') {
+                    if (newSession.type !== 'court') {
+                        setNewSessionMsg('Weekly recurring schedules are only available for court open play.');
+                        return;
+                    }
+                    if (courts.length === 0) {
+                        setNewSessionMsg('Please configure at least one court.');
+                        return;
+                    }
 
-                if (newSession.type === 'court' && courts.length > 0) {
-                    sessionData.courts = courts;
-                    sessionData.slotsPerCourt = SLOTS_PER_COURT;
-                    sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
-                    sessionData.waitlist = [];
-                } else if (newSession.type === 'coaching') {
-                    sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
-                    sessionData.waitlist = [];
+                    await addRecurringSchedule({
+                        sport: newSession.sport as AdminRecurringSchedule['sport'],
+                        day: newSession.recurringDay,
+                        title: newSession.title,
+                        time: newSession.time,
+                        courts,
+                        maxPerCourt: SLOTS_PER_COURT,
+                        maxWaitlistSize: Number(newSession.maxWaitlistSize),
+                    });
+                    setNewSessionMsg('Weekly recurring court schedule created!');
+                } else {
+                    const sessionData: Record<string, unknown> = {
+                        title: newSession.title,
+                        sport: newSession.sport,
+                        type: newSession.type,
+                        date: newSession.date,
+                        time: newSession.time,
+                        maxAttendees: Number(newSession.maxAttendees),
+                        attendees: [],
+                        coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : null,
+                        coachId: null,
+                        weekStartDate: sessionDateInput,
+                    };
+
+                    if (newSession.type === 'court' && courts.length > 0) {
+                        sessionData.courts = courts;
+                        sessionData.slotsPerCourt = SLOTS_PER_COURT;
+                        sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                        sessionData.waitlist = [];
+                    } else if (newSession.type === 'coaching') {
+                        sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                        sessionData.waitlist = [];
+                    }
+
+                    await addDoc(collection(db, 'sessions'), sessionData);
+                    setNewSessionMsg('Session scheduled successfully!');
                 }
 
-                await addDoc(collection(db, 'sessions'), sessionData);
-                setNewSessionMsg('Session scheduled successfully!');
                 setNewSession({
                     title: '',
                     sport: sessionsSportFilter !== 'All' ? sessionsSportFilter : 'Tennis',
@@ -172,7 +205,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     courtStartNumber: 1,
                     customCourtLabels: '',
                     maxWaitlistSize: DEFAULT_WAITLIST_PER_COURT * 2,
+                    recurringDay: 'tuesday',
                 });
+                setScheduleMode('one-time');
                 setSessionDateInput('');
                 window.setTimeout(() => setNewSessionMsg(''), 3000);
             } catch (err) {
@@ -240,7 +275,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             const name = newAttendeeName[sessionId]?.trim();
             if (!name) return;
 
-            const availableCourts = getCourtsForSession(session);
+            const availableCourts = getCourtsForSession(session, recurringSchedules);
             const court = newAttendeeCourt[sessionId]?.trim() || '';
 
             if (availableCourts.length > 0 && !court) {
@@ -366,6 +401,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                     <SessionOpsCard
                                         key={session.id}
                                         session={session}
+                                        recurringSchedules={recurringSchedules}
                                         rosterAttendees={rosterAttendees}
                                         coachValue={coachValue}
                                         newAttendeeName={newAttendeeName[session.id] || ''}
@@ -410,11 +446,43 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                             <div className="absolute left-0 top-0 h-full w-1.5 bg-court-accent" />
                             <h3 className="flex items-center gap-2 font-display text-2xl text-gray-900 dark:text-chalk">
                                 <Plus className="h-5 w-5 text-court-accent" />
-                                Schedule New Custom Session
+                                Schedule New Session
                             </h3>
                             <p className="mb-6 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                Create customized coaching clinics or court booking reservations.
+                                Create a one-time clinic or court booking, or add a weekly recurring open play schedule.
                             </p>
+
+                            <div className="mb-6 flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-white/60 p-1 dark:border-gray-800 dark:bg-court-950/40">
+                                <button
+                                    type="button"
+                                    onClick={() => setScheduleMode('one-time')}
+                                    className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+                                        scheduleMode === 'one-time'
+                                            ? 'bg-wimbledon-green text-white shadow-sm'
+                                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                    }`}
+                                >
+                                    One-time session
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setScheduleMode('recurring');
+                                        setNewSession((prev) => ({
+                                            ...prev,
+                                            type: 'court',
+                                            title: prev.title || defaultRecurringTitle(prev.recurringDay),
+                                        }));
+                                    }}
+                                    className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
+                                        scheduleMode === 'recurring'
+                                            ? 'bg-violet-600 text-white shadow-sm'
+                                            : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
+                                    }`}
+                                >
+                                    Weekly recurring court
+                                </button>
+                            </div>
 
                             <form onSubmit={handleAddSession} className="space-y-4">
                                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -460,6 +528,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 value={newSession.type}
                                                 onChange={(e) => {
                                                     const type = e.target.value as SessionType;
+                                                    if (scheduleMode === 'recurring' && type !== 'court') return;
                                                     const courts =
                                                         type === 'court'
                                                             ? buildCourtLabels(
@@ -477,7 +546,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                                 : getDefaultMaxAttendees('coaching'),
                                                     });
                                                 }}
-                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                                                disabled={scheduleMode === 'recurring'}
+                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent disabled:opacity-60 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                             >
                                                 <option value="court">Court Open Play</option>
                                                 <option value="coaching">Clinic / Coaching</option>
@@ -486,37 +556,94 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                                    <div>
-                                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                            Pick Date
-                                        </label>
-                                        <input
-                                            type="date"
-                                            required
-                                            value={sessionDateInput}
-                                            onChange={(e) => {
-                                                setSessionDateInput(e.target.value);
-                                                setNewSession((prev) => ({
-                                                    ...prev,
-                                                    date: formatSelectedDate(e.target.value),
-                                                }));
-                                            }}
-                                            className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-500 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-gray-300"
-                                        />
+                                {scheduleMode === 'recurring' ? (
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <div>
+                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                                Repeats every
+                                            </label>
+                                            <select
+                                                value={newSession.recurringDay}
+                                                onChange={(e) => {
+                                                    const recurringDay = e.target.value as DayName;
+                                                    setNewSession((prev) => ({
+                                                        ...prev,
+                                                        recurringDay,
+                                                        title: defaultRecurringTitle(recurringDay),
+                                                    }));
+                                                }}
+                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                                            >
+                                                {DAY_OPTIONS.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                                Schedule note
+                                            </label>
+                                            <input
+                                                type="text"
+                                                readOnly
+                                                value={`Runs every week on ${DAY_OPTIONS.find((d) => d.value === newSession.recurringDay)?.label ?? 'weekday'}`}
+                                                className="w-full cursor-default rounded-lg border border-violet-200 bg-violet-50 p-2.5 text-sm text-violet-800 outline-none dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-200"
+                                            />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                            Formatted Date (Read-only)
-                                        </label>
-                                        <input
-                                            type="text"
-                                            readOnly
-                                            placeholder="e.g. Tuesday, Jun 9"
-                                            value={newSession.date}
-                                            className="w-full cursor-default rounded-lg border border-gray-200 bg-gray-50 p-2.5 text-sm text-gray-500 outline-none dark:border-gray-800 dark:bg-black/20 dark:text-gray-400"
-                                        />
+                                ) : (
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                        <div>
+                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                                Pick Date
+                                            </label>
+                                            <input
+                                                type="date"
+                                                required
+                                                value={sessionDateInput}
+                                                onChange={(e) => {
+                                                    setSessionDateInput(e.target.value);
+                                                    setNewSession((prev) => ({
+                                                        ...prev,
+                                                        date: formatSelectedDate(e.target.value),
+                                                    }));
+                                                }}
+                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-500 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-gray-300"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                                Formatted Date (Read-only)
+                                            </label>
+                                            <input
+                                                type="text"
+                                                readOnly
+                                                placeholder="e.g. Tuesday, Jun 9"
+                                                value={newSession.date}
+                                                className="w-full cursor-default rounded-lg border border-gray-200 bg-gray-50 p-2.5 text-sm text-gray-500 outline-none dark:border-gray-800 dark:bg-black/20 dark:text-gray-400"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                                Time Slot (Text input)
+                                            </label>
+                                            <input
+                                                type="text"
+                                                required
+                                                placeholder="e.g. 9:00 PM - 11:00 PM"
+                                                value={newSession.time}
+                                                onChange={(e) =>
+                                                    setNewSession({ ...newSession, time: e.target.value })
+                                                }
+                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                                            />
+                                        </div>
                                     </div>
+                                )}
+
+                                {scheduleMode === 'recurring' && (
                                     <div>
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                             Time Slot (Text input)
@@ -526,14 +653,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             required
                                             placeholder="e.g. 9:00 PM - 11:00 PM"
                                             value={newSession.time}
-                                            onChange={(e) =>
-                                                setNewSession({ ...newSession, time: e.target.value })
-                                            }
+                                            onChange={(e) => setNewSession({ ...newSession, time: e.target.value })}
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
                                     </div>
-                                </div>
-
+                                )}
                                 {newSession.type === 'court' && (
                                     <div className="space-y-3 rounded-xl border border-gray-200 bg-white/50 p-4 dark:border-gray-800 dark:bg-court-950/30">
                                         <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
@@ -717,7 +841,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         className="flex items-center rounded-lg bg-wimbledon-green px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#004d00] disabled:opacity-50"
                                     >
                                         <Plus className="mr-2 h-4 w-4" />
-                                        {newSessionSaving ? 'Scheduling...' : 'Schedule Session'}
+                                        {newSessionSaving
+                                            ? 'Scheduling...'
+                                            : scheduleMode === 'recurring'
+                                              ? 'Create Weekly Schedule'
+                                              : 'Schedule Session'}
                                     </button>
                                 </div>
                             </form>

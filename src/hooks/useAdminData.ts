@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { SESSION_STATUS_CATEGORIES } from '../lib/sports';
+import { SESSION_STATUS_CATEGORIES, type AdminRecurringSchedule } from '../lib/sports';
 import type { Session, SessionStatus } from '../lib/sessions';
 import type { AdminEvent, FeedbackItem, SessionStatusMap } from '../components/admin/types';
 
@@ -19,6 +19,7 @@ export const useAdminData = () => {
     const [tickerText, setTickerText] = useState('');
     const [sessionStatuses, setSessionStatuses] = useState<SessionStatusMap>(defaultStatuses);
     const [sessionsList, setSessionsList] = useState<Session[]>([]);
+    const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [eventsList, setEventsList] = useState<AdminEvent[]>([]);
     const [feedbackList, setFeedbackList] = useState<FeedbackItem[]>([]);
 
@@ -50,6 +51,23 @@ export const useAdminData = () => {
                     }
                 },
                 (err) => console.error('Session status subscription error', err),
+            ),
+        );
+
+        unsubs.push(
+            onSnapshot(
+                doc(db, 'settings', 'recurringSchedules'),
+                (snap) => {
+                    if (snap.exists()) {
+                        const data = snap.data();
+                        setRecurringSchedules(
+                            Array.isArray(data.schedules) ? (data.schedules as AdminRecurringSchedule[]) : [],
+                        );
+                    } else {
+                        setRecurringSchedules([]);
+                    }
+                },
+                (err) => console.error('Recurring schedules subscription error', err),
             ),
         );
 
@@ -115,6 +133,7 @@ export const useAdminData = () => {
         setSessionStatuses,
         updateStatus,
         sessionsList,
+        recurringSchedules,
         eventsList,
         feedbackList,
     };
