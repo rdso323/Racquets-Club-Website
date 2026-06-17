@@ -8,7 +8,7 @@ import {
     setDoc,
     arrayUnion,
 } from 'firebase/firestore';
-import { Calendar, Plus } from 'lucide-react';
+import { Calendar, Plus, Trash2 } from 'lucide-react';
 import { db } from '../../../lib/firebase';
 import { SPORTS, SPORT_FILTER_TABS, SLOTS_PER_COURT, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
 import {
@@ -26,7 +26,7 @@ import {
     getMaxWaitlistSize,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
-import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
+import { addRecurringSchedule, defaultRecurringTitle, formatRecurringDayLabel, removeRecurringSchedule } from '../../../lib/recurringSchedules';
 import SessionOpsCard from '../cards/SessionOpsCard';
 import EditSessionModal, { type EditCourtFields } from '../modals/EditSessionModal';
 
@@ -76,6 +76,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         const [sessionDateInput, setSessionDateInput] = useState('');
         const [newSessionSaving, setNewSessionSaving] = useState(false);
         const [newSessionMsg, setNewSessionMsg] = useState('');
+        const [deletingScheduleId, setDeletingScheduleId] = useState<string | null>(null);
 
         const [editingSession, setEditingSession] = useState<Session | null>(null);
         const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({
@@ -352,6 +353,19 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             } catch (err) {
                 console.error('Error removing waitlist entry: ', err);
                 window.alert('Failed to remove waitlist entry.');
+            }
+        };
+
+        const handleDeleteRecurringSchedule = async (id: string, title: string) => {
+            if (!window.confirm(`Remove the weekly schedule "${title}"?`)) return;
+            setDeletingScheduleId(id);
+            try {
+                await removeRecurringSchedule(id);
+            } catch (err) {
+                console.error('Error removing recurring schedule:', err);
+                window.alert('Error removing weekly schedule.');
+            } finally {
+                setDeletingScheduleId(null);
             }
         };
 
@@ -850,6 +864,44 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                 </div>
                             </form>
                         </div>
+
+                        {recurringSchedules.length > 0 && (
+                            <div className="mt-6 rounded-xl border border-gray-200 bg-white/50 p-4 dark:border-gray-800 dark:bg-court-950/30">
+                                <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                                    Custom weekly schedules
+                                </h4>
+                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    Remove admin-created schedules that repeat each week.
+                                </p>
+                                <div className="mt-4 space-y-2">
+                                    {recurringSchedules.map((schedule) => (
+                                        <div
+                                            key={schedule.id}
+                                            className="flex items-center justify-between gap-3 rounded-lg border border-gray-150 bg-white px-3 py-2 dark:border-gray-800 dark:bg-carbon/40"
+                                        >
+                                            <div className="min-w-0">
+                                                <p className="truncate text-sm font-semibold text-gray-900 dark:text-chalk">
+                                                    {schedule.title}
+                                                </p>
+                                                <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+                                                    {schedule.sport} · Every {formatRecurringDayLabel(schedule.day)} ·{' '}
+                                                    {schedule.time}
+                                                </p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteRecurringSchedule(schedule.id, schedule.title)}
+                                                disabled={deletingScheduleId === schedule.id}
+                                                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/30 dark:text-red-300 dark:hover:bg-red-950/20"
+                                            >
+                                                <Trash2 className="h-3.5 w-3.5" />
+                                                {deletingScheduleId === schedule.id ? 'Removing...' : 'Remove'}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </>
                 )}
 

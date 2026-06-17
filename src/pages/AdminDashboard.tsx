@@ -57,7 +57,6 @@ const AdminDashboard = () => {
                     setTickerText={setTickerText}
                     sessionStatuses={sessionStatuses}
                     updateStatus={updateStatus}
-                    recurringSchedules={recurringSchedules}
                 />
             )}
 
