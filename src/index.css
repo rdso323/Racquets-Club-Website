@@ -99,6 +99,13 @@
     line-height: 0.95;
   }
 
+  .preloader-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    padding-bottom: 0.08em;
+  }
+
   .text-hollow {
     -webkit-text-stroke: 1px rgba(237, 242, 228, 0.55);
     color: transparent;

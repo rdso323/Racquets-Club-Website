@@ -64,7 +64,7 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
         <AnimatePresence onExitComplete={onDone}>
             {!exiting && (
                 <motion.div
-                    className={`fixed inset-0 z-[250] flex flex-col justify-between px-6 py-8 md:px-10 ${
+                    className={`fixed inset-0 z-[250] flex flex-col px-6 py-8 md:px-10 ${
                         isDark ? 'bg-court-950' : 'bg-[#F3F0E8]'
                     }`}
                     exit={{ y: '-100%' }}
@@ -81,8 +81,8 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
                         </span>
                     </div>
 
-                    <div className="flex items-end justify-between gap-8">
-                        <div>
+                    <div className="flex flex-1 flex-col justify-end gap-8 pb-6 sm:flex-row sm:items-end sm:justify-between">
+                        <div className="min-w-0 max-w-3xl">
                             <motion.p
                                 className={`hud-label mb-4 ${isDark ? 'text-court-accent' : 'text-emerald-700'}`}
                                 initial={{ opacity: 0 }}
@@ -91,18 +91,16 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
                             >
                                 {STATUS_LINES[statusIndex]}
                             </motion.p>
-                            <div className="overflow-hidden pb-[0.12em]">
-                                <motion.h1
-                                    className={`display-tight text-[clamp(2.4rem,7vw,6.5rem)] leading-[1.08] ${
-                                        isDark ? 'text-chalk' : 'text-wimbledon-navy'
-                                    }`}
-                                    initial={{ y: '110%' }}
-                                    animate={{ y: '0%' }}
-                                    transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-                                >
-                                    Courts are loading
-                                </motion.h1>
-                            </div>
+                            <motion.h1
+                                className={`preloader-headline text-[clamp(2rem,6.5vw,5.5rem)] ${
+                                    isDark ? 'text-chalk' : 'text-wimbledon-navy'
+                                }`}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+                            >
+                                Courts are loading
+                            </motion.h1>
                         </div>
 
                         <div className="shrink-0 text-right">

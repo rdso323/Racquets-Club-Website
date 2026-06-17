@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Calendar, Clock, Edit, ListOrdered, Trash2, UserPlus, Users, X } from 'lucide-react';
+import { Calendar, Clock, Edit, ListOrdered, Repeat, Trash2, UserPlus, Users, X } from 'lucide-react';
 import { getSportTheme } from '../../../lib/sports';
 import {
     type Session,
@@ -64,12 +64,27 @@ const SessionOpsCard = memo(({
 
     return (
         <div
-            className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-gray-250/70 bg-gray-50/20 p-5 transition-all duration-200 hover:border-court-accent/30 hover:shadow-md dark:border-gray-800/80 dark:bg-court-950/30"
-            style={{ borderLeftWidth: '4px', borderLeftColor: theme.accent }}
+            className={`relative flex flex-col justify-between overflow-hidden rounded-2xl border bg-gray-50/20 p-5 transition-all duration-200 hover:shadow-md dark:bg-court-950/30 ${
+                isRecurring
+                    ? 'border-violet-300/80 hover:border-violet-400/60 dark:border-violet-800/80'
+                    : 'border-gray-250/70 hover:border-court-accent/30 dark:border-gray-800/80'
+            }`}
+            style={{
+                borderLeftWidth: '4px',
+                borderLeftColor: isRecurring ? '#7c3aed' : theme.accent,
+            }}
         >
+            {isRecurring && (
+                <div className="mb-3 flex items-center gap-2 rounded-lg border border-violet-200 bg-violet-50 px-3 py-2 text-violet-800 dark:border-violet-900/40 dark:bg-violet-950/40 dark:text-violet-200">
+                    <Repeat className="h-4 w-4 shrink-0" />
+                    <span className="text-[11px] font-bold uppercase tracking-[0.18em]">
+                        Weekly recurring court session
+                    </span>
+                </div>
+            )}
             <div>
-                <div className="mb-3 flex items-start justify-between">
-                    <div>
+                <div className="mb-3 flex items-start justify-between gap-3">
+                    <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
                             <span
                                 className="rounded border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest"
@@ -82,8 +97,9 @@ const SessionOpsCard = memo(({
                                 {sport}
                             </span>
                             {isRecurring && (
-                                <span className="rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-violet-700 dark:border-violet-900/30 dark:bg-violet-950/30 dark:text-violet-300">
-                                    Weekly recurring
+                                <span className="inline-flex items-center gap-1 rounded-full border border-violet-300 bg-violet-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-violet-800 dark:border-violet-700 dark:bg-violet-900/50 dark:text-violet-200">
+                                    <Repeat className="h-3 w-3" />
+                                    Recurring
                                 </span>
                             )}
                         </div>
@@ -91,8 +107,8 @@ const SessionOpsCard = memo(({
                             {session.title}
                         </h3>
                         {isRecurring && recurringConfig && (
-                            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-gray-400">
-                                Every {formatRecurringDayLabel(recurringConfig.day)} · {session.time}
+                            <p className="mt-1 text-xs font-semibold text-violet-700 dark:text-violet-300">
+                                Repeats every {formatRecurringDayLabel(recurringConfig.day)} · {session.time}
                             </p>
                         )}
                     </div>
