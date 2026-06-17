@@ -207,31 +207,36 @@ const Transmissions = () => {
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">In the News</h2>,
                     ]}
                 />
-                <div className="grid gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-chalk/10 dark:bg-chalk/10 sm:grid-cols-2">
-                    {news.slice(0, 5).map((item, i) => (
-                        <motion.a
-                            key={item.id}
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            data-cursor
-                            className="group flex flex-col gap-2 bg-white p-6 transition-colors hover:bg-gray-50 dark:bg-court-950 dark:hover:bg-carbon"
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: '-5%' }}
-                            transition={{ delay: i * 0.05 }}
-                        >
-                            <div className="flex items-center gap-3">
-                                <span className="hud-label text-gray-300 dark:text-chalk/30">{String(i + 1).padStart(2, '0')}</span>
-                                <span className="hud-label text-emerald-600/80 dark:text-court-accent/70">{item.category}</span>
-                                <span className="hud-label ml-auto text-gray-400 dark:text-chalk/30">{item.date}</span>
-                            </div>
-                            <h3 className="font-display text-lg text-gray-900 transition-colors group-hover:text-clay-600 dark:text-chalk dark:group-hover:text-clay-300">
-                                {item.title}
-                            </h3>
-                            <p className="text-sm leading-relaxed text-gray-500 dark:text-chalk/50">{item.excerpt}</p>
-                        </motion.a>
-                    ))}
+                <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 sm:hidden">
+                    Swipe sideways to browse headlines
+                </p>
+                <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
+                    <div className="flex gap-4 sm:grid sm:grid-cols-2 sm:gap-px sm:overflow-hidden sm:rounded-xl sm:border sm:border-gray-200 sm:bg-gray-200 dark:sm:border-chalk/10 dark:sm:bg-chalk/10">
+                        {news.slice(0, 4).map((item, i) => (
+                            <motion.a
+                                key={item.id}
+                                href={item.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                data-cursor
+                                className="group flex w-[min(85vw,20rem)] shrink-0 snap-start flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 transition-colors hover:bg-gray-50 dark:border-chalk/10 dark:bg-court-950 dark:hover:bg-carbon sm:w-auto sm:rounded-none sm:border-0"
+                                initial={{ opacity: 0, y: 16 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: '-5%' }}
+                                transition={{ delay: i * 0.05 }}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <span className="hud-label text-gray-300 dark:text-chalk/30">{String(i + 1).padStart(2, '0')}</span>
+                                    <span className="hud-label text-emerald-600/80 dark:text-court-accent/70">{item.category}</span>
+                                    <span className="hud-label ml-auto text-gray-400 dark:text-chalk/30">{item.date}</span>
+                                </div>
+                                <h3 className="font-display text-lg text-gray-900 transition-colors group-hover:text-clay-600 dark:text-chalk dark:group-hover:text-clay-300">
+                                    {item.title}
+                                </h3>
+                                <p className="text-sm leading-relaxed text-gray-500 dark:text-chalk/50">{item.excerpt}</p>
+                            </motion.a>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

@@ -567,7 +567,7 @@ const BookingEngine = () => {
         const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
         return (
-            <div key={session.id} className="booking-card relative flex h-full flex-col overflow-hidden">
+            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-auto">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -762,11 +762,27 @@ const BookingEngine = () => {
                     <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">Check back later for court availability and coaching clinics.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                    {openPlayInstances.map(({ session, config, playDate, isNextWeek }) =>
-                        renderOpenPlayCard(session, config, playDate, isNextWeek),
+                <div className="space-y-8">
+                    {openPlayInstances.length > 0 && (
+                        <div>
+                            <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 md:hidden">
+                                Swipe sideways to browse open play sessions
+                            </p>
+                            <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:mx-0 md:overflow-visible md:px-0 md:pb-0">
+                                <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
+                                    {openPlayInstances.map(({ session, config, playDate, isNextWeek }) =>
+                                        renderOpenPlayCard(session, config, playDate, isNextWeek),
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     )}
-                    {regularSessions.map(session => renderCard(session))}
+
+                    {regularSessions.length > 0 && (
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                            {regularSessions.map((session) => renderCard(session))}
+                        </div>
+                    )}
                 </div>
             )}
         </section>

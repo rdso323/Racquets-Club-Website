@@ -7,9 +7,9 @@ const prefersReducedMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const STATUS_LINES = [
-    'Gathering roster data…',
-    'Drawing baseline markers…',
-    'Courts are waiting.',
+    'Pulling court rosters…',
+    'Checking availability…',
+    'Courts are loading…',
 ];
 
 interface PreloaderProps {
@@ -100,7 +100,7 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
                                     animate={{ y: '0%' }}
                                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                                 >
-                                    Five sports.
+                                    Courts are loading.
                                 </motion.h1>
                             </div>
                             <div className="overflow-hidden">
@@ -112,7 +112,7 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
                                     animate={{ y: '0%' }}
                                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
                                 >
-                                    One club.
+                                    See you on court.
                                 </motion.h1>
                             </div>
                         </div>
