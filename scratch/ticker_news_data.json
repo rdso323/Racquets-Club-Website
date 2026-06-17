@@ -1,40 +1,40 @@
 {
-  "tickerText": "[TENNIS] Boss Open (Stuttgart): Ben Shelton defeats Taylor Fritz (6-4, 2-6, 6-4) for his first grass-court title — his third of 2026. HSBC Championships (Queen's): Donna Vekic wins women's singles over Emma Raducanu; Tommy Paul and Alex de Minaur advance as men's play continues • [BADMINTON] Australian Open (Sydney): Alwi Farhan defeats Dong Tianyao (21-13, 21-13) for his second Super 500 title; Akane Yamaguchi beats Pornpawee Chochuwong (22-20, 21-18) as China sweeps all three doubles golds • [SQUASH] PSA Squash Tour Finals (Paris, June 17-20): World champions Mostafa Asal and Amina Orfi top the draws at Centquatre-Paris; Marwan ElShorbagy and Tinne Gilis replace injured Youssef Ibrahim and Olivia Weaver • [PICKLEBALL] Boise PPA Challenger concludes in Idaho (June 12-14); PPA Asia 500 China Open begins June 17 in Beijing — Anna Leigh Waters named to TIME100 Sports List • [TABLE TENNIS] Gangneung World Masters Championships conclude (June 12); Kanak Jha climbs to world No. 24 — United States Smash opens June 26 in Los Angeles",
+  "tickerText": "[TENNIS] HSBC Championships (Queen's): Donna Vekic defeats Emma Raducanu (6-0, 7-6) as a lucky loser for her first WTA 500 title; Alex de Minaur faces Denis Shapovalov in men's round of 16 today — Adrian Mannarino upsets Jakub Mensik • [BADMINTON] Sands China Macau Open underway (June 16-21): men's and women's singles round of 32 in progress at the Macau East Asian Games Dome • [SQUASH] PSA Squash Tour Finals open in Paris today at Centquatre-Paris — Mostafa Asal and Amina Orfi lead stacked draws in the season-ending $710K event's European debut • [PICKLEBALL] Capital Securities Beijing Open launches at China's National Tennis Center (June 17-21); Zane Ford makes PPA Tour Asia debut as men's singles top seed • [TABLE TENNIS] Kanak Jha climbs to world No. 24 ahead of United States Smash (June 26, Los Angeles); ITTF announces Shanghai will host the 2026 World Table Tennis for Health Festival in October",
   "newsItems": [
     {
-      "title": "Shelton Claims First Grass Title at Stuttgart Boss Open",
-      "excerpt": "Ben Shelton defeated Taylor Fritz 6-4, 2-6, 6-4 in an all-American final to win the Boss Open in Stuttgart — his first career grass-court title and third of 2026. At Queen's Club, Donna Vekic captured the women's singles crown while the men's ATP 500 draw is underway.",
-      "date": "June 16, 2026",
+      "title": "Vekic Sweeps Raducanu for Queen's WTA 500 Title",
+      "excerpt": "Lucky loser Donna Vekic defeated Emma Raducanu 6-0, 7-6 (8-6) to win her first WTA 500 crown at Queen's Club — her biggest title since 2023. On the men's side, top seed Alex de Minaur meets Denis Shapovalov in the round of 16 today after Adrian Mannarino stunned third seed Jakub Mensik.",
+      "date": "June 17, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news"
+      "link": "https://www.wtatennis.com/news"
     },
     {
-      "title": "Farhan and Yamaguchi Crowned at Australian Open",
-      "excerpt": "Indonesia's Alwi Farhan swept China's Dong Tianyao 21-13, 21-13 to claim his second BWF Super 500 title of the year at the Sathio Group Australian Open. Akane Yamaguchi won women's singles over Pornpawee Chochuwong as China took all three doubles championships in Sydney.",
-      "date": "June 14, 2026",
+      "title": "Macau Open Underway as BWF World Tour Shifts to Asia",
+      "excerpt": "The Sands China Ltd. Macau Open began June 16 at the Macau East Asian Games Dome, with round-of-32 action across all five disciplines on June 17. The Super 300 event carries a $370,000 prize pool and runs through June 21 before the tour heads to the U.S. Open in late June.",
+      "date": "June 17, 2026",
       "category": "Badminton",
-      "link": "https://bwfbadminton.com/news"
+      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5214/sands-china-ltd-macau-open-2026"
     },
     {
-      "title": "Asal and Orfi Lead Draws for PSA Tour Finals in Paris",
-      "excerpt": "World champions Mostafa Asal and Amina Orfi top the season-ending PSA Squash Tour Finals draws at Centquatre-Paris (June 17-20). Injury withdrawals opened spots for Marwan ElShorbagy and Tinne Gilis, with a record $710,000 prize pool on the line.",
-      "date": "June 16, 2026",
+      "title": "PSA Squash Tour Finals Kick Off in Paris",
+      "excerpt": "The season-ending PSA Squash Tour Finals opened June 17 at Centquatre-Paris — the event's first staging in France and first in Europe since 2013. World champions Mostafa Asal and Amina Orfi head stacked men's and women's draws on an all-glass ASB ShowCourt, with $710,000 in prize money at stake through June 20.",
+      "date": "June 17, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/news/"
+      "link": "https://www.psasquashtour.com/tournament/psa-squash-tour-finals-2025-2026/"
     },
     {
-      "title": "Boise Challenger Wraps; PPA Asia 500 China Open Up Next",
-      "excerpt": "The Boise PPA Challenger concluded June 14 at The Flying Pickle in Idaho, with rising pros competing for ranking points. The tour shifts to Beijing for the PPA Asia 500 China Open starting June 17, as Anna Leigh Waters earns TIME100 Sports recognition.",
-      "date": "June 16, 2026",
+      "title": "Beijing Open Brings PPA Tour Asia to Olympic Venue",
+      "excerpt": "The Capital Securities Beijing Open launched June 17 at China's National Tennis Center — the same Olympic grounds that hosted tennis superstars — marking pickleball's biggest stage yet in the capital. U.S. top-10 player Zane Ford debuts as men's singles No. 1 seed, with Chao Yi Wang and Sahra Dennehy leading the women's draw through June 21.",
+      "date": "June 17, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/"
+      "link": "https://www.ppatour-asia.com/tournament/2026/beijing-open/"
     },
     {
-      "title": "Gangneung Masters Conclude; Jha Climbs Rankings Ahead of US Smash",
-      "excerpt": "The XIOM 2026 Gangneung World Masters Table Tennis Championships wrapped June 12 after eight days in South Korea. Kanak Jha jumped six spots to world No. 24 following his Skopje result, with the United States Smash set for Los Angeles starting June 26.",
-      "date": "June 16, 2026",
+      "title": "Jha Rises to No. 24 as US Smash and Shanghai Festival Loom",
+      "excerpt": "Kanak Jha jumped six spots to world No. 24 after his Skopje runner-up finish, positioning the American among the homegrown stars set for United States Smash at the Ontario Convention Center (June 26–July 5). The ITTF Foundation also announced the 2026 World Table Tennis for Health Festival will head to Shanghai in October.",
+      "date": "June 17, 2026",
       "category": "Table Tennis",
-      "link": "https://www.ittf.com/"
+      "link": "https://www.usatt.org/news/2026/may/18/united-states-smash-2026-stars-confirmed-tickets-set-to-drop-this-week"
     }
   ]
 }
