@@ -87,6 +87,7 @@ const MOCK_EVENTS: Event[] = [
 ];
 
 const EVENT_ACCENTS = ['#BEF264', '#22D3EE', '#FFBF00', '#C9A84C'];
+const MAX_NEWS_ARTICLES = 4;
 
 const Transmissions = () => {
     const [events, setEvents] = useState<Event[]>([]);
@@ -102,7 +103,8 @@ const Transmissions = () => {
 
         const unsubNews = onSnapshot(collection(db, 'news'), (snapshot) => {
             const fbNews = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as NewsItem));
-            setNews(fbNews.length > 0 ? fbNews : MOCK_NEWS);
+            const source = fbNews.length > 0 ? fbNews : MOCK_NEWS;
+            setNews(source.slice(0, MAX_NEWS_ARTICLES));
         });
 
         return () => {
@@ -211,8 +213,8 @@ const Transmissions = () => {
                     Swipe sideways to browse headlines
                 </p>
                 <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
-                    <div className="flex gap-4 sm:grid sm:grid-cols-2 sm:gap-px sm:overflow-hidden sm:rounded-xl sm:border sm:border-gray-200 sm:bg-gray-200 dark:sm:border-chalk/10 dark:sm:bg-chalk/10">
-                        {news.slice(0, 4).map((item, i) => (
+                    <div className="flex gap-4 sm:grid sm:grid-cols-2 sm:gap-px sm:overflow-hidden sm:rounded-xl sm:border sm:border-gray-200 sm:bg-gray-200 lg:grid-cols-4 dark:sm:border-chalk/10 dark:sm:bg-chalk/10">
+                        {news.map((item, i) => (
                             <motion.a
                                 key={item.id}
                                 href={item.link}

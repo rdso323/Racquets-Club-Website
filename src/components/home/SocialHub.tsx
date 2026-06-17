@@ -50,6 +50,8 @@ const MOCK_NEWS: NewsItem[] = [
     }
 ];
 
+const MAX_NEWS_ARTICLES = 4;
+
 const SocialHub = ({ children }: { children?: React.ReactNode }) => {
     const [events, setEvents] = useState<Event[]>([]);
     const [news, setNews] = useState<NewsItem[]>(MOCK_NEWS);
@@ -70,13 +72,13 @@ const SocialHub = ({ children }: { children?: React.ReactNode }) => {
         const unsubscribeNews = onSnapshot(collection(db, 'news'), (snapshot) => {
             if (!snapshot.empty) {
                 const fbNews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as NewsItem));
-                setNews(fbNews);
+                setNews(fbNews.slice(0, MAX_NEWS_ARTICLES));
             } else {
-                setNews(MOCK_NEWS);
+                setNews(MOCK_NEWS.slice(0, MAX_NEWS_ARTICLES));
             }
         }, (err) => {
             console.warn("Could not load news from Firestore, using defaults.", err);
-            setNews(MOCK_NEWS);
+            setNews(MOCK_NEWS.slice(0, MAX_NEWS_ARTICLES));
         });
 
         return () => {
@@ -197,7 +199,7 @@ const SocialHub = ({ children }: { children?: React.ReactNode }) => {
                 </h2>
 
                 <div className="flex flex-col gap-4">
-                    {news.map((item) => (
+                    {news.slice(0, MAX_NEWS_ARTICLES).map((item) => (
                         <a key={item.id} href={item.link} target="_blank" rel="noopener noreferrer" className="glass-panel p-4 group cursor-pointer lg:p-6 rounded-2xl flex flex-col justify-between hover:shadow-md transition-all duration-300">
                             <div className="flex justify-between items-center mb-1">
                                 <span className="text-xs font-medium text-wimbledon-green dark:text-wimbledon-green-accent">{item.category}</span>
