@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { SPORTS, SLOTS_PER_COURT } from '../../../lib/sports';
+import { SPORTS, getSlotsPerCourtForSport } from '../../../lib/sports';
 import {
     type Session,
     type SessionType,
@@ -62,7 +62,25 @@ const EditSessionModal = ({
                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Sport</label>
                         <select
                             value={session.sport}
-                            onChange={(e) => onSessionChange({ ...session, sport: e.target.value })}
+                            onChange={(e) => {
+                                const sport = e.target.value;
+                                const courts = buildCourtLabels(
+                                    editCourtFields.courtCount,
+                                    editCourtFields.courtStartNumber,
+                                    editCourtFields.customCourtLabels,
+                                );
+                                onSessionChange({
+                                    ...session,
+                                    sport,
+                                    maxAttendees:
+                                        session.type === 'court'
+                                            ? suggestedCapacityForCourts(
+                                                  courts,
+                                                  getSlotsPerCourtForSport(sport),
+                                              )
+                                            : session.maxAttendees,
+                                });
+                            }}
                             className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                         >
                             {SPORTS.map((sport) => (
@@ -133,7 +151,7 @@ const EditSessionModal = ({
                                             onEditCourtFieldsChange({ ...editCourtFields, courtCount });
                                             onSessionChange({
                                                 ...session,
-                                                maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                maxAttendees: suggestedCapacityForCourts(courts, getSlotsPerCourtForSport(session.sport ?? 'Tennis')),
                                             });
                                         }}
                                         disabled={!!editCourtFields.customCourtLabels.trim()}
@@ -164,7 +182,7 @@ const EditSessionModal = ({
                                             onEditCourtFieldsChange({ ...editCourtFields, courtStartNumber });
                                             onSessionChange({
                                                 ...session,
-                                                maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                                maxAttendees: suggestedCapacityForCourts(courts, getSlotsPerCourtForSport(session.sport ?? 'Tennis')),
                                             });
                                         }}
                                         disabled={!!editCourtFields.customCourtLabels.trim()}
@@ -190,7 +208,7 @@ const EditSessionModal = ({
                                         onEditCourtFieldsChange({ ...editCourtFields, customCourtLabels });
                                         onSessionChange({
                                             ...session,
-                                            maxAttendees: suggestedCapacityForCourts(courts, SLOTS_PER_COURT),
+                                            maxAttendees: suggestedCapacityForCourts(courts, getSlotsPerCourtForSport(session.sport ?? 'Tennis')),
                                         });
                                     }}
                                     className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"

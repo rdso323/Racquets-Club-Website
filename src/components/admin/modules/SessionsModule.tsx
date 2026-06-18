@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { Calendar, Plus, Trash2 } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { SPORTS, SPORT_FILTER_TABS, SLOTS_PER_COURT, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
+import { SPORTS, SPORT_FILTER_TABS, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, getSlotsPerCourtForSport, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
 import {
     type Session,
     type SessionType,
@@ -24,6 +24,7 @@ import {
     courtFieldsFromSession,
     parseWaitlistEntry,
     getMaxWaitlistSize,
+    getSlotsPerCourt,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
 import { addRecurringSchedule, defaultRecurringTitle, formatRecurringDayLabel, removeRecurringSchedule } from '../../../lib/recurringSchedules';
@@ -162,7 +163,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         title: newSession.title,
                         time: newSession.time,
                         courts,
-                        maxPerCourt: SLOTS_PER_COURT,
+                        maxPerCourt: getSlotsPerCourtForSport(newSession.sport),
                         maxWaitlistSize: Number(newSession.maxWaitlistSize),
                     });
                     setNewSessionMsg('Weekly recurring court schedule created!');
@@ -181,8 +182,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     };
 
                     if (newSession.type === 'court' && courts.length > 0) {
+                        const slotsPerCourt = getSlotsPerCourtForSport(newSession.sport);
                         sessionData.courts = courts;
-                        sessionData.slotsPerCourt = SLOTS_PER_COURT;
+                        sessionData.slotsPerCourt = slotsPerCourt;
                         sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
                         sessionData.waitlist = [];
                     } else if (newSession.type === 'coaching') {
@@ -246,7 +248,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                 if (editingSession.type === 'court') {
                     if (isEditableCustomCourtSession(editingSession) && courts && courts.length > 0) {
                         updateData.courts = courts;
-                        updateData.slotsPerCourt = SLOTS_PER_COURT;
+                        updateData.slotsPerCourt = getSlotsPerCourtForSport(
+                            editingSession.sport || inferSport(editingSession),
+                        );
                     }
                 } else {
                     updateData.courts = null;
@@ -300,7 +304,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         maxAttendees: session.maxAttendees,
                         attendees: arrayUnion(attendeeString),
                         ...(session.courts?.length
-                            ? { courts: session.courts, slotsPerCourt: session.slotsPerCourt ?? SLOTS_PER_COURT }
+                            ? { courts: session.courts, slotsPerCourt: getSlotsPerCourt(session) }
                             : {}),
                     },
                     { merge: true },
@@ -522,9 +526,28 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             </label>
                                             <select
                                                 value={newSession.sport}
-                                                onChange={(e) =>
-                                                    setNewSession({ ...newSession, sport: e.target.value })
-                                                }
+                                                onChange={(e) => {
+                                                    const sport = e.target.value;
+                                                    const courts =
+                                                        newSession.type === 'court'
+                                                            ? buildCourtLabels(
+                                                                  newSession.courtCount,
+                                                                  newSession.courtStartNumber,
+                                                                  newSession.customCourtLabels,
+                                                              )
+                                                            : [];
+                                                    setNewSession({
+                                                        ...newSession,
+                                                        sport,
+                                                        maxAttendees:
+                                                            newSession.type === 'court'
+                                                                ? suggestedCapacityForCourts(
+                                                                      courts,
+                                                                      getSlotsPerCourtForSport(sport),
+                                                                  )
+                                                                : newSession.maxAttendees,
+                                                    });
+                                                }}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                             >
                                                 {SPORTS.map((sport) => (
@@ -556,7 +579,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                         type,
                                                         maxAttendees:
                                                             type === 'court'
-                                                                ? suggestedCapacityForCourts(courts, SLOTS_PER_COURT)
+                                                                ? suggestedCapacityForCourts(
+                                                                      courts,
+                                                                      getSlotsPerCourtForSport(newSession.sport),
+                                                                  )
                                                                 : getDefaultMaxAttendees('coaching'),
                                                     });
                                                 }}
@@ -696,7 +722,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                             courtCount,
                                                             maxAttendees: suggestedCapacityForCourts(
                                                                 courts,
-                                                                SLOTS_PER_COURT,
+                                                                getSlotsPerCourtForSport(newSession.sport),
                                                             ),
                                                             maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
                                                         });
@@ -731,7 +757,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                             courtStartNumber,
                                                             maxAttendees: suggestedCapacityForCourts(
                                                                 courts,
-                                                                SLOTS_PER_COURT,
+                                                                getSlotsPerCourtForSport(newSession.sport),
                                                             ),
                                                             maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
                                                         });
@@ -760,7 +786,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                             customCourtLabels,
                                                             maxAttendees: suggestedCapacityForCourts(
                                                                 courts,
-                                                                SLOTS_PER_COURT,
+                                                                getSlotsPerCourtForSport(newSession.sport),
                                                             ),
                                                             maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
                                                         });

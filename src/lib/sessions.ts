@@ -2,6 +2,7 @@ import {
     DEFAULT_OPEN_PLAY_CAPACITY,
     DEFAULT_WAITLIST_PER_COURT,
     SLOTS_PER_COURT,
+    getSlotsPerCourtForSport,
     type AdminRecurringSchedule,
     type DayName,
     type OpenPlayDayConfig,
@@ -495,7 +496,10 @@ export const buildCourtLabels = (
 };
 
 export const getSlotsPerCourt = (session: Session): number => {
-    return session.slotsPerCourt ?? SLOTS_PER_COURT;
+    const config = getOpenPlayConfigForSession(session);
+    if (config) return config.maxPerCourt;
+    if (session.slotsPerCourt != null) return session.slotsPerCourt;
+    return getSlotsPerCourtForSport(inferSport(session));
 };
 
 export const suggestedCapacityForCourts = (courts: string[], slotsPerCourt = SLOTS_PER_COURT): number => {
