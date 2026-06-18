@@ -16,6 +16,7 @@ import { formatRecurringDayLabel } from '../../../lib/recurringSchedules';
 export interface SessionOpsCardProps {
     session: Session;
     recurringSchedules?: AdminRecurringSchedule[];
+    disabledBuiltinSchedules?: string[];
     rosterAttendees: string[];
     waitlist: string[];
     maxWaitlistSize: number;
@@ -37,6 +38,7 @@ export interface SessionOpsCardProps {
 const SessionOpsCard = memo(({
     session,
     recurringSchedules = [],
+    disabledBuiltinSchedules = [],
     rosterAttendees,
     waitlist,
     maxWaitlistSize,
@@ -58,9 +60,11 @@ const SessionOpsCard = memo(({
     const theme = getSportTheme(sport);
     const enrolledCount = rosterAttendees.length;
     const isFull = enrolledCount >= session.maxAttendees;
-    const sessionCourts = getCourtsForSession(session, recurringSchedules);
+    const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
     const isRecurring = isRecurringCourtSession(session);
-    const recurringConfig = isRecurring ? getOpenPlayConfigForSession(session, recurringSchedules) : null;
+    const recurringConfig = isRecurring
+        ? getOpenPlayConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
+        : null;
 
     return (
         <div
@@ -290,7 +294,7 @@ const SessionOpsCard = memo(({
                         className="flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors hover:text-red-500"
                     >
                         <Trash2 className="h-3.5 w-3.5" />
-                        Delete Session
+                        {isRecurring ? 'Remove weekly schedule' : 'Delete Session'}
                     </button>
                 </div>
             </div>

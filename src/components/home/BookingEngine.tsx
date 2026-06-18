@@ -30,12 +30,14 @@ import {
     findUserWaitlistEntry,
     isAttendeeOnCourt,
     isSessionEnrollmentFull,
+    isOpenPlaySessionEnded,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 import { buildCourtSlots } from '../../lib/courtSlots';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
+const pendingOpenPlayResets = new Set<string>();
 
 const createICSFile = (session: Session, courtName?: string) => {
     let startDate = new Date();
@@ -126,6 +128,7 @@ const BookingEngine = () => {
     const [error, setError] = useState<string | null>(null);
     const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
+    const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
     const [bookingBusy, setBookingBusy] = useState<string | null>(null);
@@ -173,8 +176,12 @@ const BookingEngine = () => {
                     setRecurringSchedules(
                         Array.isArray(data.schedules) ? (data.schedules as AdminRecurringSchedule[]) : [],
                     );
+                    setDisabledBuiltinSchedules(
+                        Array.isArray(data.disabledBuiltin) ? (data.disabledBuiltin as string[]) : [],
+                    );
                 } else {
                     setRecurringSchedules([]);
+                    setDisabledBuiltinSchedules([]);
                 }
             },
             (err) => console.error('Error fetching recurring schedules:', err),
@@ -218,6 +225,39 @@ const BookingEngine = () => {
             }
         });
     }, [sessions]);
+
+    useEffect(() => {
+        for (const sport of SPORTS) {
+            const instances = getOpenPlayInstancesWithinHorizon(
+                sessions,
+                sport,
+                recurringSchedules,
+                disabledBuiltinSchedules,
+            );
+
+            instances.forEach(async ({ session, playDate }) => {
+                if (!isOpenPlaySessionEnded(playDate, session.time)) return;
+
+                const hasRoster =
+                    (session.attendees?.length ?? 0) > 0 || (session.waitlist?.length ?? 0) > 0;
+                if (!hasRoster) return;
+
+                const resetKey = `${session.id}:ended`;
+                if (pendingOpenPlayResets.has(resetKey)) return;
+                pendingOpenPlayResets.add(resetKey);
+
+                try {
+                    await updateDoc(doc(db, 'sessions', session.id), {
+                        attendees: [],
+                        waitlist: [],
+                    });
+                } catch (e) {
+                    pendingOpenPlayResets.delete(resetKey);
+                    console.error(`Failed to reset ended open play session ${session.id}:`, e);
+                }
+            });
+        }
+    }, [sessions, recurringSchedules, disabledBuiltinSchedules]);
 
     const handleJoin = async (sessionToJoin: Session, courtName?: string, slotIndex?: number) => {
         if (!user) return;
@@ -586,7 +626,7 @@ const BookingEngine = () => {
         const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
         return (
-            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-auto">
+            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden lg:w-full lg:shrink">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -719,7 +759,12 @@ const BookingEngine = () => {
     }
 
     const regularSessions = filterRegularSessionsForDisplay(sessions, activeSport);
-    const openPlayInstances = getOpenPlayInstancesWithinHorizon(sessions, activeSport, recurringSchedules);
+    const openPlayInstances = getOpenPlayInstancesWithinHorizon(
+        sessions,
+        activeSport,
+        recurringSchedules,
+        disabledBuiltinSchedules,
+    );
     const hasDisplayContent = openPlayInstances.length > 0 || regularSessions.length > 0;
     const theme = getSportTheme(activeSport);
     const accentStyle = {
@@ -781,14 +826,20 @@ const BookingEngine = () => {
                     <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">Check back later for court availability and coaching clinics.</p>
                 </div>
             ) : (
-                <div className="space-y-8">
+                <div
+                    className={`grid grid-cols-1 gap-6 ${
+                        openPlayInstances.length > 0 && regularSessions.length > 0
+                            ? 'lg:grid-cols-2 lg:items-start'
+                            : ''
+                    }`}
+                >
                     {openPlayInstances.length > 0 && (
-                        <div>
-                            <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 md:hidden">
+                        <div className={regularSessions.length === 0 ? 'lg:col-span-2' : ''}>
+                            <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 lg:hidden">
                                 Swipe sideways to browse open play sessions
                             </p>
-                            <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:mx-0 md:overflow-visible md:px-0 md:pb-0">
-                                <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
+                            <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
+                                <div className="flex gap-6 lg:flex-col">
                                     {openPlayInstances.map(({ session, config, playDate, isNextWeek }) =>
                                         renderOpenPlayCard(session, config, playDate, isNextWeek),
                                     )}
@@ -798,7 +849,7 @@ const BookingEngine = () => {
                     )}
 
                     {regularSessions.length > 0 && (
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div className={`flex flex-col gap-6 ${openPlayInstances.length === 0 ? 'lg:col-span-2' : ''}`}>
                             {regularSessions.map((session) => renderCard(session))}
                         </div>
                     )}

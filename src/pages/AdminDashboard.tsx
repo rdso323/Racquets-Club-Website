@@ -21,6 +21,7 @@ const AdminDashboard = () => {
         updateStatus,
         sessionsList,
         recurringSchedules,
+        disabledBuiltinSchedules,
         eventsList,
         feedbackList,
     } = useAdminData();
@@ -61,7 +62,12 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === 'sessions' && (
-                <SessionsModule ref={createSessionFormRef} sessionsList={sessionsList} recurringSchedules={recurringSchedules} />
+                <SessionsModule
+                    ref={createSessionFormRef}
+                    sessionsList={sessionsList}
+                    recurringSchedules={recurringSchedules}
+                    disabledBuiltinSchedules={disabledBuiltinSchedules}
+                />
             )}
 
             {activeTab === 'events' && <EventsModule eventsList={eventsList} />}
