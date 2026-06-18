@@ -27,9 +27,14 @@ import {
     getSlotsPerCourt,
     isRecurringCourtSession,
     getOpenPlayConfigForSession,
+    formatWaitlistEntry,
+    findUserAttendeeEntry,
+    findUserWaitlistEntry,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
 import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule } from '../../../lib/recurringSchedules';
+import { useMemberDirectory } from '../../../hooks/useMemberDirectory';
+import type { MemberDraft } from '../MemberLookupInput';
 import SessionOpsCard from '../cards/SessionOpsCard';
 import EditSessionModal, { type EditCourtFields } from '../modals/EditSessionModal';
 
@@ -58,8 +63,20 @@ const isEditableCustomCourtSession = (session: Session) =>
     !session.id.startsWith('open_play_') &&
     !session.title.toLowerCase().includes('open play');
 
+const emptyMemberDraft = (): MemberDraft => ({ name: '' });
+
+const resolveMemberIdentity = (draft: MemberDraft) => {
+    const name = draft.name.trim();
+    const uid = draft.uid && !draft.uid.startsWith('manual_') ? draft.uid : `manual_${Date.now()}`;
+    const email =
+        draft.email?.trim() ||
+        `${name.toLowerCase().replace(/\s+/g, '')}@manual.club`;
+    return { name, uid, email };
+};
+
 const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
     ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [], disabledBuiltinSchedules = [] }, ref) => {
+        const members = useMemberDirectory(sessionsList);
         const [sessionsSportFilter, setSessionsSportFilter] = useState(sportFilterProp);
         const [scheduleMode, setScheduleMode] = useState<ScheduleMode>('one-time');
 
@@ -88,7 +105,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             customCourtLabels: '',
         });
 
-        const [newAttendeeName, setNewAttendeeName] = useState<Record<string, string>>({});
+        const [memberDrafts, setMemberDrafts] = useState<Record<string, MemberDraft>>({});
         const [newAttendeeCourt, setNewAttendeeCourt] = useState<Record<string, string>>({});
         const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
         const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
@@ -309,7 +326,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         const handleAddAttendee = async (session: Session) => {
             const sessionId = session.id;
-            const name = newAttendeeName[sessionId]?.trim();
+            const draft = memberDrafts[sessionId] ?? emptyMemberDraft();
+            const { name, uid, email } = resolveMemberIdentity(draft);
             if (!name) return;
 
             const availableCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
@@ -320,8 +338,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                 return;
             }
 
-            const uid = `manual_${Date.now()}`;
-            const email = `${name.toLowerCase().replace(/\s+/g, '')}@manual.club`;
+            if (findUserAttendeeEntry(session.attendees, uid) || findUserWaitlistEntry(session.waitlist, uid)) {
+                window.alert(`${name} is already on this session.`);
+                return;
+            }
+
             const attendeeString = court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
 
             try {
@@ -341,11 +362,57 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     },
                     { merge: true },
                 );
-                setNewAttendeeName((prev) => ({ ...prev, [sessionId]: '' }));
+                setMemberDrafts((prev) => ({ ...prev, [sessionId]: emptyMemberDraft() }));
                 setNewAttendeeCourt((prev) => ({ ...prev, [sessionId]: '' }));
             } catch (err) {
                 console.error('Error adding attendee: ', err);
                 window.alert('Failed to add attendee.');
+            }
+        };
+
+        const handleAddToWaitlist = async (session: Session) => {
+            const sessionId = session.id;
+            const draft = memberDrafts[sessionId] ?? emptyMemberDraft();
+            const { name, uid, email } = resolveMemberIdentity(draft);
+            if (!name) return;
+
+            const maxWaitlistSize = getMaxWaitlistSize(session);
+            if (maxWaitlistSize <= 0) {
+                window.alert('Waitlist is disabled for this session.');
+                return;
+            }
+
+            if ((session.waitlist || []).length >= maxWaitlistSize) {
+                window.alert('The waitlist is full.');
+                return;
+            }
+
+            if (findUserAttendeeEntry(session.attendees, uid) || findUserWaitlistEntry(session.waitlist, uid)) {
+                window.alert(`${name} is already on this session.`);
+                return;
+            }
+
+            const waitlistEntry = formatWaitlistEntry(uid, name, email);
+
+            try {
+                await setDoc(
+                    doc(db, 'sessions', sessionId),
+                    {
+                        title: session.title,
+                        sport: session.sport || inferSport(session),
+                        type: session.type,
+                        date: session.date,
+                        time: session.time,
+                        maxAttendees: session.maxAttendees,
+                        waitlist: arrayUnion(waitlistEntry),
+                        ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
+                    },
+                    { merge: true },
+                );
+                setMemberDrafts((prev) => ({ ...prev, [sessionId]: emptyMemberDraft() }));
+            } catch (err) {
+                console.error('Error adding to waitlist: ', err);
+                window.alert('Failed to add to waitlist.');
             }
         };
 
@@ -442,20 +509,22 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         disabledBuiltinSchedules={disabledBuiltinSchedules}
                                         rosterAttendees={rosterAttendees}
                                         coachValue={coachValue}
-                                        newAttendeeName={newAttendeeName[session.id] || ''}
+                                        memberDraft={memberDrafts[session.id] ?? emptyMemberDraft()}
+                                        members={members}
                                         newAttendeeCourt={newAttendeeCourt[session.id] || ''}
                                         savingCoach={!!savingCoach[session.id]}
                                         onCoachDraftChange={(value) =>
                                             setCoachDraft((prev) => ({ ...prev, [session.id]: value }))
                                         }
                                         onUpdateCoach={() => handleUpdateCoach(session.id)}
-                                        onNewAttendeeNameChange={(value) =>
-                                            setNewAttendeeName((prev) => ({ ...prev, [session.id]: value }))
+                                        onMemberDraftChange={(draft) =>
+                                            setMemberDrafts((prev) => ({ ...prev, [session.id]: draft }))
                                         }
                                         onNewAttendeeCourtChange={(value) =>
                                             setNewAttendeeCourt((prev) => ({ ...prev, [session.id]: value }))
                                         }
                                         onAddAttendee={() => handleAddAttendee(session)}
+                                        onAddToWaitlist={() => handleAddToWaitlist(session)}
                                         onRemoveAttendee={(attendeeStr) =>
                                             handleRemoveAttendee(session, attendeeStr)
                                         }

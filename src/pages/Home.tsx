@@ -8,7 +8,6 @@ import Transmissions from '../components/home/Transmissions';
 import Footer from '../components/home/Footer';
 import LiveWire from '../components/system/LiveWire';
 import { SPORTS } from '../lib/sports';
-import { sectionHud } from '../lib/siteNav';
 
 const HeroCourtArt = () => (
     <svg
@@ -82,10 +81,7 @@ const Home = () => {
 
                     <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-24 md:px-10 md:py-28">
                         <div className="max-w-3xl">
-                            <motion.div {...rise(0)} className="mb-4">
-                                <p className="hud-label text-court-accent">{sectionHud('home')}</p>
-                            </motion.div>
-                            <motion.div {...rise(0.04)} className="mb-7 flex items-center gap-4">
+                            <motion.div {...rise(0)} className="mb-7 flex items-center gap-4">
                                 <span className="h-px w-12 bg-wimbledon-gold" aria-hidden="true" />
                                 <span className="text-[11px] font-bold uppercase tracking-editorial text-wimbledon-gold sm:text-xs">
                                     Fuqua Racquets Club · Est. 2025
@@ -93,7 +89,7 @@ const Home = () => {
                             </motion.div>
 
                             <motion.h1
-                                {...rise(0.1)}
+                                {...rise(0.08)}
                                 className="font-display text-5xl leading-[1.02] tracking-tight text-wimbledon-navy dark:text-court-line sm:text-7xl lg:text-8xl"
                             >
                                 Five sports.

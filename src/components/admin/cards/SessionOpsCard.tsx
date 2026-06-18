@@ -12,6 +12,8 @@ import {
 } from '../../../lib/sessions';
 import type { AdminRecurringSchedule } from '../../../lib/sports';
 import { formatRecurringDayLabel } from '../../../lib/recurringSchedules';
+import MemberLookupInput, { type MemberDraft } from '../MemberLookupInput';
+import type { ClubMember } from '../../../lib/members';
 
 export interface SessionOpsCardProps {
     session: Session;
@@ -21,14 +23,16 @@ export interface SessionOpsCardProps {
     waitlist: string[];
     maxWaitlistSize: number;
     coachValue: string;
-    newAttendeeName: string;
+    memberDraft: MemberDraft;
+    members: ClubMember[];
     newAttendeeCourt: string;
     savingCoach: boolean;
     onCoachDraftChange: (value: string) => void;
     onUpdateCoach: () => void;
-    onNewAttendeeNameChange: (value: string) => void;
+    onMemberDraftChange: (draft: MemberDraft) => void;
     onNewAttendeeCourtChange: (value: string) => void;
     onAddAttendee: () => void;
+    onAddToWaitlist: () => void;
     onRemoveAttendee: (attendeeStr: string) => void;
     onRemoveWaitlistEntry: (waitlistEntry: string) => void;
     onEdit: () => void;
@@ -43,14 +47,16 @@ const SessionOpsCard = memo(({
     waitlist,
     maxWaitlistSize,
     coachValue,
-    newAttendeeName,
+    memberDraft,
+    members,
     newAttendeeCourt,
     savingCoach,
     onCoachDraftChange,
     onUpdateCoach,
-    onNewAttendeeNameChange,
+    onMemberDraftChange,
     onNewAttendeeCourtChange,
     onAddAttendee,
+    onAddToWaitlist,
     onRemoveAttendee,
     onRemoveWaitlistEntry,
     onEdit,
@@ -242,12 +248,10 @@ const SessionOpsCard = memo(({
 
             <div className="mt-4 space-y-3 border-t border-gray-150 pt-3 dark:border-gray-800/80">
                 <div className="flex gap-2">
-                    <input
-                        type="text"
-                        placeholder="Add Name..."
-                        value={newAttendeeName}
-                        onChange={(e) => onNewAttendeeNameChange(e.target.value)}
-                        className="flex-grow rounded-lg border border-gray-350 bg-white p-2 text-xs text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                    <MemberLookupInput
+                        value={memberDraft.name}
+                        members={members}
+                        onChange={onMemberDraftChange}
                     />
 
                     {sessionCourts.length > 0 && (
@@ -269,15 +273,30 @@ const SessionOpsCard = memo(({
                         type="button"
                         onClick={onAddAttendee}
                         disabled={
-                            !newAttendeeName ||
+                            !memberDraft.name.trim() ||
                             (sessionCourts.length > 0 && !newAttendeeCourt)
                         }
                         className="clay-gradient rounded-lg p-2 text-white transition-colors hover:brightness-110 disabled:opacity-40"
-                        title="Register member"
+                        title="Add to roster"
                     >
                         <UserPlus className="h-3.5 w-3.5" />
                     </button>
+
+                    {maxWaitlistSize > 0 && (
+                        <button
+                            type="button"
+                            onClick={onAddToWaitlist}
+                            disabled={!memberDraft.name.trim() || waitlist.length >= maxWaitlistSize}
+                            className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-amber-700 transition-colors hover:bg-amber-100 disabled:opacity-40 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-950/50"
+                            title="Add to waitlist"
+                        >
+                            <ListOrdered className="h-3.5 w-3.5" />
+                        </button>
+                    )}
                 </div>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500">
+                    Search registered members or type any name manually.
+                </p>
 
                 <div className="flex items-center justify-between pt-2">
                     <button
