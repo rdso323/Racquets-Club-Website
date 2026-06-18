@@ -5,16 +5,39 @@ export const SPORT_FILTER_TABS = ['All', ...SPORTS] as const;
 
 export const DEFAULT_OPEN_PLAY_CAPACITY = 8;
 export const SLOTS_PER_COURT = 4;
-/** Squash courts are singles — two players per court */
-export const SQUASH_SLOTS_PER_COURT = 2;
 /** Default waitlist slots per court when session has no explicit maxWaitlistSize */
 export const DEFAULT_WAITLIST_PER_COURT = 4;
 
-export const getSlotsPerCourtForSport = (sport: string): number =>
-    sport === 'Squash' ? SQUASH_SLOTS_PER_COURT : SLOTS_PER_COURT;
+export const getSlotsPerCourtForSport = (_sport: string): number => SLOTS_PER_COURT;
 
-export type DayName = 'monday' | 'tuesday' | 'wednesday' | 'thursday';
+export type DayName =
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday'
+    | 'sunday';
 
+export const WEEKDAY_OFFSETS: Record<DayName, number> = {
+    monday: 0,
+    tuesday: 1,
+    wednesday: 2,
+    thursday: 3,
+    friday: 4,
+    saturday: 5,
+    sunday: 6,
+};
+
+export const DAY_OPTIONS: { value: DayName; label: string }[] = [
+    { value: 'monday', label: 'Monday' },
+    { value: 'tuesday', label: 'Tuesday' },
+    { value: 'wednesday', label: 'Wednesday' },
+    { value: 'thursday', label: 'Thursday' },
+    { value: 'friday', label: 'Friday' },
+    { value: 'saturday', label: 'Saturday' },
+    { value: 'sunday', label: 'Sunday' },
+];
 export interface OpenPlayDayConfig {
     day: DayName;
     title: string;
@@ -40,13 +63,6 @@ export interface AdminRecurringSchedule {
     maxPerCourt: number;
     maxWaitlistSize?: number;
 }
-
-export const DAY_OPTIONS: { value: DayName; label: string }[] = [
-    { value: 'monday', label: 'Monday' },
-    { value: 'tuesday', label: 'Tuesday' },
-    { value: 'wednesday', label: 'Wednesday' },
-    { value: 'thursday', label: 'Thursday' },
-];
 
 export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
     Tennis: [
@@ -79,7 +95,7 @@ export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
             day: 'monday',
             title: 'Open Play Monday',
             courts: ['Court 1', 'Court 2'],
-            maxPerCourt: SQUASH_SLOTS_PER_COURT,
+            maxPerCourt: SLOTS_PER_COURT,
             time: '6:00 PM - 8:00 PM',
         },
     ],

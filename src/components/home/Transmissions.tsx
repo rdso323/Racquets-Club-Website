@@ -4,6 +4,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { RevealLines } from '../system/kinetic';
 import { Calendar, ExternalLink } from 'lucide-react';
+import { sectionHud } from '../../lib/siteNav';
 
 interface Event {
     id: string;
@@ -134,7 +135,7 @@ const Transmissions = () => {
                     className="mb-8 px-5 md:px-10"
                     lineClassName="flex items-baseline gap-4"
                     lines={[
-                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">02</span>,
+                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">{sectionHud('events')}</span>,
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">Club Events</h2>,
                     ]}
                 />
@@ -205,7 +206,7 @@ const Transmissions = () => {
                     className="mb-8"
                     lineClassName="flex items-baseline gap-4"
                     lines={[
-                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">03</span>,
+                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">{sectionHud('news')}</span>,
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">In the News</h2>,
                     ]}
                 />

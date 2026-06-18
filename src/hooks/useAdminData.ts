@@ -20,6 +20,7 @@ export const useAdminData = () => {
     const [sessionStatuses, setSessionStatuses] = useState<SessionStatusMap>(defaultStatuses);
     const [sessionsList, setSessionsList] = useState<Session[]>([]);
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
+    const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [eventsList, setEventsList] = useState<AdminEvent[]>([]);
     const [feedbackList, setFeedbackList] = useState<FeedbackItem[]>([]);
 
@@ -63,8 +64,12 @@ export const useAdminData = () => {
                         setRecurringSchedules(
                             Array.isArray(data.schedules) ? (data.schedules as AdminRecurringSchedule[]) : [],
                         );
+                        setDisabledBuiltinSchedules(
+                            Array.isArray(data.disabledBuiltin) ? (data.disabledBuiltin as string[]) : [],
+                        );
                     } else {
                         setRecurringSchedules([]);
+                        setDisabledBuiltinSchedules([]);
                     }
                 },
                 (err) => console.error('Recurring schedules subscription error', err),
@@ -134,6 +139,7 @@ export const useAdminData = () => {
         updateStatus,
         sessionsList,
         recurringSchedules,
+        disabledBuiltinSchedules,
         eventsList,
         feedbackList,
     };

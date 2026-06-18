@@ -11,6 +11,22 @@ import {
 
 const SETTINGS_DOC = 'settings/recurringSchedules';
 
+export interface RecurringSchedulesSettings {
+    schedules: AdminRecurringSchedule[];
+    disabledBuiltin: string[];
+}
+
+const emptySettings = (): RecurringSchedulesSettings => ({
+    schedules: [],
+    disabledBuiltin: [],
+});
+
+export const getBuiltinScheduleKey = (sport: Sport, day: DayName): string =>
+    `${sport.toLowerCase().replace(/ /g, '_')}_${day}`;
+
+export const getRecurringTemplateKey = (sport: Sport, config: OpenPlayDayConfig): string =>
+    config.scheduleId ? `custom:${config.scheduleId}` : `builtin:${getBuiltinScheduleKey(sport, config.day)}`;
+
 export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayDayConfig => ({
     day: schedule.day,
     title: schedule.title,
@@ -25,39 +41,25 @@ export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayD
 export const getMergedScheduleForSport = (
     sport: Sport,
     customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): OpenPlayDayConfig[] => {
+    const disabled = new Set(disabledBuiltin);
+    const builtin = (OPEN_PLAY_SCHEDULE[sport] || []).filter(
+        (config) => !disabled.has(getBuiltinScheduleKey(sport, config.day)),
+    );
     const custom = customSchedules.filter((s) => s.sport === sport).map(toOpenPlayDayConfig);
-    return [...(OPEN_PLAY_SCHEDULE[sport] || []), ...custom];
+    return [...builtin, ...custom];
 };
 
 export const getAllMergedSchedules = (
     customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): Record<Sport, OpenPlayDayConfig[]> => {
     const merged = {} as Record<Sport, OpenPlayDayConfig[]>;
     for (const sport of SPORTS) {
-        merged[sport] = getMergedScheduleForSport(sport, customSchedules);
+        merged[sport] = getMergedScheduleForSport(sport, customSchedules, disabledBuiltin);
     }
     return merged;
-};
-
-export const listBuiltinRecurringSchedules = (): Array<AdminRecurringSchedule & { isBuiltin: true }> => {
-    const items: Array<AdminRecurringSchedule & { isBuiltin: true }> = [];
-    for (const sport of SPORTS) {
-        for (const config of OPEN_PLAY_SCHEDULE[sport] || []) {
-            items.push({
-                id: `builtin_${sport.toLowerCase().replace(/ /g, '_')}_${config.day}`,
-                sport,
-                day: config.day,
-                title: config.title,
-                time: config.time,
-                courts: config.courts,
-                maxPerCourt: config.maxPerCourt,
-                maxWaitlistSize: config.maxWaitlistSize,
-                isBuiltin: true,
-            });
-        }
-    }
-    return items;
 };
 
 export const formatRecurringDayLabel = (day: DayName): string =>
@@ -66,30 +68,59 @@ export const formatRecurringDayLabel = (day: DayName): string =>
 export const defaultRecurringTitle = (day: DayName): string =>
     `Open Play ${formatRecurringDayLabel(day)}`;
 
-export const fetchRecurringSchedules = async (): Promise<AdminRecurringSchedule[]> => {
+export const fetchRecurringSettings = async (): Promise<RecurringSchedulesSettings> => {
     const snap = await getDoc(doc(db, SETTINGS_DOC));
-    if (!snap.exists()) return [];
+    if (!snap.exists()) return emptySettings();
     const data = snap.data();
-    return Array.isArray(data.schedules) ? (data.schedules as AdminRecurringSchedule[]) : [];
+    return {
+        schedules: Array.isArray(data.schedules) ? (data.schedules as AdminRecurringSchedule[]) : [],
+        disabledBuiltin: Array.isArray(data.disabledBuiltin) ? (data.disabledBuiltin as string[]) : [],
+    };
+};
+
+export const saveRecurringSettings = async (settings: RecurringSchedulesSettings): Promise<void> => {
+    await setDoc(doc(db, SETTINGS_DOC), settings, { merge: true });
+};
+
+export const fetchRecurringSchedules = async (): Promise<AdminRecurringSchedule[]> => {
+    const settings = await fetchRecurringSettings();
+    return settings.schedules;
 };
 
 export const saveRecurringSchedules = async (schedules: AdminRecurringSchedule[]): Promise<void> => {
-    await setDoc(doc(db, SETTINGS_DOC), { schedules });
+    const current = await fetchRecurringSettings();
+    await saveRecurringSettings({ ...current, schedules });
 };
 
 export const addRecurringSchedule = async (
     input: Omit<AdminRecurringSchedule, 'id'>,
 ): Promise<AdminRecurringSchedule> => {
-    const existing = await fetchRecurringSchedules();
+    const current = await fetchRecurringSettings();
     const created: AdminRecurringSchedule = {
         ...input,
         id: crypto.randomUUID().replace(/-/g, '').slice(0, 12),
     };
-    await saveRecurringSchedules([...existing, created]);
+    await saveRecurringSettings({
+        ...current,
+        schedules: [...current.schedules, created],
+    });
     return created;
 };
 
 export const removeRecurringSchedule = async (id: string): Promise<void> => {
-    const existing = await fetchRecurringSchedules();
-    await saveRecurringSchedules(existing.filter((s) => s.id !== id));
+    const current = await fetchRecurringSettings();
+    await saveRecurringSettings({
+        ...current,
+        schedules: current.schedules.filter((s) => s.id !== id),
+    });
+};
+
+export const disableBuiltinSchedule = async (sport: Sport, day: DayName): Promise<void> => {
+    const current = await fetchRecurringSettings();
+    const key = getBuiltinScheduleKey(sport, day);
+    if (current.disabledBuiltin.includes(key)) return;
+    await saveRecurringSettings({
+        ...current,
+        disabledBuiltin: [...current.disabledBuiltin, key],
+    });
 };

@@ -8,8 +8,12 @@ import {
     type OpenPlayDayConfig,
     type Sport,
     SPORTS,
+    WEEKDAY_OFFSETS,
 } from './sports';
-import { getMergedScheduleForSport } from './recurringSchedules';
+import { getMergedScheduleForSport, getRecurringTemplateKey } from './recurringSchedules';
+
+const WEEKDAY_ID_PATTERN =
+    'monday|tuesday|wednesday|thursday|friday|saturday|sunday';
 
 export const BOOKING_HORIZON_DAYS = 14;
 export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = "Next week's sessions unlock Sunday at 5:00 PM";
@@ -232,16 +236,29 @@ export const getBaseWeekStart = (sport: string): Date => {
 export const getPlayDate = (startOfWeek: Date, isNextWeek: boolean, dayName: DayName): Date => {
     const offset = isNextWeek ? 7 : 0;
     const date = new Date(startOfWeek);
-
-    const dayOffsets: Record<DayName, number> = {
-        monday: 0,
-        tuesday: 1,
-        wednesday: 2,
-        thursday: 3,
-    };
-
-    date.setDate(startOfWeek.getDate() + dayOffsets[dayName] + offset);
+    date.setDate(startOfWeek.getDate() + WEEKDAY_OFFSETS[dayName] + offset);
     return date;
+};
+
+export const parseSessionEndDateTime = (playDate: Date, timeStr: string): Date | null => {
+    const end = new Date(playDate);
+    const timeRegex = /(\d{1,2}):(\d{2})\s*(AM|PM)/gi;
+    const matches = [...timeStr.matchAll(timeRegex)];
+    if (matches.length === 0) return null;
+
+    const endMatch = matches[matches.length - 1];
+    let hours = parseInt(endMatch[1], 10);
+    const mins = parseInt(endMatch[2], 10);
+    const ampm = endMatch[3].toUpperCase();
+    if (ampm === 'PM' && hours < 12) hours += 12;
+    if (ampm === 'AM' && hours === 12) hours = 0;
+    end.setHours(hours, mins, 0, 0);
+    return end;
+};
+
+export const isOpenPlaySessionEnded = (playDate: Date, timeStr: string): boolean => {
+    const end = parseSessionEndDateTime(playDate, timeStr);
+    return end ? Date.now() > end.getTime() : false;
 };
 
 export const isWeekLocked = (startOfWeek: Date, isNextWeek: boolean): boolean => {
@@ -434,8 +451,9 @@ export const getOpenPlayInstancesWithinHorizon = (
     sessions: Session[],
     sport: Sport,
     customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): Array<{ session: Session; config: OpenPlayDayConfig; playDate: Date; isNextWeek: boolean }> => {
-    const configs = getMergedScheduleForSport(sport, customSchedules);
+    const configs = getMergedScheduleForSport(sport, customSchedules, disabledBuiltin);
     const baseStartOfWeek = getBaseWeekStart(sport);
     const instances: Array<{ session: Session; config: OpenPlayDayConfig; playDate: Date; isNextWeek: boolean }> = [];
 
@@ -453,6 +471,36 @@ export const getOpenPlayInstancesWithinHorizon = (
     }
 
     return instances;
+};
+
+/** One upcoming instance per weekly template — avoids duplicate admin cards per week. */
+export const pickAdminOpenPlayInstances = (
+    instances: Array<{ session: Session; config: OpenPlayDayConfig; playDate: Date; isNextWeek: boolean }>,
+    sport: Sport,
+): Array<{ session: Session; config: OpenPlayDayConfig; playDate: Date; isNextWeek: boolean }> => {
+    const grouped = new Map<
+        string,
+        Array<{ session: Session; config: OpenPlayDayConfig; playDate: Date; isNextWeek: boolean }>
+    >();
+
+    for (const item of instances) {
+        const key = getRecurringTemplateKey(sport, item.config);
+        const list = grouped.get(key) ?? [];
+        list.push(item);
+        grouped.set(key, list);
+    }
+
+    const picked: Array<{ session: Session; config: OpenPlayDayConfig; playDate: Date; isNextWeek: boolean }> = [];
+
+    for (const candidates of grouped.values()) {
+        const sorted = [...candidates].sort((a, b) => a.playDate.getTime() - b.playDate.getTime());
+        const stillOpen = sorted.find(
+            (item) => !isOpenPlaySessionEnded(item.playDate, item.session.time),
+        );
+        picked.push(stillOpen ?? sorted[0]);
+    }
+
+    return picked.sort((a, b) => a.playDate.getTime() - b.playDate.getTime());
 };
 
 export const filterRegularSessionsForDisplay = (
@@ -540,22 +588,27 @@ export const isRecurringCourtSession = (session: Session): boolean => isOpenPlay
 export const getOpenPlayConfigForSession = (
     session: Session,
     customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): OpenPlayDayConfig | null => {
     if (!isOpenPlaySession(session)) return null;
 
     const sport = inferSport(session);
-    const configs = getMergedScheduleForSport(sport, customSchedules);
+    const configs = getMergedScheduleForSport(sport, customSchedules, disabledBuiltin);
 
     const byTitle = configs.find((c) => c.title === session.title);
     if (byTitle) return byTitle;
 
-    const customMatch = session.id.match(/^open_play_custom_([^_]+)_(monday|tuesday|wednesday|thursday)_/);
+    const customMatch = session.id.match(
+        new RegExp(`^open_play_custom_([^_]+)_(${WEEKDAY_ID_PATTERN})_`),
+    );
     if (customMatch) {
         const scheduleId = customMatch[1];
         return configs.find((c) => c.scheduleId === scheduleId) || null;
     }
 
-    const idMatch = session.id.match(/open_play_[a-z_]+_(monday|tuesday|wednesday|thursday)_/);
+    const idMatch = session.id.match(
+        new RegExp(`open_play_[a-z_]+_(${WEEKDAY_ID_PATTERN})_`),
+    );
     if (idMatch) {
         const day = idMatch[1] as DayName;
         return configs.find((c) => c.day === day && !c.scheduleId) || null;
@@ -568,10 +621,11 @@ export const getOpenPlayConfigForSession = (
 export const getCourtsForSession = (
     session: Session,
     customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): string[] => {
     if (session.type === 'coaching') return [];
 
-    const config = getOpenPlayConfigForSession(session, customSchedules);
+    const config = getOpenPlayConfigForSession(session, customSchedules, disabledBuiltin);
     if (config) return config.courts;
 
     if (session.courts && session.courts.length > 0) return session.courts;
@@ -624,6 +678,7 @@ export const buildAdminDisplaySessions = (
     sessionsList: Session[],
     sportFilter: string | null,
     customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): Session[] => {
     const sportsToShow = sportFilter ? [sportFilter as Sport] : [...SPORTS];
     const combined: Session[] = [];
@@ -636,9 +691,10 @@ export const buildAdminDisplaySessions = (
     };
 
     for (const sport of sportsToShow) {
-        const openPlayResolved = getOpenPlayInstancesWithinHorizon(sessionsList, sport, customSchedules).map(
-            ({ session }) => session,
-        );
+        const openPlayResolved = pickAdminOpenPlayInstances(
+            getOpenPlayInstancesWithinHorizon(sessionsList, sport, customSchedules, disabledBuiltin),
+            sport,
+        ).map(({ session }) => session);
         openPlayResolved.sort(sortSessionsWithinSport);
         openPlayResolved.forEach(pushUnique);
 

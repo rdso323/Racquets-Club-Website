@@ -10,6 +10,7 @@ import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { SPORTS } from '../lib/sports';
+import { formatMemberName } from '../lib/bookingActions';
 
 export interface TabPreference {
     id: string;
@@ -142,6 +143,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setUser(currentUser);
                     setError(null);
                     setFirestoreIsAdmin(isAdminEmail(currentUser.email));
+
+                    setDoc(
+                        doc(db, 'users', currentUser.uid),
+                        {
+                            email: currentUser.email || '',
+                            displayName: currentUser.displayName || formatMemberName(currentUser),
+                        },
+                        { merge: true },
+                    ).catch((err) => console.error('Error syncing user profile:', err));
 
                     const cached = readCachedTabPreferences(currentUser.uid);
                     if (cached) {

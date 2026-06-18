@@ -5,6 +5,7 @@ import { useLenis } from 'lenis/react';
 import { useAuth, type TabPreference } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
 import SortableSportTabRow from './SortableSportTabRow';
+import { SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
 
 const MenuOverlay = () => {
     const { user, signOut, tabPreferences, updateTabPreferences } = useAuth();
@@ -65,27 +66,35 @@ const MenuOverlay = () => {
     };
 
     const navItems: Array<{
-        label: string;
-        sub: string;
+        id: SiteSectionId;
         action: () => void;
         accent?: boolean;
     }> = [
-        { label: 'Home', sub: 'Club overview', action: () => goTo('/') },
-        { label: 'Book a Court', sub: 'Session availability', action: () => scrollToId('booking-section'), accent: true },
-        { label: 'Events', sub: 'Socials & mixers', action: () => scrollToId('events-section') },
-        { label: 'News', sub: 'Latest results', action: () => scrollToId('news-section') },
-        { label: 'Help', sub: 'Booking FAQ', action: () => goTo('/help') },
-        { label: 'Feedback', sub: 'Share your thoughts', action: () => closeAnd(openFeedback) },
+        { id: 'home', action: () => goTo('/') },
+        { id: 'booking', action: () => scrollToId('booking-section'), accent: true },
+        { id: 'events', action: () => scrollToId('events-section') },
+        { id: 'news', action: () => scrollToId('news-section') },
+        { id: 'help', action: () => goTo('/help') },
+        { id: 'feedback', action: () => closeAnd(openFeedback) },
     ];
 
     const authItem: { label: string; sub: string; action: () => void; accent?: boolean } = user
         ? { label: 'Sign Out', sub: 'End session', action: () => closeAnd(() => signOut()) }
         : { label: 'Sign In', sub: 'Duke.edu accounts', action: () => goTo('/login') };
 
-    const menuItems = [...navItems, authItem].map((item, i) => ({
-        ...item,
-        index: String(i + 1).padStart(2, '0'),
-    }));
+    const menuItems = [
+        ...navItems.map((item) => ({
+            label: SITE_NAV_SECTIONS[item.id].menuLabel,
+            sub: SITE_NAV_SECTIONS[item.id].menuSub,
+            index: SITE_NAV_SECTIONS[item.id].index,
+            action: item.action,
+            accent: item.accent,
+        })),
+        {
+            ...authItem,
+            index: '07',
+        },
+    ];
 
     return (
         <AnimatePresence>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, MessageCircle } from 'lucide-react';
 import Footer from '../components/home/Footer';
 import { HELP_FAQ } from '../lib/helpFaq';
+import { sectionHud } from '../lib/siteNav';
 import { useUI } from '../components/system/UIProvider';
 
 const Help = () => {
@@ -12,7 +13,7 @@ const Help = () => {
     return (
         <div className="min-h-screen">
             <div className="mx-auto max-w-3xl px-5 pb-16 pt-28 md:px-10 md:pt-32">
-                <p className="hud-label mb-3 text-court-accent">Help</p>
+                <p className="hud-label mb-3 text-court-accent">{sectionHud('help')}</p>
                 <h1 className="font-display text-4xl text-gray-900 dark:text-chalk md:text-5xl">
                     Booking & club FAQ
                 </h1>

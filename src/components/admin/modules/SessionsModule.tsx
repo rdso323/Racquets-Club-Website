@@ -8,7 +8,7 @@ import {
     setDoc,
     arrayUnion,
 } from 'firebase/firestore';
-import { Calendar, Plus, Trash2 } from 'lucide-react';
+import { Calendar, Plus } from 'lucide-react';
 import { db } from '../../../lib/firebase';
 import { SPORTS, SPORT_FILTER_TABS, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, getSlotsPerCourtForSport, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
 import {
@@ -25,9 +25,16 @@ import {
     parseWaitlistEntry,
     getMaxWaitlistSize,
     getSlotsPerCourt,
+    isRecurringCourtSession,
+    getOpenPlayConfigForSession,
+    formatWaitlistEntry,
+    findUserAttendeeEntry,
+    findUserWaitlistEntry,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
-import { addRecurringSchedule, defaultRecurringTitle, formatRecurringDayLabel, removeRecurringSchedule } from '../../../lib/recurringSchedules';
+import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule } from '../../../lib/recurringSchedules';
+import { useMemberDirectory } from '../../../hooks/useMemberDirectory';
+import type { MemberDraft } from '../MemberLookupInput';
 import SessionOpsCard from '../cards/SessionOpsCard';
 import EditSessionModal, { type EditCourtFields } from '../modals/EditSessionModal';
 
@@ -36,6 +43,7 @@ interface SessionsModuleProps {
     showCreateForm?: boolean;
     sportFilter?: string;
     recurringSchedules?: AdminRecurringSchedule[];
+    disabledBuiltinSchedules?: string[];
 }
 
 type ScheduleMode = 'one-time' | 'recurring';
@@ -55,8 +63,20 @@ const isEditableCustomCourtSession = (session: Session) =>
     !session.id.startsWith('open_play_') &&
     !session.title.toLowerCase().includes('open play');
 
+const emptyMemberDraft = (): MemberDraft => ({ name: '' });
+
+const resolveMemberIdentity = (draft: MemberDraft) => {
+    const name = draft.name.trim();
+    const uid = draft.uid && !draft.uid.startsWith('manual_') ? draft.uid : `manual_${Date.now()}`;
+    const email =
+        draft.email?.trim() ||
+        `${name.toLowerCase().replace(/\s+/g, '')}@manual.club`;
+    return { name, uid, email };
+};
+
 const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
-    ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [] }, ref) => {
+    ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [], disabledBuiltinSchedules = [] }, ref) => {
+        const members = useMemberDirectory(sessionsList);
         const [sessionsSportFilter, setSessionsSportFilter] = useState(sportFilterProp);
         const [scheduleMode, setScheduleMode] = useState<ScheduleMode>('one-time');
 
@@ -77,7 +97,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         const [sessionDateInput, setSessionDateInput] = useState('');
         const [newSessionSaving, setNewSessionSaving] = useState(false);
         const [newSessionMsg, setNewSessionMsg] = useState('');
-        const [deletingScheduleId, setDeletingScheduleId] = useState<string | null>(null);
 
         const [editingSession, setEditingSession] = useState<Session | null>(null);
         const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({
@@ -86,7 +105,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             customCourtLabels: '',
         });
 
-        const [newAttendeeName, setNewAttendeeName] = useState<Record<string, string>>({});
+        const [memberDrafts, setMemberDrafts] = useState<Record<string, MemberDraft>>({});
         const [newAttendeeCourt, setNewAttendeeCourt] = useState<Record<string, string>>({});
         const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
         const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
@@ -103,8 +122,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         const adminDisplaySessions = useMemo(() => {
             const sportFilter = sessionsSportFilter === 'All' ? null : sessionsSportFilter;
-            return buildAdminDisplaySessions(sessionsList, sportFilter, recurringSchedules);
-        }, [sessionsList, sessionsSportFilter, recurringSchedules]);
+            return buildAdminDisplaySessions(sessionsList, sportFilter, recurringSchedules, disabledBuiltinSchedules);
+        }, [sessionsList, sessionsSportFilter, recurringSchedules, disabledBuiltinSchedules]);
 
         const previewCourtLabels = buildCourtLabels(
             newSession.courtCount,
@@ -113,7 +132,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         );
 
         const getSessionRoster = (session: Session): string[] => {
-            const courts = getCourtsForSession(session, recurringSchedules);
+            const courts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
             if (courts.length > 0) {
                 return getActiveCourtAttendees(session.attendees || [], courts);
             }
@@ -265,10 +284,40 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             }
         };
 
-        const handleDeleteSession = async (id: string) => {
+        const handleDeleteSession = async (session: Session) => {
+            if (isRecurringCourtSession(session)) {
+                const config = getOpenPlayConfigForSession(
+                    session,
+                    recurringSchedules,
+                    disabledBuiltinSchedules,
+                );
+                const sport = session.sport || inferSport(session);
+                const message = config?.isCustom
+                    ? `Remove "${session.title}" from the weekly schedule? This stops all future weeks.`
+                    : `Disable "${session.title}" as a weekly recurring session?`;
+                if (!window.confirm(message)) return;
+
+                try {
+                    if (config?.scheduleId) {
+                        await removeRecurringSchedule(config.scheduleId);
+                    } else if (config) {
+                        await disableBuiltinSchedule(sport as AdminRecurringSchedule['sport'], config.day);
+                    }
+                    try {
+                        await deleteDoc(doc(db, 'sessions', session.id));
+                    } catch {
+                        /* instance doc may not exist yet */
+                    }
+                } catch (err) {
+                    console.error('Error removing recurring schedule:', err);
+                    window.alert('Error removing weekly schedule.');
+                }
+                return;
+            }
+
             if (!window.confirm('Are you sure you want to delete this session?')) return;
             try {
-                await deleteDoc(doc(db, 'sessions', id));
+                await deleteDoc(doc(db, 'sessions', session.id));
             } catch (err) {
                 console.error('Error deleting session:', err);
                 window.alert('Error deleting session.');
@@ -277,10 +326,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         const handleAddAttendee = async (session: Session) => {
             const sessionId = session.id;
-            const name = newAttendeeName[sessionId]?.trim();
+            const draft = memberDrafts[sessionId] ?? emptyMemberDraft();
+            const { name, uid, email } = resolveMemberIdentity(draft);
             if (!name) return;
 
-            const availableCourts = getCourtsForSession(session, recurringSchedules);
+            const availableCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
             const court = newAttendeeCourt[sessionId]?.trim() || '';
 
             if (availableCourts.length > 0 && !court) {
@@ -288,8 +338,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                 return;
             }
 
-            const uid = `manual_${Date.now()}`;
-            const email = `${name.toLowerCase().replace(/\s+/g, '')}@manual.club`;
+            if (findUserAttendeeEntry(session.attendees, uid) || findUserWaitlistEntry(session.waitlist, uid)) {
+                window.alert(`${name} is already on this session.`);
+                return;
+            }
+
             const attendeeString = court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
 
             try {
@@ -309,11 +362,57 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     },
                     { merge: true },
                 );
-                setNewAttendeeName((prev) => ({ ...prev, [sessionId]: '' }));
+                setMemberDrafts((prev) => ({ ...prev, [sessionId]: emptyMemberDraft() }));
                 setNewAttendeeCourt((prev) => ({ ...prev, [sessionId]: '' }));
             } catch (err) {
                 console.error('Error adding attendee: ', err);
                 window.alert('Failed to add attendee.');
+            }
+        };
+
+        const handleAddToWaitlist = async (session: Session) => {
+            const sessionId = session.id;
+            const draft = memberDrafts[sessionId] ?? emptyMemberDraft();
+            const { name, uid, email } = resolveMemberIdentity(draft);
+            if (!name) return;
+
+            const maxWaitlistSize = getMaxWaitlistSize(session);
+            if (maxWaitlistSize <= 0) {
+                window.alert('Waitlist is disabled for this session.');
+                return;
+            }
+
+            if ((session.waitlist || []).length >= maxWaitlistSize) {
+                window.alert('The waitlist is full.');
+                return;
+            }
+
+            if (findUserAttendeeEntry(session.attendees, uid) || findUserWaitlistEntry(session.waitlist, uid)) {
+                window.alert(`${name} is already on this session.`);
+                return;
+            }
+
+            const waitlistEntry = formatWaitlistEntry(uid, name, email);
+
+            try {
+                await setDoc(
+                    doc(db, 'sessions', sessionId),
+                    {
+                        title: session.title,
+                        sport: session.sport || inferSport(session),
+                        type: session.type,
+                        date: session.date,
+                        time: session.time,
+                        maxAttendees: session.maxAttendees,
+                        waitlist: arrayUnion(waitlistEntry),
+                        ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
+                    },
+                    { merge: true },
+                );
+                setMemberDrafts((prev) => ({ ...prev, [sessionId]: emptyMemberDraft() }));
+            } catch (err) {
+                console.error('Error adding to waitlist: ', err);
+                window.alert('Failed to add to waitlist.');
             }
         };
 
@@ -357,19 +456,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             } catch (err) {
                 console.error('Error removing waitlist entry: ', err);
                 window.alert('Failed to remove waitlist entry.');
-            }
-        };
-
-        const handleDeleteRecurringSchedule = async (id: string, title: string) => {
-            if (!window.confirm(`Remove the weekly schedule "${title}"?`)) return;
-            setDeletingScheduleId(id);
-            try {
-                await removeRecurringSchedule(id);
-            } catch (err) {
-                console.error('Error removing recurring schedule:', err);
-                window.alert('Error removing weekly schedule.');
-            } finally {
-                setDeletingScheduleId(null);
             }
         };
 
@@ -420,22 +506,25 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         key={session.id}
                                         session={session}
                                         recurringSchedules={recurringSchedules}
+                                        disabledBuiltinSchedules={disabledBuiltinSchedules}
                                         rosterAttendees={rosterAttendees}
                                         coachValue={coachValue}
-                                        newAttendeeName={newAttendeeName[session.id] || ''}
+                                        memberDraft={memberDrafts[session.id] ?? emptyMemberDraft()}
+                                        members={members}
                                         newAttendeeCourt={newAttendeeCourt[session.id] || ''}
                                         savingCoach={!!savingCoach[session.id]}
                                         onCoachDraftChange={(value) =>
                                             setCoachDraft((prev) => ({ ...prev, [session.id]: value }))
                                         }
                                         onUpdateCoach={() => handleUpdateCoach(session.id)}
-                                        onNewAttendeeNameChange={(value) =>
-                                            setNewAttendeeName((prev) => ({ ...prev, [session.id]: value }))
+                                        onMemberDraftChange={(draft) =>
+                                            setMemberDrafts((prev) => ({ ...prev, [session.id]: draft }))
                                         }
                                         onNewAttendeeCourtChange={(value) =>
                                             setNewAttendeeCourt((prev) => ({ ...prev, [session.id]: value }))
                                         }
                                         onAddAttendee={() => handleAddAttendee(session)}
+                                        onAddToWaitlist={() => handleAddToWaitlist(session)}
                                         onRemoveAttendee={(attendeeStr) =>
                                             handleRemoveAttendee(session, attendeeStr)
                                         }
@@ -445,7 +534,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         waitlist={session.waitlist || []}
                                         maxWaitlistSize={getMaxWaitlistSize(session)}
                                         onEdit={() => openEditSession(session)}
-                                        onDelete={() => handleDeleteSession(session.id)}
+                                        onDelete={() => handleDeleteSession(session)}
                                     />
                                 );
                             })}
@@ -890,44 +979,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                 </div>
                             </form>
                         </div>
-
-                        {recurringSchedules.length > 0 && (
-                            <div className="mt-6 rounded-xl border border-gray-200 bg-white/50 p-4 dark:border-gray-800 dark:bg-court-950/30">
-                                <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                                    Custom weekly schedules
-                                </h4>
-                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                    Remove admin-created schedules that repeat each week.
-                                </p>
-                                <div className="mt-4 space-y-2">
-                                    {recurringSchedules.map((schedule) => (
-                                        <div
-                                            key={schedule.id}
-                                            className="flex items-center justify-between gap-3 rounded-lg border border-gray-150 bg-white px-3 py-2 dark:border-gray-800 dark:bg-carbon/40"
-                                        >
-                                            <div className="min-w-0">
-                                                <p className="truncate text-sm font-semibold text-gray-900 dark:text-chalk">
-                                                    {schedule.title}
-                                                </p>
-                                                <p className="truncate text-xs text-gray-500 dark:text-gray-400">
-                                                    {schedule.sport} · Every {formatRecurringDayLabel(schedule.day)} ·{' '}
-                                                    {schedule.time}
-                                                </p>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeleteRecurringSchedule(schedule.id, schedule.title)}
-                                                disabled={deletingScheduleId === schedule.id}
-                                                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/30 dark:text-red-300 dark:hover:bg-red-950/20"
-                                            >
-                                                <Trash2 className="h-3.5 w-3.5" />
-                                                {deletingScheduleId === schedule.id ? 'Removing...' : 'Remove'}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </>
                 )}
 
