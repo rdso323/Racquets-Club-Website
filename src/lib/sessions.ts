@@ -460,7 +460,6 @@ export const getOpenPlayInstancesWithinHorizon = (
 
     for (const weekOffset of [0, 7] as const) {
         const isNextWeek = weekOffset === 7;
-        if (isNextWeek && isWeekLocked(baseStartOfWeek, true)) continue;
 
         for (const config of configs) {
             const playDate = getPlayDate(baseStartOfWeek, isNextWeek, config.day);
