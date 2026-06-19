@@ -44,8 +44,8 @@ const pendingClinicResets = new Set<string>();
 const pendingOpenPlayResets = new Set<string>();
 
 const SessionLockOverlay = () => (
-    <div className="absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/80 backdrop-blur-[2px] dark:bg-court-950/75">
-        <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300 bg-white px-5 py-4 text-center shadow-lg dark:border-amber-800 dark:bg-carbon">
+    <div className="absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/45 backdrop-blur-[1px] dark:bg-court-950/40">
+        <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300/80 bg-white/90 px-5 py-4 text-center shadow-lg backdrop-blur-sm dark:border-amber-800/80 dark:bg-carbon/90">
             <Lock className="mb-2 h-7 w-7 text-amber-600 dark:text-amber-400" />
             <p className="text-sm font-bold text-amber-900 dark:text-amber-100">Booking not open yet</p>
             <p className="mt-1.5 text-xs font-medium leading-relaxed text-amber-800/90 dark:text-amber-300/90">
@@ -513,7 +513,7 @@ const BookingEngine = () => {
                     )}
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
-                        <div className={isLocked && !isCancelled ? 'opacity-40 blur-[1px]' : ''}>
+                        <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         {hasCourtBuckets ? (
                             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                                 {sessionCourts.map((courtName) => {
@@ -709,7 +709,7 @@ const BookingEngine = () => {
                     )}
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
-                        <div className={isLocked && !isCancelled ? 'opacity-40 blur-[1px]' : ''}>
+                        <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
