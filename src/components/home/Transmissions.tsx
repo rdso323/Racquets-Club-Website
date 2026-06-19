@@ -5,7 +5,7 @@ import { db } from '../../lib/firebase';
 import { RevealLines } from '../system/kinetic';
 import { Calendar, ExternalLink } from 'lucide-react';
 import { sectionHud } from '../../lib/siteNav';
-import { DEFAULT_CLUB_EVENTS, type ClubEvent } from '../../lib/defaultEvents';
+import { DEFAULT_CLUB_EVENTS, resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
 
 interface Event extends ClubEvent {}
 
@@ -53,8 +53,6 @@ const MOCK_NEWS: NewsItem[] = [
     },
 ];
 
-const MOCK_EVENTS: Event[] = DEFAULT_CLUB_EVENTS;
-
 const EVENT_ACCENTS = ['#BEF264', '#22D3EE', '#FFBF00', '#C9A84C'];
 const MAX_NEWS_ARTICLES = 4;
 
@@ -67,7 +65,7 @@ const Transmissions = () => {
     useEffect(() => {
         const unsubEvents = onSnapshot(collection(db, 'events'), (snapshot) => {
             const fbEvents = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Event));
-            setEvents(fbEvents.length > 0 ? fbEvents : MOCK_EVENTS);
+            setEvents(resolveDisplayEvents(fbEvents));
         });
 
         const unsubNews = onSnapshot(collection(db, 'news'), (snapshot) => {
@@ -93,7 +91,7 @@ const Transmissions = () => {
         return () => window.removeEventListener('resize', measure);
     }, [events]);
 
-    const displayEvents = events.length > 0 ? events : MOCK_EVENTS;
+    const displayEvents = events.length > 0 ? events : DEFAULT_CLUB_EVENTS;
 
     return (
         <section className="pb-16 pt-8 md:pb-24 md:pt-10">

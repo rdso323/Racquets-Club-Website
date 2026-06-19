@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { Plus, Sparkles } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { DEFAULT_CLUB_EVENTS } from '../../../lib/defaultEvents';
+import { syncRecommendedEventsToFirestore } from '../../../lib/syncRecommendedEvents';
 import type { AdminEvent } from '../types';
 import EventOpsCard from '../cards/EventOpsCard';
 import EditEventModal from '../modals/EditEventModal';
@@ -84,12 +84,7 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         setSyncingDefaults(true);
         setEventMessage('');
         try {
-            await Promise.all(eventsList.map((event) => deleteDoc(doc(db, 'events', event.id))));
-            await Promise.all(
-                DEFAULT_CLUB_EVENTS.map(({ id: _id, ...event }) =>
-                    addDoc(collection(db, 'events'), event),
-                ),
-            );
+            await syncRecommendedEventsToFirestore(eventsList.map((event) => event.id));
             setEventMessage('Recommended events loaded on the home page carousel.');
             window.setTimeout(() => setEventMessage(''), 4000);
         } catch (err) {
@@ -107,10 +102,9 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                     Active Events Carousel
                 </h2>
                 <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                    Manage cards inside the Upcoming Events slider carousel on the home page. Saved events
-                    here replace the code defaults on the live site — editing Firebase is what members see
-                    at{' '}
-                    <span className="font-medium text-gray-600 dark:text-chalk/70">fuquaracquetsclub.com</span>.
+                    Manage cards inside the Upcoming Events slider carousel on the home page. Stale Firestore
+                    events are ignored until you load the recommended set — use the button below to sync
+                    Wimbledon, summer kickoff, and fall mixer to production.
                 </p>
                 <div className="mb-6 flex flex-wrap items-center gap-3">
                     <button

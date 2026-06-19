@@ -38,3 +38,18 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         link: 'https://fuquaconnect.duke.edu/events',
     },
 ];
+
+const recommendedTitles = () => new Set(DEFAULT_CLUB_EVENTS.map((event) => event.title));
+
+/** True when Firestore matches the current recommended carousel set. */
+export const isRecommendedEventSet = (events: Pick<ClubEvent, 'title'>[]): boolean =>
+    events.length === DEFAULT_CLUB_EVENTS.length &&
+    events.every((event) => recommendedTitles().has(event.title));
+
+/** Show code defaults until Firestore is empty or synced to the recommended set. */
+export const resolveDisplayEvents = (firestoreEvents: ClubEvent[]): ClubEvent[] => {
+    if (firestoreEvents.length === 0 || !isRecommendedEventSet(firestoreEvents)) {
+        return DEFAULT_CLUB_EVENTS;
+    }
+    return firestoreEvents;
+};
