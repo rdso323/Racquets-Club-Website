@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { LOGO_DARK, LOGO_LIGHT } from '../lib/branding';
 
 type Theme = 'light' | 'dark';
 
@@ -24,6 +25,16 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+
+    const faviconHref = theme === 'dark' ? LOGO_DARK : LOGO_LIGHT;
+    let favicon = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    if (!favicon) {
+      favicon = document.createElement('link');
+      favicon.rel = 'icon';
+      favicon.type = 'image/png';
+      document.head.appendChild(favicon);
+    }
+    favicon.href = faviconHref;
   }, [theme]);
 
   const toggleTheme = () => {
