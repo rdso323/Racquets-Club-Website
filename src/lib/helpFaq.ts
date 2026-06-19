@@ -10,7 +10,7 @@ export const HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'Which email should I use to sign in?',
-        answer: 'Use your firstname.lastname@duke.edu address (for example rohan.dsouza@duke.edu). NetID-only aliases like rjd51@duke.edu are not supported because they create a separate account in our system.',
+        answer: 'Sign in with whichever @duke.edu address you used when you registered (including older accounts). For new sign-ups, use firstname.lastname@duke.edu — not NetID-only aliases like rjd51@duke.edu, which create a duplicate account.',
     },
     {
         question: 'Which sports can I book?',

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { isAllowedDukeEmail, DUKE_EMAIL_FORMAT_MESSAGE } from '../lib/memberNames';
+import { isDukeEmail, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
 
 const Login = () => {
     const { signInWithEmail, signUpWithEmail, error } = useAuth();
@@ -41,8 +41,8 @@ const Login = () => {
         setResetSuccess(false);
 
         const emailToReset = resetEmail.trim();
-        if (!isAllowedDukeEmail(emailToReset)) {
-            setResetError(DUKE_EMAIL_FORMAT_MESSAGE);
+        if (!isDukeEmail(emailToReset)) {
+            setResetError(DUKE_SIGNIN_EMAIL_MESSAGE);
             return;
         }
 
@@ -88,9 +88,20 @@ const Login = () => {
                                     Welcome back
                                 </h1>
                                 <p className="mb-6 text-sm text-gray-500 transition-colors dark:text-chalk/50">
-                                    Exclusive access for verified Duke members. Use your{' '}
-                                    <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>{' '}
-                                    address — not your NetID alias.
+                                    {isSignUp ? (
+                                        <>
+                                            New accounts require your{' '}
+                                            <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>{' '}
+                                            address — not your NetID alias.
+                                        </>
+                                    ) : (
+                                        <>
+                                            Sign in with the verified{' '}
+                                            <span className="font-medium text-gray-600 dark:text-chalk/70">@duke.edu</span>{' '}
+                                            address you registered. New members: use{' '}
+                                            <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>.
+                                        </>
+                                    )}
                                 </p>
 
                                 {error && (

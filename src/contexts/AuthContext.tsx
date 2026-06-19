@@ -10,7 +10,7 @@ import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { SPORTS } from '../lib/sports';
-import { formatMemberNameFromEmail, isAllowedDukeEmail, DUKE_EMAIL_FORMAT_MESSAGE } from '../lib/memberNames';
+import { formatMemberNameFromEmail, isAllowedDukeEmail, isDukeEmail, DUKE_EMAIL_FORMAT_MESSAGE, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
 
 export interface TabPreference {
     id: string;
@@ -242,8 +242,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signInWithEmail = async (email: string, pass: string) => {
         setError(null);
-        if (!isAllowedDukeEmail(email)) {
-            setError(DUKE_EMAIL_FORMAT_MESSAGE);
+        if (!isDukeEmail(email)) {
+            setError(DUKE_SIGNIN_EMAIL_MESSAGE);
             return;
         }
 
