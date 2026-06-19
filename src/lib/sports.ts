@@ -112,7 +112,7 @@ export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
         {
             day: 'thursday',
             title: 'Open Play Thursday',
-            courts: ['Court 1', 'Court 2'],
+            courts: ['Court 1'],
             maxPerCourt: SLOTS_PER_COURT,
             time: '5:00 PM - 7:00 PM',
         },

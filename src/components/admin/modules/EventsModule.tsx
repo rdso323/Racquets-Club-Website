@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { Plus, Sparkles } from 'lucide-react';
 import { db } from '../../../lib/firebase';
+import { DEFAULT_CLUB_EVENTS } from '../../../lib/defaultEvents';
 import type { AdminEvent } from '../types';
 import EventOpsCard from '../cards/EventOpsCard';
 import EditEventModal from '../modals/EditEventModal';
@@ -20,6 +21,7 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         link: '',
     });
     const [savingEvent, setSavingEvent] = useState(false);
+    const [syncingDefaults, setSyncingDefaults] = useState(false);
     const [eventMessage, setEventMessage] = useState('');
     const [editingEvent, setEditingEvent] = useState<AdminEvent | null>(null);
 
@@ -73,15 +75,60 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         }
     };
 
+    const handleLoadRecommendedEvents = async () => {
+        const confirmed = window.confirm(
+            'Replace all carousel events with the current club defaults (Wimbledon watch party, summer kickoff at Hi-Wire, fall mixer)?',
+        );
+        if (!confirmed) return;
+
+        setSyncingDefaults(true);
+        setEventMessage('');
+        try {
+            await Promise.all(eventsList.map((event) => deleteDoc(doc(db, 'events', event.id))));
+            await Promise.all(
+                DEFAULT_CLUB_EVENTS.map(({ id: _id, ...event }) =>
+                    addDoc(collection(db, 'events'), event),
+                ),
+            );
+            setEventMessage('Recommended events loaded on the home page carousel.');
+            window.setTimeout(() => setEventMessage(''), 4000);
+        } catch (err) {
+            console.error('Error loading recommended events:', err);
+            setEventMessage('Error loading recommended events.');
+        } finally {
+            setSyncingDefaults(false);
+        }
+    };
+
     return (
         <div className="animate-fadeIn space-y-8">
             <div>
                 <h2 className="mb-2 font-display text-2xl text-gray-900 dark:text-chalk">
                     Active Events Carousel
                 </h2>
-                <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-                    Manage cards inside the Upcoming Events slider carousel on the home page.
+                <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                    Manage cards inside the Upcoming Events slider carousel on the home page. Saved events
+                    here replace the code defaults on the live site — editing Firebase is what members see
+                    at{' '}
+                    <span className="font-medium text-gray-600 dark:text-chalk/70">fuquaracquetsclub.com</span>.
                 </p>
+                <div className="mb-6 flex flex-wrap items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={handleLoadRecommendedEvents}
+                        disabled={syncingDefaults}
+                        className="rounded-lg border border-court-accent/40 bg-court-accent/10 px-4 py-2 text-sm font-semibold text-emerald-800 transition-colors hover:bg-court-accent/20 disabled:opacity-50 dark:text-court-accent"
+                    >
+                        {syncingDefaults ? 'Loading…' : 'Load recommended events'}
+                    </button>
+                    {eventMessage && (
+                        <span
+                            className={`text-sm ${eventMessage.includes('Error') ? 'text-red-500' : 'text-green-600 dark:text-court-accent'}`}
+                        >
+                            {eventMessage}
+                        </span>
+                    )}
+                </div>
 
                 {eventsList.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-gray-200 py-12 text-center text-gray-400 dark:border-gray-800 dark:text-gray-500">
