@@ -5,16 +5,9 @@ import { db } from '../../lib/firebase';
 import { RevealLines } from '../system/kinetic';
 import { Calendar, ExternalLink } from 'lucide-react';
 import { sectionHud } from '../../lib/siteNav';
+import { DEFAULT_CLUB_EVENTS, type ClubEvent } from '../../lib/defaultEvents';
 
-interface Event {
-    id: string;
-    title: string;
-    date: string;
-    time: string;
-    location: string;
-    image: string;
-    link?: string;
-}
+interface Event extends ClubEvent {}
 
 interface NewsItem {
     id: string | number;
@@ -60,32 +53,7 @@ const MOCK_NEWS: NewsItem[] = [
     },
 ];
 
-const MOCK_EVENTS: Event[] = [
-    {
-        id: 'mock1',
-        title: 'Season Opener Social',
-        date: 'Friday, Sep 12',
-        time: '7:00 PM',
-        location: 'Card Gym, Courts 2–5',
-        image: '',
-    },
-    {
-        id: 'mock2',
-        title: 'Fuqua × Law Doubles Mixer',
-        date: 'Saturday, Oct 04',
-        time: '10:00 AM',
-        location: 'Center Courts',
-        image: '',
-    },
-    {
-        id: 'mock3',
-        title: 'Wednesday Badminton Social',
-        date: 'Wednesday, Oct 22',
-        time: '3:00 PM',
-        location: 'Courts 1–2',
-        image: '',
-    },
-];
+const MOCK_EVENTS: Event[] = DEFAULT_CLUB_EVENTS;
 
 const EVENT_ACCENTS = ['#BEF264', '#22D3EE', '#FFBF00', '#C9A84C'];
 const MAX_NEWS_ARTICLES = 4;
