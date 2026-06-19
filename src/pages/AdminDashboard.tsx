@@ -7,6 +7,7 @@ import SessionsModule from '../components/admin/modules/SessionsModule';
 import EventsModule from '../components/admin/modules/EventsModule';
 import FeedbackModule from '../components/admin/modules/FeedbackModule';
 import type { AdminTab } from '../components/admin/types';
+import { filterUpcomingEvents } from '../lib/events';
 
 const AdminDashboard = () => {
     const { user } = useAuth();
@@ -48,7 +49,7 @@ const AdminDashboard = () => {
             onQuickSession={triggerQuickSession}
             userEmail={user?.email}
             sessionCount={sessionsList.length}
-            eventCount={eventsList.length}
+            eventCount={filterUpcomingEvents(eventsList).length}
             feedbackCount={feedbackList.length}
             tickerConfigured={tickerText.trim().length > 0}
         >

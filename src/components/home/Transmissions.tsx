@@ -6,6 +6,7 @@ import { RevealLines } from '../system/kinetic';
 import { Calendar, ExternalLink } from 'lucide-react';
 import { sectionHud } from '../../lib/siteNav';
 import { DEFAULT_CLUB_EVENTS, resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
+import { filterUpcomingEvents } from '../../lib/events';
 
 interface Event extends ClubEvent {}
 
@@ -91,7 +92,7 @@ const Transmissions = () => {
         return () => window.removeEventListener('resize', measure);
     }, [events]);
 
-    const displayEvents = events.length > 0 ? events : DEFAULT_CLUB_EVENTS;
+    const displayEvents = events.length > 0 ? events : filterUpcomingEvents(DEFAULT_CLUB_EVENTS);
 
     return (
         <section className="pb-16 pt-8 md:pb-24 md:pt-10">
@@ -110,6 +111,11 @@ const Transmissions = () => {
                 </p>
 
                 <div className="overflow-x-hidden">
+                    {displayEvents.length === 0 ? (
+                        <p className="px-5 text-sm text-gray-500 dark:text-chalk/50 md:px-10">
+                            No upcoming club events right now. Check back soon or browse FuquaConnect for the latest socials.
+                        </p>
+                    ) : (
                     <motion.div
                         ref={trackRef}
                         drag="x"
@@ -163,6 +169,7 @@ const Transmissions = () => {
                         </article>
                     ))}
                     </motion.div>
+                    )}
                 </div>
             </div>
 

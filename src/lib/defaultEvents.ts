@@ -1,3 +1,5 @@
+import { filterUpcomingEvents } from './events';
+
 export interface ClubEvent {
     id: string;
     title: string;
@@ -16,7 +18,7 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         date: 'Saturday, Jul 11',
         time: '10:00 AM – 4:00 PM ET',
         location: 'Geneen Auditorium · Fuqua',
-        image: 'https://images.unsplash.com/photo-1595435934249-4437caf461bd?auto=format&fit=crop&w=800&q=80',
+        image: '/events/wimbledon-watch-party.png',
         link: 'https://fuquaconnect.duke.edu/events',
     },
     {
@@ -34,7 +36,7 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         date: 'Saturday, Oct 18',
         time: '10:00 AM – 1:00 PM',
         location: 'Center Courts · Card Gym',
-        image: 'https://images.unsplash.com/photo-1622160230622-8ee2aaf137b6?auto=format&fit=crop&w=800&q=80',
+        image: '/events/fall-doubles-mixer.jpg',
         link: 'https://fuquaconnect.duke.edu/events',
     },
 ];
@@ -48,8 +50,9 @@ export const isRecommendedEventSet = (events: Pick<ClubEvent, 'title'>[]): boole
 
 /** Show code defaults until Firestore is empty or synced to the recommended set. */
 export const resolveDisplayEvents = (firestoreEvents: ClubEvent[]): ClubEvent[] => {
-    if (firestoreEvents.length === 0 || !isRecommendedEventSet(firestoreEvents)) {
-        return DEFAULT_CLUB_EVENTS;
-    }
-    return firestoreEvents;
+    const source =
+        firestoreEvents.length === 0 || !isRecommendedEventSet(firestoreEvents)
+            ? DEFAULT_CLUB_EVENTS
+            : firestoreEvents;
+    return filterUpcomingEvents(source);
 };

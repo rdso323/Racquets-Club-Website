@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { Plus, Sparkles } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { syncRecommendedEventsToFirestore } from '../../../lib/syncRecommendedEvents';
+import { partitionEventsByPast } from '../../../lib/events';
+import { removePastEventsFromFirestore, syncRecommendedEventsToFirestore } from '../../../lib/syncRecommendedEvents';
 import type { AdminEvent } from '../types';
 import EventOpsCard from '../cards/EventOpsCard';
 import EditEventModal from '../modals/EditEventModal';
@@ -22,6 +23,7 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
     });
     const [savingEvent, setSavingEvent] = useState(false);
     const [syncingDefaults, setSyncingDefaults] = useState(false);
+    const [clearingPast, setClearingPast] = useState(false);
     const [eventMessage, setEventMessage] = useState('');
     const [editingEvent, setEditingEvent] = useState<AdminEvent | null>(null);
 
@@ -75,6 +77,29 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         }
     };
 
+    const { upcoming: upcomingEvents, past: pastEvents } = partitionEventsByPast(eventsList);
+
+    const handleClearPastEvents = async () => {
+        if (pastEvents.length === 0) return;
+        const confirmed = window.confirm(
+            `Remove ${pastEvents.length} past event${pastEvents.length === 1 ? '' : 's'} from Firestore?`,
+        );
+        if (!confirmed) return;
+
+        setClearingPast(true);
+        setEventMessage('');
+        try {
+            const removed = await removePastEventsFromFirestore(eventsList);
+            setEventMessage(`Removed ${removed} past event${removed === 1 ? '' : 's'}.`);
+            window.setTimeout(() => setEventMessage(''), 4000);
+        } catch (err) {
+            console.error('Error clearing past events:', err);
+            setEventMessage('Error clearing past events.');
+        } finally {
+            setClearingPast(false);
+        }
+    };
+
     const handleLoadRecommendedEvents = async () => {
         const confirmed = window.confirm(
             'Replace all carousel events with the current club defaults (Wimbledon watch party, summer kickoff at Hi-Wire, fall mixer)?',
@@ -102,9 +127,9 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                     Active Events Carousel
                 </h2>
                 <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                    Manage cards inside the Upcoming Events slider carousel on the home page. Stale Firestore
-                    events are ignored until you load the recommended set — use the button below to sync
-                    Wimbledon, summer kickoff, and fall mixer to production.
+                    Manage cards inside the Upcoming Events slider carousel on the home page. Past events are hidden
+                    from members automatically — clear them here once they are over. Use the sync button to load the
+                    recommended Wimbledon, summer kickoff, and fall mixer set.
                 </p>
                 <div className="mb-6 flex flex-wrap items-center gap-3">
                     <button
@@ -115,6 +140,16 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                     >
                         {syncingDefaults ? 'Loading…' : 'Load recommended events'}
                     </button>
+                    {pastEvents.length > 0 && (
+                        <button
+                            type="button"
+                            onClick={handleClearPastEvents}
+                            disabled={clearingPast}
+                            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:text-chalk/80 dark:hover:bg-court-950"
+                        >
+                            {clearingPast ? 'Clearing…' : `Clear ${pastEvents.length} past event${pastEvents.length === 1 ? '' : 's'}`}
+                        </button>
+                    )}
                     {eventMessage && (
                         <span
                             className={`text-sm ${eventMessage.includes('Error') ? 'text-red-500' : 'text-green-600 dark:text-court-accent'}`}
@@ -130,15 +165,42 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                         <p className="text-sm">No events listed in Firestore. Use the form below to create one!</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        {eventsList.map((event) => (
-                            <EventOpsCard
-                                key={event.id}
-                                event={event}
-                                onEdit={() => setEditingEvent(event)}
-                                onDelete={() => handleDeleteEvent(event.id)}
-                            />
-                        ))}
+                    <div className="space-y-8">
+                        {upcomingEvents.length === 0 ? (
+                            <div className="rounded-2xl border border-dashed border-gray-200 py-10 text-center text-gray-400 dark:border-gray-800 dark:text-gray-500">
+                                <p className="text-sm">No upcoming events in Firestore.</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                                {upcomingEvents.map((event) => (
+                                    <EventOpsCard
+                                        key={event.id}
+                                        event={event}
+                                        onEdit={() => setEditingEvent(event)}
+                                        onDelete={() => handleDeleteEvent(event.id)}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {pastEvents.length > 0 && (
+                            <div>
+                                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400 dark:text-chalk/40">
+                                    Past events (hidden on home page)
+                                </h3>
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                                    {pastEvents.map((event) => (
+                                        <EventOpsCard
+                                            key={event.id}
+                                            event={event}
+                                            isPast
+                                            onEdit={() => setEditingEvent(event)}
+                                            onDelete={() => handleDeleteEvent(event.id)}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

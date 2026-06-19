@@ -4,12 +4,13 @@ import type { AdminEvent } from '../types';
 
 export interface EventOpsCardProps {
     event: AdminEvent;
+    isPast?: boolean;
     onEdit: () => void;
     onDelete: () => void;
 }
 
-const EventOpsCard = memo(({ event, onEdit, onDelete }: EventOpsCardProps) => (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-250/75 bg-gray-50/20 shadow-sm dark:border-gray-800/80 dark:bg-court-950/30">
+const EventOpsCard = memo(({ event, isPast = false, onEdit, onDelete }: EventOpsCardProps) => (
+    <div className={`group relative flex flex-col overflow-hidden rounded-2xl border bg-gray-50/20 shadow-sm dark:bg-court-950/30 ${isPast ? 'border-gray-200/60 opacity-75 dark:border-gray-800/60' : 'border-gray-250/75 dark:border-gray-800/80'}`}>
         <div className="relative h-44 w-full overflow-hidden bg-gray-200 dark:bg-carbon">
             <img
                 src={event.image}
@@ -36,6 +37,11 @@ const EventOpsCard = memo(({ event, onEdit, onDelete }: EventOpsCardProps) => (
                 </button>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4">
+                {isPast && (
+                    <span className="mb-2 inline-block rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white/90">
+                        Past
+                    </span>
+                )}
                 <h3
                     className="line-clamp-2 font-display text-lg font-bold text-white drop-shadow-sm"
                     title={event.title}
