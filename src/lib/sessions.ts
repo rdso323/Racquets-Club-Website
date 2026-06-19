@@ -16,8 +16,7 @@ const WEEKDAY_ID_PATTERN =
     'monday|tuesday|wednesday|thursday|friday|saturday|sunday';
 
 export const BOOKING_HORIZON_DAYS = 14;
-export const NEXT_WEEK_BOOKING_LOCK_MESSAGE =
-    'Next week opens for booking Sunday at 5:00 PM Eastern';
+export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = 'Opens Sunday 5pm Eastern';
 
 export type SessionStatus = 'active' | 'hidden' | 'cancelled';
 export type SessionType = 'coaching' | 'court';
