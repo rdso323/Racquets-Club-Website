@@ -19,6 +19,7 @@ import {
     isWeekLocked,
     getWeekDateRangeDisplay,
     getOpenPlayInstancesWithinHorizon,
+    pickAdminOpenPlayInstances,
     filterRegularSessionsForDisplay,
     inferSport,
     parseSessionDateString,
@@ -781,11 +782,14 @@ const BookingEngine = () => {
     }
 
     const regularSessions = filterRegularSessionsForDisplay(sessions, activeSport);
-    const openPlayInstances = getOpenPlayInstancesWithinHorizon(
-        sessions,
+    const openPlayInstances = pickAdminOpenPlayInstances(
+        getOpenPlayInstancesWithinHorizon(
+            sessions,
+            activeSport,
+            recurringSchedules,
+            disabledBuiltinSchedules,
+        ),
         activeSport,
-        recurringSchedules,
-        disabledBuiltinSchedules,
     );
     const hasDisplayContent = openPlayInstances.length > 0 || regularSessions.length > 0;
     const theme = getSportTheme(activeSport);
