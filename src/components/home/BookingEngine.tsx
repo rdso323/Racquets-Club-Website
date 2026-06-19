@@ -2,7 +2,7 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { collection, onSnapshot, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, CalendarDays, Rocket, AlertTriangle } from 'lucide-react';
+import { Users, CalendarDays, Rocket, AlertTriangle, Lock } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig, type AdminRecurringSchedule } from '../../lib/sports';
 import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
@@ -31,14 +31,28 @@ import {
     isAttendeeOnCourt,
     isSessionEnrollmentFull,
     isOpenPlaySessionEnded,
+    parseAttendee,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 import { buildCourtSlots } from '../../lib/courtSlots';
 import { sectionHud } from '../../lib/siteNav';
+import { formatCourtDisplayName } from '../../lib/memberNames';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
 const pendingOpenPlayResets = new Set<string>();
+
+const SessionLockOverlay = () => (
+    <div className="absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/80 backdrop-blur-[2px] dark:bg-court-950/75">
+        <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300 bg-white px-5 py-4 text-center shadow-lg dark:border-amber-800 dark:bg-carbon">
+            <Lock className="mb-2 h-7 w-7 text-amber-600 dark:text-amber-400" />
+            <p className="text-sm font-bold text-amber-900 dark:text-amber-100">Booking not open yet</p>
+            <p className="mt-1.5 text-xs font-medium leading-relaxed text-amber-800/90 dark:text-amber-300/90">
+                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
+            </p>
+        </div>
+    </div>
+);
 
 const createICSFile = (session: Session, courtName?: string) => {
     let startDate = new Date();
@@ -368,12 +382,9 @@ const BookingEngine = () => {
                                 let tooltip = '';
                                 if (isPresent) {
                                     if (p.includes('|')) {
-                                        const parts = p.split('|');
-                                        name = parts[1];
-                                        if (parts.length >= 3) {
-                                            if (parts[2].includes('@')) tooltip = parts[2];
-                                        }
-                                        if (!tooltip) tooltip = name;
+                                        const parsed = parseAttendee(p);
+                                        name = formatCourtDisplayName(parsed.email, parsed.name);
+                                        tooltip = parsed.email.includes('@') ? parsed.email : parsed.name;
                                     } else {
                                         name = 'Player';
                                         tooltip = 'Player';
@@ -449,9 +460,17 @@ const BookingEngine = () => {
                             {session.type === 'coaching' ? <Rocket className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />}
                             {session.type === 'coaching' ? 'Clinic' : 'Session'}
                         </span>
-                        <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
-                            {dateRangeDisplay}
-                        </p>
+                        <div className="flex flex-col items-end gap-2">
+                            {isLocked && !isCancelled && (
+                                <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+                                    <Lock className="h-3 w-3" />
+                                    Locked · Opens Sunday 5 PM ET
+                                </span>
+                            )}
+                            <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
+                                {dateRangeDisplay}
+                            </p>
+                        </div>
                     </div>
                     <h3 className="font-display text-2xl text-gray-900 dark:text-chalk">{session.title}</h3>
                     <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
@@ -492,13 +511,8 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
-                        {isLocked && !isCancelled && (
-                            <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
-                                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
-                            </div>
-                        )}
-
+                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
+                        <div className={isLocked && !isCancelled ? 'opacity-40 blur-[1px]' : ''}>
                         {hasCourtBuckets ? (
                             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                                 {sessionCourts.map((courtName) => {
@@ -583,11 +597,13 @@ const BookingEngine = () => {
                                           ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                           : 'border border-court-accent/40 bg-court-accent/10 text-emerald-700 hover:bg-court-accent/20 dark:text-court-accent'
                                 }`}
-                                disabled={(!!session.coachId && session.coachId !== user?.uid)}
+                                disabled={(!!session.coachId && session.coachId !== user?.uid) || isLocked}
                             >
                                 {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
                             </button>
                         )}
+                        </div>
+                        {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
                 </div>
             </div>
@@ -627,7 +643,7 @@ const BookingEngine = () => {
         const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
         return (
-            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden lg:w-full lg:shrink">
+            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full md:shrink">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -641,10 +657,18 @@ const BookingEngine = () => {
                 <div className={`border-b border-chalk/10 p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                            <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
-                                <CalendarDays className="h-3.5 w-3.5" />
-                                Open Play
-                            </span>
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
+                                    <CalendarDays className="h-3.5 w-3.5" />
+                                    Open Play
+                                </span>
+                                {isLocked && !isCancelled && (
+                                    <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+                                        <Lock className="h-3 w-3" />
+                                        Locked · Opens Sunday 5 PM ET
+                                    </span>
+                                )}
+                            </div>
                             <h3 className="mt-3 font-display text-2xl text-gray-900 dark:text-chalk">{config.title}</h3>
                             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
                         </div>
@@ -683,13 +707,8 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
-                        {isLocked && !isCancelled && (
-                            <div className="mb-4 rounded-lg border border-amber-200/50 bg-amber-50 px-3 py-2 text-center text-xs font-medium text-amber-700 dark:border-amber-900/40 dark:bg-amber-900/20 dark:text-amber-300">
-                                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
-                            </div>
-                        )}
-
+                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
+                        <div className={isLocked && !isCancelled ? 'opacity-40 blur-[1px]' : ''}>
                         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
@@ -745,6 +764,8 @@ const BookingEngine = () => {
                             onJoinWaitlist={() => handleJoinWaitlist(session, config)}
                             onLeaveWaitlist={() => handleLeaveWaitlist(session)}
                         />
+                        </div>
+                        {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
                 </div>
             </div>
@@ -827,20 +848,14 @@ const BookingEngine = () => {
                     <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">Check back later for court availability and coaching clinics.</p>
                 </div>
             ) : (
-                <div
-                    className={`grid grid-cols-1 gap-6 ${
-                        openPlayInstances.length > 0 && regularSessions.length > 0
-                            ? 'lg:grid-cols-2 lg:items-start'
-                            : ''
-                    }`}
-                >
+                <div className="flex flex-col gap-8">
                     {openPlayInstances.length > 0 && (
-                        <div className={regularSessions.length === 0 ? 'lg:col-span-2' : ''}>
-                            <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 lg:hidden">
+                        <div>
+                            <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 md:hidden">
                                 Swipe sideways to browse open play sessions
                             </p>
-                            <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0">
-                                <div className="flex gap-6 lg:flex-col">
+                            <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:mx-0 md:overflow-visible md:px-0 md:pb-0">
+                                <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
                                     {openPlayInstances.map(({ session, config, playDate, isNextWeek }) =>
                                         renderOpenPlayCard(session, config, playDate, isNextWeek),
                                     )}
@@ -850,7 +865,7 @@ const BookingEngine = () => {
                     )}
 
                     {regularSessions.length > 0 && (
-                        <div className={`flex flex-col gap-6 ${openPlayInstances.length === 0 ? 'lg:col-span-2' : ''}`}>
+                        <div className="flex flex-col gap-6">
                             {regularSessions.map((session) => renderCard(session))}
                         </div>
                     )}

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
+import { isAllowedDukeEmail, DUKE_EMAIL_FORMAT_MESSAGE } from '../lib/memberNames';
 
 const Login = () => {
     const { signInWithEmail, signUpWithEmail, error } = useAuth();
@@ -40,8 +41,8 @@ const Login = () => {
         setResetSuccess(false);
 
         const emailToReset = resetEmail.trim();
-        if (!emailToReset.endsWith('@duke.edu')) {
-            setResetError('Only @duke.edu email addresses are allowed.');
+        if (!isAllowedDukeEmail(emailToReset)) {
+            setResetError(DUKE_EMAIL_FORMAT_MESSAGE);
             return;
         }
 
@@ -87,7 +88,9 @@ const Login = () => {
                                     Welcome back
                                 </h1>
                                 <p className="mb-6 text-sm text-gray-500 transition-colors dark:text-chalk/50">
-                                    Exclusive access for verified Duke members.
+                                    Exclusive access for verified Duke members. Use your{' '}
+                                    <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>{' '}
+                                    address — not your NetID alias.
                                 </p>
 
                                 {error && (
@@ -118,7 +121,7 @@ const Login = () => {
                                             required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="Email (@duke.edu)"
+                                            placeholder="firstname.lastname@duke.edu"
                                             className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                         />
                                     </div>
@@ -231,7 +234,7 @@ const Login = () => {
                                                 required
                                                 value={resetEmail}
                                                 onChange={(e) => setResetEmail(e.target.value)}
-                                                placeholder="Email (@duke.edu)"
+                                                placeholder="firstname.lastname@duke.edu"
                                                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                             />
                                         </div>

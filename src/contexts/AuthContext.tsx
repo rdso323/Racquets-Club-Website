@@ -10,7 +10,7 @@ import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { SPORTS } from '../lib/sports';
-import { formatMemberName } from '../lib/bookingActions';
+import { formatMemberNameFromEmail, isAllowedDukeEmail, DUKE_EMAIL_FORMAT_MESSAGE } from '../lib/memberNames';
 
 export interface TabPreference {
     id: string;
@@ -95,6 +95,8 @@ const DEFAULT_ADMIN_EMAILS = [
     'rohan@duke.edu',
     'admin@duke.edu',
     'rohan.dsouza@duke.edu',
+    'hirsh.sinaihede@duke.edu',
+    'kathryne.piazza@duke.edu',
     CLUB_ADMIN_EMAIL,
 ];
 
@@ -148,7 +150,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         doc(db, 'users', currentUser.uid),
                         {
                             email: currentUser.email || '',
-                            displayName: currentUser.displayName || formatMemberName(currentUser),
+                            displayName: currentUser.displayName || formatMemberNameFromEmail(currentUser.email),
                         },
                         { merge: true },
                     ).catch((err) => console.error('Error syncing user profile:', err));
@@ -240,8 +242,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signInWithEmail = async (email: string, pass: string) => {
         setError(null);
-        if (!email.endsWith('@duke.edu')) {
-            setError('Only @duke.edu email addresses are allowed.');
+        if (!isAllowedDukeEmail(email)) {
+            setError(DUKE_EMAIL_FORMAT_MESSAGE);
             return;
         }
 
@@ -265,8 +267,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signUpWithEmail = async (email: string, pass: string) => {
         setError(null);
-        if (!email.endsWith('@duke.edu')) {
-            setError('Only @duke.edu email addresses are allowed.');
+        if (!isAllowedDukeEmail(email)) {
+            setError(DUKE_EMAIL_FORMAT_MESSAGE);
             return;
         }
 

@@ -26,8 +26,17 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 
 ### Auth
 
-- **Duke-only** — `@duke.edu` email + verified inbox required to book
-- **Admin access** — Hardcoded allowlist plus optional `VITE_ADMIN_EMAILS` env override
+- **Duke-only** — `firstname.lastname@duke.edu` required (NetID-only aliases not supported); verified inbox required to book
+- **Court display names** — Members show as **First L.** on court diagrams (parsed from email)
+- **Admin access** — Email allowlist in [`AuthContext.tsx`](src/contexts/AuthContext.tsx) plus optional `VITE_ADMIN_EMAILS` env override
+
+#### Adding a new admin (co-officers)
+
+1. Add their `firstname.lastname@duke.edu` to `DEFAULT_ADMIN_EMAILS` in code (or `VITE_ADMIN_EMAILS` in Cloudflare).
+2. They **sign up** at `/login` with that same address and choose a password.
+3. They verify their Duke inbox — the **Admin** link appears automatically.
+
+No pre-created Firebase accounts needed. **Forgot Password** on the login page handles resets.
 
 ## Tech stack
 
@@ -88,7 +97,7 @@ src/
 │   └── system/         # TopBar, MenuOverlay, LiveWire ticker, Preloader
 ├── contexts/           # AuthContext, ThemeContext
 ├── hooks/              # useAdminData, useMemberDirectory, useTickerText
-├── lib/                # sessions, bookingActions, sports, recurringSchedules, helpFaq
+├── lib/                # sessions, bookingActions, memberNames, sports, helpFaq
 └── pages/              # Home, Help, Login, AdminDashboard
 ```
 

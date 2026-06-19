@@ -6,7 +6,11 @@ export interface FaqItem {
 export const HELP_FAQ: FaqItem[] = [
     {
         question: 'Who can sign up and book courts?',
-        answer: 'Booking is for verified Duke members. You need a @duke.edu email address and must verify your inbox before signing in. The home page shows availability, but you must be signed in to join a session or court.',
+        answer: 'Booking is for verified Duke members. Sign up with your firstname.lastname@duke.edu address (not your NetID alias), verify your inbox, then sign in. The home page shows availability, but you must be signed in to join a session or court.',
+    },
+    {
+        question: 'Which email should I use to sign in?',
+        answer: 'Use your firstname.lastname@duke.edu address (for example rohan.dsouza@duke.edu). NetID-only aliases like rjd51@duke.edu are not supported because they create a separate account in our system.',
     },
     {
         question: 'Which sports can I book?',
@@ -22,7 +26,7 @@ export const HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'When can I book next week’s sessions?',
-        answer: "Next week's sessions open for booking on Sunday at 5:00 PM (Eastern). Until then, next week's cards appear locked in the booking section.",
+        answer: "Next week opens for booking Sunday at 5:00 PM Eastern. Until then, next week's cards show a locked overlay on the courts so you can see the schedule but cannot join yet.",
     },
     {
         question: 'How does the waitlist work?',
@@ -38,7 +42,7 @@ export const HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'What are clinics / coaching sessions?',
-        answer: 'Clinics are coaching-style sessions with a flat capacity (no court diagram). Join with the session button. On larger screens, clinics appear beside open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
+        answer: 'Clinics are coaching-style sessions with a flat capacity (no court diagram). Join with the session button. They appear below open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
     },
     {
         question: 'Where are club events and news?',
@@ -50,6 +54,10 @@ export const HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'I am an admin — where do I manage sessions?',
-        answer: 'Use Admin in the top bar (approved accounts only). The Operations Deck has tabs for Ticker & Settings, Quarts & Sessions, Events, and Feedback. In Sessions you can create one-time or weekly recurring bookings (any weekday), search members when adding roster or waitlist entries, edit capacities, and remove a weekly schedule entirely with “Remove weekly schedule”.',
+        answer: 'Use Admin in the top bar (approved accounts only). New officers: create your account at Sign In with your firstname.lastname@duke.edu — admin access is granted automatically for approved emails after you verify your inbox. The Operations Deck has tabs for Ticker & Settings, Quarts & Sessions, Events, and Feedback.',
+    },
+    {
+        question: 'I am an admin — how do co-officers get access?',
+        answer: 'Ask an existing admin to add your firstname.lastname@duke.edu to the admin allowlist, then sign up on the login page with that same address and verify your email. Choose your own password during signup; use Forgot Password if you need to reset it later.',
     },
 ];

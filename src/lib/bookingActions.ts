@@ -19,6 +19,7 @@ import {
     parseAttendee,
     promoteFromWaitlist,
 } from './sessions';
+import { formatMemberNameFromEmail } from './memberNames';
 
 export interface BookingUserProfile {
     uid: string;
@@ -33,26 +34,15 @@ export interface PromotionResult {
 }
 
 export const formatMemberName = (user: User): string => {
-    if (user.displayName) {
-        const parts = user.displayName.split(' ');
+    if (user.displayName?.trim()) {
+        const parts = user.displayName.trim().split(/\s+/);
         if (parts.length > 1) {
             return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
         }
         return parts[0];
     }
 
-    if (user.email) {
-        const emailPart = user.email.split('@')[0];
-        const parts = emailPart.split('.');
-        if (parts.length > 1) {
-            const first = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-            const lastI = parts[1].charAt(0).toUpperCase() + '.';
-            return `${first} ${lastI}`;
-        }
-        return parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-    }
-
-    return 'Player';
+    return formatMemberNameFromEmail(user.email);
 };
 
 export const toBookingProfile = (user: User): BookingUserProfile => ({
