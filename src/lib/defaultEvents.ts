@@ -24,8 +24,8 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         title: 'Summer Kickoff Social',
         date: 'Friday, Sep 5',
         time: '6:30 PM',
-        location: 'Card Gym · Courts 2–5',
-        image: 'https://images.unsplash.com/photo-1554068865-524ce3be969a?auto=format&fit=crop&w=800&q=80',
+        location: 'Hi-Wire Brewing · Golden Belt, Durham',
+        image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=800&q=80',
         link: 'https://fuquaconnect.duke.edu/events',
     },
     {
