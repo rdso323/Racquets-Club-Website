@@ -4,11 +4,10 @@ import { useTickerText, tickerMarqueeDurationSec } from '../../hooks/useTickerTe
 interface LiveWireProps {
     /** When true, ticker slides out on scroll (hero entrance). */
     dismissOnScroll?: boolean;
-    flipped?: boolean;
     id?: string;
 }
 
-const LiveWire = ({ dismissOnScroll = false, flipped = false, id }: LiveWireProps) => {
+const LiveWire = ({ dismissOnScroll = false, id }: LiveWireProps) => {
     const tickerText = useTickerText();
     const durationSec = tickerMarqueeDurationSec(tickerText);
     const { scrollY } = useScroll();
@@ -29,7 +28,6 @@ const LiveWire = ({ dismissOnScroll = false, flipped = false, id }: LiveWireProp
                     className="inline-flex w-max animate-marquee whitespace-nowrap motion-reduce:animate-none hover:[animation-play-state:paused]"
                     style={{
                         animationDuration: `${durationSec}s`,
-                        animationDirection: flipped ? 'reverse' : 'normal',
                     }}
                 >
                     <span className={rowClassName}>

@@ -156,14 +156,14 @@ const Home = () => {
                 />
             </section>
 
-            <LiveWire id="primary-ticker" dismissOnScroll flipped />
+            <LiveWire id="primary-ticker" dismissOnScroll />
 
             <div className="scroll-rise px-5 pt-12 pb-10 md:px-10 md:pt-16 md:pb-12">
                 <BookingEngine />
             </div>
 
             <Transmissions />
-            <LiveWire flipped />
+            <LiveWire />
             <Footer />
         </motion.main>
     );
