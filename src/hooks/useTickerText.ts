@@ -29,9 +29,14 @@ const ensureFirestoreSubscription = () => {
 const stripTickerHtml = (html: string) =>
     html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ');
 
-/** Seconds for one marquee loop — scales with copy length. */
-export const tickerMarqueeDurationSec = (text: string): number =>
-    Math.max(75, Math.round(stripTickerHtml(text).length * 0.14));
+/** ~13 visible characters/sec — adult reading pace, slightly unhurried for scanning headlines. */
+const TICKER_CHARS_PER_SECOND = 13;
+
+/** Seconds for one marquee loop (one full pass of the ticker copy). */
+export const tickerMarqueeDurationSec = (text: string): number => {
+    const length = Math.max(stripTickerHtml(text).length, 48);
+    return Math.max(32, Math.round(length / TICKER_CHARS_PER_SECOND));
+};
 
 /** Single shared Firestore listener for all ticker instances on the page. */
 export const useTickerText = () => {
