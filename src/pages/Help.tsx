@@ -18,8 +18,9 @@ const Help = () => {
                     Booking & club FAQ
                 </h1>
                 <p className="mt-4 text-base leading-relaxed text-gray-600 dark:text-chalk/60">
-                    Quick answers about signing in, reserving courts, waitlists, and weekly schedules.
-                    This page is static — no extra cost to load and it works offline after your first visit.
+                    Quick answers about signing in, all five club sports, reserving courts, waitlists,
+                    weekly open play, and admin tools. This page is static — no extra cost to load and
+                    it works offline after your first visit.
                 </p>
 
                 <div className="mt-10 space-y-2">

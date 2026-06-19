@@ -1,71 +1,106 @@
-# Fuqua Racquets Club Central Hub 🎾
+# Fuqua Racquets Club
 
-A premium, high-performance web application designed for the Fuqua Racquets Club community. This platform serves as a central hub for booking courts, discovering social events, and staying updated with live racquet sports news.
+Central hub for the Fuqua Racquets Club community — book courts, browse events, read club news, and manage operations as an admin.
 
-![Fuqua Racquets Club Logo](public/new_logo.png)
+**Production:** [fuquaracquetsclub.com](https://www.fuquaracquetsclub.com)
 
-## ✨ Features
+## Features
 
-- **🏆 Dynamic Booking Engine**: Seamlessly book Tennis, Badminton, and Squash sessions. Includes logic for recurring slots, attendee management, and court-specific rules.
-- **📱 Progressive Web App (PWA)**: Installable on any mobile device or desktop for a native-app experience, complete with offline support and quick-launch icons.
-- **⚙️ Account-Linked Preferences**: Users can customize their booking experience by reordering or hiding sports tabs, with settings synced across all devices via Firestore.
-- **📰 Social Hub & News**: Live ticker with the latest sports results (e.g., Indian Wells, All England Open) and a curated feed of racquet sports news.
-- **🔐 Secure Duke Authentication**: Exclusive access for the Duke community with `@duke.edu` email verification requirements.
-- **👔 Admin Suite**: Dedicated dashboard for club admins to manage sessions and club events in real-time.
+### Members (public home + booking)
 
-## 🚀 Tech Stack
+- **Booking engine** — Open play and coaching clinics across **Tennis, Badminton, Squash, Pickleball, and Table Tennis**
+- **Court diagrams** — Join specific spots on a court; switch courts within a session; shared session waitlist with auto-promotion
+- **Weekly open play** — Built-in recurring schedules (e.g. Tennis Tue/Thu); next week unlocks **Sunday 5:00 PM ET**
+- **Club Wire ticker** — Live sports headlines from Firestore
+- **Events & news** — Social events carousel and news feed (up to four articles)
+- **Help** — Static FAQ at `/help` (booking, waitlists, sport tabs, admin pointers)
+- **Account preferences** — Reorder or hide sport tabs via the menu; synced to Firestore
+- **PWA** — Installable with offline shell support
 
-- **Frontend**: React 18, TypeScript, Vite
-- **Styling**: Tailwind CSS (Wimbledon-inspired custom theme)
-- **Icons**: Lucide React
-- **Backend/Database**: Firebase (Authentication & Firestore)
-- **Deployment**: Optimized for high-speed delivery with Vite and PWA integration.
+### Admins (`/admin`)
 
-## 🛠️ Getting Started
+- **Operations Deck** — Ticker, session visibility, live sessions, events, feedback inbox
+- **Sessions** — Create one-time or **weekly recurring** court bookings (any weekday); manage rosters and waitlists with **member search** (manual names still allowed)
+- **Events** — Create and edit club socials
+- **Settings** — Edit ticker copy and per-sport session status (active / hidden / cancelled)
+
+### Auth
+
+- **Duke-only** — `@duke.edu` email + verified inbox required to book
+- **Admin access** — Hardcoded allowlist plus optional `VITE_ADMIN_EMAILS` env override
+
+## Tech stack
+
+- **Frontend:** React 19, TypeScript, Vite 7, Tailwind CSS, Framer Motion, Lenis
+- **Backend:** Firebase Auth + Firestore (client-only; no separate API server)
+- **Deploy:** Cloudflare Workers + Assets via Wrangler (`dist/` SPA fallback)
+
+## Getting started
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
-- A Firebase project (for Auth and Firestore)
+- Node.js 18+
+- npm
+- A Firebase project with Auth (email/password) and Firestore
 
-### Installation
+### Install & run
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/[your-username]/racquets-club-website.git
-   cd racquets-club-website
-   ```
+```bash
+npm install
+# Create .env with Firebase keys — see Environment variables below
+npm run dev            # http://localhost:5173
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### Environment variables
 
-3. **Configure Environment Variables**
-   Create a `.env` file in the root directory (referencing `src/lib/firebase.ts` for needed keys):
-   ```env
-   VITE_FIREBASE_API_KEY=your_api_key
-   VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-   VITE_FIREBASE_PROJECT_ID=your_project_id
-   VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-   VITE_FIREBASE_MESSAGING_SENDER_ID=your_id
-   VITE_FIREBASE_APP_ID=your_app_id
-   ```
+Create `.env` in the project root (see `src/lib/firebase.ts`):
 
-4. **Launch Development Server**
-   ```bash
-   npm run dev
-   ```
+```env
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=          # optional
+VITE_ADMIN_EMAILS=admin@duke.edu       # optional, comma-separated
+```
 
-## 📂 Project Structure
+Placeholder Firebase values are enough to render the public home page in dev; live auth and Firestore need a real project.
 
-- `src/components/home`: Core features like the Booking Engine and Social Hub.
-- `src/components/layout`: Global navigation, Ticker, and Modals.
-- `src/contexts`: Authentication and Firestore state management.
-- `src/lib`: Firebase configuration and initialization.
-- `public/`: Static assets including the PWA manifest and club logos.
+### Scripts
 
-## ⚖️ License
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Vite dev server |
+| `npm run build` | Typecheck + production build → `dist/` |
+| `npm run preview` | Build + Wrangler local preview |
+| `npm run deploy` | Build + deploy to Cloudflare |
+| `npm run lint` | ESLint (repo may have pre-existing warnings) |
+
+## Project structure
+
+```
+src/
+├── components/
+│   ├── admin/          # Operations Deck modules, cards, modals
+│   ├── home/           # BookingEngine, Transmissions, Footer, CourtDiagram
+│   └── system/         # TopBar, MenuOverlay, LiveWire ticker, Preloader
+├── contexts/           # AuthContext, ThemeContext
+├── hooks/              # useAdminData, useMemberDirectory, useTickerText
+├── lib/                # sessions, bookingActions, sports, recurringSchedules, helpFaq
+└── pages/              # Home, Help, Login, AdminDashboard
+```
+
+Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users`, `settings` (ticker, sessionStatus, recurringSchedules).
+
+## Keeping docs current
+
+When shipping user-facing or admin behaviour changes, update:
+
+- **`src/lib/helpFaq.ts`** — member FAQ copy (rendered at `/help`)
+- **`README.md`** — features, env vars, deploy notes
+
+## License
 
 Built for the Fuqua Racquets Club. Internal use only.
