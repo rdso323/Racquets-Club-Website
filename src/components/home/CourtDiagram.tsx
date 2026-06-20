@@ -5,6 +5,7 @@ import type { Sport } from '../../lib/sports';
 export interface CourtSlot {
     name: string;
     email: string;
+    initials: string;
     tooltip: string;
     isMine: boolean;
 }
@@ -102,20 +103,6 @@ const CourtMarkings = ({ sport }: { sport: string }) => {
     );
 };
 
-const displayInitials = (name: string, email: string): string => {
-    const trimmed = name.trim();
-    if (trimmed) {
-        const parts = trimmed.split(/\s+/).filter(Boolean);
-        if (parts.length >= 2) {
-            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-        }
-        return trimmed.slice(0, 2).toUpperCase();
-    }
-    const local = email.split('@')[0]?.trim() ?? '';
-    if (local.length >= 2) return local.slice(0, 2).toUpperCase();
-    return local.slice(0, 1).toUpperCase() || '?';
-};
-
 const CourtDiagram = ({
     sport,
     courtName,
@@ -180,7 +167,7 @@ const CourtDiagram = ({
                                 slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
                             }`}
                         >
-                            {displayInitials(slot.name, slot.email)}
+                            {slot.initials}
                         </div>
                     );
                 })}
