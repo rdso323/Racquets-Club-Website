@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Queen's QF Friday: de Minaur vs Nakashima and home hope Arthur Fery vs Francisco Cerundolo headline eight quarter-finals on Andy Murray Arena — Day 4 saw qualifier Rinky Hijikata stun 2025 finalist Jiri Lehecka 4-6, 7-5, 7-6(7), 2024 champion Tommy Paul beat Botic van de Zandschulp 7-6(5), 6-3, and Davidovich Fokina topped Corentin Moutet 6-3, 6-4 • [BADMINTON] Macau Open quarter-final Friday at the East Asian Games Dome — the $370,000 Super 300 narrows to the last eight across all five disciplines with fourth seed Han Yue and a nine-strong Chinese contingent chasing weekend semi-finals • [SQUASH] PSA Tour Finals semi-finals LIVE in Paris: Orfi vs Sivasangari and El Hammamy vs Aboelkheir on the women's glass court; Asal vs Elias and Coll vs Zakaria in the men's semis at Centquatre — season-ending finals Saturday June 20 • [PICKLEBALL] Beijing Open QF day at China's National Tennis Center: quarter-finals across all divisions as PPA Tour Asia's $70,000 Olympic-venue debut reaches its business end ahead of Championship Sunday June 21 • [TABLE TENNIS] WTT Star Contender Ljubljana Day 4: Mizuki Oikawa shocks world No. 39 Jonathan Groth 3-2 in the R64; Manush Shah outlasts rising Chinese star Chen Junson in five; Kanak Jha (world No. 24) pushes through the main draw in Slovenia",
+  "tickerText": "[TENNIS] Queen's semi-final Saturday on Centre Court: Brandon Nakashima faces Francisco Cerundolo at 1:00pm after stunning top seed Alex de Minaur 7-5, 6-3; 2024 champion Tommy Paul meets Ugo Humbert at 2:00pm — Paul extended his Queen's unbeaten run to eight with a 6-3, 7-6(4) QF win over Davidovich Fokina while Humbert saved four match points in a two-day R16 epic before thrashing Rinky Hijikata 6-1, 6-2 • [SQUASH] PSA Tour Finals championship Saturday at Centquatre-Paris: Sivasangari Subramaniam — first Malaysian woman in a Tour Finals final since Nicol David — takes on world No. 1 Hania El Hammamy after stunning world champion Amina Orfi 8-11, 11-10, 11-8, 11-10; Paul Coll meets Diego Elias in the men's title decider after Coll beat Mohamad Zakaria and Elias advanced past Mostafa Asal • [BADMINTON] Macau Open semi-final Saturday at the East Asian Games Dome: Malaysia's Eogene Ewe stuns second seed Jason Teh 21-9, 21-19 for a maiden Super 300 semi-final; Ong/Carmen Ting, Low/Ng, Chia/Teo, and Hoo/Lai also through as the $370,000 BWF World Tour stop sets Sunday finals • [PICKLEBALL] Beijing Open semifinal Saturday at China's National Tennis Center — PPA Tour Asia's Olympic-venue debut moves into last-four matches across all pro divisions ahead of Championship Sunday medal matches June 21 on the Capital Diamond Court • [TABLE TENNIS] WTT Star Contender Ljubljana Day 5: Huang Youzheng/Chen Yi rally from 9-6 down to beat Togami/Odo 12-10 in mixed doubles QF and set a semi vs Lim/Shin; Lin Shidong falls 1-3 to Yukiya Uda; Britain's Tom Jarvis continues his run after a straight-games R64 upset of Anton Kallberg — main-draw action at Hala Tivoli through June 21",
   "newsItems": [
     {
-      "title": "Paris Semi-Finals Set at PSA Tour Finals",
-      "excerpt": "The PSA Squash Tour Finals reach semi-final Friday at Centquatre-Paris, with world champion Amina Orfi facing Malaysia's Sivasangari and Hania El Hammamy taking on Fayrouz Aboelkheir — who stunned Nour ElSherbini in a five-game quarter-final upset on Day 2. On the men's side, Mostafa Asal meets Diego Elias and Paul Coll squares off with debutant Mohamad Zakaria for spots in Saturday's $710,000 season finale.",
-      "date": "June 19, 2026",
+      "title": "Queen's Club Semi-Finals Set for Saturday",
+      "excerpt": "The HSBC Championships reach semi-final Saturday at The Queen's Club after a blockbuster Friday: Brandon Nakashima knocked out top seed Alex de Minaur 7-5, 6-3, Francisco Cerundolo edged British wildcard Arthur Fery in three sets, 2024 champion Tommy Paul beat Alejandro Davidovich Fokina 6-3, 7-6(4), and Ugo Humbert completed a double-duty day with a 6-1, 6-2 rout of Rinky Hijikata. Nakashima vs Cerundolo and Paul vs Humbert headline Centre Court from 1:00pm London time.",
+      "date": "June 20, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/queens-club-2026-results"
+    },
+    {
+      "title": "Sivasangari Makes History at PSA Tour Finals",
+      "excerpt": "Malaysia's Sivasangari Subramaniam stunned world champion Amina Orfi 8-11, 11-10, 11-8, 11-10 in Paris to become the first Malaysian woman in a PSA Tour Finals title match since Nicol David, and will face world No. 1 Hania El Hammamy — who beat Fayrouz Aboelkheir in the other women's semi. Paul Coll and Diego Elias advanced to the men's championship decider at Centquatre-Paris on season-ending finals day.",
+      "date": "June 20, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournament/psa-squash-tour-finals-2025-2026/"
+      "link": "https://psasquashtourfinals.com/news"
     },
     {
-      "title": "Macau Open Down to the Last Eight",
-      "excerpt": "The Sands China Ltd. Macau Open Super 300 shifted into quarter-finals on June 19 at the East Asian Games Dome, with the $370,000 BWF World Tour field narrowed to the last eight across men's and women's singles, doubles, and mixed doubles. Fourth seed Han Yue leads a deep Chinese contingent pushing toward weekend semi-finals at the season's 16th World Tour stop.",
-      "date": "June 19, 2026",
+      "title": "Eogene Ewe Sparks Malaysia's Macau Open Run",
+      "excerpt": "World No. 80 Eogene Ewe delivered the Macau Open's biggest upset on semi-final Saturday, beating second seed Jason Teh 21-9, 21-19 for his first BWF World Tour Super 300 semi-final at the East Asian Games Dome. Malaysia also advanced Ong Xin Yee/Carmen Ting in women's doubles, Low Hang Yee/Ng Eng Cheong and Chia Wei Jie/Teo Ee Yi in men's doubles, and Hoo Pang Ron/Lai Pei Jing in mixed doubles ahead of Sunday's $370,000 finals.",
+      "date": "June 20, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5214/sands-china-ltd-macau-open-2026/results/2026-06-19"
+      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5214/sands-china-ltd-macau-open-2026/results/2026-06-20"
     },
     {
-      "title": "Beijing Open Reaches Quarter-Finals",
-      "excerpt": "Day 3 of the Capital Securities Beijing Open brought quarter-final action across all events at China's National Tennis Center — the 2008 Olympic venue hosting PPA Tour Asia for the first time. A 384-player field is competing for $70,000 in pro prize money and 500 tour points, with semifinals Saturday and Championship Sunday set for June 21 on the Capital Diamond Court.",
-      "date": "June 19, 2026",
-      "category": "Pickleball",
-      "link": "https://www.ppatour-asia.com/tournament/2026/beijing-open/"
-    },
-    {
-      "title": "Ljubljana Main Draw Delivers Day 4 Upsets",
-      "excerpt": "WTT Star Contender Ljubljana produced headline results on Day 4 as Japan's Mizuki Oikawa stunned world No. 39 Jonathan Groth 3-2 in the men's singles round of 64 and India's Manush Shah outlasted rising Chinese star Chen Junson in five games. Kanak Jha, freshly ranked world No. 24 after his Skopje runner-up finish, continues his main-draw run in Slovenia through June 21.",
-      "date": "June 19, 2026",
+      "title": "Huang and Chen Rally Into Ljubljana Mixed Semis",
+      "excerpt": "China's Huang Youzheng and Chen Yi saved match point in a 3-2 mixed doubles quarter-final comeback over Japan's Shunsuke Togami and Miyuu Kihara at WTT Star Contender Ljubljana, winning the decider 12-10 after trailing 9-6. Chen contested five matches in one day as the $300,000 Star Contender reached its penultimate stage; second seed Lin Shidong was upset 1-3 by Yukiya Uda in men's singles round-of-32 play.",
+      "date": "June 20, 2026",
       "category": "Table Tennis",
       "link": "https://www.worldtabletennis.com/eventInfo?eventId=3201"
     }
