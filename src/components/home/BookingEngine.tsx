@@ -44,14 +44,6 @@ import { formatCourtDisplayName } from '../../lib/memberNames';
 const pendingClinicResets = new Set<string>();
 const pendingOpenPlayResets = new Set<string>();
 
-const BOOKING_CARD_CLASS =
-    'booking-card relative flex h-full w-[min(92vw,100%)] shrink-0 snap-start flex-col overflow-hidden md:w-full';
-
-const BOOKING_CARD_GRID = 'flex gap-6 md:grid md:grid-cols-2 md:gap-6';
-
-const courtsLayoutClass = (courtCount: number) =>
-    courtCount === 1 ? 'grid grid-cols-1' : 'grid grid-cols-1 gap-5 sm:grid-cols-2';
-
 const SessionLockOverlay = () => (
     <div className="absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/45 backdrop-blur-[1px] dark:bg-court-950/40">
         <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300/80 bg-white/90 px-5 py-4 text-center shadow-lg backdrop-blur-sm dark:border-amber-800/80 dark:bg-carbon/90">
@@ -491,7 +483,7 @@ const BookingEngine = () => {
         const sessionDisabled = isPast || isLocked || isCancelled || !user;
 
         return (
-            <div key={session.id} className={BOOKING_CARD_CLASS}>
+            <div key={session.id} className="booking-card relative flex h-full flex-col overflow-hidden">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -562,7 +554,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         {hasCourtBuckets ? (
-                            <div className={courtsLayoutClass(sessionCourts.length)}>
+                            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                                 {sessionCourts.map((courtName) => {
                                     const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
                                     const isCourtFull = courtAttendees.length >= maxPerCourt;
@@ -590,21 +582,18 @@ const BookingEngine = () => {
                                                   : `Join ${courtName}`;
 
                                     return (
-                                        <div key={courtName} className="w-full">
-                                            <CourtDiagram
-                                                sport={activeSport}
-                                                courtName={courtName}
-                                                slots={slots}
-                                                spotsLeft={maxPerCourt - courtAttendees.length}
-                                                disabled={disabled}
-                                                actionLabel={actionLabel}
-                                                userInThisCourt={userInThisCourt}
-                                                onAction={() => handleJoin(session, courtName)}
-                                                onJoinSlot={(slotIndex) =>
-                                                    handleJoin(session, courtName, slotIndex)
-                                                }
-                                            />
-                                        </div>
+                                        <CourtDiagram
+                                            key={courtName}
+                                            sport={activeSport}
+                                            courtName={courtName}
+                                            slots={slots}
+                                            spotsLeft={maxPerCourt - courtAttendees.length}
+                                            disabled={disabled}
+                                            actionLabel={actionLabel}
+                                            userInThisCourt={userInThisCourt}
+                                            onAction={() => handleJoin(session, courtName)}
+                                            onJoinSlot={(slotIndex) => handleJoin(session, courtName, slotIndex)}
+                                        />
                                     );
                                 })}
                             </div>
@@ -694,7 +683,7 @@ const BookingEngine = () => {
         const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
         return (
-            <div key={session.id} className={BOOKING_CARD_CLASS}>
+            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full md:shrink">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -760,7 +749,7 @@ const BookingEngine = () => {
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
-                        <div className={courtsLayoutClass(courtsForDay.length)}>
+                        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;
@@ -788,21 +777,18 @@ const BookingEngine = () => {
                                               : `Join ${courtName}`;
 
                                 return (
-                                    <div key={courtName} className="w-full">
-                                        <CourtDiagram
-                                            sport={activeSport}
-                                            courtName={courtName}
-                                            slots={slots}
-                                            spotsLeft={maxPerCourt - courtAttendees.length}
-                                            disabled={disabled}
-                                            actionLabel={actionLabel}
-                                            userInThisCourt={userInThisCourt}
-                                            onAction={() => handleJoin(session, courtName)}
-                                            onJoinSlot={(slotIndex) =>
-                                                handleJoin(session, courtName, slotIndex)
-                                            }
-                                        />
-                                    </div>
+                                    <CourtDiagram
+                                        key={courtName}
+                                        sport={activeSport}
+                                        courtName={courtName}
+                                        slots={slots}
+                                        spotsLeft={maxPerCourt - courtAttendees.length}
+                                        disabled={disabled}
+                                        actionLabel={actionLabel}
+                                        userInThisCourt={userInThisCourt}
+                                        onAction={() => handleJoin(session, courtName)}
+                                        onJoinSlot={(slotIndex) => handleJoin(session, courtName, slotIndex)}
+                                    />
                                 );
                             })}
                         </div>
@@ -943,7 +929,7 @@ const BookingEngine = () => {
                                 Swipe sideways to browse open play sessions
                             </p>
                             <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:mx-0 md:overflow-visible md:px-0 md:pb-0">
-                                <div className={BOOKING_CARD_GRID}>
+                                <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
                                     {openPlayInstances.map(({ session, config, playDate, isNextWeek }) =>
                                         renderOpenPlayCard(session, config, playDate, isNextWeek),
                                     )}
@@ -953,7 +939,7 @@ const BookingEngine = () => {
                     )}
 
                     {regularSessions.length > 0 && (
-                        <div className={BOOKING_CARD_GRID}>
+                        <div className="flex flex-col gap-6">
                             {regularSessions.map((session) => renderCard(session))}
                         </div>
                     )}

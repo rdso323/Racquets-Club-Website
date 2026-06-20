@@ -130,7 +130,7 @@ const CourtDiagram = ({
     const filled = slots.filter(Boolean).length;
 
     return (
-        <div className="flex w-full flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60">
+        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
@@ -142,7 +142,7 @@ const CourtDiagram = ({
                 </div>
             </div>
 
-            <div className="court-surface relative mx-auto aspect-[5/8] w-full overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
+            <div className="court-surface relative mx-auto aspect-[5/8] w-full max-w-[14rem] overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
                 <svg
                     viewBox="0 0 200 340"
                     className="absolute inset-0 h-full w-full text-emerald-800/45 dark:text-court-line/70"
