@@ -130,7 +130,7 @@ const CourtDiagram = ({
     const filled = slots.filter(Boolean).length;
 
     return (
-        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60">
+        <div className="flex w-full flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60">
             <div className="flex items-center justify-between">
                 <div>
                     <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
