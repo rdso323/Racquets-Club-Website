@@ -129,77 +129,97 @@ const CourtDiagram = ({
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
+    const actionButtonClass = `rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
+        userInThisCourt
+            ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
+            : disabled
+              ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+              : 'accent-bg text-court-950 hover:brightness-110'
+    }`;
+
+    const courtSurface = (
+        <div className="court-surface relative h-[11.2rem] w-[14rem] shrink-0 overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
+            <svg
+                viewBox="0 0 200 340"
+                className="absolute inset-0 h-full w-full text-emerald-800/45 dark:text-court-line/70"
+                aria-hidden
+            >
+                <CourtMarkings sport={sport} />
+            </svg>
+
+            {slots.map((slot, index) => {
+                const { x, y } = slotPosition(index, slots.length);
+                const style = { left: `${x}%`, top: `${y}%` };
+
+                if (!slot) {
+                    return (
+                        <button
+                            key={index}
+                            type="button"
+                            disabled={disabled}
+                            onClick={() => onJoinSlot(index)}
+                            style={style}
+                            className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                            title={`Join spot ${index + 1}`}
+                        >
+                            <Plus className="h-3.5 w-3.5" />
+                        </button>
+                    );
+                }
+
+                return (
+                    <div
+                        key={index}
+                        style={style}
+                        title={slot.tooltip}
+                        className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-semibold ${
+                            slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
+                        }`}
+                    >
+                        {displayInitials(slot.name, slot.email)}
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     return (
-        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60">
-            <div className="flex items-center justify-between">
+        <div className="w-full shrink-0 rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-chalk/10 dark:bg-court-900/60 md:w-auto">
+            <div className="mb-4 flex items-start justify-between gap-3 md:hidden">
                 <div>
                     <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
-                    <h4 className="font-display text-lg text-gray-900 dark:text-chalk">{courtName}</h4>
+                    <h4 className="font-display text-lg leading-tight text-gray-900 dark:text-chalk">{courtName}</h4>
                 </div>
                 <div className="text-right">
-                    <p className="text-sm font-semibold text-emerald-900 dark:accent-text">{filled}/{slots.length}</p>
+                    <p className="text-sm font-semibold text-emerald-900 dark:accent-text">
+                        {filled}/{slots.length}
+                    </p>
                     <p className="hud-label text-gray-400 dark:text-chalk/40">{spotsLeft} open</p>
                 </div>
             </div>
 
-            <div className="court-surface relative mx-auto aspect-[5/8] w-full max-w-[14rem] overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
-                <svg
-                    viewBox="0 0 200 340"
-                    className="absolute inset-0 h-full w-full text-emerald-800/45 dark:text-court-line/70"
-                    aria-hidden
-                >
-                    <CourtMarkings sport={sport} />
-                </svg>
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-start md:gap-5">
+                {courtSurface}
 
-                {slots.map((slot, index) => {
-                    const { x, y } = slotPosition(index, slots.length);
-                    const style = { left: `${x}%`, top: `${y}%` };
+                <div className="flex w-full min-w-0 flex-col gap-4 md:w-auto md:min-w-[10rem] md:max-w-[12rem]">
+                    <div className="hidden md:flex md:flex-col md:gap-1">
+                        <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
+                        <h4 className="font-display text-lg leading-tight text-gray-900 dark:text-chalk">{courtName}</h4>
+                        <p className="text-sm font-semibold text-emerald-900 dark:accent-text">
+                            {filled}/{slots.length} · {spotsLeft} open
+                        </p>
+                    </div>
 
-                    if (!slot) {
-                        return (
-                            <button
-                                key={index}
-                                type="button"
-                                disabled={disabled}
-                                onClick={() => onJoinSlot(index)}
-                                style={style}
-                                className="player-slot--open absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-xs disabled:cursor-not-allowed disabled:opacity-40"
-                                title={`Join spot ${index + 1}`}
-                            >
-                                <Plus className="h-3.5 w-3.5" />
-                            </button>
-                        );
-                    }
-
-                    return (
-                        <div
-                            key={index}
-                            style={style}
-                            title={slot.tooltip}
-                            className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-semibold ${
-                                slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
-                            }`}
-                        >
-                            {displayInitials(slot.name, slot.email)}
-                        </div>
-                    );
-                })}
+                    <button
+                        type="button"
+                        onClick={onAction}
+                        disabled={disabled}
+                        className={`w-full ${actionButtonClass}`}
+                    >
+                        {actionLabel}
+                    </button>
+                </div>
             </div>
-
-            <button
-                type="button"
-                onClick={onAction}
-                disabled={disabled}
-                className={`w-full rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
-                    userInThisCourt
-                        ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
-                        : disabled
-                          ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
-                          : 'accent-bg text-court-950 hover:brightness-110'
-                }`}
-            >
-                {actionLabel}
-            </button>
         </div>
     );
 };
