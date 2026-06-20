@@ -1,6 +1,6 @@
 import type { CourtSlot } from '../components/home/CourtDiagram';
 import { mapAttendeesToCourtSlots, parseAttendee } from './sessions';
-import { formatCourtDisplayName } from './memberNames';
+import { formatCourtDisplayName, formatCourtSlotInitials } from './memberNames';
 
 export const buildCourtSlots = (
     courtAttendees: string[],
@@ -15,6 +15,7 @@ export const buildCourtSlots = (
         return {
             name: formatCourtDisplayName(email, name),
             email,
+            initials: formatCourtSlotInitials(email, name),
             tooltip: email.includes('@') ? email : name,
             isMine,
         };

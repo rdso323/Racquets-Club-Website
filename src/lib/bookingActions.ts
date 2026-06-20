@@ -29,9 +29,14 @@ export interface BookingUserProfile {
 
 export interface PromotionResult {
     promoted: boolean;
+    promotedUid?: string;
     promotedName?: string;
     promotedCourt?: string;
 }
+
+export type JoinSessionResult =
+    | { action: 'joined' | 'switched' }
+    | { action: 'left'; promotion?: PromotionResult };
 
 export const formatMemberName = (user: User): string => {
     if (user.displayName?.trim()) {
@@ -56,6 +61,9 @@ const sessionSeedFields = (session: Session, activeSport?: string): Record<strin
     type: session.type,
     date: session.date,
     time: session.time,
+    ...(session.startTime ? { startTime: session.startTime } : {}),
+    ...(session.endTime ? { endTime: session.endTime } : {}),
+    ...(session.weekStartDate ? { weekStartDate: session.weekStartDate } : {}),
     maxAttendees: session.maxAttendees,
     sport: activeSport || session.sport,
     ...(session.courts?.length
@@ -80,7 +88,7 @@ export const joinSessionCourt = async (
     courtName: string | undefined,
     activeSport?: string,
     slotIndex?: number,
-): Promise<'joined' | 'left' | 'switched'> => {
+): Promise<JoinSessionResult> => {
     const sessionRef = doc(db, 'sessions', session.id);
 
     const snap = await runTransaction(db, async (tx) => {
@@ -114,13 +122,14 @@ export const joinSessionCourt = async (
                 attendees = attendees.filter((a) => a !== existingEntry);
                 attendees.push(attendeeString);
                 tx.set(sessionRef, { ...sessionSeedFields(data, activeSport), attendees, waitlist }, { merge: true });
-                return 'switched' as const;
+                return { action: 'switched' as const };
             }
 
             attendees = attendees.filter((a) => a !== existingEntry);
             const freedCourt = parseAttendee(existingEntry).court || courtName;
             let nextAttendees = attendees;
             let nextWaitlist = waitlist;
+            let promotion: PromotionResult | undefined;
 
             if (waitlist.length > 0) {
                 const promoted = promoteFromWaitlist(
@@ -131,6 +140,14 @@ export const joinSessionCourt = async (
                 );
                 nextAttendees = promoted.attendees;
                 nextWaitlist = promoted.waitlist;
+                if (promoted.promotedEntry) {
+                    promotion = {
+                        promoted: true,
+                        promotedUid: promoted.promotedEntry.uid,
+                        promotedName: promoted.promotedEntry.name,
+                        promotedCourt: freedCourt || undefined,
+                    };
+                }
             }
 
             tx.set(
@@ -138,7 +155,7 @@ export const joinSessionCourt = async (
                 { ...sessionSeedFields(data, activeSport), attendees: nextAttendees, waitlist: nextWaitlist },
                 { merge: true },
             );
-            return 'left' as const;
+            return promotion ? { action: 'left' as const, promotion } : { action: 'left' as const };
         }
 
         if (waitlistEntry) {
@@ -172,7 +189,7 @@ export const joinSessionCourt = async (
         }
 
         tx.set(sessionRef, { ...sessionSeedFields(data, activeSport), attendees, waitlist }, { merge: true });
-        return 'joined' as const;
+        return { action: 'joined' as const };
     });
 
     return snap;
@@ -289,6 +306,7 @@ export const removeAttendeeWithPromotion = async (
             if (result.promotedEntry) {
                 promoted = {
                     promoted: true,
+                    promotedUid: result.promotedEntry.uid,
                     promotedName: result.promotedEntry.name,
                     promotedCourt: freedCourt || undefined,
                 };

@@ -1,5 +1,6 @@
 import {
     Calendar,
+    Archive,
     MessageSquare,
     Plus,
     Sliders,
@@ -13,6 +14,7 @@ interface AdminSidebarProps {
     onQuickSession: () => void;
     sessionCount: number;
     eventCount: number;
+    archiveCount: number;
     feedbackCount: number;
 }
 
@@ -29,6 +31,7 @@ const AdminSidebar = ({
     onQuickSession,
     sessionCount,
     eventCount,
+    archiveCount,
     feedbackCount,
 }: AdminSidebarProps) => (
     <aside className="glass-deep flex w-full shrink-0 flex-col gap-2 p-4 lg:w-64">
@@ -57,6 +60,16 @@ const AdminSidebar = ({
             {eventCount > 0 && (
                 <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600 dark:bg-court-950 dark:text-gray-300">
                     {eventCount}
+                </span>
+            )}
+        </button>
+
+        <button onClick={() => onTabChange('archive')} className={navButtonClass(activeTab === 'archive')}>
+            <Archive className="h-4 w-4" />
+            Archive
+            {archiveCount > 0 && (
+                <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600 dark:bg-court-950 dark:text-gray-300">
+                    {archiveCount}
                 </span>
             )}
         </button>

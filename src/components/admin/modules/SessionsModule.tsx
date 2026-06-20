@@ -32,6 +32,11 @@ import {
     findUserWaitlistEntry,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
+import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
+import { notifyWaitlistPromotion } from '../../../lib/waitlistNotifications';
+import { useAuth } from '../../../contexts/AuthContext';
+import DatePickerField from '../fields/DatePickerField';
+import TimeRangePicker from '../fields/TimeRangePicker';
 import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule } from '../../../lib/recurringSchedules';
 import { useMemberDirectory } from '../../../hooks/useMemberDirectory';
 import type { MemberDraft } from '../MemberLookupInput';
@@ -47,16 +52,6 @@ interface SessionsModuleProps {
 }
 
 type ScheduleMode = 'one-time' | 'recurring';
-
-const formatSelectedDate = (dateStr: string) => {
-    if (!dateStr) return '';
-    const parts = dateStr.split('-');
-    if (parts.length !== 3) return '';
-    const [year, month, day] = parts.map(Number);
-    if (isNaN(year) || isNaN(month) || isNaN(day)) return '';
-    const dateObj = new Date(year, month - 1, day);
-    return dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-};
 
 const isEditableCustomCourtSession = (session: Session) =>
     session.type === 'court' &&
@@ -76,6 +71,7 @@ const resolveMemberIdentity = (draft: MemberDraft) => {
 
 const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
     ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [], disabledBuiltinSchedules = [] }, ref) => {
+        const { user } = useAuth();
         const members = useMemberDirectory(sessionsList);
         const [sessionsSportFilter, setSessionsSportFilter] = useState(sportFilterProp);
         const [scheduleMode, setScheduleMode] = useState<ScheduleMode>('one-time');
@@ -86,6 +82,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             type: 'court' as SessionType,
             date: '',
             time: '',
+            startTime: '18:30',
+            endTime: '20:00',
             maxAttendees: getDefaultMaxAttendees('court'),
             maxWaitlistSize: DEFAULT_WAITLIST_PER_COURT * 2,
             coach: '',
@@ -146,7 +144,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         const handleAddSession = async (e: React.FormEvent) => {
             e.preventDefault();
-            if (!newSession.title || !newSession.time) {
+            if (!newSession.title || !newSession.startTime) {
                 setNewSessionMsg('Please fill in all required fields.');
                 return;
             }
@@ -187,12 +185,13 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     });
                     setNewSessionMsg('Weekly recurring court schedule created!');
                 } else {
+                    const timeFields = buildTimeFields(newSession.startTime, newSession.endTime || undefined);
                     const sessionData: Record<string, unknown> = {
                         title: newSession.title,
                         sport: newSession.sport,
                         type: newSession.type,
                         date: newSession.date,
-                        time: newSession.time,
+                        ...timeFields,
                         maxAttendees: Number(newSession.maxAttendees),
                         attendees: [],
                         coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : null,
@@ -221,6 +220,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     type: 'court',
                     date: '',
                     time: '',
+                    startTime: '18:30',
+                    endTime: '20:00',
                     maxAttendees: getDefaultMaxAttendees('court'),
                     coach: '',
                     courtCount: 2,
@@ -253,16 +254,24 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                           )
                         : editingSession.courts;
 
+                const timeFields = buildTimeFields(
+                    editingSession.startTime || '18:30',
+                    editingSession.endTime,
+                );
                 const updateData: Record<string, unknown> = {
                     title: editingSession.title,
                     sport: editingSession.sport,
                     type: editingSession.type,
                     date: editingSession.date,
-                    time: editingSession.time,
+                    ...timeFields,
                     maxAttendees: Number(editingSession.maxAttendees),
                     maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
                     coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
                 };
+
+                if (editingSession.weekStartDate) {
+                    updateData.weekStartDate = editingSession.weekStartDate;
+                }
 
                 if (editingSession.type === 'court') {
                     if (isEditableCustomCourtSession(editingSession) && courts && courts.length > 0) {
@@ -438,9 +447,22 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             if (!window.confirm(`Are you sure you want to remove ${name} from this session?`)) return;
             try {
                 const result = await removeAttendeeWithPromotion(session, attendeeStr);
-                if (result.promoted) {
+                if (result.promoted && result.promotedUid) {
                     const courtNote = result.promotedCourt ? ` on ${result.promotedCourt}` : '';
                     window.alert(`${result.promotedName} was promoted from the waitlist${courtNote}.`);
+                    try {
+                        await notifyWaitlistPromotion({
+                            promotedUid: result.promotedUid,
+                            promotedName: result.promotedName || 'Member',
+                            promotedCourt: result.promotedCourt,
+                            sessionId: session.id,
+                            sessionTitle: session.title,
+                            sessionDate: session.date,
+                            actorUid: user?.uid,
+                        });
+                    } catch (notifyErr) {
+                        console.warn('Could not write waitlist promotion notification:', notifyErr);
+                    }
                 }
             } catch (err) {
                 console.error('Error removing attendee: ', err);
@@ -723,69 +745,47 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                                        <div>
-                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                                Pick Date
-                                            </label>
-                                            <input
-                                                type="date"
-                                                required
-                                                value={sessionDateInput}
-                                                onChange={(e) => {
-                                                    setSessionDateInput(e.target.value);
-                                                    setNewSession((prev) => ({
-                                                        ...prev,
-                                                        date: formatSelectedDate(e.target.value),
-                                                    }));
-                                                }}
-                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-500 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-gray-300"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                                Formatted Date (Read-only)
-                                            </label>
-                                            <input
-                                                type="text"
-                                                readOnly
-                                                placeholder="e.g. Tuesday, Jun 9"
-                                                value={newSession.date}
-                                                className="w-full cursor-default rounded-lg border border-gray-200 bg-gray-50 p-2.5 text-sm text-gray-500 outline-none dark:border-gray-800 dark:bg-black/20 dark:text-gray-400"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                                Time Slot (Text input)
-                                            </label>
-                                            <input
-                                                type="text"
-                                                required
-                                                placeholder="e.g. 9:00 PM - 11:00 PM"
-                                                value={newSession.time}
-                                                onChange={(e) =>
-                                                    setNewSession({ ...newSession, time: e.target.value })
-                                                }
-                                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                                            />
-                                        </div>
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                        <DatePickerField
+                                            label="Pick Date"
+                                            required
+                                            value={sessionDateInput}
+                                            onChange={(iso) => {
+                                                setSessionDateInput(iso);
+                                                setNewSession((prev) => ({
+                                                    ...prev,
+                                                    date: buildDateFieldsFromIso(iso).date,
+                                                }));
+                                            }}
+                                        />
+                                        <TimeRangePicker
+                                            startTime={newSession.startTime}
+                                            endTime={newSession.endTime}
+                                            onChange={(fields) =>
+                                                setNewSession({
+                                                    ...newSession,
+                                                    startTime: fields.startTime,
+                                                    endTime: fields.endTime || '',
+                                                    time: fields.time,
+                                                })
+                                            }
+                                        />
                                     </div>
                                 )}
 
                                 {scheduleMode === 'recurring' && (
-                                    <div>
-                                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                            Time Slot (Text input)
-                                        </label>
-                                        <input
-                                            type="text"
-                                            required
-                                            placeholder="e.g. 9:00 PM - 11:00 PM"
-                                            value={newSession.time}
-                                            onChange={(e) => setNewSession({ ...newSession, time: e.target.value })}
-                                            className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                                        />
-                                    </div>
+                                    <TimeRangePicker
+                                        startTime={newSession.startTime}
+                                        endTime={newSession.endTime}
+                                        onChange={(fields) =>
+                                            setNewSession({
+                                                ...newSession,
+                                                startTime: fields.startTime,
+                                                endTime: fields.endTime || '',
+                                                time: fields.time,
+                                            })
+                                        }
+                                    />
                                 )}
                                 {newSession.type === 'court' && (
                                     <div className="space-y-3 rounded-xl border border-gray-200 bg-white/50 p-4 dark:border-gray-800 dark:bg-court-950/30">

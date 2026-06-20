@@ -1,4 +1,7 @@
 import { X } from 'lucide-react';
+import { buildDateFieldsFromIso } from '../../../lib/dates';
+import DatePickerField from '../fields/DatePickerField';
+import TimeRangePicker from '../fields/TimeRangePicker';
 import type { AdminEvent } from '../types';
 
 interface EditEventModalProps {
@@ -32,28 +35,31 @@ const EditEventModal = ({ event, onEventChange, onClose, onSubmit }: EditEventMo
                         className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                     />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Date</label>
-                        <input
-                            type="text"
-                            required
-                            value={event.date}
-                            onChange={(e) => onEventChange({ ...event, date: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                        />
-                    </div>
-                    <div>
-                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Time</label>
-                        <input
-                            type="text"
-                            required
-                            value={event.time}
-                            onChange={(e) => onEventChange({ ...event, time: e.target.value })}
-                            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                        />
-                    </div>
-                </div>
+                <DatePickerField
+                    label="Event Date"
+                    required
+                    value={event.dateISO || ''}
+                    onChange={(dateISO) =>
+                        onEventChange({
+                            ...event,
+                            dateISO,
+                            date: buildDateFieldsFromIso(dateISO).date,
+                        })
+                    }
+                />
+                <TimeRangePicker
+                    startTime={event.startTime}
+                    endTime={event.endTime}
+                    legacyTime={event.time}
+                    onChange={(fields) =>
+                        onEventChange({
+                            ...event,
+                            startTime: fields.startTime,
+                            endTime: fields.endTime,
+                            time: fields.time,
+                        })
+                    }
+                />
                 <div>
                     <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Location</label>
                     <input

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { maintainEventsCollection } from '../lib/events';
+import { maintainArchivedCollections } from '../lib/archive';
 import { SESSION_STATUS_CATEGORIES, type AdminRecurringSchedule } from '../lib/sports';
 import type { Session, SessionStatus } from '../lib/sessions';
 import type { AdminEvent, FeedbackItem, SessionStatusMap } from '../components/admin/types';
@@ -100,7 +100,6 @@ export const useAdminData = (isAdmin = false) => {
                         id: docSnap.id,
                         ...docSnap.data(),
                     })) as AdminEvent[];
-                    void maintainEventsCollection(events, isAdmin);
                     setEventsList(events);
                 },
                 (err) => console.error('Events subscription error', err),
@@ -126,6 +125,11 @@ export const useAdminData = (isAdmin = false) => {
             unsubs.forEach((unsub) => unsub());
         };
     }, [isAdmin]);
+
+    useEffect(() => {
+        if (!isAdmin) return;
+        void maintainArchivedCollections(eventsList, sessionsList, isAdmin);
+    }, [eventsList, sessionsList, isAdmin]);
 
     const updateStatus = (id: string, status: SessionStatus) => {
         setSessionStatuses((prev) => ({ ...prev, [id]: status }));

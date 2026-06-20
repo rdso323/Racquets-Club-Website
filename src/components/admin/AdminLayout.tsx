@@ -11,6 +11,7 @@ interface AdminLayoutProps {
     userEmail?: string | null;
     sessionCount: number;
     eventCount: number;
+    archiveCount: number;
     feedbackCount: number;
     tickerConfigured: boolean;
     children: ReactNode;
@@ -23,6 +24,7 @@ const AdminLayout = ({
     userEmail,
     sessionCount,
     eventCount,
+    archiveCount,
     feedbackCount,
     tickerConfigured,
     children,
@@ -65,6 +67,7 @@ const AdminLayout = ({
                 onQuickSession={onQuickSession}
                 sessionCount={sessionCount}
                 eventCount={eventCount}
+                archiveCount={archiveCount}
                 feedbackCount={feedbackCount}
             />
             <main className="glass-deep min-h-[600px] w-full flex-grow p-6 transition-colors duration-300 md:p-8">

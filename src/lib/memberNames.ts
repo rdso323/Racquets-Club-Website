@@ -43,6 +43,31 @@ export const formatCourtDisplayName = (email: string, fallbackName?: string): st
     return 'Player';
 };
 
+/** Two-letter badge on court diagrams — first + last initial from Duke email when possible. */
+export const formatCourtSlotInitials = (email: string, storedName?: string): string => {
+    const lower = email.trim().toLowerCase();
+
+    if (lower.endsWith('@duke.edu')) {
+        const parts = lower.split('@')[0].split('.').filter(Boolean);
+        if (parts.length >= 2) {
+            return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        }
+    }
+
+    const display = formatCourtDisplayName(email, storedName);
+    const tokens = display.split(/\s+/).filter(Boolean);
+    if (tokens.length >= 2) {
+        const last = tokens[tokens.length - 1].replace(/\./g, '');
+        return (tokens[0].charAt(0) + last.charAt(0)).toUpperCase();
+    }
+
+    if (tokens.length === 1 && tokens[0] !== 'Player' && tokens[0].length >= 2) {
+        return tokens[0].slice(0, 2).toUpperCase();
+    }
+
+    return '?';
+};
+
 export const formatMemberNameFromEmail = (email: string | null | undefined): string => {
     if (!email) return 'Player';
     return formatCourtDisplayName(email);

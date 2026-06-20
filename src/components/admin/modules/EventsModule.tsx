@@ -2,7 +2,16 @@ import { useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { Plus, Sparkles } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { EVENT_RETENTION_DAYS, partitionEventsByPast } from '../../../lib/events';
+import { filterUpcomingEvents } from '../../../lib/events';
+import { ARCHIVE_RETENTION_DAYS } from '../../../lib/archive';
+import {
+    buildDateFieldsFromIso,
+    buildTimeFields,
+    resolveEventDateISO,
+    resolveEventTimes,
+} from '../../../lib/dates';
+import DatePickerField from '../fields/DatePickerField';
+import TimeRangePicker from '../fields/TimeRangePicker';
 import type { AdminEvent } from '../types';
 import EventOpsCard from '../cards/EventOpsCard';
 import EditEventModal from '../modals/EditEventModal';
@@ -11,27 +20,51 @@ interface EventsModuleProps {
     eventsList: AdminEvent[];
 }
 
+const emptyEventForm = () => ({
+    title: '',
+    dateISO: '',
+    date: '',
+    startTime: '18:30',
+    endTime: '',
+    time: '6:30 PM',
+    location: '',
+    image: '',
+    link: '',
+});
+
 const EventsModule = ({ eventsList }: EventsModuleProps) => {
-    const [newEvent, setNewEvent] = useState({
-        title: '',
-        date: '',
-        time: '',
-        location: '',
-        image: '',
-        link: '',
-    });
+    const [newEvent, setNewEvent] = useState(emptyEventForm());
     const [savingEvent, setSavingEvent] = useState(false);
     const [eventMessage, setEventMessage] = useState('');
     const [editingEvent, setEditingEvent] = useState<AdminEvent | null>(null);
 
+    const upcomingEvents = filterUpcomingEvents(eventsList);
+
+    const buildEventPayload = (fields: typeof newEvent) => {
+        const dateFields = buildDateFieldsFromIso(fields.dateISO);
+        const timeFields = buildTimeFields(fields.startTime, fields.endTime || undefined);
+        return {
+            title: fields.title,
+            ...dateFields,
+            ...timeFields,
+            location: fields.location,
+            image: fields.image,
+            link: fields.link || '',
+        };
+    };
+
     const handleAddEvent = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!newEvent.dateISO) {
+            setEventMessage('Please pick a date.');
+            return;
+        }
         setSavingEvent(true);
         setEventMessage('');
         try {
-            await addDoc(collection(db, 'events'), newEvent);
+            await addDoc(collection(db, 'events'), buildEventPayload(newEvent));
             setEventMessage('Event added successfully!');
-            setNewEvent({ title: '', date: '', time: '', location: '', image: '', link: '' });
+            setNewEvent(emptyEventForm());
             window.setTimeout(() => setEventMessage(''), 3000);
         } catch (error) {
             console.error('Error adding event', error);
@@ -43,14 +76,20 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
 
     const handleSaveEventEdit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!editingEvent) return;
+        if (!editingEvent?.dateISO) return;
         try {
+            const dateFields = buildDateFieldsFromIso(editingEvent.dateISO);
+            const times = resolveEventTimes(editingEvent);
+            const timeFields = times
+                ? buildTimeFields(times.startTime, times.endTime)
+                : { startTime: editingEvent.startTime || '18:30', time: editingEvent.time };
+
             await setDoc(
                 doc(db, 'events', editingEvent.id),
                 {
                     title: editingEvent.title,
-                    date: editingEvent.date,
-                    time: editingEvent.time,
+                    ...dateFields,
+                    ...timeFields,
                     location: editingEvent.location,
                     image: editingEvent.image,
                     link: editingEvent.link || '',
@@ -74,8 +113,6 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         }
     };
 
-    const { upcoming: upcomingEvents, past: pastEvents } = partitionEventsByPast(eventsList);
-
     return (
         <div className="animate-fadeIn space-y-8">
             <div>
@@ -84,51 +121,32 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                 </h2>
                 <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
                     Create and edit cards for the home page carousel. Past events are hidden from members
-                    automatically and removed from Firestore after {EVENT_RETENTION_DAYS} days.
+                    automatically and appear in the Archive tab for {ARCHIVE_RETENTION_DAYS} days before
+                    auto-deletion.
                 </p>
 
-                {eventsList.length === 0 ? (
+                {upcomingEvents.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-gray-200 py-12 text-center text-gray-400 dark:border-gray-800 dark:text-gray-500">
                         <Sparkles className="mx-auto mb-2 h-8 w-8 opacity-50" />
-                        <p className="text-sm">No events in Firestore yet. Add one below, or the site shows built-in defaults until you do.</p>
+                        <p className="text-sm">
+                            No upcoming events in Firestore. Built-in defaults show on the home page until you add one.
+                        </p>
                     </div>
                 ) : (
-                    <div className="space-y-8">
-                        {upcomingEvents.length === 0 ? (
-                            <div className="rounded-2xl border border-dashed border-gray-200 py-10 text-center text-gray-400 dark:border-gray-800 dark:text-gray-500">
-                                <p className="text-sm">No upcoming events in Firestore. Built-in defaults show on the home page until you add one.</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                                {upcomingEvents.map((event) => (
-                                    <EventOpsCard
-                                        key={event.id}
-                                        event={event}
-                                        onEdit={() => setEditingEvent(event)}
-                                        onDelete={() => handleDeleteEvent(event.id)}
-                                    />
-                                ))}
-                            </div>
-                        )}
-
-                        {pastEvents.length > 0 && (
-                            <div>
-                                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400 dark:text-chalk/40">
-                                    Archived (removed automatically after {EVENT_RETENTION_DAYS} days)
-                                </h3>
-                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                                    {pastEvents.map((event) => (
-                                        <EventOpsCard
-                                            key={event.id}
-                                            event={event}
-                                            isPast
-                                            onEdit={() => setEditingEvent(event)}
-                                            onDelete={() => handleDeleteEvent(event.id)}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                        {upcomingEvents.map((event) => (
+                            <EventOpsCard
+                                key={event.id}
+                                event={event}
+                                onEdit={() =>
+                                    setEditingEvent({
+                                        ...event,
+                                        dateISO: resolveEventDateISO(event) || event.dateISO || '',
+                                    })
+                                }
+                                onDelete={() => handleDeleteEvent(event.id)}
+                            />
+                        ))}
                     </div>
                 )}
             </div>
@@ -160,35 +178,33 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                                 placeholder="e.g. Annual Squash Championship Match"
                             />
                         </div>
-                        <div>
-                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                Date String
-                            </label>
-                            <input
-                                type="text"
-                                required
-                                value={newEvent.date}
-                                onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
-                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                                placeholder="e.g. October 14"
-                            />
-                        </div>
+                        <DatePickerField
+                            label="Event Date"
+                            required
+                            value={newEvent.dateISO}
+                            onChange={(dateISO) =>
+                                setNewEvent({
+                                    ...newEvent,
+                                    dateISO,
+                                    date: buildDateFieldsFromIso(dateISO).date,
+                                })
+                            }
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                        <div>
-                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                Time Slot
-                            </label>
-                            <input
-                                type="text"
-                                required
-                                value={newEvent.time}
-                                onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
-                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                                placeholder="e.g. 9:00 AM EST"
-                            />
-                        </div>
+                        <TimeRangePicker
+                            startTime={newEvent.startTime}
+                            endTime={newEvent.endTime}
+                            onChange={(fields) =>
+                                setNewEvent({
+                                    ...newEvent,
+                                    startTime: fields.startTime,
+                                    endTime: fields.endTime || '',
+                                    time: fields.time,
+                                })
+                            }
+                        />
                         <div>
                             <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                 Location

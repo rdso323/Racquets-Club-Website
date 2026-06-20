@@ -7,6 +7,7 @@ import { Calendar, ExternalLink } from 'lucide-react';
 import { sectionHud } from '../../lib/siteNav';
 import { resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
 import { maintainEventsCollection } from '../../lib/events';
+import { maintainSessionsCollection } from '../../lib/archive';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface Event extends ClubEvent {}
@@ -72,6 +73,16 @@ const Transmissions = () => {
             setEvents(resolveDisplayEvents(fbEvents));
         });
 
+        const unsubSessions = isAdmin
+            ? onSnapshot(collection(db, 'sessions'), (snapshot) => {
+                  const fbSessions = snapshot.docs.map((d) => ({
+                      id: d.id,
+                      ...d.data(),
+                  })) as import('../../lib/sessions').Session[];
+                  void maintainSessionsCollection(fbSessions, isAdmin);
+              })
+            : () => {};
+
         const unsubNews = onSnapshot(collection(db, 'news'), (snapshot) => {
             const fbNews = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as NewsItem));
             const source = fbNews.length > 0 ? fbNews : MOCK_NEWS;
@@ -80,6 +91,7 @@ const Transmissions = () => {
 
         return () => {
             unsubEvents();
+            unsubSessions();
             unsubNews();
         };
     }, [isAdmin]);
