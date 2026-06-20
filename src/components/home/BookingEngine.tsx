@@ -483,7 +483,7 @@ const BookingEngine = () => {
         const sessionDisabled = isPast || isLocked || isCancelled || !user;
 
         return (
-            <div key={session.id} className="booking-card relative flex h-full flex-col overflow-hidden">
+            <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
                 {isCancelled && (
                     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
                         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
@@ -554,7 +554,13 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         {hasCourtBuckets ? (
-                            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                            <div
+                                className={
+                                    sessionCourts.length === 1
+                                        ? 'grid grid-cols-1 gap-5'
+                                        : 'grid grid-cols-1 gap-5 lg:grid-cols-2'
+                                }
+                            >
                                 {sessionCourts.map((courtName) => {
                                     const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
                                     const isCourtFull = courtAttendees.length >= maxPerCourt;
@@ -939,7 +945,7 @@ const BookingEngine = () => {
                     )}
 
                     {regularSessions.length > 0 && (
-                        <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
                             {regularSessions.map((session) => renderCard(session))}
                         </div>
                     )}
