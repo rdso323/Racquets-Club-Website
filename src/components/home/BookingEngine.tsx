@@ -1,8 +1,8 @@
 import { useState, useEffect, type CSSProperties } from 'react';
-import { collection, onSnapshot, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc, getDoc, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, CalendarDays, Rocket, AlertTriangle, Lock } from 'lucide-react';
+import { Users, CalendarDays, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig, type AdminRecurringSchedule } from '../../lib/sports';
 import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
@@ -12,6 +12,7 @@ import {
     leaveWaitlist,
     toBookingProfile,
 } from '../../lib/bookingActions';
+import { dismissNotification, notifyWaitlistPromotion, type WaitlistPromotionNotification } from '../../lib/waitlistNotifications';
 import {
     type Session,
     type SessionStatus,
@@ -148,6 +149,30 @@ const BookingEngine = () => {
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
     const [displayTabs, setDisplayTabs] = useState<string[]>([]);
     const [bookingBusy, setBookingBusy] = useState<string | null>(null);
+    const [promotionAlerts, setPromotionAlerts] = useState<
+        Array<{ id: string } & WaitlistPromotionNotification>
+    >([]);
+
+    useEffect(() => {
+        if (!user) {
+            setPromotionAlerts([]);
+            return;
+        }
+
+        const notificationsRef = collection(db, 'users', user.uid, 'notifications');
+        const unreadQuery = query(notificationsRef, where('read', '==', false));
+
+        const unsub = onSnapshot(unreadQuery, (snapshot) => {
+            const alerts = snapshot.docs
+                .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() } as { id: string } & WaitlistPromotionNotification))
+                .filter((item) => item.type === 'waitlist_promoted');
+            setPromotionAlerts(alerts);
+        }, (err) => {
+            console.warn('Could not load promotion notifications:', err);
+        });
+
+        return () => unsub();
+    }, [user]);
 
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
@@ -283,10 +308,24 @@ const BookingEngine = () => {
         try {
             const result = await joinSessionCourt(sessionToJoin, profile, courtName, activeSport, slotIndex);
 
-            if (result === 'joined' && window.confirm('Successfully joined! Would you like to download a calendar invite?')) {
+            if (result.action === 'joined' && window.confirm('Successfully joined! Would you like to download a calendar invite?')) {
                 createICSFile(sessionToJoin, courtName);
-            } else if (result === 'switched' && window.confirm('Successfully switched courts! Would you like to download a calendar invite?')) {
+            } else if (result.action === 'switched' && window.confirm('Successfully switched courts! Would you like to download a calendar invite?')) {
                 createICSFile(sessionToJoin, courtName);
+            } else if (result.action === 'left' && result.promotion?.promoted && result.promotion.promotedUid) {
+                try {
+                    await notifyWaitlistPromotion({
+                        promotedUid: result.promotion.promotedUid,
+                        promotedName: result.promotion.promotedName || 'Member',
+                        promotedCourt: result.promotion.promotedCourt,
+                        sessionId: sessionToJoin.id,
+                        sessionTitle: sessionToJoin.title,
+                        sessionDate: sessionToJoin.date,
+                        actorUid: user.uid,
+                    });
+                } catch (notifyErr) {
+                    console.warn('Could not write waitlist promotion notification:', notifyErr);
+                }
             }
         } catch (error) {
             console.error('Error updating session', error);
@@ -813,6 +852,37 @@ const BookingEngine = () => {
                 </div>
                 <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
             </div>
+
+            {promotionAlerts.length > 0 && (
+                <div className="mb-8 space-y-3">
+                    {promotionAlerts.map((alert) => (
+                        <div
+                            key={alert.id}
+                            className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50/90 p-4 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-950/30"
+                        >
+                            <PartyPopper className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600 dark:text-court-accent" />
+                            <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-emerald-900 dark:text-emerald-100">
+                                    You&apos;re off the waitlist!
+                                </p>
+                                <p className="mt-1 text-sm text-emerald-800/90 dark:text-emerald-200/90">
+                                    {alert.court
+                                        ? `You were promoted to ${alert.court} for ${alert.sessionTitle} (${alert.sessionDate}).`
+                                        : `You were promoted into ${alert.sessionTitle} (${alert.sessionDate}).`}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => user && dismissNotification(user.uid, alert.id)}
+                                className="rounded-lg p-1 text-emerald-700/70 transition-colors hover:text-emerald-900 dark:text-emerald-300/70 dark:hover:text-emerald-100"
+                                aria-label="Dismiss"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             <div className="mb-10 flex justify-start overflow-x-auto pb-2 scrollbar-hide">
                 <div className="flex gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">

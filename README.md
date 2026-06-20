@@ -13,15 +13,17 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 - **Weekly open play** — Built-in recurring schedules (e.g. Tennis Tue/Thu); next week unlocks **Sunday 5:00 PM ET**
 - **Club Wire ticker** — Live sports headlines from Firestore
 - **Events & news** — Social events carousel and news feed (up to four articles)
-- **Help** — Static FAQ at `/help` (booking, waitlists, sport tabs, admin pointers)
+- **Help** — Static FAQ at `/help` with member topics; signed-in admins also see an Operations guide section
+- **Waitlist promotions** — Promoted members see a dismissible in-app banner when they return to booking
 - **Account preferences** — Reorder or hide sport tabs via the menu; synced to Firestore
 - **PWA** — Installable with offline shell support
 
 ### Admins (`/admin`)
 
-- **Operations Deck** — Ticker, session visibility, live sessions, events, feedback inbox
-- **Sessions** — Create one-time or **weekly recurring** court bookings (any weekday); manage rosters and waitlists with **member search** (manual names still allowed)
-- **Events** — Create and edit club socials
+- **Operations Deck** — Ticker, session visibility, live sessions, events, archive, feedback inbox
+- **Sessions** — Create one-time or **weekly recurring** court bookings (any weekday); calendar date + 12-hour AM/PM time pickers; manage rosters and waitlists with **member search** (manual names still allowed)
+- **Events** — Create and edit club socials with calendar date and structured time pickers
+- **Archive** — Past events and one-time sessions kept for **7 days**, then auto-deleted when an admin visits the site; weekly open play is not archived
 - **Settings** — Edit ticker copy and per-sport session status (active / hidden / cancelled)
 
 ### Auth
@@ -97,17 +99,17 @@ src/
 │   └── system/         # TopBar, MenuOverlay, LiveWire ticker, Preloader
 ├── contexts/           # AuthContext, ThemeContext
 ├── hooks/              # useAdminData, useMemberDirectory, useTickerText
-├── lib/                # sessions, bookingActions, memberNames, sports, helpFaq
+├── lib/                # sessions, bookingActions, dates, archive, memberNames, sports, helpFaq
 └── pages/              # Home, Help, Login, AdminDashboard
 ```
 
-Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users`, `settings` (ticker, sessionStatus, recurringSchedules).
+Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users` (including `users/{uid}/notifications` for waitlist alerts), `settings` (ticker, sessionStatus, recurringSchedules).
 
 ## Keeping docs current
 
 When shipping user-facing or admin behaviour changes, update:
 
-- **`src/lib/helpFaq.ts`** — member FAQ copy (rendered at `/help`)
+- **`src/lib/helpFaq.ts`** — `MEMBER_HELP_FAQ` and `ADMIN_HELP_FAQ` (rendered at `/help`)
 - **`README.md`** — features, env vars, deploy notes
 
 ## License

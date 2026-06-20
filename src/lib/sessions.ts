@@ -10,6 +10,7 @@ import {
     SPORTS,
     WEEKDAY_OFFSETS,
 } from './sports';
+import { isSessionArchivable, isSessionPast } from './archive';
 import { getMergedScheduleForSport, getRecurringTemplateKey } from './recurringSchedules';
 
 const WEEKDAY_ID_PATTERN =
@@ -27,6 +28,8 @@ export interface Session {
     type: SessionType;
     date: string;
     time: string;
+    startTime?: string;
+    endTime?: string;
     maxAttendees: number;
     attendees: string[];
     /** FIFO session-level waitlist (common across all courts in a session) */
@@ -716,5 +719,5 @@ export const buildAdminDisplaySessions = (
         customSessions.forEach(pushUnique);
     }
 
-    return combined;
+    return combined.filter((s) => !(isSessionArchivable(s) && isSessionPast(s)));
 };

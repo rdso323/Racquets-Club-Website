@@ -3,7 +3,8 @@ export interface FaqItem {
     answer: string;
 }
 
-export const HELP_FAQ: FaqItem[] = [
+/** Member-facing FAQ — always shown on /help */
+export const MEMBER_HELP_FAQ: FaqItem[] = [
     {
         question: 'Who can sign up and book courts?',
         answer: 'Booking is for verified Duke members. Sign up with your firstname.lastname@duke.edu address (not your NetID alias), verify your inbox, then sign in. The home page shows availability, but you must be signed in to join a session or court.',
@@ -33,6 +34,10 @@ export const HELP_FAQ: FaqItem[] = [
         answer: 'When every court in a session is full, you can join a single shared waitlist for that session (not per court). If someone drops out, the next person on the waitlist is automatically added to the freed spot. You cannot be on the waitlist and on a court at the same time.',
     },
     {
+        question: 'What happens when I am promoted from the waitlist?',
+        answer: 'When a spot opens and you are next on the waitlist, you are automatically moved onto the court. The next time you visit the booking section, a banner confirms your promotion — refresh the page if needed to see your court assignment. Email notifications may be added later.',
+    },
+    {
         question: 'Can I switch courts after joining?',
         answer: 'Yes. If you are already on a court, tap Join on another court with an open spot to switch. Use Drop on your current court to leave entirely; that may promote someone from the waitlist.',
     },
@@ -46,18 +51,49 @@ export const HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'Where are club events and news?',
-        answer: 'Scroll past the booking section or use the menu: Events (03) shows socials and mixers; News (04) shows up to four headline articles. The Club Wire ticker above booking carries live sports updates.',
+        answer: 'Scroll past the booking section or use the menu: Events (03) shows upcoming socials and mixers only — past events disappear after their date. News (04) shows up to four headline articles. The Club Wire ticker above booking carries live sports updates.',
     },
     {
         question: 'How do I share feedback or report a problem?',
         answer: 'Use Feedback in the menu (06) or footer to send a message to the club. For booking issues, include the sport, session date, and what you expected to happen.',
     },
     {
-        question: 'I am an admin — where do I manage sessions?',
-        answer: 'Use Admin in the top bar (approved accounts only). New officers: create your account at Sign In with your firstname.lastname@duke.edu — admin access is granted automatically for approved emails after you verify your inbox. The Operations Deck has tabs for Ticker & Settings, Quarts & Sessions, Events, and Feedback.',
-    },
-    {
-        question: 'I am an admin — how do co-officers get access?',
-        answer: 'Ask an existing admin to add your firstname.lastname@duke.edu to the admin allowlist, then sign up on the login page with that same address and verify your email. Choose your own password during signup; use Forgot Password if you need to reset it later.',
+        question: 'I am a club officer — where is the admin guide?',
+        answer: 'Sign in with an approved @duke.edu account and scroll to the Operations guide at the bottom of this page (visible to admins only). You can also open Admin in the top bar to reach the Operations Deck.',
     },
 ];
+
+/** Admin-only operations guide — shown on /help when isAdmin is true */
+export const ADMIN_HELP_FAQ: FaqItem[] = [
+    {
+        question: 'What is the Operations Deck?',
+        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Archive, and Feedback Inbox. Only allowlisted @duke.edu emails see the Admin link and can access this area.',
+    },
+    {
+        question: 'How do I create events and sessions?',
+        answer: 'Use calendar date pickers and 12-hour AM/PM time pickers in the admin forms — no free-text dates or times. Events need a date, start time, and optional end time. One-time sessions store the date as weekStartDate; recurring open play uses a weekday template instead.',
+    },
+    {
+        question: 'What happens to past events?',
+        answer: 'Past events leave the home carousel and main Events tab immediately. They appear in the Archive tab for 7 days, then are auto-deleted from Firestore when an admin visits the site.',
+    },
+    {
+        question: 'What happens to past one-time sessions?',
+        answer: 'One-time clinics and custom court bookings follow the same 7-day archive rule. Weekly recurring open play rolls forward each week and is never archived.',
+    },
+    {
+        question: 'What is the Archive tab for?',
+        answer: 'Archive shows recently ended events and archivable sessions before auto-deletion. You can delete items early if needed. Badge counts on the sidebar reflect total archived items.',
+    },
+    {
+        question: 'How do co-officers get admin access?',
+        answer: 'Add their firstname.lastname@duke.edu to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign up at /login with that address and verify their inbox. The Admin link appears automatically.',
+    },
+    {
+        question: 'How are waitlist promotions handled?',
+        answer: 'When someone drops a court or an admin removes them, the next waitlisted member is promoted automatically. The promoted member sees an in-app banner on their next visit to the booking section. Admins also see a confirmation alert when removing someone triggers a promotion.',
+    },
+];
+
+/** @deprecated Use MEMBER_HELP_FAQ — kept for any legacy imports */
+export const HELP_FAQ = MEMBER_HELP_FAQ;
