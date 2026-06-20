@@ -10,7 +10,7 @@ export interface ClubEvent {
     link?: string;
 }
 
-/** Fallback carousel cards when Firestore `events` collection is empty. */
+/** Fallback carousel cards when Firestore has no upcoming events. */
 export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
     {
         id: 'wimbledon-watch-party',
@@ -41,18 +41,9 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
     },
 ];
 
-const recommendedTitles = () => new Set(DEFAULT_CLUB_EVENTS.map((event) => event.title));
-
-/** True when Firestore matches the current recommended carousel set. */
-export const isRecommendedEventSet = (events: Pick<ClubEvent, 'title'>[]): boolean =>
-    events.length === DEFAULT_CLUB_EVENTS.length &&
-    events.every((event) => recommendedTitles().has(event.title));
-
-/** Show code defaults until Firestore is empty or synced to the recommended set. */
+/** Prefer upcoming Firestore events; otherwise show code defaults. */
 export const resolveDisplayEvents = (firestoreEvents: ClubEvent[]): ClubEvent[] => {
-    const source =
-        firestoreEvents.length === 0 || !isRecommendedEventSet(firestoreEvents)
-            ? DEFAULT_CLUB_EVENTS
-            : firestoreEvents;
-    return filterUpcomingEvents(source);
+    const upcomingFirestore = filterUpcomingEvents(firestoreEvents);
+    if (upcomingFirestore.length > 0) return upcomingFirestore;
+    return filterUpcomingEvents(DEFAULT_CLUB_EVENTS);
 };

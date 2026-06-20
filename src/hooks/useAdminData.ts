@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { maintainEventsCollection } from '../lib/events';
 import { SESSION_STATUS_CATEGORIES, type AdminRecurringSchedule } from '../lib/sports';
 import type { Session, SessionStatus } from '../lib/sessions';
 import type { AdminEvent, FeedbackItem, SessionStatusMap } from '../components/admin/types';
@@ -14,7 +15,7 @@ const defaultStatuses = (): SessionStatusMap => {
 };
 
 /** Subscribes to all Operations Deck collections on mount so stats and modules stay in sync. */
-export const useAdminData = () => {
+export const useAdminData = (isAdmin = false) => {
     const [initialLoading, setInitialLoading] = useState(true);
     const [tickerText, setTickerText] = useState('');
     const [sessionStatuses, setSessionStatuses] = useState<SessionStatusMap>(defaultStatuses);
@@ -95,12 +96,12 @@ export const useAdminData = () => {
             onSnapshot(
                 collection(db, 'events'),
                 (snapshot) => {
-                    setEventsList(
-                        snapshot.docs.map((docSnap) => ({
-                            id: docSnap.id,
-                            ...docSnap.data(),
-                        })) as AdminEvent[],
-                    );
+                    const events = snapshot.docs.map((docSnap) => ({
+                        id: docSnap.id,
+                        ...docSnap.data(),
+                    })) as AdminEvent[];
+                    void maintainEventsCollection(events, isAdmin);
+                    setEventsList(events);
                 },
                 (err) => console.error('Events subscription error', err),
             ),
@@ -124,7 +125,7 @@ export const useAdminData = () => {
         return () => {
             unsubs.forEach((unsub) => unsub());
         };
-    }, []);
+    }, [isAdmin]);
 
     const updateStatus = (id: string, status: SessionStatus) => {
         setSessionStatuses((prev) => ({ ...prev, [id]: status }));

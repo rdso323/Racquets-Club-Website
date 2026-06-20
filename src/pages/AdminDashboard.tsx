@@ -10,7 +10,7 @@ import type { AdminTab } from '../components/admin/types';
 import { filterUpcomingEvents } from '../lib/events';
 
 const AdminDashboard = () => {
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
     const [activeTab, setActiveTab] = useState<AdminTab>('settings');
     const createSessionFormRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
         disabledBuiltinSchedules,
         eventsList,
         feedbackList,
-    } = useAdminData();
+    } = useAdminData(isAdmin);
 
     const triggerQuickSession = () => {
         setActiveTab('sessions');

@@ -5,8 +5,9 @@ import { db } from '../../lib/firebase';
 import { RevealLines } from '../system/kinetic';
 import { Calendar, ExternalLink } from 'lucide-react';
 import { sectionHud } from '../../lib/siteNav';
-import { DEFAULT_CLUB_EVENTS, resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
-import { filterUpcomingEvents } from '../../lib/events';
+import { resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
+import { maintainEventsCollection } from '../../lib/events';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Event extends ClubEvent {}
 
@@ -58,6 +59,7 @@ const EVENT_ACCENTS = ['#BEF264', '#22D3EE', '#FFBF00', '#C9A84C'];
 const MAX_NEWS_ARTICLES = 4;
 
 const Transmissions = () => {
+    const { isAdmin } = useAuth();
     const [events, setEvents] = useState<Event[]>([]);
     const [news, setNews] = useState<NewsItem[]>(MOCK_NEWS);
     const trackRef = useRef<HTMLDivElement>(null);
@@ -66,6 +68,7 @@ const Transmissions = () => {
     useEffect(() => {
         const unsubEvents = onSnapshot(collection(db, 'events'), (snapshot) => {
             const fbEvents = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Event));
+            void maintainEventsCollection(fbEvents, isAdmin);
             setEvents(resolveDisplayEvents(fbEvents));
         });
 
@@ -79,7 +82,7 @@ const Transmissions = () => {
             unsubEvents();
             unsubNews();
         };
-    }, []);
+    }, [isAdmin]);
 
     useEffect(() => {
         const measure = () => {
@@ -92,7 +95,7 @@ const Transmissions = () => {
         return () => window.removeEventListener('resize', measure);
     }, [events]);
 
-    const displayEvents = events.length > 0 ? events : filterUpcomingEvents(DEFAULT_CLUB_EVENTS);
+    const displayEvents = events;
 
     return (
         <section className="pb-16 pt-8 md:pb-24 md:pt-10">

@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { Plus, Sparkles } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { partitionEventsByPast } from '../../../lib/events';
-import { removePastEventsFromFirestore, syncRecommendedEventsToFirestore } from '../../../lib/syncRecommendedEvents';
+import { EVENT_RETENTION_DAYS, partitionEventsByPast } from '../../../lib/events';
 import type { AdminEvent } from '../types';
 import EventOpsCard from '../cards/EventOpsCard';
 import EditEventModal from '../modals/EditEventModal';
@@ -22,8 +21,6 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         link: '',
     });
     const [savingEvent, setSavingEvent] = useState(false);
-    const [syncingDefaults, setSyncingDefaults] = useState(false);
-    const [clearingPast, setClearingPast] = useState(false);
     const [eventMessage, setEventMessage] = useState('');
     const [editingEvent, setEditingEvent] = useState<AdminEvent | null>(null);
 
@@ -79,96 +76,27 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
 
     const { upcoming: upcomingEvents, past: pastEvents } = partitionEventsByPast(eventsList);
 
-    const handleClearPastEvents = async () => {
-        if (pastEvents.length === 0) return;
-        const confirmed = window.confirm(
-            `Remove ${pastEvents.length} past event${pastEvents.length === 1 ? '' : 's'} from Firestore?`,
-        );
-        if (!confirmed) return;
-
-        setClearingPast(true);
-        setEventMessage('');
-        try {
-            const removed = await removePastEventsFromFirestore(eventsList);
-            setEventMessage(`Removed ${removed} past event${removed === 1 ? '' : 's'}.`);
-            window.setTimeout(() => setEventMessage(''), 4000);
-        } catch (err) {
-            console.error('Error clearing past events:', err);
-            setEventMessage('Error clearing past events.');
-        } finally {
-            setClearingPast(false);
-        }
-    };
-
-    const handleLoadRecommendedEvents = async () => {
-        const confirmed = window.confirm(
-            'Replace all carousel events with the current club defaults (Wimbledon watch party, summer kickoff at Hi-Wire, fall mixer)?',
-        );
-        if (!confirmed) return;
-
-        setSyncingDefaults(true);
-        setEventMessage('');
-        try {
-            await syncRecommendedEventsToFirestore(eventsList.map((event) => event.id));
-            setEventMessage('Recommended events loaded on the home page carousel.');
-            window.setTimeout(() => setEventMessage(''), 4000);
-        } catch (err) {
-            console.error('Error loading recommended events:', err);
-            setEventMessage('Error loading recommended events.');
-        } finally {
-            setSyncingDefaults(false);
-        }
-    };
-
     return (
         <div className="animate-fadeIn space-y-8">
             <div>
                 <h2 className="mb-2 font-display text-2xl text-gray-900 dark:text-chalk">
                     Active Events Carousel
                 </h2>
-                <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                    Manage cards inside the Upcoming Events slider carousel on the home page. Past events are hidden
-                    from members automatically — clear them here once they are over. Use the sync button to load the
-                    recommended Wimbledon, summer kickoff, and fall mixer set.
+                <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
+                    Create and edit cards for the home page carousel. Past events are hidden from members
+                    automatically and removed from Firestore after {EVENT_RETENTION_DAYS} days.
                 </p>
-                <div className="mb-6 flex flex-wrap items-center gap-3">
-                    <button
-                        type="button"
-                        onClick={handleLoadRecommendedEvents}
-                        disabled={syncingDefaults}
-                        className="rounded-lg border border-court-accent/40 bg-court-accent/10 px-4 py-2 text-sm font-semibold text-emerald-800 transition-colors hover:bg-court-accent/20 disabled:opacity-50 dark:text-court-accent"
-                    >
-                        {syncingDefaults ? 'Loading…' : 'Load recommended events'}
-                    </button>
-                    {pastEvents.length > 0 && (
-                        <button
-                            type="button"
-                            onClick={handleClearPastEvents}
-                            disabled={clearingPast}
-                            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50 dark:border-gray-700 dark:text-chalk/80 dark:hover:bg-court-950"
-                        >
-                            {clearingPast ? 'Clearing…' : `Clear ${pastEvents.length} past event${pastEvents.length === 1 ? '' : 's'}`}
-                        </button>
-                    )}
-                    {eventMessage && (
-                        <span
-                            className={`text-sm ${eventMessage.includes('Error') ? 'text-red-500' : 'text-green-600 dark:text-court-accent'}`}
-                        >
-                            {eventMessage}
-                        </span>
-                    )}
-                </div>
 
                 {eventsList.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-gray-200 py-12 text-center text-gray-400 dark:border-gray-800 dark:text-gray-500">
                         <Sparkles className="mx-auto mb-2 h-8 w-8 opacity-50" />
-                        <p className="text-sm">No events listed in Firestore. Use the form below to create one!</p>
+                        <p className="text-sm">No events in Firestore yet. Add one below, or the site shows built-in defaults until you do.</p>
                     </div>
                 ) : (
                     <div className="space-y-8">
                         {upcomingEvents.length === 0 ? (
                             <div className="rounded-2xl border border-dashed border-gray-200 py-10 text-center text-gray-400 dark:border-gray-800 dark:text-gray-500">
-                                <p className="text-sm">No upcoming events in Firestore.</p>
+                                <p className="text-sm">No upcoming events in Firestore. Built-in defaults show on the home page until you add one.</p>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -186,7 +114,7 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                         {pastEvents.length > 0 && (
                             <div>
                                 <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-400 dark:text-chalk/40">
-                                    Past events (hidden on home page)
+                                    Archived (removed automatically after {EVENT_RETENTION_DAYS} days)
                                 </h3>
                                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                                     {pastEvents.map((event) => (
@@ -214,7 +142,7 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                     Add New Club Event
                 </h3>
                 <p className="mb-6 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Insert new announcements or matches into Upcoming Events slider.
+                    New events appear on the home page carousel as soon as they are saved.
                 </p>
 
                 <form onSubmit={handleAddEvent} className="space-y-4">
