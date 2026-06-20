@@ -45,10 +45,12 @@ const pendingClinicResets = new Set<string>();
 const pendingOpenPlayResets = new Set<string>();
 
 const BOOKING_CARD_CLASS =
-    'booking-card relative flex h-full w-[min(92vw,28rem)] max-w-[28rem] shrink-0 snap-start flex-col overflow-hidden';
+    'booking-card relative flex h-full w-[min(92vw,100%)] shrink-0 snap-start flex-col overflow-hidden md:w-full';
+
+const BOOKING_CARD_GRID = 'flex gap-6 md:grid md:grid-cols-2 md:gap-6';
 
 const courtsLayoutClass = (courtCount: number) =>
-    courtCount === 1 ? 'flex justify-center' : 'grid grid-cols-1 gap-5 lg:grid-cols-2';
+    courtCount === 1 ? 'grid grid-cols-1' : 'grid grid-cols-1 gap-5 sm:grid-cols-2';
 
 const SessionLockOverlay = () => (
     <div className="absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/45 backdrop-blur-[1px] dark:bg-court-950/40">
@@ -588,12 +590,7 @@ const BookingEngine = () => {
                                                   : `Join ${courtName}`;
 
                                     return (
-                                        <div
-                                            key={courtName}
-                                            className={
-                                                sessionCourts.length === 1 ? 'w-full max-w-[16rem]' : 'w-full'
-                                            }
-                                        >
+                                        <div key={courtName} className="w-full">
                                             <CourtDiagram
                                                 sport={activeSport}
                                                 courtName={courtName}
@@ -791,12 +788,7 @@ const BookingEngine = () => {
                                               : `Join ${courtName}`;
 
                                 return (
-                                    <div
-                                        key={courtName}
-                                        className={
-                                            courtsForDay.length === 1 ? 'w-full max-w-[16rem]' : 'w-full'
-                                        }
-                                    >
+                                    <div key={courtName} className="w-full">
                                         <CourtDiagram
                                             sport={activeSport}
                                             courtName={courtName}
@@ -951,7 +943,7 @@ const BookingEngine = () => {
                                 Swipe sideways to browse open play sessions
                             </p>
                             <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:mx-0 md:overflow-visible md:px-0 md:pb-0">
-                                <div className="flex flex-wrap gap-6">
+                                <div className={BOOKING_CARD_GRID}>
                                     {openPlayInstances.map(({ session, config, playDate, isNextWeek }) =>
                                         renderOpenPlayCard(session, config, playDate, isNextWeek),
                                     )}
@@ -961,7 +953,7 @@ const BookingEngine = () => {
                     )}
 
                     {regularSessions.length > 0 && (
-                        <div className="flex flex-wrap gap-6">
+                        <div className={BOOKING_CARD_GRID}>
                             {regularSessions.map((session) => renderCard(session))}
                         </div>
                     )}
