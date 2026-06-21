@@ -2,7 +2,7 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { collection, onSnapshot, doc, updateDoc, getDoc, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, CalendarDays, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
+import { Users, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig, type AdminRecurringSchedule } from '../../lib/sports';
 import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
@@ -42,6 +42,7 @@ import {
 import { buildCourtSlots } from '../../lib/courtSlots';
 import { sectionHud } from '../../lib/siteNav';
 import { formatCourtDisplayName } from '../../lib/memberNames';
+import SessionTags from '../SessionTags';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
@@ -507,17 +508,7 @@ const BookingEngine = () => {
 
                 <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="mb-4 flex items-start justify-between gap-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
-                                {session.type === 'coaching' ? <Rocket className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />}
-                                {session.type === 'coaching' ? 'Clinic' : 'Session'}
-                            </span>
-                            {isRecurringClinic && (
-                                <span className="inline-flex items-center rounded border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:border-violet-900/40 dark:bg-violet-950/40 dark:text-violet-200">
-                                    Recurring
-                                </span>
-                            )}
-                        </div>
+                        <SessionTags session={session} variant="booking" />
                         <div className="flex flex-col items-end gap-2">
                             <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
                                 {formattedClinicDate}
@@ -716,10 +707,7 @@ const BookingEngine = () => {
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
-                                    <CalendarDays className="h-3.5 w-3.5" />
-                                    Open Play
-                                </span>
+                                <SessionTags session={session} variant="booking" />
                                 {isLocked && !isCancelled && (
                                     <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
                                         <Lock className="h-3 w-3" />
