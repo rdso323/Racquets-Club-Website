@@ -40,6 +40,8 @@ export interface SessionOpsCardProps {
     onDelete: () => void;
     /** When true, renders only roster/admin controls (no session header). */
     embedded?: boolean;
+    /** Hide the "Admin controls" label in embedded mode. */
+    showEmbeddedLabel?: boolean;
     /** When false, court picker is hidden and not required to add members. */
     requiresCourtForAdd?: boolean;
 }
@@ -67,6 +69,7 @@ const SessionOpsCard = memo(({
     onEdit,
     onDelete,
     embedded = false,
+    showEmbeddedLabel = true,
     requiresCourtForAdd,
 }: SessionOpsCardProps) => {
     const sport = session.sport || inferSport(session);
@@ -286,9 +289,11 @@ const SessionOpsCard = memo(({
     if (embedded) {
         return (
             <div className="rounded-xl border border-dashed border-court-accent/35 bg-white/50 p-4 dark:border-court-accent/25 dark:bg-court-950/25">
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-court-accent">
-                    Admin controls
-                </p>
+                {showEmbeddedLabel && (
+                    <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-court-accent">
+                        Admin controls
+                    </p>
+                )}
                 {coachEditor}
                 {rosterSection}
                 {actionSection}

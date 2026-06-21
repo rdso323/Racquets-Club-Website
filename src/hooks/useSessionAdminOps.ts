@@ -408,3 +408,5 @@ export function useSessionAdminOps({
         setNewAttendeeCourt,
     };
 }
+
+export type SessionAdminOps = ReturnType<typeof useSessionAdminOps>;

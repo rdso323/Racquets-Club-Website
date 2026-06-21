@@ -30,7 +30,6 @@ import {
     getSessionEnrollmentCap,
     getSessionRosterAttendees,
     usesCourtDiagramLayout,
-    getMaxWaitlistSize,
     isRecurringSession,
     filterAttendeesByCourt,
     findUserAttendeeEntry,
@@ -48,7 +47,8 @@ import { buildCourtSlots } from '../../lib/courtSlots';
 import { sectionHud } from '../../lib/siteNav';
 import { formatCourtDisplayName } from '../../lib/memberNames';
 import SessionTags from '../SessionTags';
-import SessionOpsCard from '../admin/cards/SessionOpsCard';
+import BookingCardAdminMenu from './BookingCardAdminMenu';
+import SessionOpsModal from './SessionOpsModal';
 import EditSessionModal from '../admin/modals/EditSessionModal';
 import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 
@@ -164,6 +164,7 @@ const BookingEngine = () => {
     const [promotionAlerts, setPromotionAlerts] = useState<
         Array<{ id: string } & WaitlistPromotionNotification>
     >([]);
+    const [opsSession, setOpsSession] = useState<Session | null>(null);
 
     const adminOps = useSessionAdminOps({
         sessionsList: sessions,
@@ -467,50 +468,16 @@ const BookingEngine = () => {
         );
     };
 
-    const emptyMemberDraft = () => ({ name: '' });
-
-    const renderInlineAdminOps = (session: Session) => {
+    const renderAdminMenu = (session: Session) => {
         if (!isAdmin) return null;
 
-        const rosterAttendees = adminOps.getSessionRoster(session);
-        const coachValue = adminOps.coachDraft[session.id] ?? session.coach ?? '';
-
         return (
-            <div className="relative z-30 mt-4">
-                <SessionOpsCard
-                    embedded
-                    session={session}
-                    recurringSchedules={recurringSchedules}
-                    disabledBuiltinSchedules={disabledBuiltinSchedules}
-                    rosterAttendees={rosterAttendees}
-                    coachValue={coachValue}
-                    memberDraft={adminOps.memberDrafts[session.id] ?? emptyMemberDraft()}
-                    members={adminOps.members}
-                    newAttendeeCourt={adminOps.newAttendeeCourt[session.id] || ''}
-                    savingCoach={!!adminOps.savingCoach[session.id]}
-                    requiresCourtForAdd={adminOps.sessionRequiresCourtForAdd(session)}
-                    onCoachDraftChange={(value) =>
-                        adminOps.setCoachDraft((prev) => ({ ...prev, [session.id]: value }))
-                    }
-                    onUpdateCoach={() => adminOps.handleUpdateCoach(session.id)}
-                    onMemberDraftChange={(draft) =>
-                        adminOps.setMemberDrafts((prev) => ({ ...prev, [session.id]: draft }))
-                    }
-                    onNewAttendeeCourtChange={(value) =>
-                        adminOps.setNewAttendeeCourt((prev) => ({ ...prev, [session.id]: value }))
-                    }
-                    onAddAttendee={() => adminOps.handleAddAttendee(session)}
-                    onAddToWaitlist={() => adminOps.handleAddToWaitlist(session)}
-                    onRemoveAttendee={(attendeeStr) => adminOps.handleRemoveAttendee(session, attendeeStr)}
-                    onRemoveWaitlistEntry={(waitlistEntry) =>
-                        adminOps.handleRemoveWaitlistEntry(session.id, waitlistEntry)
-                    }
-                    waitlist={session.waitlist || []}
-                    maxWaitlistSize={getMaxWaitlistSize(session)}
-                    onEdit={() => adminOps.openEditSession(session)}
-                    onDelete={() => adminOps.handleDeleteSession(session)}
-                />
-            </div>
+            <BookingCardAdminMenu
+                session={session}
+                onEdit={() => adminOps.openEditSession(session)}
+                onManageRoster={() => setOpsSession(session)}
+                onDelete={() => adminOps.handleDeleteSession(session)}
+            />
         );
     };
 
@@ -591,6 +558,7 @@ const BookingEngine = () => {
                             )}
                         </div>
                         <div className="flex flex-col items-end gap-2">
+                            {renderAdminMenu(session)}
                             <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
                                 {dateHeaderLabel}
                             </p>
@@ -738,7 +706,6 @@ const BookingEngine = () => {
                         </div>
                         {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
-                    {renderInlineAdminOps(session)}
                 </div>
             </div>
         );
@@ -804,9 +771,12 @@ const BookingEngine = () => {
                             <h3 className="mt-3 font-display text-2xl text-gray-900 dark:text-chalk">{config.title}</h3>
                             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
                         </div>
-                        <p className="hud-label mt-1 w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50 sm:mt-0">
-                            {dateRangeDisplay}
-                        </p>
+                        <div className="flex flex-col items-end gap-2 sm:mt-0">
+                            {renderAdminMenu(session)}
+                            <p className="hud-label mt-1 w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
+                                {dateRangeDisplay}
+                            </p>
+                        </div>
                     </div>
                     <p className="text-sm font-medium text-wimbledon-navy dark:text-chalk/70">
                         {session.date} · {session.time}
@@ -941,7 +911,6 @@ const BookingEngine = () => {
                         </div>
                         {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
-                    {renderInlineAdminOps(session)}
                 </div>
             </div>
         );
@@ -1117,6 +1086,16 @@ const BookingEngine = () => {
                 onEditCourtFieldsChange={adminOps.setEditCourtFields}
                 onClose={() => adminOps.setEditingSession(null)}
                 onSubmit={adminOps.handleSaveSessionEdit}
+            />
+        )}
+
+        {opsSession && (
+            <SessionOpsModal
+                session={opsSession}
+                adminOps={adminOps}
+                recurringSchedules={recurringSchedules}
+                disabledBuiltinSchedules={disabledBuiltinSchedules}
+                onClose={() => setOpsSession(null)}
             />
         )}
     </>
