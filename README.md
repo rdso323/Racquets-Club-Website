@@ -9,8 +9,11 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 ### Members (public home + booking)
 
 - **Booking engine** — Open play and coaching clinics across **Tennis, Badminton, Squash, Pickleball, and Table Tennis**
-- **Court diagrams** — Join specific spots on a court; switch courts within a session; shared session waitlist with auto-promotion
-- **Weekly open play** — Built-in recurring schedules (e.g. Tennis Tue/Thu); next week unlocks **Sunday 5:00 PM ET**
+- **Court diagrams** — Join specific spots when a session uses 2 or 4 players per court; switch courts within a session
+- **Clinic layouts** — Coaching sessions use court diagrams when total capacity divides evenly into 2 or 4 per court; otherwise a roster list with Join Session
+- **Session waitlist** — Shared queue per session with auto-promotion; **visible roster** (position, name, email) on each booking card when anyone is queued
+- **Weekly recurring sessions** — Built-in open play and coaching clinic templates; cards show **Clinic/Open Play** and **Recurring/One-time** tags
+- **Next-week lock** — Opens **Sunday 5:00 PM ET** for both open play and recurring coaching clinics
 - **Club Wire ticker** — Live sports headlines from Firestore
 - **Events & news** — Social events carousel and news feed (up to four articles)
 - **Help** — Static FAQ at `/help` with member topics; signed-in admins also see an Operations guide section
@@ -18,12 +21,14 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 - **Account preferences** — Reorder or hide sport tabs via the menu; synced to Firestore
 - **PWA** — Installable with offline shell support
 
-### Admins (`/admin`)
+### Admins (`/admin` and home page)
 
 - **Operations Deck** — Ticker, session visibility, live sessions, events, archive, feedback inbox
-- **Sessions** — Create one-time or **weekly recurring** court bookings (any weekday); calendar date + 12-hour AM/PM time pickers; manage rosters and waitlists with **member search** (manual names still allowed)
+- **Home page session controls** — **Gear icon** on each booking card: Edit details, Manage roster (players + waitlist + coach), Delete / remove schedule
+- **Sessions** — Create one-time or **weekly recurring** open play or **coaching clinics** (any weekday); calendar date + 12-hour AM/PM time pickers; edit type, courts, capacity, and time on live recurring schedules
+- **Roster tools** — Member search with manual name fallback; add/remove roster and waitlist; capacity uses **max attendees** for clinics (not only courts × 4)
 - **Events** — Create and edit club socials with calendar date and structured time pickers
-- **Archive** — Past events and one-time sessions kept for **7 days**, then auto-deleted when an admin visits the site; weekly open play is not archived
+- **Archive** — Past events and one-time sessions kept for **7 days**, then auto-deleted when an admin visits the site; weekly recurring sessions are not archived
 - **Settings** — Edit ticker copy and per-sport session status (active / hidden / cancelled)
 
 ### Auth
@@ -94,16 +99,28 @@ Placeholder Firebase values are enough to render the public home page in dev; li
 ```
 src/
 ├── components/
-│   ├── admin/          # Operations Deck modules, cards, modals
-│   ├── home/           # BookingEngine, Transmissions, Footer, CourtDiagram
+│   ├── admin/          # Operations Deck modules, cards, modals, fields
+│   ├── home/           # BookingEngine, WaitlistPanel, CourtDiagram, admin gear menu
 │   └── system/         # TopBar, MenuOverlay, LiveWire ticker, Preloader
 ├── contexts/           # AuthContext, ThemeContext
-├── hooks/              # useAdminData, useMemberDirectory, useTickerText
-├── lib/                # sessions, bookingActions, dates, archive, memberNames, sports, helpFaq
+├── hooks/              # useAdminData, useMemberDirectory, useSessionAdminOps, useTickerText
+├── lib/                # sessions, bookingActions, dates, archive, helpFaq, sports, recurringSchedules
 └── pages/              # Home, Help, Login, AdminDashboard
 ```
 
 Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users` (including `users/{uid}/notifications` for waitlist alerts), `settings` (ticker, sessionStatus, recurringSchedules).
+
+## Booking & admin behaviour (summary)
+
+| Topic | Behaviour |
+|-------|-------------|
+| Clinic capacity | Header uses **max attendees** set in admin |
+| Court diagrams | Shown when slots per court are **2 or 4** and clinic total divides evenly across courts |
+| Waitlist on cards | Listed with #, name, email whenever the queue is non-empty |
+| Admin on home page | Gear menu on each booking card (same ops as Operations Deck session cards) |
+| Recurring edit | Updates weekly schedule template + current Firestore instance |
+
+Full member and admin FAQs live in **`src/lib/helpFaq.ts`** (rendered at `/help`).
 
 ## Keeping docs current
 

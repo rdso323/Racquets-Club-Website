@@ -65,8 +65,8 @@ const Help = () => {
                 </h1>
                 <p className="mt-4 text-base leading-relaxed text-gray-600 dark:text-chalk/60">
                     {isAdmin
-                        ? 'Member FAQ below; scroll to the Operations guide at the bottom for admin-only topics (archive lifecycle, date/time pickers, and the Operations Deck).'
-                        : 'Quick answers about signing in, all five club sports, reserving courts, waitlists, weekly open play, and club events.'}
+                        ? 'Member FAQ below; scroll to the Operations guide for admin topics — homepage gear controls, clinic capacity, waitlists, recurring edits, and the Operations Deck.'
+                        : 'Quick answers about signing in, all five club sports, reserving courts, waitlists (including who is queued), weekly sessions, clinics, and club events.'}
                 </p>
 
                 <div className="mt-10">

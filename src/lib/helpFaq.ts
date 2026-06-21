@@ -19,23 +19,23 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do I reserve a spot on a court?',
-        answer: 'Open Book a Court from the menu (or scroll to the booking section), choose your sport tab, and pick an open play or clinic session. On court sessions, tap + on an open spot in the court diagram, or use Join to take the first available spot on that court. You can only hold one court per session at a time.',
+        answer: 'Open Book a Court from the menu (or scroll to the booking section), choose your sport tab, and pick an open play or clinic session. When a session uses court diagrams, tap + on an open spot or use Join to take the first available spot on that court. You can only hold one court per session at a time. Some clinics use a simple roster list instead of diagrams when capacity does not split evenly into 2 or 4 players per court.',
     },
     {
         question: 'What is weekly open play vs a one-time session?',
-        answer: 'Weekly open play runs on a fixed day every week (for example Tennis Open Play Tuesday and Thursday). One-time sessions are custom events admins create for a specific date. Recurring cards show the day under the title (e.g. “Every Tuesday”). After a session ends, its roster and waitlist reset for the next week.',
+        answer: 'Weekly sessions run on a fixed day every week (for example Tennis Open Play Tuesday and Thursday, or a Friday coaching clinic). One-time sessions are custom events admins create for a specific date. Cards show tags for type (Open Play or Clinic) and schedule (Recurring or One-time), plus the weekday when applicable (e.g. “Every Tuesday”). After a session ends, its roster and waitlist reset for the next week.',
     },
     {
         question: 'When can I book next week’s sessions?',
-        answer: "Next week opens for booking Sunday at 5:00 PM Eastern. Until then, next week's cards show a locked overlay on the courts so you can see the schedule but cannot join yet.",
+        answer: "Next week opens for booking Sunday at 5:00 PM Eastern. Until then, next week's cards show a locked overlay so you can see the schedule but cannot join yet. This applies to both open play and recurring coaching clinics.",
     },
     {
         question: 'How does the waitlist work?',
-        answer: 'When every court in a session is full, you can join a single shared waitlist for that session (not per court). If someone drops out, the next person on the waitlist is automatically added to the freed spot. You cannot be on the waitlist and on a court at the same time.',
+        answer: 'When a session is full, you can join a single shared waitlist for that session (not per court). If someone drops out, the next person on the waitlist is automatically added to the freed spot. You cannot be on the waitlist and on a court at the same time. When anyone is queued, the booking card shows a Session Waitlist section with each person’s position, name, and email.',
     },
     {
         question: 'What happens when I am promoted from the waitlist?',
-        answer: 'When a spot opens and you are next on the waitlist, you are automatically moved onto the court. The next time you visit the booking section, a banner confirms your promotion — refresh the page if needed to see your court assignment. Email notifications may be added later.',
+        answer: 'When a spot opens and you are next on the waitlist, you are automatically moved onto the court (or session roster). The next time you visit the booking section, a banner confirms your promotion — refresh the page if needed to see your assignment. Email notifications may be added later.',
     },
     {
         question: 'Can I switch courts after joining?',
@@ -47,7 +47,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'What are clinics / coaching sessions?',
-        answer: 'Clinics are coaching-style sessions with a flat capacity (no court diagram). Join with the session button. They appear below open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
+        answer: 'Clinics are coaching sessions with a total capacity set by admins. When that capacity divides evenly across courts into 2 or 4 players per court, you will see the same court diagrams as open play. Otherwise the card shows a roster list with a single Join Session button. Clinics appear below open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
     },
     {
         question: 'Where are club events and news?',
@@ -59,7 +59,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'I am a club officer — where is the admin guide?',
-        answer: 'Sign in with an approved @duke.edu account and scroll to the Operations guide at the bottom of this page (visible to admins only). You can also open Admin in the top bar to reach the Operations Deck.',
+        answer: 'Sign in with an approved @duke.edu account and scroll to the Operations guide at the bottom of this page (visible to admins only). You can also open Admin in the top bar for the full Operations Deck, or use the gear icon on any booking card on the home page for quick session edits.',
     },
 ];
 
@@ -67,11 +67,23 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
 export const ADMIN_HELP_FAQ: FaqItem[] = [
     {
         question: 'What is the Operations Deck?',
-        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Archive, and Feedback Inbox. Only allowlisted @duke.edu emails see the Admin link and can access this area.',
+        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Archive, and Feedback Inbox. Only allowlisted @duke.edu emails see the Admin link and can access this area. You can also manage many session tasks directly from the home page booking cards (see below).',
+    },
+    {
+        question: 'How do I manage sessions from the home page?',
+        answer: 'On any booking card, tap the gear icon in the top-right corner. Choose Edit details (capacity, courts, time, coach, type), Manage roster (add or remove players, waitlist, assign coach), or Delete / remove weekly schedule. This mirrors the Operations Deck session controls without leaving the booking page.',
     },
     {
         question: 'How do I create events and sessions?',
-        answer: 'Use calendar date pickers and 12-hour AM/PM time pickers in the admin forms — no free-text dates or times. Events need a date, start time, and optional end time. One-time sessions store the date as weekStartDate; recurring open play uses a weekday template instead.',
+        answer: 'In the Operations Deck → Courts & Sessions, use calendar date pickers and 12-hour AM/PM time pickers — no free-text dates or times. Choose one-time or weekly recurring, Open Play or Clinic, configure courts, max capacity, and waitlist size. Events are created under Events Manager with the same date/time pickers.',
+    },
+    {
+        question: 'How does clinic capacity and court layout work?',
+        answer: 'Set Max Capacity to the total roster size (e.g. 6 or 8). Court diagrams on the public site only appear when that total divides evenly across all configured courts into exactly 2 or 4 slots per court (e.g. 8 players on 2 courts = 4 each). Otherwise members see a roster list. The header always shows enrolled count vs your max capacity, not courts × 4.',
+    },
+    {
+        question: 'Can I edit recurring sessions after they are live?',
+        answer: 'Yes. Edit details on a recurring open play or coaching clinic updates the weekly schedule template (courts, time, capacity, coach, session type). Changes apply to future weeks. You can switch between Open Play and Clinic, adjust court count and labels, and edit time without disabling the schedule.',
     },
     {
         question: 'What happens to past events?',
@@ -79,7 +91,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'What happens to past one-time sessions?',
-        answer: 'One-time clinics and custom court bookings follow the same 7-day archive rule. Weekly recurring open play rolls forward each week and is never archived.',
+        answer: 'One-time clinics and custom court bookings follow the same 7-day archive rule. Weekly recurring open play and coaching clinics roll forward each week and are never archived.',
     },
     {
         question: 'What is the Archive tab for?',
@@ -90,8 +102,8 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
         answer: 'Add their firstname.lastname@duke.edu to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign up at /login with that address and verify their inbox. The Admin link appears automatically.',
     },
     {
-        question: 'How are waitlist promotions handled?',
-        answer: 'When someone drops a court or an admin removes them, the next waitlisted member is promoted automatically. The promoted member sees an in-app banner on their next visit to the booking section. Admins also see a confirmation alert when removing someone triggers a promotion.',
+        question: 'How are waitlists managed?',
+        answer: 'Add members to the waitlist from Manage roster on a booking card or in the Operations Deck. The booking card shows a visible waitlist roster (position, name, email) whenever anyone is queued — even if spots are still open on the courts. When someone drops or you remove them, the next waitlisted member is promoted automatically. Promoted members see an in-app banner on their next visit; admins see a confirmation when a removal triggers promotion.',
     },
 ];
 
