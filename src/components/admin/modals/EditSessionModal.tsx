@@ -1,10 +1,9 @@
-import { X } from 'lucide-react';
 import { SPORTS, getSlotsPerCourtForSport, DEFAULT_WAITLIST_PER_COURT } from '../../../lib/sports';
 import { buildDateFieldsFromIso, resolveSessionDateISO } from '../../../lib/dates';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
-import ModalPortal from '../ModalPortal';
+import AdminModalShell from '../AdminModalShell';
 import {
     type Session,
     type SessionType,
@@ -53,19 +52,7 @@ const EditSessionModal = ({
     };
 
     return (
-        <ModalPortal>
-            <div className="w-full max-w-md space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-800 dark:bg-carbon">
-                <div className="flex items-center justify-between border-b border-gray-200 pb-2 dark:border-gray-800">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-chalk">Edit Session Details</h3>
-                    <button
-                        type="button"
-                        onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                    >
-                        <X className="h-5 w-5" />
-                    </button>
-                </div>
-                <form onSubmit={onSubmit} className="space-y-4">
+        <AdminModalShell title="Edit Session Details" onClose={onClose} onSubmit={onSubmit}>
                     <div>
                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                             Session Title
@@ -299,24 +286,7 @@ const EditSessionModal = ({
                             </div>
                         )}
                     </div>
-                    <div className="flex justify-end gap-2 border-t border-gray-200 pt-2 dark:border-gray-800">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            className="clay-gradient rounded-lg px-4 py-2 text-sm text-white hover:brightness-110"
-                        >
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </ModalPortal>
+        </AdminModalShell>
     );
 };
 
