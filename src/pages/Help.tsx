@@ -160,8 +160,8 @@ const Help = () => {
                 </h1>
                 <p className="mt-4 text-base leading-relaxed text-gray-600 dark:text-chalk/60">
                     {isAdmin
-                        ? 'Member FAQ below; scroll to the Operations guide for admin topics — homepage gear controls, clinic capacity, waitlists, recurring edits, and the Operations Deck.'
-                        : 'Quick answers about signing in, all five club sports, reserving courts, waitlists (including who is queued), weekly sessions, clinics, and club events.'}
+                        ? 'Search below or browse the member FAQ; scroll to the Operations guide for admin topics — gear controls, capacity limits, waitlists, roster edits, and the Operations Deck.'
+                        : 'Search below or browse answers about signing in, all five club sports, reserving courts, waitlists, weekly sessions, clinics, and club events.'}
                 </p>
 
                 <div ref={searchContainerRef} className="relative mt-8">

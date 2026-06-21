@@ -27,7 +27,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'When can I book next week’s sessions?',
-        answer: "Next week opens for booking Sunday at 5:00 PM Eastern. Until then, next week's cards show a locked overlay so you can see the schedule but cannot join yet. This applies to both open play and recurring coaching clinics.",
+        answer: "Next week opens for booking Sunday at 5:00 PM Eastern. Until then, you can see next week's schedule on the card, but a lock overlay appears over the courts area and you cannot join yet. This applies to both open play and recurring coaching clinics.",
     },
     {
         question: 'How does the waitlist work?',
@@ -47,11 +47,15 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'What are clinics / coaching sessions?',
-        answer: 'Clinics are coaching sessions with a total capacity set by admins. When that capacity divides evenly across courts into 2 or 4 players per court, you will see the same court diagrams as open play. Otherwise the card shows a roster list with a single Join Session button. Clinics appear below open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
+        answer: 'Clinics and open play sessions share the same booking cards. Admins set a total capacity (up to 20 roster spots). When that capacity divides evenly across courts into 2 or 4 players per court, you will see court diagrams. Otherwise the card shows a roster list with a Join Session button. Clinics appear below open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
     },
     {
         question: 'Where are club events and news?',
-        answer: 'Scroll past the booking section or use the menu: Events (03) shows upcoming socials and mixers only — past events disappear after their date. News (04) shows up to four headline articles. The Club Wire ticker above booking carries live sports updates.',
+        answer: 'Scroll past the booking section or use the menu: Events (03) shows upcoming socials and mixers only — past events disappear after their date. News (04) shows up to four headline articles. The Club Wire ticker above booking carries live sports updates. From the Help page footer, Book a Court, Events, and News take you back to the home page and scroll to the right section.',
+    },
+    {
+        question: 'How do I find answers on the Help page?',
+        answer: 'Use the search bar at the top of /help. Type keywords such as waitlist, courts, sign in, or clinic — matching FAQ entries appear as you type. Tap a result to jump to that question and open it automatically.',
     },
     {
         question: 'How do I share feedback or report a problem?',
@@ -71,15 +75,19 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do I manage sessions from the home page?',
-        answer: 'On any booking card, tap the gear icon in the top-right corner. Choose Edit details (capacity, courts, time, coach, type), Manage roster (add or remove players, waitlist, assign coach), or Delete / remove weekly schedule. This mirrors the Operations Deck session controls without leaving the booking page.',
+        answer: 'When signed in as an allowlisted admin, tap the gear icon in the top-right corner of any booking card. Choose Edit details (capacity, courts, time, coach, type), Manage roster (add or remove players, waitlist, assign coach), or Delete / remove weekly schedule. Regular members and guests do not see the gear icon. This mirrors the Operations Deck session controls without leaving the booking page.',
     },
     {
         question: 'How do I create events and sessions?',
-        answer: 'In the Operations Deck → Courts & Sessions, use calendar date pickers and 12-hour AM/PM time pickers — no free-text dates or times. Choose one-time or weekly recurring, Open Play or Clinic, configure courts, max capacity, and waitlist size. Events are created under Events Manager with the same date/time pickers.',
+        answer: 'In the Operations Deck → Courts & Sessions, use calendar date pickers and 12-hour AM/PM time pickers — no free-text dates or times. Choose one-time or weekly recurring, Open Play or Clinic, configure courts (up to 5), max capacity (up to 20 roster spots), and waitlist size (up to 10, or 0 to disable). Events are created under Events Manager with the same date/time pickers.',
+    },
+    {
+        question: 'What are the maximum session size limits?',
+        answer: 'Each session is capped at 5 courts, 20 total roster spots (max attendees), and 10 waitlist spots. Admin forms enforce these limits so oversized values cannot be saved. If you lower capacity below the number already enrolled, you must choose who to remove or cancel the save — existing rosters are otherwise preserved when you edit courts or capacity.',
     },
     {
         question: 'How does clinic capacity and court layout work?',
-        answer: 'Set Max Capacity to the total roster size (e.g. 6 or 8). Court diagrams on the public site only appear when that total divides evenly across all configured courts into exactly 2 or 4 slots per court (e.g. 8 players on 2 courts = 4 each). Otherwise members see a roster list. The header always shows enrolled count vs your max capacity, not courts × 4. Capacity and layout updates apply instantly on the booking card after you save — no page refresh needed. Editing courts or capacity does not remove existing players or waitlist entries — if the new cap is below current enrollment, you must choose who to remove or cancel the save.',
+        answer: 'Set Max Capacity to the total roster size (e.g. 6 or 8; maximum 20). Court diagrams on the public site only appear when that total divides evenly across all configured courts (up to 5) into exactly 2 or 4 slots per court (e.g. 8 players on 2 courts = 4 each). Otherwise members see a roster list. The header always shows enrolled count vs your max capacity. Capacity and layout updates apply instantly on the booking card after you save — no page refresh needed. Editing courts or capacity does not remove existing players or waitlist entries unless the new cap is below current enrollment, in which case you choose who to remove or cancel the save.',
     },
     {
         question: 'Can I edit recurring sessions after they are live?',
