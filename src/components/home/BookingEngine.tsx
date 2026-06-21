@@ -755,7 +755,13 @@ const BookingEngine = () => {
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
-                        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                        <div
+                            className={
+                                courtsForDay.length === 1
+                                    ? 'grid grid-cols-1 gap-5'
+                                    : 'grid grid-cols-1 gap-5 lg:grid-cols-2'
+                            }
+                        >
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
                                 const isCourtFull = courtAttendees.length >= maxPerCourt;

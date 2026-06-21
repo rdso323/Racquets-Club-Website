@@ -3,6 +3,7 @@ export {
     isEventPast,
     isEventReadyForDeletion,
     filterUpcomingEvents,
+    sortEventsChronologically,
     partitionEventsByPast,
     purgeExpiredEventsFromFirestore,
     maintainEventsCollection,
