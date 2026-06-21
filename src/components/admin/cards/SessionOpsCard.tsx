@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Calendar, Clock, Edit, ListOrdered, Trash2, UserPlus, Users, X } from 'lucide-react';
+import { Calendar, CalendarX, Clock, Edit, ListOrdered, RotateCcw, Trash2, UserPlus, Users, X } from 'lucide-react';
 import { getSportTheme } from '../../../lib/sports';
 import {
     type Session,
@@ -37,6 +37,8 @@ export interface SessionOpsCardProps {
     onRemoveAttendee: (attendeeStr: string) => void;
     onRemoveWaitlistEntry: (waitlistEntry: string) => void;
     onEdit: () => void;
+    onCancelThisWeek?: () => void;
+    onRestoreThisWeek?: () => void;
     onDelete: () => void;
     /** When true, renders only roster/admin controls (no session header). */
     embedded?: boolean;
@@ -67,6 +69,8 @@ const SessionOpsCard = memo(({
     onRemoveAttendee,
     onRemoveWaitlistEntry,
     onEdit,
+    onCancelThisWeek,
+    onRestoreThisWeek,
     onDelete,
     embedded = false,
     showEmbeddedLabel = true,
@@ -79,6 +83,7 @@ const SessionOpsCard = memo(({
     const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
     const courtRequired = requiresCourtForAdd ?? sessionCourts.length > 0;
     const isRecurring = isRecurringSession(session);
+    const isCancelledThisWeek = session.cancelledThisWeek === true;
     const recurringConfig = isRecurring
         ? getRecurringConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
         : null;
@@ -274,14 +279,36 @@ const SessionOpsCard = memo(({
                     <Edit className="h-3.5 w-3.5" />
                     Edit Details
                 </button>
-                <button
-                    type="button"
-                    onClick={onDelete}
-                    className="flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors hover:text-red-500"
-                >
-                    <Trash2 className="h-3.5 w-3.5" />
-                    {isRecurring ? 'Remove weekly schedule' : 'Delete Session'}
-                </button>
+                <div className="flex items-center gap-3">
+                    {isRecurring &&
+                        (isCancelledThisWeek ? (
+                            <button
+                                type="button"
+                                onClick={onRestoreThisWeek}
+                                className="flex items-center gap-1 text-xs font-medium text-emerald-600 transition-colors hover:text-emerald-700 dark:text-emerald-400"
+                            >
+                                <RotateCcw className="h-3.5 w-3.5" />
+                                Restore this week
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={onCancelThisWeek}
+                                className="flex items-center gap-1 text-xs font-medium text-amber-600 transition-colors hover:text-amber-700 dark:text-amber-400"
+                            >
+                                <CalendarX className="h-3.5 w-3.5" />
+                                Cancel this week
+                            </button>
+                        ))}
+                    <button
+                        type="button"
+                        onClick={onDelete}
+                        className="flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors hover:text-red-500"
+                    >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        {isRecurring ? 'Remove schedule' : 'Delete Session'}
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -328,7 +355,14 @@ const SessionOpsCard = memo(({
                             </p>
                         )}
                     </div>
-                    <SessionTags session={session} variant="admin" />
+                    <div className="flex shrink-0 flex-col items-end gap-2">
+                        {isCancelledThisWeek && (
+                            <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
+                                Cancelled this week
+                            </span>
+                        )}
+                        <SessionTags session={session} variant="admin" />
+                    </div>
                 </div>
 
                 <div className="mb-4 flex flex-col gap-1 rounded-xl border border-gray-150 bg-white/40 p-2.5 text-xs text-gray-500 dark:border-gray-850 dark:bg-carbon/40 dark:text-gray-400">

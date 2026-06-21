@@ -24,14 +24,14 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 
 ### Admins (`/admin` and home page)
 
-- **Operations Deck** — Ticker, session visibility, live sessions, events, archive, feedback inbox
-- **Home page session controls** — **Gear icon** (signed-in admins only) on each booking card: Edit details, Manage roster, Delete / remove schedule
+- **Operations Deck** — Ticker, live sessions (by sport), events, archive, feedback inbox
+- **Home page session controls** — **Gear icon** (signed-in admins only) on each booking card: Edit details, Manage roster, Cancel this week / Restore this week (recurring), Remove schedule / Delete session
 - **Sessions** — Create one-time or **weekly recurring** open play or **coaching clinics** (any weekday); calendar date + 12-hour AM/PM time pickers; edit type, courts, capacity, and time on live recurring schedules
 - **Session limits** — Max **5 courts**, **20 roster spots**, and **10 waitlist spots** per session (enforced in admin forms and saves)
 - **Roster tools** — Member search with manual name fallback; add/remove roster and waitlist; edits preserve existing rosters unless you lower capacity below enrollment (with a pick-who-to-remove prompt)
 - **Events** — Create and edit club socials with calendar date and structured time pickers
 - **Archive** — Past events and one-time sessions kept for **7 days**, then auto-deleted when an admin visits the site; weekly recurring sessions are not archived
-- **Settings** — Edit ticker copy and per-sport session status (active / hidden / cancelled)
+- **Settings** — Edit ticker copy
 
 ### Auth
 
@@ -110,7 +110,7 @@ src/
 └── pages/              # Home, Help (searchable FAQ), Login, AdminDashboard
 ```
 
-Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users` (including `users/{uid}/notifications` for waitlist alerts), `settings` (ticker, sessionStatus, recurringSchedules).
+Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users` (including `users/{uid}/notifications` for waitlist alerts), `settings` (ticker, recurringSchedules).
 
 ## Booking & admin behaviour (summary)
 

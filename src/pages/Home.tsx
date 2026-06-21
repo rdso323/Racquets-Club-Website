@@ -104,8 +104,8 @@ const Home = () => {
                                 {...rise(0.18)}
                                 className="mt-7 max-w-2xl text-base font-light leading-relaxed text-gray-700 dark:text-court-line/70 sm:text-lg"
                             >
-                                A community for racquet sports players of every level — tennis, pickleball, squash,
-                                badminton, and more. We host open play and social events for the Fuqua, Duke, and
+                                A community for racquet sports players of every level — tennis, badminton, squash,
+                                pickleball, and table tennis. We host open play and social events for the Fuqua, Duke, and
                                 greater Durham communities.
                             </motion.p>
 

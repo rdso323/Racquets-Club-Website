@@ -1,5 +1,3 @@
-import type { SessionStatus } from '../../lib/sessions';
-
 export type AdminTab = 'settings' | 'sessions' | 'events' | 'archive' | 'feedback';
 
 export interface AdminEvent {
@@ -23,5 +21,3 @@ export interface FeedbackItem {
     userId: string;
     createdAt?: { seconds?: number };
 }
-
-export type SessionStatusMap = Record<string, SessionStatus>;

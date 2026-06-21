@@ -1,5 +1,5 @@
 import { useState, useEffect, type CSSProperties } from 'react';
-import { collection, onSnapshot, doc, updateDoc, getDoc, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Users, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
@@ -15,7 +15,6 @@ import {
 import { dismissNotification, notifyWaitlistPromotion, type WaitlistPromotionNotification } from '../../lib/waitlistNotifications';
 import {
     type Session,
-    type SessionStatus,
     getBaseWeekStart,
     isWeekLocked,
     getWeekDateRangeDisplay,
@@ -158,7 +157,6 @@ const BookingEngine = () => {
     const [sessions, setSessions] = useState<Session[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [sessionStatuses, setSessionStatuses] = useState<Record<string, SessionStatus>>({});
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
@@ -217,18 +215,6 @@ const BookingEngine = () => {
             setError("Could not load sessions. Please try again later.");
             setLoading(false);
         });
-
-        const fetchStatuses = async () => {
-            try {
-                const statusDoc = await getDoc(doc(db, 'settings', 'sessionStatus'));
-                if (statusDoc.exists()) {
-                    setSessionStatuses(statusDoc.data() as Record<string, SessionStatus>);
-                }
-            } catch (err) {
-                console.error("Error fetching statuses:", err);
-            }
-        };
-        fetchStatuses();
 
         const unsubRecurring = onSnapshot(
             doc(db, 'settings', 'recurringSchedules'),
@@ -482,6 +468,8 @@ const BookingEngine = () => {
                 session={session}
                 onEdit={() => adminOps.openEditSession(session)}
                 onManageRoster={() => setOpsSession(session)}
+                onCancelThisWeek={() => adminOps.handleCancelThisWeek(session)}
+                onRestoreThisWeek={() => adminOps.handleRestoreThisWeek(session)}
                 onDelete={() => adminOps.handleDeleteSession(session)}
             />
         );
@@ -491,13 +479,7 @@ const BookingEngine = () => {
         session: Session,
         recurringWeek?: { playDate: Date; isNextWeek: boolean },
     ) => {
-        const categoryKey = session.type === 'court'
-            ? `${activeSport}_OpenPlay`
-            : `${activeSport}_Clinic`;
-        const status = sessionStatuses[categoryKey] || 'active';
-
-        if (status === 'hidden') return null;
-        const isCancelled = status === 'cancelled';
+        const isCancelled = session.cancelledThisWeek === true;
 
         const sessionDateObj = recurringWeek?.playDate ?? parseSessionDateString(session.date);
         if (sessionDateObj && !isWithinBookingHorizon(sessionDateObj)) return null;
@@ -759,11 +741,7 @@ const BookingEngine = () => {
         playDate: Date,
         isNextWeek: boolean,
     ) => {
-        const categoryKey = `${activeSport}_OpenPlay`;
-        const status = sessionStatuses[categoryKey] || 'active';
-
-        if (status === 'hidden') return null;
-        const isCancelled = status === 'cancelled';
+        const isCancelled = session.cancelledThisWeek === true;
 
         const baseStartOfWeek = getBaseWeekStart(activeSport);
         const isLocked = isWeekLocked(baseStartOfWeek, isNextWeek);

@@ -41,7 +41,7 @@ type ScheduleMode = 'one-time' | 'recurring';
 const emptyMemberDraft = () => ({ name: '' });
 
 const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
-    ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [], disabledBuiltinSchedules = [] }, ref) => {
+    ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'Tennis', recurringSchedules = [], disabledBuiltinSchedules = [] }, ref) => {
         const adminOps = useSessionAdminOps({ sessionsList, recurringSchedules, disabledBuiltinSchedules });
         const {
             members,
@@ -58,6 +58,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             openEditSession,
             handleSaveSessionEdit,
             handleDeleteSession,
+            handleCancelThisWeek,
+            handleRestoreThisWeek,
             handleAddAttendee,
             handleAddToWaitlist,
             handleUpdateCoach,
@@ -98,14 +100,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         }, [sportFilterProp]);
 
         useEffect(() => {
-            if (sessionsSportFilter !== 'All') {
-                setNewSession((prev) => ({ ...prev, sport: sessionsSportFilter }));
-            }
+            setNewSession((prev) => ({ ...prev, sport: sessionsSportFilter }));
         }, [sessionsSportFilter]);
 
         const adminDisplaySessions = useMemo(() => {
-            const sportFilter = sessionsSportFilter === 'All' ? null : sessionsSportFilter;
-            return buildAdminDisplaySessions(sessionsList, sportFilter, recurringSchedules, disabledBuiltinSchedules);
+            return buildAdminDisplaySessions(sessionsList, sessionsSportFilter, recurringSchedules, disabledBuiltinSchedules);
         }, [sessionsList, sessionsSportFilter, recurringSchedules, disabledBuiltinSchedules]);
 
         const previewCourtLabels = buildCourtLabels(
@@ -192,7 +191,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
                 setNewSession({
                     title: '',
-                    sport: sessionsSportFilter !== 'All' ? sessionsSportFilter : 'Tennis',
+                    sport: sessionsSportFilter,
                     type: 'court',
                     date: '',
                     time: '',
@@ -293,6 +292,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         maxWaitlistSize={getMaxWaitlistSize(session)}
                                         requiresCourtForAdd={sessionRequiresCourtForAdd(session)}
                                         onEdit={() => openEditSession(session)}
+                                        onCancelThisWeek={() => handleCancelThisWeek(session)}
+                                        onRestoreThisWeek={() => handleRestoreThisWeek(session)}
                                         onDelete={() => handleDeleteSession(session)}
                                     />
                                 );

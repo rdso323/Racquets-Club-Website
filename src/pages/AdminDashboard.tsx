@@ -21,8 +21,6 @@ const AdminDashboard = () => {
         initialLoading,
         tickerText,
         setTickerText,
-        sessionStatuses,
-        updateStatus,
         sessionsList,
         recurringSchedules,
         disabledBuiltinSchedules,
@@ -75,12 +73,7 @@ const AdminDashboard = () => {
             tickerConfigured={tickerText.trim().length > 0}
         >
             {activeTab === 'settings' && (
-                <SettingsModule
-                    tickerText={tickerText}
-                    setTickerText={setTickerText}
-                    sessionStatuses={sessionStatuses}
-                    updateStatus={updateStatus}
-                />
+                <SettingsModule tickerText={tickerText} setTickerText={setTickerText} />
             )}
 
             {activeTab === 'sessions' && (
