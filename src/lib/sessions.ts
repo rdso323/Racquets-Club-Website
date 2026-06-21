@@ -166,8 +166,8 @@ export const isCourtSlotTaken = (
 export const formatWaitlistEntry = (uid: string, name: string, email: string, joinedAtMs = Date.now()): string =>
     `${uid}|${name}|${email}|${joinedAtMs}`;
 
-export const findUserAttendeeEntry = (attendees: string[], uid: string): string | undefined =>
-    attendees.find((a) => a.startsWith(`${uid}|`) || a === uid);
+export const findUserAttendeeEntry = (attendees: string[] | undefined, uid: string): string | undefined =>
+    (attendees || []).find((a) => a.startsWith(`${uid}|`) || a === uid);
 
 export const findUserWaitlistEntry = (waitlist: string[] | undefined, uid: string): string | undefined =>
     (waitlist || []).find((a) => a.startsWith(`${uid}|`) || a === uid);
@@ -423,6 +423,8 @@ export const resolveRecurringSession = (
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
                 maxAttendees: dbSession.maxAttendees ?? totalMax,
+                attendees: dbSession.attendees ?? [],
+                waitlist: dbSession.waitlist ?? [],
                 maxWaitlistSize:
                     dbSession.maxWaitlistSize ??
                     config.maxWaitlistSize ??
@@ -460,6 +462,8 @@ export const resolveRecurringSession = (
             type: 'court',
             maxAttendees: totalMax,
             sport,
+            attendees: dbSession.attendees ?? [],
+            waitlist: dbSession.waitlist ?? [],
             maxWaitlistSize:
                 dbSession.maxWaitlistSize ??
                 config.maxWaitlistSize ??
@@ -607,6 +611,26 @@ export const filterRegularSessionsForDisplay = (
 
 export const getDefaultMaxAttendees = (type: SessionType): number => {
     return type === 'court' ? DEFAULT_OPEN_PLAY_CAPACITY : 4;
+};
+
+/** Ensures Firestore session docs always have safe array/number fields for UI rendering. */
+export const normalizeSessionFromFirestore = (
+    id: string,
+    data: Record<string, unknown>,
+): Session => {
+    const type = (data.type as SessionType) || 'court';
+    const parsedMax = Number(data.maxAttendees);
+    return {
+        ...(data as unknown as Session),
+        id,
+        type,
+        attendees: Array.isArray(data.attendees) ? (data.attendees as string[]) : [],
+        waitlist: Array.isArray(data.waitlist) ? (data.waitlist as string[]) : [],
+        maxAttendees:
+            Number.isFinite(parsedMax) && parsedMax > 0
+                ? parsedMax
+                : getDefaultMaxAttendees(type),
+    };
 };
 
 export const buildCourtLabels = (

@@ -41,6 +41,7 @@ import {
     isRecurringCoachingSession,
     getRecurringConfigForSession,
     parseAttendee,
+    normalizeSessionFromFirestore,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 import { buildCourtSlots } from '../../lib/courtSlots';
@@ -203,10 +204,9 @@ const BookingEngine = () => {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'sessions'), (snapshot) => {
-            const sessionsData = snapshot.docs.map(docSnap => ({
-                id: docSnap.id,
-                ...docSnap.data()
-            })) as Session[];
+            const sessionsData = snapshot.docs.map((docSnap) =>
+                normalizeSessionFromFirestore(docSnap.id, docSnap.data()),
+            );
 
             setSessions(sessionsData);
             setLoading(false);
@@ -732,7 +732,7 @@ const BookingEngine = () => {
         const showCourtDiagram = usesCourtDiagramLayout(maxPerCourt);
         const totalMax = courtsForDay.length * maxPerCourt;
 
-        const activeAttendees = session.attendees.filter((a) =>
+        const activeAttendees = (session.attendees || []).filter((a) =>
             courtsForDay.some((court) => isAttendeeOnCourt(a, court)),
         );
 

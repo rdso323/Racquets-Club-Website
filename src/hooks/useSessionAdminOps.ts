@@ -133,6 +133,8 @@ export function useSessionAdminOps({
                 ...timeFields,
                 maxAttendees: Number(editingSession.maxAttendees),
                 maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
+                attendees: editingSession.attendees ?? [],
+                waitlist: editingSession.waitlist ?? [],
                 coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
                 coachId: null,
             };
