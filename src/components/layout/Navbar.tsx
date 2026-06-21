@@ -5,6 +5,7 @@ import { User, Settings, LogOut, Sun, Moon, LogIn } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
+import { formatMemberFirstName } from '../../lib/memberNames';
 
 const Navbar = () => {
     const { user, signOut, isAdmin } = useAuth();
@@ -55,7 +56,7 @@ const Navbar = () => {
                                 <div className="hidden sm:flex items-center gap-2 mr-1 flex-shrink-0">
                                     <User className="w-5 h-5 mr-3 text-gray-400 dark:text-gray-500" strokeWidth={1.5} />
                                     <span className="text-[15px] font-semibold text-wimbledon-navy dark:text-gray-100">
-                                        Welcome, {user.displayName?.split(' ')[0] || (user.email ? user.email.split('@')[0].split('.')[0].charAt(0).toUpperCase() + user.email.split('@')[0].split('.')[0].slice(1) : 'Member')}
+                                        Welcome, {formatMemberFirstName(user.email, user.displayName)}
                                     </span>
                                 </div>
                                 

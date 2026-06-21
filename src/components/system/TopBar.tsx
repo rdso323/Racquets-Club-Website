@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useUI } from './UIProvider';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
+import { formatMemberFirstName } from '../../lib/memberNames';
 import { Menu, Moon, Sun, LogIn, X } from 'lucide-react';
 
 const TopBar = () => {
@@ -38,7 +39,7 @@ const TopBar = () => {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    const memberLabel = user?.displayName?.split(' ')[0] || user?.email?.split('@')[0] || null;
+    const memberLabel = user ? formatMemberFirstName(user.email, user.displayName) : null;
     const onAdminPage = location.pathname === '/admin';
 
     return (
