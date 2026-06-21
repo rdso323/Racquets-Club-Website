@@ -33,7 +33,7 @@ import {
     findUserWaitlistEntry,
 } from '../../../lib/sessions';
 import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
-import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
+import { buildDateFieldsFromIso, buildTimeFields, resolveSessionTimes } from '../../../lib/dates';
 import { notifyWaitlistPromotion } from '../../../lib/waitlistNotifications';
 import { useAuth } from '../../../contexts/AuthContext';
 import DatePickerField from '../fields/DatePickerField';
@@ -257,10 +257,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                       )
                     : editingSession.courts;
 
-                const timeFields = buildTimeFields(
-                    editingSession.startTime || '18:30',
-                    editingSession.endTime,
-                );
+                const resolvedTimes = resolveSessionTimes(editingSession);
+                const timeFields = resolvedTimes
+                    ? buildTimeFields(resolvedTimes.startTime, resolvedTimes.endTime)
+                    : buildTimeFields(editingSession.startTime || '18:30', editingSession.endTime);
                 const sport = editingSession.sport || inferSport(editingSession);
                 const slotsPerCourt = getSlotsPerCourtForSport(sport);
                 const updateData: Record<string, unknown> = {
@@ -298,7 +298,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         return;
                     }
 
-                    const scheduleFields = {
+                    const scheduleFields: Omit<AdminRecurringSchedule, 'id' | 'sport' | 'day'> = {
                         title: editingSession.title,
                         sessionType: editingSession.type,
                         time: timeFields.time,
@@ -306,7 +306,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         maxPerCourt: slotsPerCourt,
                         maxAttendees: Number(editingSession.maxAttendees),
                         maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
-                        coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : undefined,
+                        ...(editingSession.type === 'coaching'
+                            ? { coach: editingSession.coach || 'TBD' }
+                            : {}),
                     };
 
                     if (config.scheduleId) {
@@ -320,7 +322,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     }
                 }
 
-                await updateDoc(doc(db, 'sessions', editingSession.id), updateData);
+                await setDoc(doc(db, 'sessions', editingSession.id), updateData, { merge: true });
                 setEditingSession(null);
             } catch (err) {
                 console.error('Error saving session edit:', err);

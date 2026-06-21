@@ -172,15 +172,18 @@ export const updateRecurringSchedule = async (
     const current = await fetchRecurringSettings();
     await saveRecurringSettings({
         ...current,
-        schedules: current.schedules.map((schedule) =>
-            schedule.id === id
-                ? {
-                      ...schedule,
-                      ...patch,
-                      sessionType: patch.sessionType ?? schedule.sessionType ?? 'court',
-                  }
-                : schedule,
-        ),
+        schedules: current.schedules.map((schedule) => {
+            if (schedule.id !== id) return schedule;
+            const next: AdminRecurringSchedule = {
+                ...schedule,
+                ...patch,
+                sessionType: patch.sessionType ?? schedule.sessionType ?? 'court',
+            };
+            if (next.sessionType === 'court') {
+                delete next.coach;
+            }
+            return next;
+        }),
     });
 };
 

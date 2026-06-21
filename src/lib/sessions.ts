@@ -755,13 +755,21 @@ export const getRecurringConfigForSession = (
     const clinicIdMatch = session.id.match(new RegExp(`^clinic_[a-z_]+_(${WEEKDAY_ID_PATTERN})_`));
     if (clinicIdMatch) {
         const day = clinicIdMatch[1] as DayName;
-        return configs.find((c) => c.day === day && c.sessionType === 'coaching' && !c.scheduleId) || null;
+        return (
+            configs.find((c) => c.day === day && c.sessionType === 'coaching' && c.scheduleId) ||
+            configs.find((c) => c.day === day && c.sessionType === 'coaching' && !c.scheduleId) ||
+            null
+        );
     }
 
     const openPlayIdMatch = session.id.match(new RegExp(`open_play_[a-z_]+_(${WEEKDAY_ID_PATTERN})_`));
     if (openPlayIdMatch) {
         const day = openPlayIdMatch[1] as DayName;
-        return configs.find((c) => c.day === day && (c.sessionType ?? 'court') === 'court' && !c.scheduleId) || null;
+        return (
+            configs.find((c) => c.day === day && (c.sessionType ?? 'court') === 'court' && c.scheduleId) ||
+            configs.find((c) => c.day === day && (c.sessionType ?? 'court') === 'court' && !c.scheduleId) ||
+            null
+        );
     }
 
     const titleLower = session.title.toLowerCase();
