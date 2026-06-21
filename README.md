@@ -74,7 +74,7 @@ VITE_FIREBASE_STORAGE_BUCKET=
 VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 VITE_FIREBASE_MEASUREMENT_ID=          # optional
-VITE_ADMIN_EMAILS=admin@duke.edu       # optional, comma-separated
+VITE_ADMIN_EMAILS=officer@duke.edu     # optional, comma-separated
 ```
 
 Placeholder Firebase values are enough to render the public home page in dev; live auth and Firestore need a real project.
