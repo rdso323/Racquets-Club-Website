@@ -206,9 +206,7 @@ const EditSessionModal = ({
                                     min={1}
                                     value={editCourtFields.courtStartNumber}
                                     onChange={(courtStartNumber) => {
-                                        const fields = { ...editCourtFields, courtStartNumber };
-                                        onEditCourtFieldsChange(fields);
-                                        updateCourtsCapacity(fields);
+                                        onEditCourtFieldsChange({ ...editCourtFields, courtStartNumber });
                                     }}
                                     className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                 />
@@ -224,9 +222,7 @@ const EditSessionModal = ({
                                 value={editCourtFields.customCourtLabels}
                                 onChange={(e) => {
                                     const customCourtLabels = e.target.value;
-                                    const fields = { ...editCourtFields, customCourtLabels };
-                                    onEditCourtFieldsChange(fields);
-                                    updateCourtsCapacity(fields);
+                                    onEditCourtFieldsChange({ ...editCourtFields, customCourtLabels });
                                 }}
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             />

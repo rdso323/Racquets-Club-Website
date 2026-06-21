@@ -77,7 +77,7 @@ export function useSessionAdminOps({
 
     const getSessionRoster = (session: Session): string[] => {
         const courts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-        const maxPerCourt = getSlotsPerCourt(session);
+        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
         if (courts.length > 0) {
             const courtCapacity = courts.length * maxPerCourt;
             if (session.type === 'coaching' && session.maxAttendees > courtCapacity) {
@@ -91,7 +91,7 @@ export function useSessionAdminOps({
     const sessionRequiresCourtForAdd = (session: Session): boolean => {
         const courts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
         if (courts.length === 0) return false;
-        const maxPerCourt = getSlotsPerCourt(session);
+        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
         const cap = getSessionEnrollmentCap(session, courts, maxPerCourt);
         if (session.type === 'coaching' && cap > courts.length * maxPerCourt) {
             return false;

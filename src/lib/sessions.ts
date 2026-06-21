@@ -422,7 +422,7 @@ export const resolveRecurringSession = (
                 type: 'coaching',
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
-                maxAttendees: dbSession.maxAttendees ?? totalMax,
+                maxAttendees: config.maxAttendees ?? dbSession.maxAttendees ?? totalMax,
                 attendees: dbSession.attendees ?? [],
                 waitlist: dbSession.waitlist ?? [],
                 maxWaitlistSize:
@@ -460,7 +460,7 @@ export const resolveRecurringSession = (
             ...dbSession,
             title: config.title,
             type: 'court',
-            maxAttendees: totalMax,
+            maxAttendees: config.maxAttendees ?? dbSession.maxAttendees ?? totalMax,
             sport,
             attendees: dbSession.attendees ?? [],
             waitlist: dbSession.waitlist ?? [],
@@ -648,11 +648,27 @@ export const buildCourtLabels = (
     return Array.from({ length: safeCount }, (_, i) => `Court ${safeStart + i}`);
 };
 
-export const getSlotsPerCourt = (session: Session): number => {
-    const config = getOpenPlayConfigForSession(session);
-    if (config) return config.maxPerCourt;
+export const getSlotsPerCourt = (
+    session: Session,
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): number => {
+    const recurringConfig = getRecurringConfigForSession(session, customSchedules, disabledBuiltin);
+    if (recurringConfig?.maxPerCourt) return recurringConfig.maxPerCourt;
     if (session.slotsPerCourt != null) return session.slotsPerCourt;
     return getSlotsPerCourtForSport(inferSport(session));
+};
+
+/** Whether the booking card should render interactive court diagrams. */
+export const shouldShowCourtDiagram = (
+    session: Session,
+    courts: string[],
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): boolean => {
+    if (courts.length === 0) return false;
+    const maxPerCourt = getSlotsPerCourt(session, customSchedules, disabledBuiltin);
+    return usesCourtDiagramLayout(maxPerCourt);
 };
 
 /** Court diagram UI only for standard 2- or 4-player court layouts. */

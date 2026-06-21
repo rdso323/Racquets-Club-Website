@@ -29,7 +29,7 @@ import {
     getSlotsPerCourt,
     getSessionEnrollmentCap,
     getSessionRosterAttendees,
-    usesCourtDiagramLayout,
+    shouldShowCourtDiagram,
     isRecurringSession,
     filterAttendeesByCourt,
     findUserAttendeeEntry,
@@ -504,13 +504,14 @@ const BookingEngine = () => {
             : session.date;
 
         const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-        const hasCourtBuckets = sessionCourts.length > 0;
-        const maxPerCourt = getSlotsPerCourt(session);
+        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
         const totalMax = getSessionEnrollmentCap(session, sessionCourts, maxPerCourt);
-        const showCourtDiagram =
-            hasCourtBuckets &&
-            usesCourtDiagramLayout(maxPerCourt) &&
-            (session.type !== 'coaching' || totalMax <= sessionCourts.length * maxPerCourt);
+        const showCourtDiagram = shouldShowCourtDiagram(
+            session,
+            sessionCourts,
+            recurringSchedules,
+            disabledBuiltinSchedules,
+        );
 
         const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
 
@@ -617,15 +618,22 @@ const BookingEngine = () => {
                                 }
                             >
                                 {sessionCourts.map((courtName) => {
-                                    const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
-                                    const isCourtFull = courtAttendees.length >= maxPerCourt;
+                                    const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
+                                    const sessionAtCapacity = activeAttendees.length >= totalMax;
+                                    const isCourtFull =
+                                        courtAttendees.length >= maxPerCourt ||
+                                        (session.type === 'coaching' && sessionAtCapacity);
                                     const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                     const userInAnotherCourt = !!(userEntry && !userInThisCourt);
                                     const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
+                                    const spotsLeft = Math.min(
+                                        maxPerCourt - courtAttendees.length,
+                                        totalMax - activeAttendees.length,
+                                    );
                                     const disabled =
                                         sessionDisabled ||
                                         userOnWaitlist ||
-                                        (isCourtFull && !userInThisCourt) ||
+                                        ((isCourtFull || sessionAtCapacity) && !userInThisCourt) ||
                                         bookingBusy === session.id;
 
                                     const actionLabel = isPast
@@ -648,7 +656,7 @@ const BookingEngine = () => {
                                             sport={activeSport}
                                             courtName={courtName}
                                             slots={slots}
-                                            spotsLeft={maxPerCourt - courtAttendees.length}
+                                            spotsLeft={Math.max(0, spotsLeft)}
                                             disabled={disabled}
                                             actionLabel={actionLabel}
                                             userInThisCourt={userInThisCourt}
@@ -660,7 +668,11 @@ const BookingEngine = () => {
                             </div>
                         ) : (
                             <>
-                                {renderAttendeesList(activeAttendees, totalMax, undefined)}
+                                {renderAttendeesList(
+                                    activeAttendees,
+                                    totalMax,
+                                    sessionCourts.length > 0 ? sessionCourts : undefined,
+                                )}
                                 <button
                                     onClick={() => handleJoin(session)}
                                     disabled={sessionDisabled || userOnWaitlist || (isFull && !isJoining) || bookingBusy === session.id}
@@ -729,7 +741,12 @@ const BookingEngine = () => {
 
         const courtsForDay = config.courts;
         const maxPerCourt = config.maxPerCourt;
-        const showCourtDiagram = usesCourtDiagramLayout(maxPerCourt);
+        const showCourtDiagram = shouldShowCourtDiagram(
+            session,
+            courtsForDay,
+            recurringSchedules,
+            disabledBuiltinSchedules,
+        );
         const totalMax = courtsForDay.length * maxPerCourt;
 
         const activeAttendees = (session.attendees || []).filter((a) =>
