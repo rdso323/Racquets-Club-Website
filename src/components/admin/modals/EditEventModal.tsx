@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { buildDateFieldsFromIso } from '../../../lib/dates';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
+import ModalPortal from '../ModalPortal';
 import type { AdminEvent } from '../types';
 
 interface EditEventModalProps {
@@ -12,7 +13,7 @@ interface EditEventModalProps {
 }
 
 const EditEventModal = ({ event, onEventChange, onClose, onSubmit }: EditEventModalProps) => (
-    <div className="fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4">
+    <ModalPortal>
         <div className="w-full max-w-md space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-800 dark:bg-carbon">
             <div className="flex items-center justify-between border-b border-gray-200 pb-2 dark:border-gray-800">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-chalk">Edit Event</h3>
@@ -108,7 +109,7 @@ const EditEventModal = ({ event, onEventChange, onClose, onSubmit }: EditEventMo
                 </div>
             </form>
         </div>
-    </div>
+    </ModalPortal>
 );
 
 export default EditEventModal;

@@ -4,6 +4,7 @@ import { buildDateFieldsFromIso, resolveSessionDateISO } from '../../../lib/date
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
+import ModalPortal from '../ModalPortal';
 import {
     type Session,
     type SessionType,
@@ -52,7 +53,7 @@ const EditSessionModal = ({
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4">
+        <ModalPortal>
             <div className="w-full max-w-md space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-800 dark:bg-carbon">
                 <div className="flex items-center justify-between border-b border-gray-200 pb-2 dark:border-gray-800">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-chalk">Edit Session Details</h3>
@@ -315,7 +316,7 @@ const EditSessionModal = ({
                     </div>
                 </form>
             </div>
-        </div>
+        </ModalPortal>
     );
 };
 
