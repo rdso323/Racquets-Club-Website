@@ -101,14 +101,14 @@ const SessionOpsCard = memo(({
                     </div>
                     <span
                         className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                            session.type === 'coaching'
-                                ? 'border-blue-100 bg-blue-50 text-blue-600 dark:border-blue-900/20 dark:bg-blue-950/30 dark:text-blue-450'
-                                : isRecurring
-                                  ? 'border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-900/20 dark:bg-violet-950/30 dark:text-violet-300'
+                            isRecurring
+                                ? 'border-violet-100 bg-violet-50 text-violet-600 dark:border-violet-900/20 dark:bg-violet-950/30 dark:text-violet-300'
+                                : session.type === 'coaching'
+                                  ? 'border-blue-100 bg-blue-50 text-blue-600 dark:border-blue-900/20 dark:bg-blue-950/30 dark:text-blue-450'
                                   : 'border-green-100 bg-green-50 text-green-600 dark:border-green-900/20 dark:bg-green-950/30 dark:text-green-400'
                         }`}
                     >
-                        {session.type === 'coaching' ? 'Clinic' : isRecurring ? 'Recurring' : 'One-time'}
+                        {isRecurring ? 'Recurring' : session.type === 'coaching' ? 'Clinic' : 'One-time'}
                     </span>
                 </div>
 

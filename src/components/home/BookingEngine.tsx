@@ -35,6 +35,7 @@ import {
     isOpenPlaySessionEnded,
     isOpenPlaySession,
     isRecurringCoachingSession,
+    getRecurringConfigForSession,
     parseAttendee,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
@@ -484,6 +485,13 @@ const BookingEngine = () => {
         const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
         const isJoining = !!userEntry;
         const sessionDisabled = isPast || isCancelled || !user;
+        const isRecurringClinic = isRecurringCoachingSession(session);
+        const recurringClinicConfig = isRecurringClinic
+            ? getRecurringConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
+            : null;
+        const recurringDayLabel = recurringClinicConfig
+            ? recurringClinicConfig.day.charAt(0).toUpperCase() + recurringClinicConfig.day.slice(1)
+            : null;
 
         return (
             <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
@@ -499,10 +507,17 @@ const BookingEngine = () => {
 
                 <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="mb-4 flex items-start justify-between gap-3">
-                        <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
-                            {session.type === 'coaching' ? <Rocket className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />}
-                            {session.type === 'coaching' ? 'Clinic' : 'Session'}
-                        </span>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
+                                {session.type === 'coaching' ? <Rocket className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />}
+                                {session.type === 'coaching' ? 'Clinic' : 'Session'}
+                            </span>
+                            {isRecurringClinic && (
+                                <span className="inline-flex items-center rounded border border-violet-200 bg-violet-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-700 dark:border-violet-900/40 dark:bg-violet-950/40 dark:text-violet-200">
+                                    Recurring
+                                </span>
+                            )}
+                        </div>
                         <div className="flex flex-col items-end gap-2">
                             <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
                                 {formattedClinicDate}
@@ -510,6 +525,9 @@ const BookingEngine = () => {
                         </div>
                     </div>
                     <h3 className="font-display text-2xl text-gray-900 dark:text-chalk">{session.title}</h3>
+                    {recurringDayLabel && (
+                        <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
+                    )}
                     <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
                         {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                     </p>
