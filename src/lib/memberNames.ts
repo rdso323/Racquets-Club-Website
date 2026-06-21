@@ -72,3 +72,29 @@ export const formatMemberNameFromEmail = (email: string | null | undefined): str
     if (!email) return 'Player';
     return formatCourtDisplayName(email);
 };
+
+/** Greeting label — first name only, e.g. "Rohan" from rohan.dsouza@duke.edu. */
+export const formatMemberFirstName = (
+    email: string | null | undefined,
+    displayName?: string | null,
+): string => {
+    if (email) {
+        const lower = email.trim().toLowerCase();
+        if (lower.endsWith('@duke.edu')) {
+            const parts = lower.split('@')[0].split('.').filter(Boolean);
+            if (parts.length >= 1) return titleCase(parts[0]);
+        }
+    }
+
+    const trimmed = displayName?.trim();
+    if (trimmed) {
+        const firstToken = trimmed.split(/\s+/)[0];
+        if (firstToken.includes('.')) {
+            const segment = firstToken.split('.').filter(Boolean)[0];
+            if (segment) return titleCase(segment);
+        }
+        return titleCase(firstToken);
+    }
+
+    return 'Member';
+};
