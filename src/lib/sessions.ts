@@ -1,7 +1,12 @@
 import {
+    ADMIN_MAX_COURTS,
+    ADMIN_MAX_ATTENDEES,
     DEFAULT_OPEN_PLAY_CAPACITY,
     DEFAULT_WAITLIST_PER_COURT,
     SLOTS_PER_COURT,
+    clampAdminCourtCount,
+    clampAdminMaxAttendees,
+    clampAdminMaxWaitlist,
     getSlotsPerCourtForSport,
     type AdminRecurringSchedule,
     type DayName,
@@ -631,6 +636,7 @@ export const normalizeSessionFromFirestore = (
 ): Session => {
     const type = (data.type as SessionType) || 'court';
     const parsedMax = Number(data.maxAttendees);
+    const parsedWaitlist = Number(data.maxWaitlistSize);
     return {
         ...(data as unknown as Session),
         id,
@@ -639,8 +645,11 @@ export const normalizeSessionFromFirestore = (
         waitlist: Array.isArray(data.waitlist) ? (data.waitlist as string[]) : [],
         maxAttendees:
             Number.isFinite(parsedMax) && parsedMax > 0
-                ? parsedMax
+                ? clampAdminMaxAttendees(parsedMax)
                 : getDefaultMaxAttendees(type),
+        ...(Number.isFinite(parsedWaitlist)
+            ? { maxWaitlistSize: clampAdminMaxWaitlist(parsedWaitlist) }
+            : {}),
     };
 };
 
@@ -651,10 +660,14 @@ export const buildCourtLabels = (
 ): string[] => {
     const trimmed = customOverride?.trim();
     if (trimmed) {
-        return trimmed.split(',').map((label) => label.trim()).filter(Boolean);
+        return trimmed
+            .split(',')
+            .map((label) => label.trim())
+            .filter(Boolean)
+            .slice(0, ADMIN_MAX_COURTS);
     }
 
-    const safeCount = Math.max(1, Math.min(5, count));
+    const safeCount = clampAdminCourtCount(count);
     const safeStart = Math.max(1, startNumber);
     return Array.from({ length: safeCount }, (_, i) => `Court ${safeStart + i}`);
 };
@@ -875,12 +888,12 @@ export const getSessionEnrollmentCap = (
     maxPerCourt: number,
 ): number => {
     if (session.maxAttendees > 0) {
-        return session.maxAttendees;
+        return clampAdminMaxAttendees(session.maxAttendees);
     }
     if (courts.length > 0) {
-        return courts.length * maxPerCourt;
+        return Math.min(ADMIN_MAX_ATTENDEES, courts.length * maxPerCourt);
     }
-    return session.maxAttendees;
+    return clampAdminMaxAttendees(session.maxAttendees);
 };
 
 /** Count enrolled players for display and full checks — always includes the full persisted roster. */
@@ -901,12 +914,12 @@ export const isSessionEnrollmentFull = (
 };
 
 export const getMaxWaitlistSize = (session: Session, openPlayConfig?: OpenPlayDayConfig | null): number => {
-    if (session.maxWaitlistSize != null) return session.maxWaitlistSize;
-    if (openPlayConfig?.maxWaitlistSize != null) return openPlayConfig.maxWaitlistSize;
+    if (session.maxWaitlistSize != null) return clampAdminMaxWaitlist(session.maxWaitlistSize);
+    if (openPlayConfig?.maxWaitlistSize != null) return clampAdminMaxWaitlist(openPlayConfig.maxWaitlistSize);
 
     const courts = getCourtsForSession(session);
-    if (courts.length > 0) return courts.length * DEFAULT_WAITLIST_PER_COURT;
-    return DEFAULT_WAITLIST_PER_COURT * 2;
+    if (courts.length > 0) return clampAdminMaxWaitlist(courts.length * DEFAULT_WAITLIST_PER_COURT);
+    return clampAdminMaxWaitlist(DEFAULT_WAITLIST_PER_COURT * 2);
 };
 
 export const isWaitlistEnabled = (session: Session, openPlayConfig?: OpenPlayDayConfig | null): boolean =>

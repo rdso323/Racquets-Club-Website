@@ -8,7 +8,7 @@ import {
     arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { type AdminRecurringSchedule, getSlotsPerCourtForSport } from '../lib/sports';
+import { type AdminRecurringSchedule, getSlotsPerCourtForSport, clampAdminMaxAttendees, clampAdminMaxWaitlist } from '../lib/sports';
 import {
     type Session,
     buildCourtLabels,
@@ -136,8 +136,8 @@ export function useSessionAdminOps({
                 time: String(updateData.time ?? sessionToSave.time),
                 courts: courts ?? config.courts,
                 maxPerCourt: slotsPerCourt,
-                maxAttendees: Number(updateData.maxAttendees ?? sessionToSave.maxAttendees),
-                maxWaitlistSize: Number(updateData.maxWaitlistSize ?? sessionToSave.maxWaitlistSize ?? 0),
+                maxAttendees: clampAdminMaxAttendees(Number(updateData.maxAttendees ?? sessionToSave.maxAttendees)),
+                maxWaitlistSize: clampAdminMaxWaitlist(Number(updateData.maxWaitlistSize ?? sessionToSave.maxWaitlistSize ?? 0)),
                 ...(sessionToSave.type === 'coaching'
                     ? { coach: sessionToSave.coach || 'TBD' }
                     : {}),
@@ -203,8 +203,8 @@ export function useSessionAdminOps({
                 type: editingSession.type,
                 date: editingSession.date,
                 ...timeFields,
-                maxAttendees: Number(editingSession.maxAttendees),
-                maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
+                maxAttendees: clampAdminMaxAttendees(Number(editingSession.maxAttendees)),
+                maxWaitlistSize: clampAdminMaxWaitlist(Number(editingSession.maxWaitlistSize ?? 0)),
                 coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
                 coachId: null,
             };
@@ -224,7 +224,7 @@ export function useSessionAdminOps({
             const capSession: Session = {
                 ...editingSession,
                 courts: usesCourts && courts && courts.length > 0 ? courts : editingSession.courts,
-                maxAttendees: Number(editingSession.maxAttendees),
+                maxAttendees: clampAdminMaxAttendees(Number(editingSession.maxAttendees)),
             };
             const capCourts = getCourtsForSession(capSession, recurringSchedules, disabledBuiltinSchedules);
             const maxPerCourt = getSlotsPerCourt(capSession, recurringSchedules, disabledBuiltinSchedules);

@@ -8,6 +8,20 @@ export const SLOTS_PER_COURT = 4;
 /** Default waitlist slots per court when session has no explicit maxWaitlistSize */
 export const DEFAULT_WAITLIST_PER_COURT = 4;
 
+/** Admin-configurable upper bounds for session scheduling. */
+export const ADMIN_MAX_COURTS = 5;
+export const ADMIN_MAX_ATTENDEES = 20;
+export const ADMIN_MAX_WAITLIST = 10;
+
+export const clampAdminCourtCount = (value: number): number =>
+    Math.min(ADMIN_MAX_COURTS, Math.max(1, Math.trunc(value)));
+
+export const clampAdminMaxAttendees = (value: number): number =>
+    Math.min(ADMIN_MAX_ATTENDEES, Math.max(1, Math.trunc(value)));
+
+export const clampAdminMaxWaitlist = (value: number): number =>
+    Math.min(ADMIN_MAX_WAITLIST, Math.max(0, Math.trunc(value)));
+
 export const getSlotsPerCourtForSport = (_sport: string): number => SLOTS_PER_COURT;
 
 export type DayName =

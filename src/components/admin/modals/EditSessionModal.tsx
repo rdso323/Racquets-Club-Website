@@ -1,4 +1,12 @@
-import { SPORTS, getSlotsPerCourtForSport, DEFAULT_WAITLIST_PER_COURT, type OpenPlayDayConfig } from '../../../lib/sports';
+import {
+    SPORTS,
+    getSlotsPerCourtForSport,
+    DEFAULT_WAITLIST_PER_COURT,
+    ADMIN_MAX_ATTENDEES,
+    ADMIN_MAX_WAITLIST,
+    clampAdminMaxWaitlist,
+    type OpenPlayDayConfig,
+} from '../../../lib/sports';
 import { buildDateFieldsFromIso, resolveSessionDateISO } from '../../../lib/dates';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
@@ -48,7 +56,7 @@ const EditSessionModal = ({
         const courts = buildCourtLabels(fields.courtCount, fields.courtStartNumber, fields.customCourtLabels);
         onSessionChange({
             ...session,
-            maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
+            maxWaitlistSize: clampAdminMaxWaitlist(courts.length * DEFAULT_WAITLIST_PER_COURT),
         });
     };
 
@@ -250,20 +258,24 @@ const EditSessionModal = ({
                     <AdminNumericField
                         required
                         min={1}
+                        max={ADMIN_MAX_ATTENDEES}
                         value={session.maxAttendees}
                         onChange={(maxAttendees) => onSessionChange({ ...session, maxAttendees })}
                         className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                     />
+                    <p className="mt-1 text-[10px] text-gray-400">Max {ADMIN_MAX_ATTENDEES} roster spots.</p>
                 </div>
                 <div>
                     <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Max Waitlist</label>
                     <AdminNumericField
                         required
                         min={0}
+                        max={ADMIN_MAX_WAITLIST}
                         value={session.maxWaitlistSize ?? 0}
                         onChange={(maxWaitlistSize) => onSessionChange({ ...session, maxWaitlistSize })}
                         className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                     />
+                    <p className="mt-1 text-[10px] text-gray-400">Max {ADMIN_MAX_WAITLIST} waitlist spots. 0 disables waitlist.</p>
                 </div>
                 {session.type === 'coaching' && (
                     <div>

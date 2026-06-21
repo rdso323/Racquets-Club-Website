@@ -5,7 +5,7 @@ import {
 } from 'firebase/firestore';
 import { Calendar, Plus } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { SPORTS, SPORT_FILTER_TABS, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, getSlotsPerCourtForSport, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
+import { SPORTS, SPORT_FILTER_TABS, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, getSlotsPerCourtForSport, ADMIN_MAX_ATTENDEES, ADMIN_MAX_WAITLIST, clampAdminMaxAttendees, clampAdminMaxWaitlist, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
 import {
     type Session,
     type SessionType,
@@ -147,9 +147,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         sessionType: newSession.type,
                         courts,
                         maxPerCourt: getSlotsPerCourtForSport(newSession.sport),
-                        maxAttendees: Number(newSession.maxAttendees),
+                        maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                         coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
-                        maxWaitlistSize: Number(newSession.maxWaitlistSize),
+                        maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
                     });
                     setNewSessionMsg(
                         newSession.type === 'coaching'
@@ -164,7 +164,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         type: newSession.type,
                         date: newSession.date,
                         ...timeFields,
-                        maxAttendees: Number(newSession.maxAttendees),
+                        maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                         attendees: [],
                         coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : null,
                         coachId: null,
@@ -179,10 +179,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         const slotsPerCourt = getSlotsPerCourtForSport(newSession.sport);
                         sessionData.courts = courts;
                         sessionData.slotsPerCourt = slotsPerCourt;
-                        sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                        sessionData.maxWaitlistSize = clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize));
                         sessionData.waitlist = [];
                     } else if (newSession.type === 'coaching') {
-                        sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                        sessionData.maxWaitlistSize = clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize));
                         sessionData.waitlist = [];
                     }
 
@@ -660,6 +660,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         <AdminNumericField
                                             required
                                             min={1}
+                                            max={ADMIN_MAX_ATTENDEES}
                                             placeholder="8"
                                             value={newSession.maxAttendees}
                                             onChange={(maxAttendees) =>
@@ -670,6 +671,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
+                                        <p className="mt-1 text-[10px] text-gray-400">Max {ADMIN_MAX_ATTENDEES} roster spots.</p>
                                     </div>
                                     <div>
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
@@ -678,6 +680,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         <AdminNumericField
                                             required
                                             min={0}
+                                            max={ADMIN_MAX_WAITLIST}
                                             placeholder="8"
                                             value={newSession.maxWaitlistSize}
                                             onChange={(maxWaitlistSize) =>
@@ -688,7 +691,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
-                                        <p className="mt-1 text-[10px] text-gray-400">0 disables waitlist. Default is 4 per court.</p>
+                                        <p className="mt-1 text-[10px] text-gray-400">Max {ADMIN_MAX_WAITLIST} waitlist spots. 0 disables waitlist.</p>
                                     </div>
                                     {newSession.type === 'coaching' && (
                                         <div>
