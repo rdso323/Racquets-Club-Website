@@ -26,7 +26,6 @@ import {
     getMaxWaitlistSize,
     getSlotsPerCourt,
     isRecurringSession,
-    isEditableOneTimeSession,
     applySessionTypeChange,
     getRecurringConfigForSession,
     formatWaitlistEntry,
@@ -136,8 +135,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         };
 
         const openEditSession = (session: Session) => {
+            const templateCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
+            const courts = session.courts?.length ? session.courts : templateCourts;
             setEditingSession(session);
-            setEditCourtFields(courtFieldsFromSession(session.courts));
+            setEditCourtFields(courtFieldsFromSession(courts.length ? courts : session.courts));
         };
 
         const handleAddSession = async (e: React.FormEvent) => {
@@ -247,8 +248,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             e.preventDefault();
             if (!editingSession) return;
             try {
-                const canEditCourts = isEditableOneTimeSession(editingSession);
-                const courts = canEditCourts
+                const usesCourts = editingSession.type === 'court' || editingSession.type === 'coaching';
+                const courts = usesCourts
                     ? buildCourtLabels(
                           editCourtFields.courtCount,
                           editCourtFields.courtStartNumber,
@@ -260,6 +261,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     editingSession.startTime || '18:30',
                     editingSession.endTime,
                 );
+                const sport = editingSession.sport || inferSport(editingSession);
+                const slotsPerCourt = getSlotsPerCourtForSport(sport);
                 const updateData: Record<string, unknown> = {
                     title: editingSession.title,
                     sport: editingSession.sport,
@@ -276,12 +279,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     updateData.weekStartDate = editingSession.weekStartDate;
                 }
 
-                if (canEditCourts && courts && courts.length > 0) {
+                if (usesCourts && courts && courts.length > 0) {
                     updateData.courts = courts;
-                    updateData.slotsPerCourt = getSlotsPerCourtForSport(
-                        editingSession.sport || inferSport(editingSession),
-                    );
-                } else if (canEditCourts) {
+                    updateData.slotsPerCourt = slotsPerCourt;
+                } else if (usesCourts) {
                     updateData.courts = null;
                     updateData.slotsPerCourt = null;
                 }
@@ -297,10 +298,12 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         return;
                     }
 
-                    const sport = (editingSession.sport || inferSport(editingSession)) as AdminRecurringSchedule['sport'];
                     const scheduleFields = {
                         title: editingSession.title,
                         sessionType: editingSession.type,
+                        time: timeFields.time,
+                        courts: courts ?? config.courts,
+                        maxPerCourt: slotsPerCourt,
                         maxAttendees: Number(editingSession.maxAttendees),
                         maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
                         coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : undefined,
@@ -308,13 +311,12 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
                     if (config.scheduleId) {
                         await updateRecurringSchedule(config.scheduleId, scheduleFields);
-                    } else if ((config.sessionType ?? 'court') !== editingSession.type) {
-                        await replaceBuiltinRecurringSchedule(sport, config, {
-                            ...scheduleFields,
-                            time: config.time,
-                            courts: config.courts,
-                            maxPerCourt: config.maxPerCourt,
-                        });
+                    } else {
+                        await replaceBuiltinRecurringSchedule(
+                            sport as AdminRecurringSchedule['sport'],
+                            config,
+                            scheduleFields,
+                        );
                     }
                 }
 
@@ -1036,6 +1038,15 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     <EditSessionModal
                         session={editingSession}
                         editCourtFields={editCourtFields}
+                        recurringConfig={
+                            isRecurringSession(editingSession)
+                                ? getRecurringConfigForSession(
+                                      editingSession,
+                                      recurringSchedules,
+                                      disabledBuiltinSchedules,
+                                  )
+                                : null
+                        }
                         onSessionChange={setEditingSession}
                         onEditCourtFieldsChange={setEditCourtFields}
                         onClose={() => setEditingSession(null)}
