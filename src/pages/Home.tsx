@@ -8,6 +8,7 @@ import Transmissions from '../components/home/Transmissions';
 import Footer from '../components/home/Footer';
 import LiveWire from '../components/system/LiveWire';
 import { SPORTS } from '../lib/sports';
+import { isHomeSectionHash } from '../hooks/useHomeSectionNavigation';
 
 const HeroCourtArt = () => (
     <svg
@@ -38,14 +39,16 @@ const Home = () => {
     const scrollCueOpacity = useTransform(scrollY, [100, 360], [1, 0]);
 
     useEffect(() => {
-        if (location.hash === '#booking-section' || location.hash === '#radar') {
-            const t = window.setTimeout(() => {
-                const el = document.getElementById('booking-section');
-                if (el) lenis?.scrollTo(el, { duration: 1.4, offset: -80 });
-            }, 600);
-            return () => window.clearTimeout(t);
-        }
-    }, [location.hash, lenis]);
+        if (location.pathname !== '/' || !isHomeSectionHash(location.hash)) return;
+
+        const sectionId = location.hash.slice(1);
+        const t = window.setTimeout(() => {
+            const el = document.getElementById(sectionId);
+            if (el) lenis?.scrollTo(el, { duration: 1.4, offset: -80 });
+        }, 600);
+
+        return () => window.clearTimeout(t);
+    }, [location.pathname, location.hash, lenis]);
 
     const scrollToSection = (id: string) => {
         const el = document.getElementById(id);

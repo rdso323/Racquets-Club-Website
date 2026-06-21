@@ -1,6 +1,16 @@
 /** Shared section index + labels — keep menu and on-page HUD numbers aligned. */
 export type SiteSectionId = 'home' | 'booking' | 'events' | 'news' | 'help' | 'feedback';
 
+/** Home page anchor sections linked from footer, menu, and cross-page CTAs. */
+export const HOME_SECTION_IDS = [
+    'booking-section',
+    'events-section',
+    'news-section',
+    'radar',
+] as const;
+
+export type HomeSectionId = (typeof HOME_SECTION_IDS)[number];
+
 export const SITE_NAV_SECTIONS: Record<
     SiteSectionId,
     { index: string; menuLabel: string; menuSub: string; hudLabel: string }
