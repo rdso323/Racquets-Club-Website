@@ -560,12 +560,6 @@ const BookingEngine = () => {
                     <div className="mb-4 flex items-start justify-between gap-3">
                         <div className="flex flex-wrap items-center gap-2">
                             <SessionTags session={session} variant="booking" />
-                            {isLocked && !isCancelled && (
-                                <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-                                    <Lock className="h-3 w-3" />
-                                    Locked · Opens Sunday 5 PM ET
-                                </span>
-                            )}
                         </div>
                         <div className="flex flex-col items-end gap-2">
                             {renderAdminMenu(session)}
@@ -815,12 +809,6 @@ const BookingEngine = () => {
                         <div>
                             <div className="flex flex-wrap items-center gap-2">
                                 <SessionTags session={session} variant="booking" />
-                                {isLocked && !isCancelled && (
-                                    <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-                                        <Lock className="h-3 w-3" />
-                                        Locked · Opens Sunday 5 PM ET
-                                    </span>
-                                )}
                             </div>
                             <h3 className="mt-3 font-display text-2xl text-gray-900 dark:text-chalk">{config.title}</h3>
                             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
