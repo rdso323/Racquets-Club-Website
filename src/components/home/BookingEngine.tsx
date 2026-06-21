@@ -453,7 +453,10 @@ const BookingEngine = () => {
         );
     };
 
-    const renderCard = (session: Session) => {
+    const renderCard = (
+        session: Session,
+        recurringWeek?: { playDate: Date; isNextWeek: boolean },
+    ) => {
         const categoryKey = session.type === 'court'
             ? `${activeSport}_OpenPlay`
             : `${activeSport}_Clinic`;
@@ -462,7 +465,7 @@ const BookingEngine = () => {
         if (status === 'hidden') return null;
         const isCancelled = status === 'cancelled';
 
-        const sessionDateObj = parseSessionDateString(session.date);
+        const sessionDateObj = recurringWeek?.playDate ?? parseSessionDateString(session.date);
         if (sessionDateObj && !isWithinBookingHorizon(sessionDateObj)) return null;
 
         const isPast = sessionDateObj
@@ -472,7 +475,7 @@ const BookingEngine = () => {
             ? sessionDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
             : session.date;
 
-        const sessionCourts = getCourtsForSession(session);
+        const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
         const hasCourtBuckets = sessionCourts.length > 0;
         const maxPerCourt = getSlotsPerCourt(session);
         const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
@@ -485,7 +488,11 @@ const BookingEngine = () => {
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
         const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
         const isJoining = !!userEntry;
-        const sessionDisabled = isPast || isCancelled || !user;
+        const baseStartOfWeek = getBaseWeekStart(activeSport);
+        const isLocked = recurringWeek
+            ? isWeekLocked(baseStartOfWeek, recurringWeek.isNextWeek)
+            : false;
+        const sessionDisabled = isPast || isCancelled || isLocked || !user;
         const isRecurringClinic = isRecurringCoachingSession(session);
         const recurringClinicConfig = isRecurringClinic
             ? getRecurringConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
@@ -493,6 +500,9 @@ const BookingEngine = () => {
         const recurringDayLabel = recurringClinicConfig
             ? recurringClinicConfig.day.charAt(0).toUpperCase() + recurringClinicConfig.day.slice(1)
             : null;
+        const dateHeaderLabel = recurringWeek
+            ? getWeekDateRangeDisplay(baseStartOfWeek, recurringWeek.isNextWeek)
+            : formattedClinicDate;
 
         return (
             <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
@@ -508,10 +518,18 @@ const BookingEngine = () => {
 
                 <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="mb-4 flex items-start justify-between gap-3">
-                        <SessionTags session={session} variant="booking" />
+                        <div className="flex flex-wrap items-center gap-2">
+                            <SessionTags session={session} variant="booking" />
+                            {isLocked && !isCancelled && (
+                                <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+                                    <Lock className="h-3 w-3" />
+                                    Locked · Opens Sunday 5 PM ET
+                                </span>
+                            )}
+                        </div>
                         <div className="flex flex-col items-end gap-2">
                             <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
-                                {formattedClinicDate}
+                                {dateHeaderLabel}
                             </p>
                         </div>
                     </div>
@@ -557,8 +575,8 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
-                        <div>
+                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
+                        <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         {hasCourtBuckets ? (
                             <div
                                 className={
@@ -583,13 +601,15 @@ const BookingEngine = () => {
                                         ? 'Session Ended'
                                         : isCancelled
                                           ? 'Cancelled'
-                                          : userInThisCourt
-                                            ? `Drop ${courtName}`
-                                            : userInAnotherCourt
-                                              ? `Switch to ${courtName}`
-                                              : isCourtFull
-                                                ? `${courtName} Full`
-                                                : `Join ${courtName}`;
+                                          : isLocked
+                                            ? 'Locked'
+                                            : userInThisCourt
+                                              ? `Drop ${courtName}`
+                                              : userInAnotherCourt
+                                                ? `Switch to ${courtName}`
+                                                : isCourtFull
+                                                  ? `${courtName} Full`
+                                                  : `Join ${courtName}`;
 
                                     return (
                                         <CourtDiagram
@@ -621,7 +641,7 @@ const BookingEngine = () => {
                                               : 'accent-bg text-court-950 hover:brightness-110'
                                     }`}
                                 >
-                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : userOnWaitlist ? 'On Waitlist' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
+                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userOnWaitlist ? 'On Waitlist' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
                                 </button>
                             </>
                         )}
@@ -653,6 +673,7 @@ const BookingEngine = () => {
                             </button>
                         )}
                         </div>
+                        {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
                 </div>
             </div>
@@ -961,7 +982,9 @@ const BookingEngine = () => {
 
                     {recurringClinicInstances.length > 0 && (
                         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                            {recurringClinicInstances.map(({ session }) => renderCard(session))}
+                            {recurringClinicInstances.map(({ session, playDate, isNextWeek }) =>
+                                renderCard(session, { playDate, isNextWeek }),
+                            )}
                         </div>
                     )}
 
