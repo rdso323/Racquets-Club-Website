@@ -1,47 +1,32 @@
 import { useState, useEffect, useMemo, forwardRef } from 'react';
 import {
-    doc,
     addDoc,
     collection,
-    deleteDoc,
-    updateDoc,
-    setDoc,
-    arrayUnion,
 } from 'firebase/firestore';
 import { Calendar, Plus } from 'lucide-react';
 import { db } from '../../../lib/firebase';
-import { SPORTS, SPORT_FILTER_TABS, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, getSlotsPerCourtForSport, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
+import { SPORTS, SPORT_FILTER_TABS, DEFAULT_WAITLIST_PER_COURT, DAY_OPTIONS, getSlotsPerCourtForSport, ADMIN_MAX_ATTENDEES, ADMIN_MAX_WAITLIST, clampAdminMaxAttendees, clampAdminMaxWaitlist, type AdminRecurringSchedule, type DayName } from '../../../lib/sports';
 import {
     type Session,
     type SessionType,
-    getActiveCourtAttendees,
-    getDefaultMaxAttendees,
-    inferSport,
     buildAdminDisplaySessions,
-    getCourtsForSession,
     buildCourtLabels,
     suggestedCapacityForCourts,
-    courtFieldsFromSession,
-    parseWaitlistEntry,
+    isRecurringSession,
+    applySessionTypeChange,
+    getRecurringConfigForSession,
+    getDefaultMaxAttendees,
     getMaxWaitlistSize,
-    getSlotsPerCourt,
-    isRecurringCourtSession,
-    getOpenPlayConfigForSession,
-    formatWaitlistEntry,
-    findUserAttendeeEntry,
-    findUserWaitlistEntry,
 } from '../../../lib/sessions';
-import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../../../lib/bookingActions';
 import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
-import { notifyWaitlistPromotion } from '../../../lib/waitlistNotifications';
-import { useAuth } from '../../../contexts/AuthContext';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
-import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule } from '../../../lib/recurringSchedules';
-import { useMemberDirectory } from '../../../hooks/useMemberDirectory';
-import type { MemberDraft } from '../MemberLookupInput';
+import AdminNumericField from '../fields/AdminNumericField';
+import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
+import { useSessionAdminOps } from '../../../hooks/useSessionAdminOps';
 import SessionOpsCard from '../cards/SessionOpsCard';
-import EditSessionModal, { type EditCourtFields } from '../modals/EditSessionModal';
+import EditSessionModal from '../modals/EditSessionModal';
+import CapacityReductionModal from '../modals/CapacityReductionModal';
 
 interface SessionsModuleProps {
     sessionsList: Session[];
@@ -53,26 +38,38 @@ interface SessionsModuleProps {
 
 type ScheduleMode = 'one-time' | 'recurring';
 
-const isEditableCustomCourtSession = (session: Session) =>
-    session.type === 'court' &&
-    !session.id.startsWith('open_play_') &&
-    !session.title.toLowerCase().includes('open play');
-
-const emptyMemberDraft = (): MemberDraft => ({ name: '' });
-
-const resolveMemberIdentity = (draft: MemberDraft) => {
-    const name = draft.name.trim();
-    const uid = draft.uid && !draft.uid.startsWith('manual_') ? draft.uid : `manual_${Date.now()}`;
-    const email =
-        draft.email?.trim() ||
-        `${name.toLowerCase().replace(/\s+/g, '')}@manual.club`;
-    return { name, uid, email };
-};
+const emptyMemberDraft = () => ({ name: '' });
 
 const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
     ({ sessionsList, showCreateForm = true, sportFilter: sportFilterProp = 'All', recurringSchedules = [], disabledBuiltinSchedules = [] }, ref) => {
-        const { user } = useAuth();
-        const members = useMemberDirectory(sessionsList);
+        const adminOps = useSessionAdminOps({ sessionsList, recurringSchedules, disabledBuiltinSchedules });
+        const {
+            members,
+            editingSession,
+            editCourtFields,
+            setEditingSession,
+            setEditCourtFields,
+            memberDrafts,
+            coachDraft,
+            savingCoach,
+            newAttendeeCourt,
+            getSessionRoster,
+            sessionRequiresCourtForAdd,
+            openEditSession,
+            handleSaveSessionEdit,
+            handleDeleteSession,
+            handleAddAttendee,
+            handleAddToWaitlist,
+            handleUpdateCoach,
+            handleRemoveAttendee,
+            handleRemoveWaitlistEntry,
+            capacityReductionPrompt,
+            confirmCapacityReduction,
+            cancelCapacityReduction,
+            setCoachDraft,
+            setMemberDrafts,
+            setNewAttendeeCourt,
+        } = adminOps;
         const [sessionsSportFilter, setSessionsSportFilter] = useState(sportFilterProp);
         const [scheduleMode, setScheduleMode] = useState<ScheduleMode>('one-time');
 
@@ -96,18 +93,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         const [newSessionSaving, setNewSessionSaving] = useState(false);
         const [newSessionMsg, setNewSessionMsg] = useState('');
 
-        const [editingSession, setEditingSession] = useState<Session | null>(null);
-        const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({
-            courtCount: 2,
-            courtStartNumber: 1,
-            customCourtLabels: '',
-        });
-
-        const [memberDrafts, setMemberDrafts] = useState<Record<string, MemberDraft>>({});
-        const [newAttendeeCourt, setNewAttendeeCourt] = useState<Record<string, string>>({});
-        const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
-        const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
-
         useEffect(() => {
             setSessionsSportFilter(sportFilterProp);
         }, [sportFilterProp]);
@@ -129,19 +114,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             newSession.customCourtLabels,
         );
 
-        const getSessionRoster = (session: Session): string[] => {
-            const courts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-            if (courts.length > 0) {
-                return getActiveCourtAttendees(session.attendees || [], courts);
-            }
-            return session.attendees || [];
-        };
-
-        const openEditSession = (session: Session) => {
-            setEditingSession(session);
-            setEditCourtFields(courtFieldsFromSession(session.courts));
-        };
-
         const handleAddSession = async (e: React.FormEvent) => {
             e.preventDefault();
             if (!newSession.title || !newSession.startTime) {
@@ -155,20 +127,13 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             setNewSessionSaving(true);
             setNewSessionMsg('');
             try {
-                const courts =
-                    newSession.type === 'court'
-                        ? buildCourtLabels(
-                              newSession.courtCount,
-                              newSession.courtStartNumber,
-                              newSession.customCourtLabels,
-                          )
-                        : [];
+                const courts = buildCourtLabels(
+                    newSession.courtCount,
+                    newSession.courtStartNumber,
+                    newSession.customCourtLabels,
+                );
 
                 if (scheduleMode === 'recurring') {
-                    if (newSession.type !== 'court') {
-                        setNewSessionMsg('Weekly recurring schedules are only available for court open play.');
-                        return;
-                    }
                     if (courts.length === 0) {
                         setNewSessionMsg('Please configure at least one court.');
                         return;
@@ -179,11 +144,18 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         day: newSession.recurringDay,
                         title: newSession.title,
                         time: newSession.time,
+                        sessionType: newSession.type,
                         courts,
                         maxPerCourt: getSlotsPerCourtForSport(newSession.sport),
-                        maxWaitlistSize: Number(newSession.maxWaitlistSize),
+                        maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
+                        coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
+                        maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
                     });
-                    setNewSessionMsg('Weekly recurring court schedule created!');
+                    setNewSessionMsg(
+                        newSession.type === 'coaching'
+                            ? 'Weekly recurring clinic schedule created!'
+                            : 'Weekly recurring open play schedule created!',
+                    );
                 } else {
                     const timeFields = buildTimeFields(newSession.startTime, newSession.endTime || undefined);
                     const sessionData: Record<string, unknown> = {
@@ -192,21 +164,25 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         type: newSession.type,
                         date: newSession.date,
                         ...timeFields,
-                        maxAttendees: Number(newSession.maxAttendees),
+                        maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                         attendees: [],
                         coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : null,
                         coachId: null,
                         weekStartDate: sessionDateInput,
                     };
 
-                    if (newSession.type === 'court' && courts.length > 0) {
+                    if (
+                        scheduleMode === 'one-time' &&
+                        (newSession.type === 'court' || newSession.type === 'coaching') &&
+                        courts.length > 0
+                    ) {
                         const slotsPerCourt = getSlotsPerCourtForSport(newSession.sport);
                         sessionData.courts = courts;
                         sessionData.slotsPerCourt = slotsPerCourt;
-                        sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                        sessionData.maxWaitlistSize = clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize));
                         sessionData.waitlist = [];
                     } else if (newSession.type === 'coaching') {
-                        sessionData.maxWaitlistSize = Number(newSession.maxWaitlistSize);
+                        sessionData.maxWaitlistSize = clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize));
                         sessionData.waitlist = [];
                     }
 
@@ -238,246 +214,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                 setNewSessionMsg('Error creating session.');
             } finally {
                 setNewSessionSaving(false);
-            }
-        };
-
-        const handleSaveSessionEdit = async (e: React.FormEvent) => {
-            e.preventDefault();
-            if (!editingSession) return;
-            try {
-                const courts =
-                    editingSession.type === 'court' && isEditableCustomCourtSession(editingSession)
-                        ? buildCourtLabels(
-                              editCourtFields.courtCount,
-                              editCourtFields.courtStartNumber,
-                              editCourtFields.customCourtLabels,
-                          )
-                        : editingSession.courts;
-
-                const timeFields = buildTimeFields(
-                    editingSession.startTime || '18:30',
-                    editingSession.endTime,
-                );
-                const updateData: Record<string, unknown> = {
-                    title: editingSession.title,
-                    sport: editingSession.sport,
-                    type: editingSession.type,
-                    date: editingSession.date,
-                    ...timeFields,
-                    maxAttendees: Number(editingSession.maxAttendees),
-                    maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
-                    coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
-                };
-
-                if (editingSession.weekStartDate) {
-                    updateData.weekStartDate = editingSession.weekStartDate;
-                }
-
-                if (editingSession.type === 'court') {
-                    if (isEditableCustomCourtSession(editingSession) && courts && courts.length > 0) {
-                        updateData.courts = courts;
-                        updateData.slotsPerCourt = getSlotsPerCourtForSport(
-                            editingSession.sport || inferSport(editingSession),
-                        );
-                    }
-                } else {
-                    updateData.courts = null;
-                    updateData.slotsPerCourt = null;
-                }
-
-                await updateDoc(doc(db, 'sessions', editingSession.id), updateData);
-                setEditingSession(null);
-            } catch (err) {
-                console.error('Error saving session edit:', err);
-                window.alert('Error updating session.');
-            }
-        };
-
-        const handleDeleteSession = async (session: Session) => {
-            if (isRecurringCourtSession(session)) {
-                const config = getOpenPlayConfigForSession(
-                    session,
-                    recurringSchedules,
-                    disabledBuiltinSchedules,
-                );
-                const sport = session.sport || inferSport(session);
-                const message = config?.isCustom
-                    ? `Remove "${session.title}" from the weekly schedule? This stops all future weeks.`
-                    : `Disable "${session.title}" as a weekly recurring session?`;
-                if (!window.confirm(message)) return;
-
-                try {
-                    if (config?.scheduleId) {
-                        await removeRecurringSchedule(config.scheduleId);
-                    } else if (config) {
-                        await disableBuiltinSchedule(sport as AdminRecurringSchedule['sport'], config.day);
-                    }
-                    try {
-                        await deleteDoc(doc(db, 'sessions', session.id));
-                    } catch {
-                        /* instance doc may not exist yet */
-                    }
-                } catch (err) {
-                    console.error('Error removing recurring schedule:', err);
-                    window.alert('Error removing weekly schedule.');
-                }
-                return;
-            }
-
-            if (!window.confirm('Are you sure you want to delete this session?')) return;
-            try {
-                await deleteDoc(doc(db, 'sessions', session.id));
-            } catch (err) {
-                console.error('Error deleting session:', err);
-                window.alert('Error deleting session.');
-            }
-        };
-
-        const handleAddAttendee = async (session: Session) => {
-            const sessionId = session.id;
-            const draft = memberDrafts[sessionId] ?? emptyMemberDraft();
-            const { name, uid, email } = resolveMemberIdentity(draft);
-            if (!name) return;
-
-            const availableCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-            const court = newAttendeeCourt[sessionId]?.trim() || '';
-
-            if (availableCourts.length > 0 && !court) {
-                window.alert('Please select a court for this open play session.');
-                return;
-            }
-
-            if (findUserAttendeeEntry(session.attendees, uid) || findUserWaitlistEntry(session.waitlist, uid)) {
-                window.alert(`${name} is already on this session.`);
-                return;
-            }
-
-            const attendeeString = court ? `${uid}|${name}|${email}|${court}` : `${uid}|${name}|${email}`;
-
-            try {
-                await setDoc(
-                    doc(db, 'sessions', sessionId),
-                    {
-                        title: session.title,
-                        sport: session.sport || inferSport(session),
-                        type: session.type,
-                        date: session.date,
-                        time: session.time,
-                        maxAttendees: session.maxAttendees,
-                        attendees: arrayUnion(attendeeString),
-                        ...(session.courts?.length
-                            ? { courts: session.courts, slotsPerCourt: getSlotsPerCourt(session) }
-                            : {}),
-                    },
-                    { merge: true },
-                );
-                setMemberDrafts((prev) => ({ ...prev, [sessionId]: emptyMemberDraft() }));
-                setNewAttendeeCourt((prev) => ({ ...prev, [sessionId]: '' }));
-            } catch (err) {
-                console.error('Error adding attendee: ', err);
-                window.alert('Failed to add attendee.');
-            }
-        };
-
-        const handleAddToWaitlist = async (session: Session) => {
-            const sessionId = session.id;
-            const draft = memberDrafts[sessionId] ?? emptyMemberDraft();
-            const { name, uid, email } = resolveMemberIdentity(draft);
-            if (!name) return;
-
-            const maxWaitlistSize = getMaxWaitlistSize(session);
-            if (maxWaitlistSize <= 0) {
-                window.alert('Waitlist is disabled for this session.');
-                return;
-            }
-
-            if ((session.waitlist || []).length >= maxWaitlistSize) {
-                window.alert('The waitlist is full.');
-                return;
-            }
-
-            if (findUserAttendeeEntry(session.attendees, uid) || findUserWaitlistEntry(session.waitlist, uid)) {
-                window.alert(`${name} is already on this session.`);
-                return;
-            }
-
-            const waitlistEntry = formatWaitlistEntry(uid, name, email);
-
-            try {
-                await setDoc(
-                    doc(db, 'sessions', sessionId),
-                    {
-                        title: session.title,
-                        sport: session.sport || inferSport(session),
-                        type: session.type,
-                        date: session.date,
-                        time: session.time,
-                        maxAttendees: session.maxAttendees,
-                        waitlist: arrayUnion(waitlistEntry),
-                        ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
-                    },
-                    { merge: true },
-                );
-                setMemberDrafts((prev) => ({ ...prev, [sessionId]: emptyMemberDraft() }));
-            } catch (err) {
-                console.error('Error adding to waitlist: ', err);
-                window.alert('Failed to add to waitlist.');
-            }
-        };
-
-        const handleUpdateCoach = async (sessionId: string) => {
-            const coachName = coachDraft[sessionId]?.trim();
-            setSavingCoach((prev) => ({ ...prev, [sessionId]: true }));
-            try {
-                await updateDoc(doc(db, 'sessions', sessionId), {
-                    coach: coachName || 'TBD',
-                    coachId: null,
-                });
-            } catch (err) {
-                console.error('Error updating coach:', err);
-                window.alert('Failed to update coach.');
-            } finally {
-                setSavingCoach((prev) => ({ ...prev, [sessionId]: false }));
-            }
-        };
-
-        const handleRemoveAttendee = async (session: Session, attendeeStr: string) => {
-            const parts = attendeeStr.split('|');
-            const name = parts[1] || 'Player';
-            if (!window.confirm(`Are you sure you want to remove ${name} from this session?`)) return;
-            try {
-                const result = await removeAttendeeWithPromotion(session, attendeeStr);
-                if (result.promoted && result.promotedUid) {
-                    const courtNote = result.promotedCourt ? ` on ${result.promotedCourt}` : '';
-                    window.alert(`${result.promotedName} was promoted from the waitlist${courtNote}.`);
-                    try {
-                        await notifyWaitlistPromotion({
-                            promotedUid: result.promotedUid,
-                            promotedName: result.promotedName || 'Member',
-                            promotedCourt: result.promotedCourt,
-                            sessionId: session.id,
-                            sessionTitle: session.title,
-                            sessionDate: session.date,
-                            actorUid: user?.uid,
-                        });
-                    } catch (notifyErr) {
-                        console.warn('Could not write waitlist promotion notification:', notifyErr);
-                    }
-                }
-            } catch (err) {
-                console.error('Error removing attendee: ', err);
-                window.alert('Failed to remove attendee.');
-            }
-        };
-
-        const handleRemoveWaitlistEntry = async (sessionId: string, waitlistEntry: string) => {
-            const name = parseWaitlistEntry(waitlistEntry).name;
-            if (!window.confirm(`Remove ${name} from the waitlist?`)) return;
-            try {
-                await removeWaitlistEntry(sessionId, waitlistEntry);
-            } catch (err) {
-                console.error('Error removing waitlist entry: ', err);
-                window.alert('Failed to remove waitlist entry.');
             }
         };
 
@@ -555,6 +291,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         }
                                         waitlist={session.waitlist || []}
                                         maxWaitlistSize={getMaxWaitlistSize(session)}
+                                        requiresCourtForAdd={sessionRequiresCourtForAdd(session)}
                                         onEdit={() => openEditSession(session)}
                                         onDelete={() => handleDeleteSession(session)}
                                     />
@@ -578,7 +315,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                 Schedule New Session
                             </h3>
                             <p className="mb-6 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                Create a one-time clinic or court booking, or add a weekly recurring open play schedule.
+                                Create a one-time session, or add a weekly recurring open play or coaching clinic schedule.
                             </p>
 
                             <div className="mb-6 flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-white/60 p-1 dark:border-gray-800 dark:bg-court-950/40">
@@ -599,8 +336,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         setScheduleMode('recurring');
                                         setNewSession((prev) => ({
                                             ...prev,
-                                            type: 'court',
-                                            title: prev.title || defaultRecurringTitle(prev.recurringDay),
+                                            title: prev.title || defaultRecurringTitle(prev.recurringDay, prev.type),
                                         }));
                                     }}
                                     className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
@@ -609,7 +345,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
                                     }`}
                                 >
-                                    Weekly recurring court
+                                    Weekly recurring session
                                 </button>
                             </div>
 
@@ -639,24 +375,26 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 value={newSession.sport}
                                                 onChange={(e) => {
                                                     const sport = e.target.value;
-                                                    const courts =
-                                                        newSession.type === 'court'
-                                                            ? buildCourtLabels(
-                                                                  newSession.courtCount,
-                                                                  newSession.courtStartNumber,
-                                                                  newSession.customCourtLabels,
-                                                              )
-                                                            : [];
+                                                    const courts = buildCourtLabels(
+                                                        newSession.courtCount,
+                                                        newSession.courtStartNumber,
+                                                        newSession.customCourtLabels,
+                                                    );
                                                     setNewSession({
                                                         ...newSession,
                                                         sport,
                                                         maxAttendees:
-                                                            newSession.type === 'court'
+                                                            scheduleMode === 'one-time'
                                                                 ? suggestedCapacityForCourts(
                                                                       courts,
                                                                       getSlotsPerCourtForSport(sport),
                                                                   )
-                                                                : newSession.maxAttendees,
+                                                                : newSession.type === 'court'
+                                                                  ? suggestedCapacityForCourts(
+                                                                        courts,
+                                                                        getSlotsPerCourtForSport(sport),
+                                                                    )
+                                                                  : newSession.maxAttendees,
                                                     });
                                                 }}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -676,28 +414,42 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 value={newSession.type}
                                                 onChange={(e) => {
                                                     const type = e.target.value as SessionType;
-                                                    if (scheduleMode === 'recurring' && type !== 'court') return;
-                                                    const courts =
-                                                        type === 'court'
-                                                            ? buildCourtLabels(
-                                                                  newSession.courtCount,
-                                                                  newSession.courtStartNumber,
-                                                                  newSession.customCourtLabels,
-                                                              )
-                                                            : [];
+                                                    const result = applySessionTypeChange(
+                                                        {
+                                                            id: 'draft',
+                                                            title: newSession.title,
+                                                            type: newSession.type,
+                                                            date: newSession.date,
+                                                            time: newSession.time,
+                                                            maxAttendees: newSession.maxAttendees,
+                                                            attendees: [],
+                                                            sport: newSession.sport,
+                                                            coach: newSession.coach,
+                                                            maxWaitlistSize: newSession.maxWaitlistSize,
+                                                        },
+                                                        type,
+                                                        {
+                                                            courtCount: newSession.courtCount,
+                                                            courtStartNumber: newSession.courtStartNumber,
+                                                            customCourtLabels: newSession.customCourtLabels,
+                                                        },
+                                                    );
                                                     setNewSession({
                                                         ...newSession,
-                                                        type,
-                                                        maxAttendees:
-                                                            type === 'court'
-                                                                ? suggestedCapacityForCourts(
-                                                                      courts,
-                                                                      getSlotsPerCourtForSport(newSession.sport),
-                                                                  )
-                                                                : getDefaultMaxAttendees('coaching'),
+                                                        type: result.session.type,
+                                                        coach: result.session.coach || '',
+                                                        maxAttendees: result.session.maxAttendees,
+                                                        maxWaitlistSize:
+                                                            result.session.maxWaitlistSize ?? newSession.maxWaitlistSize,
+                                                        courtCount: result.editCourtFields.courtCount,
+                                                        courtStartNumber: result.editCourtFields.courtStartNumber,
+                                                        customCourtLabels: result.editCourtFields.customCourtLabels,
+                                                        title:
+                                                            scheduleMode === 'recurring'
+                                                                ? defaultRecurringTitle(newSession.recurringDay, type)
+                                                                : newSession.title,
                                                     });
                                                 }}
-                                                disabled={scheduleMode === 'recurring'}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent disabled:opacity-60 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                             >
                                                 <option value="court">Court Open Play</option>
@@ -720,7 +472,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                     setNewSession((prev) => ({
                                                         ...prev,
                                                         recurringDay,
-                                                        title: defaultRecurringTitle(recurringDay),
+                                                        title: defaultRecurringTitle(recurringDay, prev.type),
                                                     }));
                                                 }}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -787,7 +539,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         }
                                     />
                                 )}
-                                {newSession.type === 'court' && (
+                                {((scheduleMode === 'one-time' &&
+                                    (newSession.type === 'court' || newSession.type === 'coaching')) ||
+                                    scheduleMode === 'recurring') && (
                                     <div className="space-y-3 rounded-xl border border-gray-200 bg-white/50 p-4 dark:border-gray-800 dark:bg-court-950/30">
                                         <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
                                             Courts
@@ -830,12 +584,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                                     Starting court #
                                                 </label>
-                                                <input
-                                                    type="number"
+                                                <AdminNumericField
                                                     min={1}
                                                     value={newSession.courtStartNumber}
-                                                    onChange={(e) => {
-                                                        const courtStartNumber = Number(e.target.value) || 1;
+                                                    onChange={(courtStartNumber) => {
                                                         const courts = buildCourtLabels(
                                                             newSession.courtCount,
                                                             courtStartNumber,
@@ -905,40 +657,41 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                             Max capacity (Max Attendees)
                                         </label>
-                                        <input
-                                            type="number"
+                                        <AdminNumericField
                                             required
                                             min={1}
+                                            max={ADMIN_MAX_ATTENDEES}
                                             placeholder="8"
                                             value={newSession.maxAttendees}
-                                            onChange={(e) =>
+                                            onChange={(maxAttendees) =>
                                                 setNewSession({
                                                     ...newSession,
-                                                    maxAttendees: Number(e.target.value),
+                                                    maxAttendees,
                                                 })
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
+                                        <p className="mt-1 text-[10px] text-gray-400">Max {ADMIN_MAX_ATTENDEES} roster spots.</p>
                                     </div>
                                     <div>
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                             Max waitlist size
                                         </label>
-                                        <input
-                                            type="number"
+                                        <AdminNumericField
                                             required
                                             min={0}
+                                            max={ADMIN_MAX_WAITLIST}
                                             placeholder="8"
                                             value={newSession.maxWaitlistSize}
-                                            onChange={(e) =>
+                                            onChange={(maxWaitlistSize) =>
                                                 setNewSession({
                                                     ...newSession,
-                                                    maxWaitlistSize: Number(e.target.value),
+                                                    maxWaitlistSize,
                                                 })
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
-                                        <p className="mt-1 text-[10px] text-gray-400">0 disables waitlist. Default is 4 per court.</p>
+                                        <p className="mt-1 text-[10px] text-gray-400">Max {ADMIN_MAX_WAITLIST} waitlist spots. 0 disables waitlist.</p>
                                     </div>
                                     {newSession.type === 'coaching' && (
                                         <div>
@@ -986,11 +739,27 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     <EditSessionModal
                         session={editingSession}
                         editCourtFields={editCourtFields}
+                        recurringConfig={
+                            isRecurringSession(editingSession)
+                                ? getRecurringConfigForSession(
+                                      editingSession,
+                                      recurringSchedules,
+                                      disabledBuiltinSchedules,
+                                  )
+                                : null
+                        }
                         onSessionChange={setEditingSession}
                         onEditCourtFieldsChange={setEditCourtFields}
                         onClose={() => setEditingSession(null)}
                         onSubmit={handleSaveSessionEdit}
-                        isEditableCustomCourtSession={isEditableCustomCourtSession}
+                    />
+                )}
+
+                {capacityReductionPrompt && (
+                    <CapacityReductionModal
+                        prompt={capacityReductionPrompt}
+                        onConfirm={confirmCapacityReduction}
+                        onCancel={cancelCapacityReduction}
                     />
                 )}
             </div>

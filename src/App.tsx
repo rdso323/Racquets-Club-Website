@@ -9,6 +9,7 @@ import TopBar from './components/system/TopBar';
 import MenuOverlay from './components/system/MenuOverlay';
 import FeedbackModal from './components/layout/FeedbackModal';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import { isHomeSectionHash } from './hooks/useHomeSectionNavigation';
 import Home from './pages/Home';
 import Help from './pages/Help';
 import Login from './pages/Login';
@@ -47,12 +48,13 @@ const ScrollLock = () => {
 };
 
 const ScrollReset = () => {
-    const { pathname } = useLocation();
+    const { pathname, hash } = useLocation();
     const lenis = useLenis();
     useEffect(() => {
         if (pathname.startsWith('/admin')) return;
+        if (pathname === '/' && isHomeSectionHash(hash)) return;
         lenis?.scrollTo(0, { immediate: true, force: true });
-    }, [pathname, lenis]);
+    }, [pathname, hash, lenis]);
     return null;
 };
 

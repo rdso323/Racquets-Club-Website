@@ -3,7 +3,7 @@ import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { maintainArchivedCollections } from '../lib/archive';
 import { SESSION_STATUS_CATEGORIES, type AdminRecurringSchedule } from '../lib/sports';
-import type { Session, SessionStatus } from '../lib/sessions';
+import { normalizeSessionFromFirestore, type Session, type SessionStatus } from '../lib/sessions';
 import type { AdminEvent, FeedbackItem, SessionStatusMap } from '../components/admin/types';
 
 const defaultStatuses = (): SessionStatusMap => {
@@ -82,10 +82,9 @@ export const useAdminData = (isAdmin = false) => {
                 collection(db, 'sessions'),
                 (snapshot) => {
                     setSessionsList(
-                        snapshot.docs.map((docSnap) => ({
-                            id: docSnap.id,
-                            ...docSnap.data(),
-                        })) as Session[],
+                        snapshot.docs.map((docSnap) =>
+                            normalizeSessionFromFirestore(docSnap.id, docSnap.data()),
+                        ),
                     );
                 },
                 (err) => console.error('Sessions subscription error', err),

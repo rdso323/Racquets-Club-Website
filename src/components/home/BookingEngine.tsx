@@ -2,7 +2,7 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { collection, onSnapshot, doc, updateDoc, getDoc, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, CalendarDays, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
+import { Users, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig, type AdminRecurringSchedule } from '../../lib/sports';
 import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
@@ -27,18 +27,33 @@ import {
     isWithinBookingHorizon,
     getCourtsForSession,
     getSlotsPerCourt,
+    getSessionEnrollmentCap,
+    getSessionRosterAttendees,
+    getDiagramSlotsPerCourt,
+    isRecurringSession,
     filterAttendeesByCourt,
     findUserAttendeeEntry,
     findUserWaitlistEntry,
     isAttendeeOnCourt,
     isSessionEnrollmentFull,
     isOpenPlaySessionEnded,
+    isOpenPlaySession,
+    isRecurringCoachingSession,
+    getRecurringConfigForSession,
     parseAttendee,
+    getAttendeesNotOnConfiguredCourts,
+    normalizeSessionFromFirestore,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
 import { buildCourtSlots } from '../../lib/courtSlots';
 import { sectionHud } from '../../lib/siteNav';
 import { formatCourtDisplayName } from '../../lib/memberNames';
+import SessionTags from '../SessionTags';
+import BookingCardAdminMenu from './BookingCardAdminMenu';
+import SessionOpsModal from './SessionOpsModal';
+import EditSessionModal from '../admin/modals/EditSessionModal';
+import CapacityReductionModal from '../admin/modals/CapacityReductionModal';
+import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
@@ -152,6 +167,13 @@ const BookingEngine = () => {
     const [promotionAlerts, setPromotionAlerts] = useState<
         Array<{ id: string } & WaitlistPromotionNotification>
     >([]);
+    const [opsSession, setOpsSession] = useState<Session | null>(null);
+
+    const adminOps = useSessionAdminOps({
+        sessionsList: sessions,
+        recurringSchedules,
+        disabledBuiltinSchedules,
+    });
 
     useEffect(() => {
         if (!user) {
@@ -184,10 +206,9 @@ const BookingEngine = () => {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(collection(db, 'sessions'), (snapshot) => {
-            const sessionsData = snapshot.docs.map(docSnap => ({
-                id: docSnap.id,
-                ...docSnap.data()
-            })) as Session[];
+            const sessionsData = snapshot.docs.map((docSnap) =>
+                normalizeSessionFromFirestore(docSnap.id, docSnap.data()),
+            );
 
             setSessions(sessionsData);
             setLoading(false);
@@ -236,6 +257,7 @@ const BookingEngine = () => {
 
     useEffect(() => {
         sessions.forEach(async (session) => {
+            if (isRecurringCoachingSession(session)) return;
             if (session.type === 'coaching' || session.title.toLowerCase().includes('clinic')) {
                 const sport = inferSport(session);
                 const baseStartOfWeek = getBaseWeekStart(sport);
@@ -276,7 +298,8 @@ const BookingEngine = () => {
                 disabledBuiltinSchedules,
             );
 
-            instances.forEach(async ({ session, playDate }) => {
+            instances.forEach(async ({ session, playDate, config }) => {
+                if (!isOpenPlaySession(session) && config.sessionType !== 'coaching') return;
                 if (!isOpenPlaySessionEnded(playDate, session.time)) return;
 
                 const hasRoster =
@@ -288,10 +311,14 @@ const BookingEngine = () => {
                 pendingOpenPlayResets.add(resetKey);
 
                 try {
-                    await updateDoc(doc(db, 'sessions', session.id), {
+                    const reset: Record<string, unknown> = {
                         attendees: [],
                         waitlist: [],
-                    });
+                    };
+                    if (config.sessionType === 'coaching') {
+                        reset.coachId = null;
+                    }
+                    await updateDoc(doc(db, 'sessions', session.id), reset);
                 } catch (e) {
                     pendingOpenPlayResets.delete(resetKey);
                     console.error(`Failed to reset ended open play session ${session.id}:`, e);
@@ -400,7 +427,11 @@ const BookingEngine = () => {
     };
 
     const renderAttendeesList = (attendees: string[], maxAttendees: number, courtNames?: string[]) => {
-        const perCourt = courtNames ? Math.ceil(maxAttendees / courtNames.length) : 4;
+        const perCourt = courtNames?.length
+            ? maxAttendees % courtNames.length === 0
+                ? maxAttendees / courtNames.length
+                : Math.ceil(maxAttendees / courtNames.length)
+            : 4;
         const slots = Array(maxAttendees).fill(null).map((_, i) => attendees[i] || null);
         const courts = [];
         for (let i = 0; i < slots.length; i += perCourt) {
@@ -443,7 +474,23 @@ const BookingEngine = () => {
         );
     };
 
-    const renderCard = (session: Session) => {
+    const renderAdminMenu = (session: Session) => {
+        if (!user || !isAdmin) return null;
+
+        return (
+            <BookingCardAdminMenu
+                session={session}
+                onEdit={() => adminOps.openEditSession(session)}
+                onManageRoster={() => setOpsSession(session)}
+                onDelete={() => adminOps.handleDeleteSession(session)}
+            />
+        );
+    };
+
+    const renderCard = (
+        session: Session,
+        recurringWeek?: { playDate: Date; isNextWeek: boolean },
+    ) => {
         const categoryKey = session.type === 'court'
             ? `${activeSport}_OpenPlay`
             : `${activeSport}_Clinic`;
@@ -452,35 +499,50 @@ const BookingEngine = () => {
         if (status === 'hidden') return null;
         const isCancelled = status === 'cancelled';
 
-        const baseStartOfWeek = getBaseWeekStart(activeSport);
-        const isLocked = isWeekLocked(baseStartOfWeek, false);
-        const dateRangeDisplay = getWeekDateRangeDisplay(baseStartOfWeek, false);
+        const sessionDateObj = recurringWeek?.playDate ?? parseSessionDateString(session.date);
+        if (sessionDateObj && !isWithinBookingHorizon(sessionDateObj)) return null;
 
-        const clinicDateObj = parseSessionDateString(session.date) || new Date(baseStartOfWeek);
-        if (!parseSessionDateString(session.date)) {
-            clinicDateObj.setDate(baseStartOfWeek.getDate() + 4);
-        }
-        clinicDateObj.setHours(14, 0, 0, 0);
+        const isPast = sessionDateObj
+            ? sessionDateObj.getTime() + 24 * 60 * 60 * 1000 < new Date().getTime()
+            : false;
+        const formattedClinicDate = sessionDateObj
+            ? sessionDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+            : session.date;
 
-        if (!isWithinBookingHorizon(clinicDateObj)) return null;
+        const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
+        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
+        const totalMax = getSessionEnrollmentCap(session, sessionCourts, maxPerCourt);
+        const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
+            session,
+            sessionCourts,
+            recurringSchedules,
+            disabledBuiltinSchedules,
+        );
+        const showCourtDiagram = diagramSlotsPerCourt != null;
+        const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
 
-        const isPast = clinicDateObj.getTime() + 24 * 60 * 60 * 1000 < new Date().getTime();
-        const formattedClinicDate = clinicDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-
-        const sessionCourts = session.type === 'court' ? getCourtsForSession(session) : [];
-        const hasCourtBuckets = sessionCourts.length > 0;
-        const maxPerCourt = getSlotsPerCourt(session);
-        const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
-
-        const activeAttendees = hasCourtBuckets
-            ? session.attendees.filter((a) => sessionCourts.some((court) => isAttendeeOnCourt(a, court)))
-            : session.attendees;
+        const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
+        const orphanedAttendees = getAttendeesNotOnConfiguredCourts(session.attendees || [], sessionCourts);
 
         const isFull = isSessionEnrollmentFull(session, sessionCourts, maxPerCourt);
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
         const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
         const isJoining = !!userEntry;
-        const sessionDisabled = isPast || isLocked || isCancelled || !user;
+        const baseStartOfWeek = getBaseWeekStart(activeSport);
+        const isLocked = recurringWeek
+            ? isWeekLocked(baseStartOfWeek, recurringWeek.isNextWeek)
+            : false;
+        const sessionDisabled = isPast || isCancelled || isLocked || !user;
+        const isRecurringClinic = isRecurringCoachingSession(session);
+        const recurringClinicConfig = isRecurringClinic
+            ? getRecurringConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
+            : null;
+        const recurringDayLabel = recurringClinicConfig
+            ? recurringClinicConfig.day.charAt(0).toUpperCase() + recurringClinicConfig.day.slice(1)
+            : null;
+        const dateHeaderLabel = recurringWeek
+            ? getWeekDateRangeDisplay(baseStartOfWeek, recurringWeek.isNextWeek)
+            : formattedClinicDate;
 
         return (
             <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
@@ -496,23 +558,20 @@ const BookingEngine = () => {
 
                 <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                     <div className="mb-4 flex items-start justify-between gap-3">
-                        <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
-                            {session.type === 'coaching' ? <Rocket className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />}
-                            {session.type === 'coaching' ? 'Clinic' : 'Session'}
-                        </span>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <SessionTags session={session} variant="booking" />
+                        </div>
                         <div className="flex flex-col items-end gap-2">
-                            {isLocked && !isCancelled && (
-                                <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-                                    <Lock className="h-3 w-3" />
-                                    Locked · Opens Sunday 5 PM ET
-                                </span>
-                            )}
+                            {renderAdminMenu(session)}
                             <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
-                                {dateRangeDisplay}
+                                {dateHeaderLabel}
                             </p>
                         </div>
                     </div>
                     <h3 className="font-display text-2xl text-gray-900 dark:text-chalk">{session.title}</h3>
+                    {recurringDayLabel && (
+                        <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
+                    )}
                     <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
                         {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                     </p>
@@ -553,7 +612,8 @@ const BookingEngine = () => {
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
-                        {hasCourtBuckets ? (
+                        {showCourtDiagram ? (
+                            <>
                             <div
                                 className={
                                     sessionCourts.length === 1
@@ -562,15 +622,22 @@ const BookingEngine = () => {
                                 }
                             >
                                 {sessionCourts.map((courtName) => {
-                                    const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
-                                    const isCourtFull = courtAttendees.length >= maxPerCourt;
+                                    const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
+                                    const sessionAtCapacity = activeAttendees.length >= totalMax;
+                                    const isCourtFull =
+                                        courtAttendees.length >= slotsPerCourtForUi ||
+                                        (session.type === 'coaching' && sessionAtCapacity);
                                     const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                     const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                    const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
+                                    const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
+                                    const spotsLeft = Math.min(
+                                        slotsPerCourtForUi - courtAttendees.length,
+                                        totalMax - activeAttendees.length,
+                                    );
                                     const disabled =
                                         sessionDisabled ||
                                         userOnWaitlist ||
-                                        (isCourtFull && !userInThisCourt) ||
+                                        ((isCourtFull || sessionAtCapacity) && !userInThisCourt) ||
                                         bookingBusy === session.id;
 
                                     const actionLabel = isPast
@@ -593,7 +660,7 @@ const BookingEngine = () => {
                                             sport={activeSport}
                                             courtName={courtName}
                                             slots={slots}
-                                            spotsLeft={maxPerCourt - courtAttendees.length}
+                                            spotsLeft={Math.max(0, spotsLeft)}
                                             disabled={disabled}
                                             actionLabel={actionLabel}
                                             userInThisCourt={userInThisCourt}
@@ -603,14 +670,44 @@ const BookingEngine = () => {
                                     );
                                 })}
                             </div>
+                            {orphanedAttendees.length > 0 && (
+                                <div className="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/50 p-3 dark:border-amber-900/30 dark:bg-amber-950/20">
+                                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                                        Enrolled roster
+                                    </p>
+                                    <div className="space-y-1">
+                                        {orphanedAttendees.map((entry) => {
+                                            const { name, court } = parseAttendee(entry);
+                                            return (
+                                                <p
+                                                    key={entry}
+                                                    className="text-sm font-medium text-gray-800 dark:text-chalk/85"
+                                                >
+                                                    {name}
+                                                    {court ? (
+                                                        <span className="ml-1 text-xs font-normal text-gray-500 dark:text-chalk/45">
+                                                            ({court})
+                                                        </span>
+                                                    ) : null}
+                                                </p>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+                            </>
                         ) : (
                             <>
-                                {renderAttendeesList(session.attendees, session.maxAttendees, undefined)}
+                                {renderAttendeesList(
+                                    activeAttendees,
+                                    totalMax,
+                                    sessionCourts.length > 0 ? sessionCourts : undefined,
+                                )}
                                 <button
                                     onClick={() => handleJoin(session)}
                                     disabled={sessionDisabled || userOnWaitlist || (isFull && !isJoining) || bookingBusy === session.id}
                                     className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                                        isPast || isCancelled || isLocked || (isFull && !isJoining) || userOnWaitlist
+                                        isPast || isCancelled || (isFull && !isJoining) || userOnWaitlist
                                             ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                             : isJoining
                                               ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
@@ -643,7 +740,7 @@ const BookingEngine = () => {
                                           ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                           : 'border border-court-accent/40 bg-court-accent/10 text-emerald-700 hover:bg-court-accent/20 dark:text-court-accent'
                                 }`}
-                                disabled={(!!session.coachId && session.coachId !== user?.uid) || isLocked}
+                                disabled={!!session.coachId && session.coachId !== user?.uid}
                             >
                                 {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
                             </button>
@@ -672,13 +769,20 @@ const BookingEngine = () => {
         const isLocked = isWeekLocked(baseStartOfWeek, isNextWeek);
         const dateRangeDisplay = getWeekDateRangeDisplay(baseStartOfWeek, isNextWeek);
 
-        const courtsForDay = config.courts;
-        const maxPerCourt = config.maxPerCourt;
-        const totalMax = courtsForDay.length * maxPerCourt;
-
-        const activeAttendees = session.attendees.filter((a) =>
-            courtsForDay.some((court) => isAttendeeOnCourt(a, court)),
+        const courtsForDay = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
+        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
+        const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
+            session,
+            courtsForDay,
+            recurringSchedules,
+            disabledBuiltinSchedules,
         );
+        const showCourtDiagram = diagramSlotsPerCourt != null;
+        const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
+        const totalMax = getSessionEnrollmentCap(session, courtsForDay, maxPerCourt);
+
+        const activeAttendees = getSessionRosterAttendees(session, courtsForDay, maxPerCourt);
+        const orphanedAttendees = getAttendeesNotOnConfiguredCourts(session.attendees || [], courtsForDay);
 
         const isFull = isSessionEnrollmentFull(session, courtsForDay, maxPerCourt);
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
@@ -704,23 +808,17 @@ const BookingEngine = () => {
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div>
                             <div className="flex flex-wrap items-center gap-2">
-                                <span className="inline-flex items-center gap-1.5 rounded bg-court-accent/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest accent-text">
-                                    <CalendarDays className="h-3.5 w-3.5" />
-                                    Open Play
-                                </span>
-                                {isLocked && !isCancelled && (
-                                    <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-                                        <Lock className="h-3 w-3" />
-                                        Locked · Opens Sunday 5 PM ET
-                                    </span>
-                                )}
+                                <SessionTags session={session} variant="booking" />
                             </div>
                             <h3 className="mt-3 font-display text-2xl text-gray-900 dark:text-chalk">{config.title}</h3>
                             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
                         </div>
-                        <p className="hud-label mt-1 w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50 sm:mt-0">
-                            {dateRangeDisplay}
-                        </p>
+                        <div className="flex flex-col items-end gap-2 sm:mt-0">
+                            {renderAdminMenu(session)}
+                            <p className="hud-label mt-1 w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
+                                {dateRangeDisplay}
+                            </p>
+                        </div>
                     </div>
                     <p className="text-sm font-medium text-wimbledon-navy dark:text-chalk/70">
                         {session.date} · {session.time}
@@ -755,6 +853,8 @@ const BookingEngine = () => {
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
+                        {showCourtDiagram ? (
+                        <>
                         <div
                             className={
                                 courtsForDay.length === 1
@@ -763,15 +863,22 @@ const BookingEngine = () => {
                             }
                         >
                             {courtsForDay.map((courtName) => {
-                                const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
-                                const isCourtFull = courtAttendees.length >= maxPerCourt;
+                                const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
+                                const sessionAtCapacity = activeAttendees.length >= totalMax;
+                                const isCourtFull =
+                                    courtAttendees.length >= slotsPerCourtForUi ||
+                                    sessionAtCapacity;
                                 const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                 const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
+                                const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
+                                const spotsLeft = Math.min(
+                                    slotsPerCourtForUi - courtAttendees.length,
+                                    totalMax - activeAttendees.length,
+                                );
                                 const disabled =
                                     sessionDisabled ||
                                     userOnWaitlist ||
-                                    (isCourtFull && !userInThisCourt) ||
+                                    ((isCourtFull || sessionAtCapacity) && !userInThisCourt) ||
                                     bookingBusy === session.id;
 
                                 const actionLabel = isPast
@@ -794,7 +901,7 @@ const BookingEngine = () => {
                                         sport={activeSport}
                                         courtName={courtName}
                                         slots={slots}
-                                        spotsLeft={maxPerCourt - courtAttendees.length}
+                                        spotsLeft={Math.max(0, spotsLeft)}
                                         disabled={disabled}
                                         actionLabel={actionLabel}
                                         userInThisCourt={userInThisCourt}
@@ -804,6 +911,71 @@ const BookingEngine = () => {
                                 );
                             })}
                         </div>
+                        {orphanedAttendees.length > 0 && (
+                            <div className="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/50 p-3 dark:border-amber-900/30 dark:bg-amber-950/20">
+                                <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                                    Enrolled roster
+                                </p>
+                                <div className="space-y-1">
+                                    {orphanedAttendees.map((entry) => {
+                                        const { name, court } = parseAttendee(entry);
+                                        return (
+                                            <p
+                                                key={entry}
+                                                className="text-sm font-medium text-gray-800 dark:text-chalk/85"
+                                            >
+                                                {name}
+                                                {court ? (
+                                                    <span className="ml-1 text-xs font-normal text-gray-500 dark:text-chalk/45">
+                                                        ({court})
+                                                    </span>
+                                                ) : null}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                        </>
+                        ) : (
+                            <>
+                                {renderAttendeesList(
+                                    activeAttendees,
+                                    totalMax,
+                                    courtsForDay.length > 0 ? courtsForDay : undefined,
+                                )}
+                                <button
+                                    onClick={() => handleJoin(session)}
+                                    disabled={
+                                        sessionDisabled ||
+                                        userOnWaitlist ||
+                                        (isFull && !userEntry) ||
+                                        bookingBusy === session.id
+                                    }
+                                    className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                        isPast || isCancelled || isLocked || (isFull && !userEntry) || userOnWaitlist
+                                            ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+                                            : userEntry
+                                              ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
+                                              : 'accent-bg text-court-950 hover:brightness-110'
+                                    }`}
+                                >
+                                    {isPast
+                                        ? 'Session Ended'
+                                        : isCancelled
+                                          ? 'Cancelled'
+                                          : isLocked
+                                            ? 'Locked'
+                                            : userOnWaitlist
+                                              ? 'On Waitlist'
+                                              : userEntry
+                                                ? 'Drop Session'
+                                                : isFull
+                                                  ? 'Session Full'
+                                                  : 'Join Session'}
+                                </button>
+                            </>
+                        )}
 
                         <WaitlistPanel
                             session={session}
@@ -832,8 +1004,7 @@ const BookingEngine = () => {
         );
     }
 
-    const regularSessions = filterRegularSessionsForDisplay(sessions, activeSport);
-    const openPlayInstances = pickAdminOpenPlayInstances(
+    const allRecurringInstances = pickAdminOpenPlayInstances(
         getOpenPlayInstancesWithinHorizon(
             sessions,
             activeSport,
@@ -842,7 +1013,17 @@ const BookingEngine = () => {
         ),
         activeSport,
     );
-    const hasDisplayContent = openPlayInstances.length > 0 || regularSessions.length > 0;
+    const openPlayInstances = allRecurringInstances.filter(
+        (item) => (item.config.sessionType ?? 'court') === 'court',
+    );
+    const recurringClinicInstances = allRecurringInstances.filter(
+        (item) => item.config.sessionType === 'coaching',
+    );
+    const oneTimeSessions = filterRegularSessionsForDisplay(sessions, activeSport);
+    const hasDisplayContent =
+        openPlayInstances.length > 0 ||
+        recurringClinicInstances.length > 0 ||
+        oneTimeSessions.length > 0;
     const theme = getSportTheme(activeSport);
     const accentStyle = {
         '--accent': theme.accent,
@@ -851,6 +1032,7 @@ const BookingEngine = () => {
     } as CSSProperties;
 
     return (
+        <>
         <section id="booking-section" style={accentStyle} className="transition-[--accent] duration-500">
             <div id="radar" className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
@@ -950,14 +1132,61 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    {regularSessions.length > 0 && (
+                    {recurringClinicInstances.length > 0 && (
                         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                            {regularSessions.map((session) => renderCard(session))}
+                            {recurringClinicInstances.map(({ session, playDate, isNextWeek }) =>
+                                renderCard(session, { playDate, isNextWeek }),
+                            )}
+                        </div>
+                    )}
+
+                    {oneTimeSessions.length > 0 && (
+                        <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
+                            {oneTimeSessions.map((session) => renderCard(session))}
                         </div>
                     )}
                 </div>
             )}
         </section>
+
+        {adminOps.editingSession && (
+            <EditSessionModal
+                session={adminOps.editingSession}
+                editCourtFields={adminOps.editCourtFields}
+                recurringConfig={
+                    isRecurringSession(adminOps.editingSession)
+                        ? getRecurringConfigForSession(
+                              adminOps.editingSession,
+                              recurringSchedules,
+                              disabledBuiltinSchedules,
+                          )
+                        : null
+                }
+                onSessionChange={adminOps.setEditingSession}
+                onEditCourtFieldsChange={adminOps.setEditCourtFields}
+                onClose={() => adminOps.setEditingSession(null)}
+                onSubmit={adminOps.handleSaveSessionEdit}
+            />
+        )}
+
+        {adminOps.capacityReductionPrompt && (
+            <CapacityReductionModal
+                prompt={adminOps.capacityReductionPrompt}
+                onConfirm={adminOps.confirmCapacityReduction}
+                onCancel={adminOps.cancelCapacityReduction}
+            />
+        )}
+
+        {opsSession && (
+            <SessionOpsModal
+                session={opsSession}
+                adminOps={adminOps}
+                recurringSchedules={recurringSchedules}
+                disabledBuiltinSchedules={disabledBuiltinSchedules}
+                onClose={() => setOpsSession(null)}
+            />
+        )}
+    </>
     );
 };
 

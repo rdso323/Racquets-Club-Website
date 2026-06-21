@@ -1,28 +1,32 @@
 import { useLenis } from 'lenis/react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useUI } from '../system/UIProvider';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
+import { useHomeSectionNavigation } from '../../hooks/useHomeSectionNavigation';
 
 const Footer = () => {
     const { user } = useAuth();
     const { openFeedback } = useUI();
     const { theme } = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
     const lenis = useLenis();
+    const { scrollToHomeSection } = useHomeSectionNavigation();
 
-    const scrollToId = (id: string) => {
-        const el = document.getElementById(id);
-        if (el) lenis?.scrollTo(el, { duration: 1.4, offset: -80 });
-    };
-
-    const links = [
-        { label: 'Book a Court', action: () => scrollToId('booking-section') },
-        { label: 'Events', action: () => scrollToId('events-section') },
-        { label: 'News', action: () => scrollToId('news-section') },
-        { label: 'Help', action: () => navigate('/help') },
+    const links: Array<{ label: string; action: () => void }> = [
+        { label: 'Book a Court', action: () => scrollToHomeSection('booking-section') },
+        { label: 'Events', action: () => scrollToHomeSection('events-section') },
+        { label: 'News', action: () => scrollToHomeSection('news-section') },
+        {
+            label: 'Help',
+            action: () => {
+                if (location.pathname !== '/help') navigate('/help');
+                else lenis?.scrollTo(0, { duration: 1.2 });
+            },
+        },
         { label: 'Feedback', action: openFeedback },
         user
             ? { label: 'Back to Top', action: () => lenis?.scrollTo(0, { duration: 1.5 }) }
@@ -56,6 +60,7 @@ const Footer = () => {
                         {links.map((link) => (
                             <button
                                 key={link.label}
+                                type="button"
                                 onClick={link.action}
                                 data-cursor
                                 className="group flex items-center gap-1.5 text-left text-sm font-medium text-gray-600 transition-colors hover:text-clay-600 dark:text-chalk/70 dark:hover:text-clay-300"

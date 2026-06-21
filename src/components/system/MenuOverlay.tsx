@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, Reorder } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useLenis } from 'lenis/react';
 import { useAuth, type TabPreference } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
 import SortableSportTabRow from './SortableSportTabRow';
 import { SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
+import { useHomeSectionNavigation } from '../../hooks/useHomeSectionNavigation';
 
 const MenuOverlay = () => {
-    const { user, signOut, tabPreferences, updateTabPreferences } = useAuth();
+    const { user, signOut, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
     const { menuOpen, setMenuOpen, openFeedback } = useUI();
     const [localTabs, setLocalTabs] = useState<TabPreference[]>(tabPreferences);
     const location = useLocation();
     const navigate = useNavigate();
-    const lenis = useLenis();
+    const { scrollToHomeSection } = useHomeSectionNavigation();
 
     useEffect(() => {
         if (menuOpen) setLocalTabs(tabPreferences);
@@ -33,19 +33,8 @@ const MenuOverlay = () => {
         window.setTimeout(action, 180);
     };
 
-    const scrollToId = (id: string) => {
-        closeAnd(() => {
-            if (location.pathname !== '/') {
-                navigate('/');
-                window.setTimeout(() => {
-                    const el = document.getElementById(id);
-                    if (el) lenis?.scrollTo(el, { duration: 1.4, offset: -80 });
-                }, 400);
-                return;
-            }
-            const el = document.getElementById(id);
-            if (el) lenis?.scrollTo(el, { duration: 1.4, offset: -80 });
-        });
+    const scrollToId = (id: 'booking-section' | 'events-section' | 'news-section') => {
+        closeAnd(() => scrollToHomeSection(id));
     };
 
     const goTo = (path: string) => closeAnd(() => navigate(path));
@@ -64,6 +53,8 @@ const MenuOverlay = () => {
     const handleReorder = (next: TabPreference[]) => {
         persistTabs(next);
     };
+
+    const onAdminPage = location.pathname === '/admin';
 
     const navItems: Array<{
         id: SiteSectionId;
@@ -90,9 +81,20 @@ const MenuOverlay = () => {
             action: item.action,
             accent: item.accent,
         })),
+        ...(isAdmin
+            ? [
+                  {
+                      label: onAdminPage ? 'Home' : 'Admin',
+                      sub: onAdminPage ? 'Return to site' : 'Operations Deck',
+                      index: '07',
+                      action: () => goTo(onAdminPage ? '/' : '/admin'),
+                      accent: false as const,
+                  },
+              ]
+            : []),
         {
             ...authItem,
-            index: '07',
+            index: isAdmin ? '08' : '07',
         },
     ];
 
