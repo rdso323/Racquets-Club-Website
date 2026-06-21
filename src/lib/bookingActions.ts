@@ -11,6 +11,7 @@ import {
     formatWaitlistEntry,
     firstOpenCourtSlot,
     getCourtsForSession,
+    getDiagramSlotsPerCourt,
     getSlotsPerCourt,
     isAttendeeOnCourt,
     isCourtSlotTaken,
@@ -95,7 +96,8 @@ export const joinSessionCourt = async (
         const docSnap = await tx.get(sessionRef);
         const data = readSessionData(session, docSnap.data());
         const courts = getCourtsForSession(data);
-        const maxPerCourt = getSlotsPerCourt(data);
+        const maxPerCourt =
+            getDiagramSlotsPerCourt(data, courts) ?? getSlotsPerCourt(data);
         let attendees = [...(data.attendees || [])];
         const waitlist = [...(data.waitlist || [])];
 
@@ -207,7 +209,8 @@ export const joinWaitlist = async (
         const docSnap = await tx.get(sessionRef);
         const data = readSessionData(session, docSnap.data());
         const courts = getCourtsForSession(data);
-        const maxPerCourt = getSlotsPerCourt(data);
+        const maxPerCourt =
+            getDiagramSlotsPerCourt(data, courts) ?? getSlotsPerCourt(data);
         const attendees = [...(data.attendees || [])];
         const waitlist = [...(data.waitlist || [])];
 
@@ -268,7 +271,8 @@ export const removeAttendeeWithPromotion = async (
         const docSnap = await tx.get(sessionRef);
         const data = readSessionData(session, docSnap.data());
         const courts = getCourtsForSession(data);
-        const maxPerCourt = getSlotsPerCourt(data);
+        const maxPerCourt =
+            getDiagramSlotsPerCourt(data, courts) ?? getSlotsPerCourt(data);
         let attendees = [...(data.attendees || [])];
         let waitlist = [...(data.waitlist || [])];
 

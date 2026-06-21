@@ -659,21 +659,40 @@ export const getSlotsPerCourt = (
     return getSlotsPerCourtForSport(inferSport(session));
 };
 
+/** Court diagram UI only for standard 2- or 4-player court layouts. */
+export const usesCourtDiagramLayout = (slotsPerCourt: number): boolean =>
+    slotsPerCourt === 2 || slotsPerCourt === 4;
+
+/**
+ * Slots per court for the interactive court diagram, or null when list layout is appropriate.
+ * Coaching: only when maxAttendees divides evenly across courts into 2 or 4 each (e.g. 8÷2=4 ✓, 6÷2=3 ✗, 8÷1 ✗).
+ */
+export const getDiagramSlotsPerCourt = (
+    session: Session,
+    courts: string[],
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): number | null => {
+    if (courts.length === 0) return null;
+
+    if (session.type === 'coaching') {
+        const total = session.maxAttendees;
+        if (total % courts.length !== 0) return null;
+        const perCourt = total / courts.length;
+        return usesCourtDiagramLayout(perCourt) ? perCourt : null;
+    }
+
+    const perCourt = getSlotsPerCourt(session, customSchedules, disabledBuiltin);
+    return usesCourtDiagramLayout(perCourt) ? perCourt : null;
+};
+
 /** Whether the booking card should render interactive court diagrams. */
 export const shouldShowCourtDiagram = (
     session: Session,
     courts: string[],
     customSchedules: AdminRecurringSchedule[] = [],
     disabledBuiltin: string[] = [],
-): boolean => {
-    if (courts.length === 0) return false;
-    const maxPerCourt = getSlotsPerCourt(session, customSchedules, disabledBuiltin);
-    return usesCourtDiagramLayout(maxPerCourt);
-};
-
-/** Court diagram UI only for standard 2- or 4-player court layouts. */
-export const usesCourtDiagramLayout = (slotsPerCourt: number): boolean =>
-    slotsPerCourt === 2 || slotsPerCourt === 4;
+): boolean => getDiagramSlotsPerCourt(session, courts, customSchedules, disabledBuiltin) != null;
 
 export const suggestedCapacityForCourts = (courts: string[], slotsPerCourt = SLOTS_PER_COURT): number => {
     return courts.length * slotsPerCourt;

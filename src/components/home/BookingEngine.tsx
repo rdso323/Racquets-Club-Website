@@ -29,7 +29,7 @@ import {
     getSlotsPerCourt,
     getSessionEnrollmentCap,
     getSessionRosterAttendees,
-    shouldShowCourtDiagram,
+    getDiagramSlotsPerCourt,
     isRecurringSession,
     filterAttendeesByCourt,
     findUserAttendeeEntry,
@@ -425,7 +425,11 @@ const BookingEngine = () => {
     };
 
     const renderAttendeesList = (attendees: string[], maxAttendees: number, courtNames?: string[]) => {
-        const perCourt = courtNames ? Math.ceil(maxAttendees / courtNames.length) : 4;
+        const perCourt = courtNames?.length
+            ? maxAttendees % courtNames.length === 0
+                ? maxAttendees / courtNames.length
+                : Math.ceil(maxAttendees / courtNames.length)
+            : 4;
         const slots = Array(maxAttendees).fill(null).map((_, i) => attendees[i] || null);
         const courts = [];
         for (let i = 0; i < slots.length; i += perCourt) {
@@ -506,12 +510,14 @@ const BookingEngine = () => {
         const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
         const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
         const totalMax = getSessionEnrollmentCap(session, sessionCourts, maxPerCourt);
-        const showCourtDiagram = shouldShowCourtDiagram(
+        const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
             session,
             sessionCourts,
             recurringSchedules,
             disabledBuiltinSchedules,
         );
+        const showCourtDiagram = diagramSlotsPerCourt != null;
+        const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
 
         const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
 
@@ -621,13 +627,13 @@ const BookingEngine = () => {
                                     const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
                                     const sessionAtCapacity = activeAttendees.length >= totalMax;
                                     const isCourtFull =
-                                        courtAttendees.length >= maxPerCourt ||
+                                        courtAttendees.length >= slotsPerCourtForUi ||
                                         (session.type === 'coaching' && sessionAtCapacity);
                                     const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                     const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                    const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
+                                    const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
                                     const spotsLeft = Math.min(
-                                        maxPerCourt - courtAttendees.length,
+                                        slotsPerCourtForUi - courtAttendees.length,
                                         totalMax - activeAttendees.length,
                                     );
                                     const disabled =
@@ -741,12 +747,14 @@ const BookingEngine = () => {
 
         const courtsForDay = config.courts;
         const maxPerCourt = config.maxPerCourt;
-        const showCourtDiagram = shouldShowCourtDiagram(
+        const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
             session,
             courtsForDay,
             recurringSchedules,
             disabledBuiltinSchedules,
         );
+        const showCourtDiagram = diagramSlotsPerCourt != null;
+        const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
         const totalMax = courtsForDay.length * maxPerCourt;
 
         const activeAttendees = (session.attendees || []).filter((a) =>
@@ -837,11 +845,11 @@ const BookingEngine = () => {
                             }
                         >
                             {courtsForDay.map((courtName) => {
-                                const courtAttendees = filterAttendeesByCourt(session.attendees, courtName);
-                                const isCourtFull = courtAttendees.length >= maxPerCourt;
+                                const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
+                                const isCourtFull = courtAttendees.length >= slotsPerCourtForUi;
                                 const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                 const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                const slots = buildCourtSlots(courtAttendees, maxPerCourt, user?.uid);
+                                const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
                                 const disabled =
                                     sessionDisabled ||
                                     userOnWaitlist ||
@@ -868,7 +876,7 @@ const BookingEngine = () => {
                                         sport={activeSport}
                                         courtName={courtName}
                                         slots={slots}
-                                        spotsLeft={maxPerCourt - courtAttendees.length}
+                                        spotsLeft={slotsPerCourtForUi - courtAttendees.length}
                                         disabled={disabled}
                                         actionLabel={actionLabel}
                                         userInThisCourt={userInThisCourt}
