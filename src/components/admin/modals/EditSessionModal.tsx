@@ -101,7 +101,6 @@ const EditSessionModal = ({
                             <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Type</label>
                             <select
                                 value={session.type}
-                                disabled={!canEditSchedule}
                                 onChange={(e) => {
                                     const newType = e.target.value as SessionType;
                                     const result = applySessionTypeChange(session, newType, editCourtFields);

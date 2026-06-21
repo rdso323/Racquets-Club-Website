@@ -165,6 +165,39 @@ export const removeRecurringSchedule = async (id: string): Promise<void> => {
     });
 };
 
+export const updateRecurringSchedule = async (
+    id: string,
+    patch: Partial<Omit<AdminRecurringSchedule, 'id'>>,
+): Promise<void> => {
+    const current = await fetchRecurringSettings();
+    await saveRecurringSettings({
+        ...current,
+        schedules: current.schedules.map((schedule) =>
+            schedule.id === id
+                ? {
+                      ...schedule,
+                      ...patch,
+                      sessionType: patch.sessionType ?? schedule.sessionType ?? 'court',
+                  }
+                : schedule,
+        ),
+    });
+};
+
+/** Disable a built-in template and add a custom replacement (e.g. when changing session type). */
+export const replaceBuiltinRecurringSchedule = async (
+    sport: Sport,
+    config: OpenPlayDayConfig,
+    input: Omit<AdminRecurringSchedule, 'id' | 'sport' | 'day'>,
+): Promise<AdminRecurringSchedule> => {
+    await disableBuiltinSchedule(sport, config.day, config.sessionType ?? 'court');
+    return addRecurringSchedule({
+        sport,
+        day: config.day,
+        ...input,
+    });
+};
+
 export const disableBuiltinSchedule = async (
     sport: Sport,
     day: DayName,

@@ -27,6 +27,7 @@ import {
     isWithinBookingHorizon,
     getCourtsForSession,
     getSlotsPerCourt,
+    usesCourtDiagramLayout,
     filterAttendeesByCourt,
     findUserAttendeeEntry,
     findUserWaitlistEntry,
@@ -478,6 +479,7 @@ const BookingEngine = () => {
         const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
         const hasCourtBuckets = sessionCourts.length > 0;
         const maxPerCourt = getSlotsPerCourt(session);
+        const showCourtDiagram = hasCourtBuckets && usesCourtDiagramLayout(maxPerCourt);
         const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
 
         const activeAttendees = hasCourtBuckets
@@ -577,7 +579,7 @@ const BookingEngine = () => {
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
-                        {hasCourtBuckets ? (
+                        {showCourtDiagram ? (
                             <div
                                 className={
                                     sessionCourts.length === 1
@@ -698,6 +700,7 @@ const BookingEngine = () => {
 
         const courtsForDay = config.courts;
         const maxPerCourt = config.maxPerCourt;
+        const showCourtDiagram = usesCourtDiagramLayout(maxPerCourt);
         const totalMax = courtsForDay.length * maxPerCourt;
 
         const activeAttendees = session.attendees.filter((a) =>
@@ -776,6 +779,7 @@ const BookingEngine = () => {
 
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
+                        {showCourtDiagram ? (
                         <div
                             className={
                                 courtsForDay.length === 1
@@ -825,6 +829,41 @@ const BookingEngine = () => {
                                 );
                             })}
                         </div>
+                        ) : (
+                            <>
+                                {renderAttendeesList(session.attendees, totalMax, courtsForDay)}
+                                <button
+                                    onClick={() => handleJoin(session)}
+                                    disabled={
+                                        sessionDisabled ||
+                                        userOnWaitlist ||
+                                        (isFull && !userEntry) ||
+                                        bookingBusy === session.id
+                                    }
+                                    className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                        isPast || isCancelled || isLocked || (isFull && !userEntry) || userOnWaitlist
+                                            ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+                                            : userEntry
+                                              ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
+                                              : 'accent-bg text-court-950 hover:brightness-110'
+                                    }`}
+                                >
+                                    {isPast
+                                        ? 'Session Ended'
+                                        : isCancelled
+                                          ? 'Cancelled'
+                                          : isLocked
+                                            ? 'Locked'
+                                            : userOnWaitlist
+                                              ? 'On Waitlist'
+                                              : userEntry
+                                                ? 'Drop Session'
+                                                : isFull
+                                                  ? 'Session Full'
+                                                  : 'Join Session'}
+                                </button>
+                            </>
+                        )}
 
                         <WaitlistPanel
                             session={session}

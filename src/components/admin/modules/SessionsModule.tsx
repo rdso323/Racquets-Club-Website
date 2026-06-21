@@ -40,7 +40,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
-import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule } from '../../../lib/recurringSchedules';
+import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule, replaceBuiltinRecurringSchedule, updateRecurringSchedule } from '../../../lib/recurringSchedules';
 import { useMemberDirectory } from '../../../hooks/useMemberDirectory';
 import type { MemberDraft } from '../MemberLookupInput';
 import SessionOpsCard from '../cards/SessionOpsCard';
@@ -284,6 +284,38 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                 } else if (canEditCourts) {
                     updateData.courts = null;
                     updateData.slotsPerCourt = null;
+                }
+
+                if (isRecurringSession(editingSession)) {
+                    const config = getRecurringConfigForSession(
+                        editingSession,
+                        recurringSchedules,
+                        disabledBuiltinSchedules,
+                    );
+                    if (!config) {
+                        window.alert('Could not find the weekly schedule for this session.');
+                        return;
+                    }
+
+                    const sport = (editingSession.sport || inferSport(editingSession)) as AdminRecurringSchedule['sport'];
+                    const scheduleFields = {
+                        title: editingSession.title,
+                        sessionType: editingSession.type,
+                        maxAttendees: Number(editingSession.maxAttendees),
+                        maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
+                        coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : undefined,
+                    };
+
+                    if (config.scheduleId) {
+                        await updateRecurringSchedule(config.scheduleId, scheduleFields);
+                    } else if ((config.sessionType ?? 'court') !== editingSession.type) {
+                        await replaceBuiltinRecurringSchedule(sport, config, {
+                            ...scheduleFields,
+                            time: config.time,
+                            courts: config.courts,
+                            maxPerCourt: config.maxPerCourt,
+                        });
+                    }
                 }
 
                 await updateDoc(doc(db, 'sessions', editingSession.id), updateData);

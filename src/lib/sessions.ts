@@ -631,6 +631,10 @@ export const getSlotsPerCourt = (session: Session): number => {
     return getSlotsPerCourtForSport(inferSport(session));
 };
 
+/** Court diagram UI only for standard 2- or 4-player court layouts. */
+export const usesCourtDiagramLayout = (slotsPerCourt: number): boolean =>
+    slotsPerCourt === 2 || slotsPerCourt === 4;
+
 export const suggestedCapacityForCourts = (courts: string[], slotsPerCourt = SLOTS_PER_COURT): number => {
     return courts.length * slotsPerCourt;
 };

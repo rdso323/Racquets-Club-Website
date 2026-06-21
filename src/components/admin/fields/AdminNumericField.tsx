@@ -18,10 +18,11 @@ const clamp = (value: number, min?: number, max?: number): number => {
     return next;
 };
 
-const parseInput = (raw: string, min?: number): number | null => {
+const parseDigits = (raw: string): number | null => {
     const trimmed = raw.trim();
-    if (trimmed === '') return min != null ? min : 0;
+    if (trimmed === '') return null;
     const normalized = trimmed.replace(/^0+(?=\d)/, '');
+    if (normalized === '') return null;
     const parsed = Number(normalized);
     if (!Number.isFinite(parsed)) return null;
     return Math.trunc(parsed);
@@ -44,8 +45,14 @@ const AdminNumericField = ({
     }, [value]);
 
     const commit = (raw: string) => {
-        const parsed = parseInput(raw, min);
+        const parsed = parseDigits(raw);
         if (parsed == null) {
+            if (required && min != null) {
+                const fallback = clamp(min, min, max);
+                setDisplay(String(fallback));
+                onChange(fallback);
+                return;
+            }
             setDisplay(String(value));
             return;
         }
@@ -68,9 +75,11 @@ const AdminNumericField = ({
                 const raw = e.target.value;
                 if (raw === '' || /^\d*$/.test(raw)) {
                     setDisplay(raw);
-                    const parsed = parseInput(raw, min);
-                    if (parsed != null) {
-                        onChange(clamp(parsed, min, max));
+                    if (raw !== '') {
+                        const parsed = parseDigits(raw);
+                        if (parsed != null) {
+                            onChange(clamp(parsed, min, max));
+                        }
                     }
                 }
             }}
