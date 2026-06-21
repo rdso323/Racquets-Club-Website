@@ -1,7 +1,7 @@
 import { deleteDoc, doc } from 'firebase/firestore';
 import type { ClubEvent } from './defaultEvents';
 import { db } from './firebase';
-import { resolveEventDateISO, resolveSessionDateISO, resolveSessionTimes } from './dates';
+import { resolveEventDateISO, resolveSessionDateISO, resolveSessionTimes, resolveEventTimes } from './dates';
 import {
     isLegacyBundledOpenPlay,
     isOpenPlaySession,
@@ -59,8 +59,30 @@ export const isEventReadyForDeletion = (event: Pick<ClubEvent, 'dateISO' | 'date
     return deleteAfter < Date.now();
 };
 
-export const filterUpcomingEvents = <T extends Pick<ClubEvent, 'dateISO' | 'date'>>(events: T[]): T[] =>
-    events.filter((event) => !isEventPast(event));
+const eventStartMs = (event: Pick<ClubEvent, 'dateISO' | 'date' | 'startTime' | 'time'>): number => {
+    const eventDate = resolveEventDate(event);
+    if (!eventDate) return Number.MAX_SAFE_INTEGER;
+
+    const times = resolveEventTimes(event);
+    if (times?.startTime) {
+        const [hours, minutes] = times.startTime.split(':').map(Number);
+        if (!Number.isNaN(hours) && !Number.isNaN(minutes)) {
+            eventDate.setHours(hours, minutes, 0, 0);
+            return eventDate.getTime();
+        }
+    }
+
+    return eventDate.getTime();
+};
+
+/** Soonest first — leftmost carousel card is the next upcoming event. */
+export const sortEventsChronologically = <T extends Pick<ClubEvent, 'dateISO' | 'date' | 'startTime' | 'time'>>(
+    events: T[],
+): T[] => [...events].sort((a, b) => eventStartMs(a) - eventStartMs(b));
+
+export const filterUpcomingEvents = <T extends Pick<ClubEvent, 'dateISO' | 'date' | 'startTime' | 'time'>>(
+    events: T[],
+): T[] => sortEventsChronologically(events.filter((event) => !isEventPast(event)));
 
 export const partitionEventsByPast = <T extends Pick<ClubEvent, 'dateISO' | 'date'>>(
     events: T[],
