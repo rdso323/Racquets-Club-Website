@@ -27,7 +27,11 @@ import {
     isWithinBookingHorizon,
     getCourtsForSession,
     getSlotsPerCourt,
+    getSessionEnrollmentCap,
+    getSessionRosterAttendees,
     usesCourtDiagramLayout,
+    getMaxWaitlistSize,
+    isRecurringSession,
     filterAttendeesByCourt,
     findUserAttendeeEntry,
     findUserWaitlistEntry,
@@ -44,6 +48,9 @@ import { buildCourtSlots } from '../../lib/courtSlots';
 import { sectionHud } from '../../lib/siteNav';
 import { formatCourtDisplayName } from '../../lib/memberNames';
 import SessionTags from '../SessionTags';
+import SessionOpsCard from '../admin/cards/SessionOpsCard';
+import EditSessionModal from '../admin/modals/EditSessionModal';
+import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
@@ -157,6 +164,12 @@ const BookingEngine = () => {
     const [promotionAlerts, setPromotionAlerts] = useState<
         Array<{ id: string } & WaitlistPromotionNotification>
     >([]);
+
+    const adminOps = useSessionAdminOps({
+        sessionsList: sessions,
+        recurringSchedules,
+        disabledBuiltinSchedules,
+    });
 
     useEffect(() => {
         if (!user) {
@@ -454,6 +467,53 @@ const BookingEngine = () => {
         );
     };
 
+    const emptyMemberDraft = () => ({ name: '' });
+
+    const renderInlineAdminOps = (session: Session) => {
+        if (!isAdmin) return null;
+
+        const rosterAttendees = adminOps.getSessionRoster(session);
+        const coachValue = adminOps.coachDraft[session.id] ?? session.coach ?? '';
+
+        return (
+            <div className="relative z-30 mt-4">
+                <SessionOpsCard
+                    embedded
+                    session={session}
+                    recurringSchedules={recurringSchedules}
+                    disabledBuiltinSchedules={disabledBuiltinSchedules}
+                    rosterAttendees={rosterAttendees}
+                    coachValue={coachValue}
+                    memberDraft={adminOps.memberDrafts[session.id] ?? emptyMemberDraft()}
+                    members={adminOps.members}
+                    newAttendeeCourt={adminOps.newAttendeeCourt[session.id] || ''}
+                    savingCoach={!!adminOps.savingCoach[session.id]}
+                    requiresCourtForAdd={adminOps.sessionRequiresCourtForAdd(session)}
+                    onCoachDraftChange={(value) =>
+                        adminOps.setCoachDraft((prev) => ({ ...prev, [session.id]: value }))
+                    }
+                    onUpdateCoach={() => adminOps.handleUpdateCoach(session.id)}
+                    onMemberDraftChange={(draft) =>
+                        adminOps.setMemberDrafts((prev) => ({ ...prev, [session.id]: draft }))
+                    }
+                    onNewAttendeeCourtChange={(value) =>
+                        adminOps.setNewAttendeeCourt((prev) => ({ ...prev, [session.id]: value }))
+                    }
+                    onAddAttendee={() => adminOps.handleAddAttendee(session)}
+                    onAddToWaitlist={() => adminOps.handleAddToWaitlist(session)}
+                    onRemoveAttendee={(attendeeStr) => adminOps.handleRemoveAttendee(session, attendeeStr)}
+                    onRemoveWaitlistEntry={(waitlistEntry) =>
+                        adminOps.handleRemoveWaitlistEntry(session.id, waitlistEntry)
+                    }
+                    waitlist={session.waitlist || []}
+                    maxWaitlistSize={getMaxWaitlistSize(session)}
+                    onEdit={() => adminOps.openEditSession(session)}
+                    onDelete={() => adminOps.handleDeleteSession(session)}
+                />
+            </div>
+        );
+    };
+
     const renderCard = (
         session: Session,
         recurringWeek?: { playDate: Date; isNextWeek: boolean },
@@ -479,12 +539,13 @@ const BookingEngine = () => {
         const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
         const hasCourtBuckets = sessionCourts.length > 0;
         const maxPerCourt = getSlotsPerCourt(session);
-        const showCourtDiagram = hasCourtBuckets && usesCourtDiagramLayout(maxPerCourt);
-        const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
+        const totalMax = getSessionEnrollmentCap(session, sessionCourts, maxPerCourt);
+        const showCourtDiagram =
+            hasCourtBuckets &&
+            usesCourtDiagramLayout(maxPerCourt) &&
+            (session.type !== 'coaching' || totalMax <= sessionCourts.length * maxPerCourt);
 
-        const activeAttendees = hasCourtBuckets
-            ? session.attendees.filter((a) => sessionCourts.some((court) => isAttendeeOnCourt(a, court)))
-            : session.attendees;
+        const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
 
         const isFull = isSessionEnrollmentFull(session, sessionCourts, maxPerCourt);
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
@@ -631,7 +692,7 @@ const BookingEngine = () => {
                             </div>
                         ) : (
                             <>
-                                {renderAttendeesList(session.attendees, session.maxAttendees, undefined)}
+                                {renderAttendeesList(activeAttendees, totalMax, undefined)}
                                 <button
                                     onClick={() => handleJoin(session)}
                                     disabled={sessionDisabled || userOnWaitlist || (isFull && !isJoining) || bookingBusy === session.id}
@@ -677,6 +738,7 @@ const BookingEngine = () => {
                         </div>
                         {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
+                    {renderInlineAdminOps(session)}
                 </div>
             </div>
         );
@@ -879,6 +941,7 @@ const BookingEngine = () => {
                         </div>
                         {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
+                    {renderInlineAdminOps(session)}
                 </div>
             </div>
         );
@@ -920,6 +983,7 @@ const BookingEngine = () => {
     } as CSSProperties;
 
     return (
+        <>
         <section id="booking-section" style={accentStyle} className="transition-[--accent] duration-500">
             <div id="radar" className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
@@ -1035,6 +1099,27 @@ const BookingEngine = () => {
                 </div>
             )}
         </section>
+
+        {adminOps.editingSession && (
+            <EditSessionModal
+                session={adminOps.editingSession}
+                editCourtFields={adminOps.editCourtFields}
+                recurringConfig={
+                    isRecurringSession(adminOps.editingSession)
+                        ? getRecurringConfigForSession(
+                              adminOps.editingSession,
+                              recurringSchedules,
+                              disabledBuiltinSchedules,
+                          )
+                        : null
+                }
+                onSessionChange={adminOps.setEditingSession}
+                onEditCourtFieldsChange={adminOps.setEditCourtFields}
+                onClose={() => adminOps.setEditingSession(null)}
+                onSubmit={adminOps.handleSaveSessionEdit}
+            />
+        )}
+    </>
     );
 };
 

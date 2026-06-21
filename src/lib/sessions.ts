@@ -799,15 +799,46 @@ export const getCourtsForSession = (
     return [];
 };
 
+/** Authoritative roster cap — coaching uses maxAttendees; open play uses court slots. */
+export const getSessionEnrollmentCap = (
+    session: Session,
+    courts: string[],
+    maxPerCourt: number,
+): number => {
+    if (session.type === 'coaching') {
+        return session.maxAttendees;
+    }
+    if (courts.length > 0) {
+        return courts.length * maxPerCourt;
+    }
+    return session.maxAttendees;
+};
+
+/** Count enrolled players for display and full checks. */
+export const getSessionRosterAttendees = (
+    session: Session,
+    courts: string[],
+    maxPerCourt: number,
+): string[] => {
+    const attendees = session.attendees || [];
+    if (courts.length === 0) return attendees;
+
+    const courtCapacity = courts.length * maxPerCourt;
+    if (session.type === 'coaching' && session.maxAttendees > courtCapacity) {
+        return attendees;
+    }
+
+    return getActiveCourtAttendees(attendees, courts);
+};
+
 export const isSessionEnrollmentFull = (
     session: Session,
     courts: string[],
     maxPerCourt: number,
 ): boolean => {
-    if (courts.length > 0) {
-        return getActiveCourtAttendees(session.attendees || [], courts).length >= courts.length * maxPerCourt;
-    }
-    return (session.attendees || []).length >= session.maxAttendees;
+    const cap = getSessionEnrollmentCap(session, courts, maxPerCourt);
+    const roster = getSessionRosterAttendees(session, courts, maxPerCourt);
+    return roster.length >= cap;
 };
 
 export const getMaxWaitlistSize = (session: Session, openPlayConfig?: OpenPlayDayConfig | null): number => {
