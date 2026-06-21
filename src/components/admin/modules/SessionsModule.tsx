@@ -26,6 +26,8 @@ import {
     getMaxWaitlistSize,
     getSlotsPerCourt,
     isRecurringCourtSession,
+    isEditableOneTimeSession,
+    applySessionTypeChange,
     getOpenPlayConfigForSession,
     formatWaitlistEntry,
     findUserAttendeeEntry,
@@ -37,6 +39,7 @@ import { notifyWaitlistPromotion } from '../../../lib/waitlistNotifications';
 import { useAuth } from '../../../contexts/AuthContext';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
+import AdminNumericField from '../fields/AdminNumericField';
 import { addRecurringSchedule, defaultRecurringTitle, disableBuiltinSchedule, removeRecurringSchedule } from '../../../lib/recurringSchedules';
 import { useMemberDirectory } from '../../../hooks/useMemberDirectory';
 import type { MemberDraft } from '../MemberLookupInput';
@@ -52,11 +55,6 @@ interface SessionsModuleProps {
 }
 
 type ScheduleMode = 'one-time' | 'recurring';
-
-const isEditableCustomCourtSession = (session: Session) =>
-    session.type === 'court' &&
-    !session.id.startsWith('open_play_') &&
-    !session.title.toLowerCase().includes('open play');
 
 const emptyMemberDraft = (): MemberDraft => ({ name: '' });
 
@@ -156,13 +154,19 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             setNewSessionMsg('');
             try {
                 const courts =
-                    newSession.type === 'court'
+                    scheduleMode === 'one-time'
                         ? buildCourtLabels(
                               newSession.courtCount,
                               newSession.courtStartNumber,
                               newSession.customCourtLabels,
                           )
-                        : [];
+                        : newSession.type === 'court'
+                          ? buildCourtLabels(
+                                newSession.courtCount,
+                                newSession.courtStartNumber,
+                                newSession.customCourtLabels,
+                            )
+                          : [];
 
                 if (scheduleMode === 'recurring') {
                     if (newSession.type !== 'court') {
@@ -199,7 +203,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         weekStartDate: sessionDateInput,
                     };
 
-                    if (newSession.type === 'court' && courts.length > 0) {
+                    if (
+                        scheduleMode === 'one-time' &&
+                        (newSession.type === 'court' || newSession.type === 'coaching') &&
+                        courts.length > 0
+                    ) {
                         const slotsPerCourt = getSlotsPerCourtForSport(newSession.sport);
                         sessionData.courts = courts;
                         sessionData.slotsPerCourt = slotsPerCourt;
@@ -245,14 +253,14 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             e.preventDefault();
             if (!editingSession) return;
             try {
-                const courts =
-                    editingSession.type === 'court' && isEditableCustomCourtSession(editingSession)
-                        ? buildCourtLabels(
-                              editCourtFields.courtCount,
-                              editCourtFields.courtStartNumber,
-                              editCourtFields.customCourtLabels,
-                          )
-                        : editingSession.courts;
+                const canEditCourts = isEditableOneTimeSession(editingSession);
+                const courts = canEditCourts
+                    ? buildCourtLabels(
+                          editCourtFields.courtCount,
+                          editCourtFields.courtStartNumber,
+                          editCourtFields.customCourtLabels,
+                      )
+                    : editingSession.courts;
 
                 const timeFields = buildTimeFields(
                     editingSession.startTime || '18:30',
@@ -267,20 +275,19 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     maxAttendees: Number(editingSession.maxAttendees),
                     maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
                     coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
+                    coachId: null,
                 };
 
                 if (editingSession.weekStartDate) {
                     updateData.weekStartDate = editingSession.weekStartDate;
                 }
 
-                if (editingSession.type === 'court') {
-                    if (isEditableCustomCourtSession(editingSession) && courts && courts.length > 0) {
-                        updateData.courts = courts;
-                        updateData.slotsPerCourt = getSlotsPerCourtForSport(
-                            editingSession.sport || inferSport(editingSession),
-                        );
-                    }
-                } else {
+                if (canEditCourts && courts && courts.length > 0) {
+                    updateData.courts = courts;
+                    updateData.slotsPerCourt = getSlotsPerCourtForSport(
+                        editingSession.sport || inferSport(editingSession),
+                    );
+                } else if (canEditCourts) {
                     updateData.courts = null;
                     updateData.slotsPerCourt = null;
                 }
@@ -639,24 +646,26 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 value={newSession.sport}
                                                 onChange={(e) => {
                                                     const sport = e.target.value;
-                                                    const courts =
-                                                        newSession.type === 'court'
-                                                            ? buildCourtLabels(
-                                                                  newSession.courtCount,
-                                                                  newSession.courtStartNumber,
-                                                                  newSession.customCourtLabels,
-                                                              )
-                                                            : [];
+                                                    const courts = buildCourtLabels(
+                                                        newSession.courtCount,
+                                                        newSession.courtStartNumber,
+                                                        newSession.customCourtLabels,
+                                                    );
                                                     setNewSession({
                                                         ...newSession,
                                                         sport,
                                                         maxAttendees:
-                                                            newSession.type === 'court'
+                                                            scheduleMode === 'one-time'
                                                                 ? suggestedCapacityForCourts(
                                                                       courts,
                                                                       getSlotsPerCourtForSport(sport),
                                                                   )
-                                                                : newSession.maxAttendees,
+                                                                : newSession.type === 'court'
+                                                                  ? suggestedCapacityForCourts(
+                                                                        courts,
+                                                                        getSlotsPerCourtForSport(sport),
+                                                                    )
+                                                                  : newSession.maxAttendees,
                                                     });
                                                 }}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -677,24 +686,36 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 onChange={(e) => {
                                                     const type = e.target.value as SessionType;
                                                     if (scheduleMode === 'recurring' && type !== 'court') return;
-                                                    const courts =
-                                                        type === 'court'
-                                                            ? buildCourtLabels(
-                                                                  newSession.courtCount,
-                                                                  newSession.courtStartNumber,
-                                                                  newSession.customCourtLabels,
-                                                              )
-                                                            : [];
+                                                    const result = applySessionTypeChange(
+                                                        {
+                                                            id: 'draft',
+                                                            title: newSession.title,
+                                                            type: newSession.type,
+                                                            date: newSession.date,
+                                                            time: newSession.time,
+                                                            maxAttendees: newSession.maxAttendees,
+                                                            attendees: [],
+                                                            sport: newSession.sport,
+                                                            coach: newSession.coach,
+                                                            maxWaitlistSize: newSession.maxWaitlistSize,
+                                                        },
+                                                        type,
+                                                        {
+                                                            courtCount: newSession.courtCount,
+                                                            courtStartNumber: newSession.courtStartNumber,
+                                                            customCourtLabels: newSession.customCourtLabels,
+                                                        },
+                                                    );
                                                     setNewSession({
                                                         ...newSession,
-                                                        type,
-                                                        maxAttendees:
-                                                            type === 'court'
-                                                                ? suggestedCapacityForCourts(
-                                                                      courts,
-                                                                      getSlotsPerCourtForSport(newSession.sport),
-                                                                  )
-                                                                : getDefaultMaxAttendees('coaching'),
+                                                        type: result.session.type,
+                                                        coach: result.session.coach || '',
+                                                        maxAttendees: result.session.maxAttendees,
+                                                        maxWaitlistSize:
+                                                            result.session.maxWaitlistSize ?? newSession.maxWaitlistSize,
+                                                        courtCount: result.editCourtFields.courtCount,
+                                                        courtStartNumber: result.editCourtFields.courtStartNumber,
+                                                        customCourtLabels: result.editCourtFields.customCourtLabels,
                                                     });
                                                 }}
                                                 disabled={scheduleMode === 'recurring'}
@@ -787,7 +808,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         }
                                     />
                                 )}
-                                {newSession.type === 'court' && (
+                                {((scheduleMode === 'one-time' &&
+                                    (newSession.type === 'court' || newSession.type === 'coaching')) ||
+                                    scheduleMode === 'recurring') && (
                                     <div className="space-y-3 rounded-xl border border-gray-200 bg-white/50 p-4 dark:border-gray-800 dark:bg-court-950/30">
                                         <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
                                             Courts
@@ -830,12 +853,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                                     Starting court #
                                                 </label>
-                                                <input
-                                                    type="number"
+                                                <AdminNumericField
                                                     min={1}
                                                     value={newSession.courtStartNumber}
-                                                    onChange={(e) => {
-                                                        const courtStartNumber = Number(e.target.value) || 1;
+                                                    onChange={(courtStartNumber) => {
                                                         const courts = buildCourtLabels(
                                                             newSession.courtCount,
                                                             courtStartNumber,
@@ -905,16 +926,15 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                             Max capacity (Max Attendees)
                                         </label>
-                                        <input
-                                            type="number"
+                                        <AdminNumericField
                                             required
                                             min={1}
                                             placeholder="8"
                                             value={newSession.maxAttendees}
-                                            onChange={(e) =>
+                                            onChange={(maxAttendees) =>
                                                 setNewSession({
                                                     ...newSession,
-                                                    maxAttendees: Number(e.target.value),
+                                                    maxAttendees,
                                                 })
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -924,16 +944,15 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                             Max waitlist size
                                         </label>
-                                        <input
-                                            type="number"
+                                        <AdminNumericField
                                             required
                                             min={0}
                                             placeholder="8"
                                             value={newSession.maxWaitlistSize}
-                                            onChange={(e) =>
+                                            onChange={(maxWaitlistSize) =>
                                                 setNewSession({
                                                     ...newSession,
-                                                    maxWaitlistSize: Number(e.target.value),
+                                                    maxWaitlistSize,
                                                 })
                                             }
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -990,7 +1009,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         onEditCourtFieldsChange={setEditCourtFields}
                         onClose={() => setEditingSession(null)}
                         onSubmit={handleSaveSessionEdit}
-                        isEditableCustomCourtSession={isEditableCustomCourtSession}
                     />
                 )}
             </div>

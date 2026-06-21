@@ -85,7 +85,7 @@ const TopBar = () => {
                     <Link
                         to={onAdminPage ? '/' : '/admin'}
                         data-cursor
-                        className="hidden hud-label rounded-full bg-wimbledon-navy px-4 py-2 text-white transition-colors hover:bg-[#00287a] dark:bg-chalk dark:text-court-950 dark:hover:bg-white sm:inline-block"
+                        className="hud-label inline-block rounded-full bg-wimbledon-navy px-3 py-1.5 text-[10px] text-white transition-colors hover:bg-[#00287a] sm:px-4 sm:py-2 dark:bg-chalk dark:text-court-950 dark:hover:bg-white"
                     >
                         {onAdminPage ? 'Home' : 'Admin'}
                     </Link>

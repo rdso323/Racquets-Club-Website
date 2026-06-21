@@ -1,13 +1,16 @@
 import { X } from 'lucide-react';
-import { SPORTS, getSlotsPerCourtForSport } from '../../../lib/sports';
+import { SPORTS, getSlotsPerCourtForSport, DEFAULT_WAITLIST_PER_COURT } from '../../../lib/sports';
 import { buildDateFieldsFromIso, resolveSessionDateISO } from '../../../lib/dates';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
+import AdminNumericField from '../fields/AdminNumericField';
 import {
     type Session,
     type SessionType,
+    applySessionTypeChange,
     buildCourtLabels,
     suggestedCapacityForCourts,
+    isEditableOneTimeSession,
     isRecurringCourtSession,
 } from '../../../lib/sessions';
 
@@ -24,7 +27,6 @@ interface EditSessionModalProps {
     onEditCourtFieldsChange: (fields: EditCourtFields) => void;
     onClose: () => void;
     onSubmit: (e: React.FormEvent) => void;
-    isEditableCustomCourtSession: (session: Session) => boolean;
 }
 
 const EditSessionModal = ({
@@ -34,10 +36,20 @@ const EditSessionModal = ({
     onEditCourtFieldsChange,
     onClose,
     onSubmit,
-    isEditableCustomCourtSession,
 }: EditSessionModalProps) => {
     const canEditSchedule = !isRecurringCourtSession(session);
+    const canEditCourts = isEditableOneTimeSession(session);
     const dateISO = session.weekStartDate || resolveSessionDateISO(session) || '';
+    const slotsPerCourt = getSlotsPerCourtForSport(session.sport ?? 'Tennis');
+
+    const updateCourtsCapacity = (fields: EditCourtFields) => {
+        const courts = buildCourtLabels(fields.courtCount, fields.courtStartNumber, fields.customCourtLabels);
+        onSessionChange({
+            ...session,
+            maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
+            maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
+        });
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex animate-fadeIn items-center justify-center bg-black/50 p-4">
@@ -80,13 +92,12 @@ const EditSessionModal = ({
                                     onSessionChange({
                                         ...session,
                                         sport,
-                                        maxAttendees:
-                                            session.type === 'court'
-                                                ? suggestedCapacityForCourts(
-                                                      courts,
-                                                      getSlotsPerCourtForSport(sport),
-                                                  )
-                                                : session.maxAttendees,
+                                        maxAttendees: canEditCourts
+                                            ? suggestedCapacityForCourts(
+                                                  courts,
+                                                  getSlotsPerCourtForSport(sport),
+                                              )
+                                            : session.maxAttendees,
                                     });
                                 }}
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -102,10 +113,14 @@ const EditSessionModal = ({
                             <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Type</label>
                             <select
                                 value={session.type}
-                                onChange={(e) =>
-                                    onSessionChange({ ...session, type: e.target.value as SessionType })
-                                }
-                                className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                                disabled={!canEditSchedule}
+                                onChange={(e) => {
+                                    const newType = e.target.value as SessionType;
+                                    const result = applySessionTypeChange(session, newType, editCourtFields);
+                                    onEditCourtFieldsChange(result.editCourtFields);
+                                    onSessionChange(result.session);
+                                }}
+                                className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 disabled:opacity-60 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             >
                                 <option value="court">Open Play / Court</option>
                                 <option value="coaching">Clinic / Coaching</option>
@@ -163,7 +178,7 @@ const EditSessionModal = ({
                             </div>
                         </div>
                     )}
-                    {session.type === 'court' && isEditableCustomCourtSession(session) && (
+                    {canEditCourts && (
                         <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50/50 p-3 dark:border-gray-800 dark:bg-court-950/30">
                             <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Courts</p>
                             <div className="grid grid-cols-1 gap-3">
@@ -176,19 +191,9 @@ const EditSessionModal = ({
                                             value={editCourtFields.courtCount}
                                             onChange={(e) => {
                                                 const courtCount = Number(e.target.value);
-                                                const courts = buildCourtLabels(
-                                                    courtCount,
-                                                    editCourtFields.courtStartNumber,
-                                                    editCourtFields.customCourtLabels,
-                                                );
-                                                onEditCourtFieldsChange({ ...editCourtFields, courtCount });
-                                                onSessionChange({
-                                                    ...session,
-                                                    maxAttendees: suggestedCapacityForCourts(
-                                                        courts,
-                                                        getSlotsPerCourtForSport(session.sport ?? 'Tennis'),
-                                                    ),
-                                                });
+                                                const fields = { ...editCourtFields, courtCount };
+                                                onEditCourtFieldsChange(fields);
+                                                updateCourtsCapacity(fields);
                                             }}
                                             disabled={!!editCourtFields.customCourtLabels.trim()}
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -204,27 +209,14 @@ const EditSessionModal = ({
                                         <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                             Starting court #
                                         </label>
-                                        <input
-                                            type="number"
+                                        <AdminNumericField
                                             min={1}
                                             value={editCourtFields.courtStartNumber}
-                                            onChange={(e) => {
-                                                const courtStartNumber = Number(e.target.value) || 1;
-                                                const courts = buildCourtLabels(
-                                                    editCourtFields.courtCount,
-                                                    courtStartNumber,
-                                                    editCourtFields.customCourtLabels,
-                                                );
-                                                onEditCourtFieldsChange({ ...editCourtFields, courtStartNumber });
-                                                onSessionChange({
-                                                    ...session,
-                                                    maxAttendees: suggestedCapacityForCourts(
-                                                        courts,
-                                                        getSlotsPerCourtForSport(session.sport ?? 'Tennis'),
-                                                    ),
-                                                });
+                                            onChange={(courtStartNumber) => {
+                                                const fields = { ...editCourtFields, courtStartNumber };
+                                                onEditCourtFieldsChange(fields);
+                                                updateCourtsCapacity(fields);
                                             }}
-                                            disabled={!!editCourtFields.customCourtLabels.trim()}
                                             className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                         />
                                     </div>
@@ -239,19 +231,9 @@ const EditSessionModal = ({
                                         value={editCourtFields.customCourtLabels}
                                         onChange={(e) => {
                                             const customCourtLabels = e.target.value;
-                                            const courts = buildCourtLabels(
-                                                editCourtFields.courtCount,
-                                                editCourtFields.courtStartNumber,
-                                                customCourtLabels,
-                                            );
-                                            onEditCourtFieldsChange({ ...editCourtFields, customCourtLabels });
-                                            onSessionChange({
-                                                ...session,
-                                                maxAttendees: suggestedCapacityForCourts(
-                                                    courts,
-                                                    getSlotsPerCourtForSport(session.sport ?? 'Tennis'),
-                                                ),
-                                            });
+                                            const fields = { ...editCourtFields, customCourtLabels };
+                                            onEditCourtFieldsChange(fields);
+                                            updateCourtsCapacity(fields);
                                         }}
                                         className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                     />
@@ -279,14 +261,11 @@ const EditSessionModal = ({
                             <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                 Max Capacity
                             </label>
-                            <input
-                                type="number"
+                            <AdminNumericField
                                 required
                                 min={1}
                                 value={session.maxAttendees}
-                                onChange={(e) =>
-                                    onSessionChange({ ...session, maxAttendees: Number(e.target.value) })
-                                }
+                                onChange={(maxAttendees) => onSessionChange({ ...session, maxAttendees })}
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             />
                         </div>
@@ -294,13 +273,12 @@ const EditSessionModal = ({
                             <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                 Max Waitlist
                             </label>
-                            <input
-                                type="number"
+                            <AdminNumericField
                                 required
                                 min={0}
                                 value={session.maxWaitlistSize ?? 0}
-                                onChange={(e) =>
-                                    onSessionChange({ ...session, maxWaitlistSize: Number(e.target.value) })
+                                onChange={(maxWaitlistSize) =>
+                                    onSessionChange({ ...session, maxWaitlistSize })
                                 }
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             />

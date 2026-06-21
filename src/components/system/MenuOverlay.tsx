@@ -8,7 +8,7 @@ import SortableSportTabRow from './SortableSportTabRow';
 import { SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
 
 const MenuOverlay = () => {
-    const { user, signOut, tabPreferences, updateTabPreferences } = useAuth();
+    const { user, signOut, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
     const { menuOpen, setMenuOpen, openFeedback } = useUI();
     const [localTabs, setLocalTabs] = useState<TabPreference[]>(tabPreferences);
     const location = useLocation();
@@ -65,6 +65,8 @@ const MenuOverlay = () => {
         persistTabs(next);
     };
 
+    const onAdminPage = location.pathname === '/admin';
+
     const navItems: Array<{
         id: SiteSectionId;
         action: () => void;
@@ -90,9 +92,20 @@ const MenuOverlay = () => {
             action: item.action,
             accent: item.accent,
         })),
+        ...(isAdmin
+            ? [
+                  {
+                      label: onAdminPage ? 'Home' : 'Admin',
+                      sub: onAdminPage ? 'Return to site' : 'Operations Deck',
+                      index: '07',
+                      action: () => goTo(onAdminPage ? '/' : '/admin'),
+                      accent: false as const,
+                  },
+              ]
+            : []),
         {
             ...authItem,
-            index: '07',
+            index: isAdmin ? '08' : '07',
         },
     ];
 

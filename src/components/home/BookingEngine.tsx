@@ -452,22 +452,17 @@ const BookingEngine = () => {
         if (status === 'hidden') return null;
         const isCancelled = status === 'cancelled';
 
-        const baseStartOfWeek = getBaseWeekStart(activeSport);
-        const isLocked = isWeekLocked(baseStartOfWeek, false);
-        const dateRangeDisplay = getWeekDateRangeDisplay(baseStartOfWeek, false);
+        const sessionDateObj = parseSessionDateString(session.date);
+        if (sessionDateObj && !isWithinBookingHorizon(sessionDateObj)) return null;
 
-        const clinicDateObj = parseSessionDateString(session.date) || new Date(baseStartOfWeek);
-        if (!parseSessionDateString(session.date)) {
-            clinicDateObj.setDate(baseStartOfWeek.getDate() + 4);
-        }
-        clinicDateObj.setHours(14, 0, 0, 0);
+        const isPast = sessionDateObj
+            ? sessionDateObj.getTime() + 24 * 60 * 60 * 1000 < new Date().getTime()
+            : false;
+        const formattedClinicDate = sessionDateObj
+            ? sessionDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+            : session.date;
 
-        if (!isWithinBookingHorizon(clinicDateObj)) return null;
-
-        const isPast = clinicDateObj.getTime() + 24 * 60 * 60 * 1000 < new Date().getTime();
-        const formattedClinicDate = clinicDateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-
-        const sessionCourts = session.type === 'court' ? getCourtsForSession(session) : [];
+        const sessionCourts = getCourtsForSession(session);
         const hasCourtBuckets = sessionCourts.length > 0;
         const maxPerCourt = getSlotsPerCourt(session);
         const totalMax = hasCourtBuckets ? sessionCourts.length * maxPerCourt : session.maxAttendees;
@@ -480,7 +475,7 @@ const BookingEngine = () => {
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
         const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
         const isJoining = !!userEntry;
-        const sessionDisabled = isPast || isLocked || isCancelled || !user;
+        const sessionDisabled = isPast || isCancelled || !user;
 
         return (
             <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
@@ -501,14 +496,8 @@ const BookingEngine = () => {
                             {session.type === 'coaching' ? 'Clinic' : 'Session'}
                         </span>
                         <div className="flex flex-col items-end gap-2">
-                            {isLocked && !isCancelled && (
-                                <span className="inline-flex items-center gap-1 rounded border border-amber-300 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-                                    <Lock className="h-3 w-3" />
-                                    Locked · Opens Sunday 5 PM ET
-                                </span>
-                            )}
                             <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
-                                {dateRangeDisplay}
+                                {formattedClinicDate}
                             </p>
                         </div>
                     </div>
@@ -551,8 +540,8 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
-                        <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
+                    <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : ''}>
+                        <div>
                         {hasCourtBuckets ? (
                             <div
                                 className={
@@ -577,15 +566,13 @@ const BookingEngine = () => {
                                         ? 'Session Ended'
                                         : isCancelled
                                           ? 'Cancelled'
-                                          : isLocked
-                                            ? 'Locked'
-                                            : userInThisCourt
-                                              ? `Drop ${courtName}`
-                                              : userInAnotherCourt
-                                                ? `Switch to ${courtName}`
-                                                : isCourtFull
-                                                  ? `${courtName} Full`
-                                                  : `Join ${courtName}`;
+                                          : userInThisCourt
+                                            ? `Drop ${courtName}`
+                                            : userInAnotherCourt
+                                              ? `Switch to ${courtName}`
+                                              : isCourtFull
+                                                ? `${courtName} Full`
+                                                : `Join ${courtName}`;
 
                                     return (
                                         <CourtDiagram
@@ -610,14 +597,14 @@ const BookingEngine = () => {
                                     onClick={() => handleJoin(session)}
                                     disabled={sessionDisabled || userOnWaitlist || (isFull && !isJoining) || bookingBusy === session.id}
                                     className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                                        isPast || isCancelled || isLocked || (isFull && !isJoining) || userOnWaitlist
+                                        isPast || isCancelled || (isFull && !isJoining) || userOnWaitlist
                                             ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                             : isJoining
                                               ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
                                               : 'accent-bg text-court-950 hover:brightness-110'
                                     }`}
                                 >
-                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : isLocked ? 'Locked' : userOnWaitlist ? 'On Waitlist' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
+                                    {isPast ? 'Session Ended' : isCancelled ? 'Cancelled' : userOnWaitlist ? 'On Waitlist' : isJoining ? 'Drop Session' : isFull ? 'Session Full' : 'Join Session'}
                                 </button>
                             </>
                         )}
@@ -643,13 +630,12 @@ const BookingEngine = () => {
                                           ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                           : 'border border-court-accent/40 bg-court-accent/10 text-emerald-700 hover:bg-court-accent/20 dark:text-court-accent'
                                 }`}
-                                disabled={(!!session.coachId && session.coachId !== user?.uid) || isLocked}
+                                disabled={!!session.coachId && session.coachId !== user?.uid}
                             >
                                 {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
                             </button>
                         )}
                         </div>
-                        {isLocked && !isCancelled && user && <SessionLockOverlay />}
                     </div>
                 </div>
             </div>

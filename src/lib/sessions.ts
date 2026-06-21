@@ -587,6 +587,49 @@ export const isOpenPlaySession = (session: Session): boolean => {
 
 export const isRecurringCourtSession = (session: Session): boolean => isOpenPlaySession(session);
 
+export const isEditableOneTimeSession = (session: Session): boolean =>
+    !isRecurringCourtSession(session);
+
+export const applySessionTypeChange = (
+    session: Session,
+    newType: SessionType,
+    editCourtFields: { courtCount: number; courtStartNumber: number; customCourtLabels: string },
+): {
+    session: Session;
+    editCourtFields: { courtCount: number; courtStartNumber: number; customCourtLabels: string };
+} => {
+    const sport = session.sport ?? inferSport(session);
+    const slotsPerCourt = getSlotsPerCourtForSport(sport);
+    const fields = session.courts?.length ? courtFieldsFromSession(session.courts) : editCourtFields;
+    const courts = buildCourtLabels(fields.courtCount, fields.courtStartNumber, fields.customCourtLabels);
+
+    if (newType === 'coaching') {
+        return {
+            session: {
+                ...session,
+                type: newType,
+                coach: session.coach || '',
+                coachId: null,
+                maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
+                maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
+            },
+            editCourtFields: fields,
+        };
+    }
+
+    return {
+        session: {
+            ...session,
+            type: newType,
+            coach: null,
+            coachId: null,
+            maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
+            maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
+        },
+        editCourtFields: fields,
+    };
+};
+
 export const getOpenPlayConfigForSession = (
     session: Session,
     customSchedules: AdminRecurringSchedule[] = [],
@@ -625,8 +668,6 @@ export const getCourtsForSession = (
     customSchedules: AdminRecurringSchedule[] = [],
     disabledBuiltin: string[] = [],
 ): string[] => {
-    if (session.type === 'coaching') return [];
-
     const config = getOpenPlayConfigForSession(session, customSchedules, disabledBuiltin);
     if (config) return config.courts;
 
