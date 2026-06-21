@@ -775,8 +775,8 @@ const BookingEngine = () => {
         const isLocked = isWeekLocked(baseStartOfWeek, isNextWeek);
         const dateRangeDisplay = getWeekDateRangeDisplay(baseStartOfWeek, isNextWeek);
 
-        const courtsForDay = config.courts;
-        const maxPerCourt = config.maxPerCourt;
+        const courtsForDay = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
+        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
         const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
             session,
             courtsForDay,
@@ -785,11 +785,10 @@ const BookingEngine = () => {
         );
         const showCourtDiagram = diagramSlotsPerCourt != null;
         const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
-        const totalMax = courtsForDay.length * maxPerCourt;
+        const totalMax = getSessionEnrollmentCap(session, courtsForDay, maxPerCourt);
 
-        const activeAttendees = (session.attendees || []).filter((a) =>
-            courtsForDay.some((court) => isAttendeeOnCourt(a, court)),
-        );
+        const activeAttendees = getSessionRosterAttendees(session, courtsForDay, maxPerCourt);
+        const orphanedAttendees = getAttendeesNotOnConfiguredCourts(session.attendees || [], courtsForDay);
 
         const isFull = isSessionEnrollmentFull(session, courtsForDay, maxPerCourt);
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
@@ -867,6 +866,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         {showCourtDiagram ? (
+                        <>
                         <div
                             className={
                                 courtsForDay.length === 1
@@ -876,14 +876,21 @@ const BookingEngine = () => {
                         >
                             {courtsForDay.map((courtName) => {
                                 const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
-                                const isCourtFull = courtAttendees.length >= slotsPerCourtForUi;
+                                const sessionAtCapacity = activeAttendees.length >= totalMax;
+                                const isCourtFull =
+                                    courtAttendees.length >= slotsPerCourtForUi ||
+                                    sessionAtCapacity;
                                 const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                 const userInAnotherCourt = !!(userEntry && !userInThisCourt);
                                 const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
+                                const spotsLeft = Math.min(
+                                    slotsPerCourtForUi - courtAttendees.length,
+                                    totalMax - activeAttendees.length,
+                                );
                                 const disabled =
                                     sessionDisabled ||
                                     userOnWaitlist ||
-                                    (isCourtFull && !userInThisCourt) ||
+                                    ((isCourtFull || sessionAtCapacity) && !userInThisCourt) ||
                                     bookingBusy === session.id;
 
                                 const actionLabel = isPast
@@ -906,7 +913,7 @@ const BookingEngine = () => {
                                         sport={activeSport}
                                         courtName={courtName}
                                         slots={slots}
-                                        spotsLeft={slotsPerCourtForUi - courtAttendees.length}
+                                        spotsLeft={Math.max(0, spotsLeft)}
                                         disabled={disabled}
                                         actionLabel={actionLabel}
                                         userInThisCourt={userInThisCourt}
@@ -916,9 +923,39 @@ const BookingEngine = () => {
                                 );
                             })}
                         </div>
+                        {orphanedAttendees.length > 0 && (
+                            <div className="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/50 p-3 dark:border-amber-900/30 dark:bg-amber-950/20">
+                                <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                                    Enrolled roster
+                                </p>
+                                <div className="space-y-1">
+                                    {orphanedAttendees.map((entry) => {
+                                        const { name, court } = parseAttendee(entry);
+                                        return (
+                                            <p
+                                                key={entry}
+                                                className="text-sm font-medium text-gray-800 dark:text-chalk/85"
+                                            >
+                                                {name}
+                                                {court ? (
+                                                    <span className="ml-1 text-xs font-normal text-gray-500 dark:text-chalk/45">
+                                                        ({court})
+                                                    </span>
+                                                ) : null}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                        </>
                         ) : (
                             <>
-                                {renderAttendeesList(session.attendees, totalMax, courtsForDay)}
+                                {renderAttendeesList(
+                                    activeAttendees,
+                                    totalMax,
+                                    courtsForDay.length > 0 ? courtsForDay : undefined,
+                                )}
                                 <button
                                     onClick={() => handleJoin(session)}
                                     disabled={

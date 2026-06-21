@@ -422,7 +422,7 @@ export const resolveRecurringSession = (
                 type: 'coaching',
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
-                maxAttendees: config.maxAttendees ?? dbSession.maxAttendees ?? totalMax,
+                maxAttendees: dbSession.maxAttendees ?? config.maxAttendees ?? totalMax,
                 attendees: dbSession.attendees ?? [],
                 waitlist: dbSession.waitlist ?? [],
                 maxWaitlistSize:
@@ -460,7 +460,7 @@ export const resolveRecurringSession = (
             ...dbSession,
             title: config.title,
             type: 'court',
-            maxAttendees: config.maxAttendees ?? dbSession.maxAttendees ?? totalMax,
+            maxAttendees: dbSession.maxAttendees ?? config.maxAttendees ?? totalMax,
             sport,
             attendees: dbSession.attendees ?? [],
             waitlist: dbSession.waitlist ?? [],
@@ -468,6 +468,8 @@ export const resolveRecurringSession = (
                 dbSession.maxWaitlistSize ??
                 config.maxWaitlistSize ??
                 config.courts.length * DEFAULT_WAITLIST_PER_COURT,
+            courts: dbSession.courts ?? (config.courts.length > 0 ? config.courts : undefined),
+            slotsPerCourt: dbSession.slotsPerCourt ?? (config.courts.length > 0 ? slotsPerCourt : undefined),
         };
     }
 
@@ -674,7 +676,7 @@ export const usesCourtDiagramLayout = (slotsPerCourt: number): boolean =>
 
 /**
  * Slots per court for the interactive court diagram, or null when list layout is appropriate.
- * Coaching: only when maxAttendees divides evenly across courts into 2 or 4 each (e.g. 8÷2=4 ✓, 6÷2=3 ✗, 8÷1 ✗).
+ * Uses maxAttendees when set: diagram only when total divides evenly across courts into 2 or 4 each.
  */
 export const getDiagramSlotsPerCourt = (
     session: Session,
@@ -684,14 +686,13 @@ export const getDiagramSlotsPerCourt = (
 ): number | null => {
     if (courts.length === 0) return null;
 
-    if (session.type === 'coaching') {
-        const total = session.maxAttendees;
-        if (total % courts.length !== 0) return null;
-        const perCourt = total / courts.length;
-        return usesCourtDiagramLayout(perCourt) ? perCourt : null;
-    }
+    const total =
+        session.maxAttendees > 0
+            ? session.maxAttendees
+            : courts.length * getSlotsPerCourt(session, customSchedules, disabledBuiltin);
 
-    const perCourt = getSlotsPerCourt(session, customSchedules, disabledBuiltin);
+    if (total % courts.length !== 0) return null;
+    const perCourt = total / courts.length;
     return usesCourtDiagramLayout(perCourt) ? perCourt : null;
 };
 
@@ -867,13 +868,13 @@ export const getCourtsForSession = (
     return [];
 };
 
-/** Authoritative roster cap — coaching uses maxAttendees; open play uses court slots. */
+/** Authoritative roster cap — prefers admin-set maxAttendees for all session types. */
 export const getSessionEnrollmentCap = (
     session: Session,
     courts: string[],
     maxPerCourt: number,
 ): number => {
-    if (session.type === 'coaching') {
+    if (session.maxAttendees > 0) {
         return session.maxAttendees;
     }
     if (courts.length > 0) {
