@@ -41,6 +41,7 @@ import {
     isRecurringCoachingSession,
     getRecurringConfigForSession,
     parseAttendee,
+    getAttendeesNotOnConfiguredCourts,
     normalizeSessionFromFirestore,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
@@ -51,6 +52,7 @@ import SessionTags from '../SessionTags';
 import BookingCardAdminMenu from './BookingCardAdminMenu';
 import SessionOpsModal from './SessionOpsModal';
 import EditSessionModal from '../admin/modals/EditSessionModal';
+import CapacityReductionModal from '../admin/modals/CapacityReductionModal';
 import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 
 /** Prevents duplicate clinic week-reset writes when snapshots re-fire. */
@@ -473,7 +475,7 @@ const BookingEngine = () => {
     };
 
     const renderAdminMenu = (session: Session) => {
-        if (!isAdmin) return null;
+        if (!user || !isAdmin) return null;
 
         return (
             <BookingCardAdminMenu
@@ -520,6 +522,7 @@ const BookingEngine = () => {
         const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
 
         const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
+        const orphanedAttendees = getAttendeesNotOnConfiguredCourts(session.attendees || [], sessionCourts);
 
         const isFull = isSessionEnrollmentFull(session, sessionCourts, maxPerCourt);
         const userEntry = user ? findUserAttendeeEntry(session.attendees, user.uid) : undefined;
@@ -616,6 +619,7 @@ const BookingEngine = () => {
                     <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                         <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
                         {showCourtDiagram ? (
+                            <>
                             <div
                                 className={
                                     sessionCourts.length === 1
@@ -672,6 +676,32 @@ const BookingEngine = () => {
                                     );
                                 })}
                             </div>
+                            {orphanedAttendees.length > 0 && (
+                                <div className="mt-4 rounded-lg border border-amber-200/80 bg-amber-50/50 p-3 dark:border-amber-900/30 dark:bg-amber-950/20">
+                                    <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                                        Enrolled roster
+                                    </p>
+                                    <div className="space-y-1">
+                                        {orphanedAttendees.map((entry) => {
+                                            const { name, court } = parseAttendee(entry);
+                                            return (
+                                                <p
+                                                    key={entry}
+                                                    className="text-sm font-medium text-gray-800 dark:text-chalk/85"
+                                                >
+                                                    {name}
+                                                    {court ? (
+                                                        <span className="ml-1 text-xs font-normal text-gray-500 dark:text-chalk/45">
+                                                            ({court})
+                                                        </span>
+                                                    ) : null}
+                                                </p>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+                            </>
                         ) : (
                             <>
                                 {renderAttendeesList(
@@ -1111,6 +1141,14 @@ const BookingEngine = () => {
                 onEditCourtFieldsChange={adminOps.setEditCourtFields}
                 onClose={() => adminOps.setEditingSession(null)}
                 onSubmit={adminOps.handleSaveSessionEdit}
+            />
+        )}
+
+        {adminOps.capacityReductionPrompt && (
+            <CapacityReductionModal
+                prompt={adminOps.capacityReductionPrompt}
+                onConfirm={adminOps.confirmCapacityReduction}
+                onCancel={adminOps.cancelCapacityReduction}
             />
         )}
 

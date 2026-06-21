@@ -522,13 +522,22 @@ export const bucketAttendeesByCourt = (
     return orderedAttendees;
 };
 
-/** Attendees with a court assignment, matching front-end enrollment logic */
+/** Attendees with a court assignment on one of the configured courts. */
 export const getActiveCourtAttendees = (
     attendees: string[],
     courts: string[],
 ): string[] => {
     if (courts.length === 0) return attendees;
     return attendees.filter((a) => courts.some((court) => isAttendeeOnCourt(a, court)));
+};
+
+/** Enrolled players whose court label no longer matches the session's configured courts. */
+export const getAttendeesNotOnConfiguredCourts = (
+    attendees: string[],
+    courts: string[],
+): string[] => {
+    if (courts.length === 0) return [];
+    return attendees.filter((entry) => !courts.some((court) => isAttendeeOnCourt(entry, court)));
 };
 
 export const getOpenPlayInstancesWithinHorizon = (
@@ -873,22 +882,12 @@ export const getSessionEnrollmentCap = (
     return session.maxAttendees;
 };
 
-/** Count enrolled players for display and full checks. */
+/** Count enrolled players for display and full checks — always includes the full persisted roster. */
 export const getSessionRosterAttendees = (
     session: Session,
-    courts: string[],
-    maxPerCourt: number,
-): string[] => {
-    const attendees = session.attendees || [];
-    if (courts.length === 0) return attendees;
-
-    const courtCapacity = courts.length * maxPerCourt;
-    if (session.type === 'coaching' && session.maxAttendees > courtCapacity) {
-        return attendees;
-    }
-
-    return getActiveCourtAttendees(attendees, courts);
-};
+    _courts: string[],
+    _maxPerCourt: number,
+): string[] => session.attendees || [];
 
 export const isSessionEnrollmentFull = (
     session: Session,

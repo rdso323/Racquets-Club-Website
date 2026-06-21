@@ -43,13 +43,11 @@ const EditSessionModal = ({
     const isOneTime = !isRecurring;
     const showCourtFields = session.type === 'court' || session.type === 'coaching';
     const dateISO = session.weekStartDate || resolveSessionDateISO(session) || '';
-    const slotsPerCourt = getSlotsPerCourtForSport(session.sport ?? 'Tennis');
 
     const updateCourtsCapacity = (fields: EditCourtFields) => {
         const courts = buildCourtLabels(fields.courtCount, fields.courtStartNumber, fields.customCourtLabels);
         onSessionChange({
             ...session,
-            maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
             maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
         });
     };

@@ -4,6 +4,7 @@ import {
     deleteDoc,
     updateDoc,
     setDoc,
+    getDoc,
     arrayUnion,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
@@ -15,7 +16,6 @@ import {
     findUserAttendeeEntry,
     findUserWaitlistEntry,
     formatWaitlistEntry,
-    getActiveCourtAttendees,
     getCourtsForSession,
     getMaxWaitlistSize,
     getRecurringConfigForSession,
@@ -39,7 +39,17 @@ import {
     updateRecurringSchedule,
 } from '../lib/recurringSchedules';
 
+import type { CapacityReductionPrompt } from '../components/admin/modals/CapacityReductionModal';
+
 const emptyMemberDraft = (): MemberDraft => ({ name: '' });
+
+interface PendingSessionSave {
+    editingSession: Session;
+    updateData: Record<string, unknown>;
+    preservedAttendees: string[];
+    preservedWaitlist: string[];
+    newCap: number;
+}
 
 const resolveMemberIdentity = (draft: MemberDraft) => {
     const name = draft.name.trim();
@@ -74,19 +84,10 @@ export function useSessionAdminOps({
     const [newAttendeeCourt, setNewAttendeeCourt] = useState<Record<string, string>>({});
     const [coachDraft, setCoachDraft] = useState<Record<string, string>>({});
     const [savingCoach, setSavingCoach] = useState<Record<string, boolean>>({});
+    const [capacityReductionPrompt, setCapacityReductionPrompt] = useState<CapacityReductionPrompt | null>(null);
+    const [pendingSessionSave, setPendingSessionSave] = useState<PendingSessionSave | null>(null);
 
-    const getSessionRoster = (session: Session): string[] => {
-        const courts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-        const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
-        if (courts.length > 0) {
-            const courtCapacity = courts.length * maxPerCourt;
-            if (session.type === 'coaching' && session.maxAttendees > courtCapacity) {
-                return session.attendees || [];
-            }
-            return getActiveCourtAttendees(session.attendees || [], courts);
-        }
-        return session.attendees || [];
-    };
+    const getSessionRoster = (session: Session): string[] => session.attendees || [];
 
     const sessionRequiresCourtForAdd = (session: Session): boolean => {
         const courts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
@@ -100,16 +101,87 @@ export function useSessionAdminOps({
     };
 
     const openEditSession = (session: Session) => {
-        const templateCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-        const courts = session.courts?.length ? session.courts : templateCourts;
-        setEditingSession(session);
-        setEditCourtFields(courtFieldsFromSession(courts.length ? courts : session.courts));
+        const latest = sessionsList.find((item) => item.id === session.id) ?? session;
+        const templateCourts = getCourtsForSession(latest, recurringSchedules, disabledBuiltinSchedules);
+        const courts = latest.courts?.length ? latest.courts : templateCourts;
+        setEditingSession(latest);
+        setEditCourtFields(courtFieldsFromSession(courts.length ? courts : latest.courts));
+    };
+
+    const applySessionSave = async (
+        sessionToSave: Session,
+        updateData: Record<string, unknown>,
+        finalAttendees: string[],
+        finalWaitlist: string[],
+    ) => {
+        const usesCourts = sessionToSave.type === 'court' || sessionToSave.type === 'coaching';
+        const sport = sessionToSave.sport || inferSport(sessionToSave);
+        const slotsPerCourt = getSlotsPerCourtForSport(sport);
+        const courts = usesCourts && Array.isArray(updateData.courts) ? (updateData.courts as string[]) : sessionToSave.courts;
+
+        if (isRecurringSession(sessionToSave)) {
+            const config = getRecurringConfigForSession(
+                sessionToSave,
+                recurringSchedules,
+                disabledBuiltinSchedules,
+            );
+            if (!config) {
+                window.alert('Could not find the weekly schedule for this session.');
+                return;
+            }
+
+            const scheduleFields: Omit<AdminRecurringSchedule, 'id' | 'sport' | 'day'> = {
+                title: sessionToSave.title,
+                sessionType: sessionToSave.type,
+                time: String(updateData.time ?? sessionToSave.time),
+                courts: courts ?? config.courts,
+                maxPerCourt: slotsPerCourt,
+                maxAttendees: Number(updateData.maxAttendees ?? sessionToSave.maxAttendees),
+                maxWaitlistSize: Number(updateData.maxWaitlistSize ?? sessionToSave.maxWaitlistSize ?? 0),
+                ...(sessionToSave.type === 'coaching'
+                    ? { coach: sessionToSave.coach || 'TBD' }
+                    : {}),
+            };
+
+            if (config.scheduleId) {
+                await updateRecurringSchedule(config.scheduleId, scheduleFields);
+            } else {
+                await replaceBuiltinRecurringSchedule(
+                    sport as AdminRecurringSchedule['sport'],
+                    config,
+                    scheduleFields,
+                );
+            }
+        }
+
+        await setDoc(
+            doc(db, 'sessions', sessionToSave.id),
+            {
+                ...updateData,
+                attendees: finalAttendees,
+                waitlist: finalWaitlist,
+            },
+            { merge: true },
+        );
+        setEditingSession(null);
+        setCapacityReductionPrompt(null);
+        setPendingSessionSave(null);
     };
 
     const handleSaveSessionEdit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!editingSession) return;
         try {
+            const sessionRef = doc(db, 'sessions', editingSession.id);
+            const existingSnap = await getDoc(sessionRef);
+            const existingData = existingSnap.exists() ? existingSnap.data() : {};
+            const preservedAttendees = Array.isArray(existingData.attendees)
+                ? (existingData.attendees as string[])
+                : (editingSession.attendees ?? []);
+            const preservedWaitlist = Array.isArray(existingData.waitlist)
+                ? (existingData.waitlist as string[])
+                : (editingSession.waitlist ?? []);
+
             const usesCourts = editingSession.type === 'court' || editingSession.type === 'coaching';
             const courts = usesCourts
                 ? buildCourtLabels(
@@ -133,8 +205,6 @@ export function useSessionAdminOps({
                 ...timeFields,
                 maxAttendees: Number(editingSession.maxAttendees),
                 maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
-                attendees: editingSession.attendees ?? [],
-                waitlist: editingSession.waitlist ?? [],
                 coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
                 coachId: null,
             };
@@ -151,47 +221,69 @@ export function useSessionAdminOps({
                 updateData.slotsPerCourt = null;
             }
 
-            if (isRecurringSession(editingSession)) {
-                const config = getRecurringConfigForSession(
+            const capSession: Session = {
+                ...editingSession,
+                courts: usesCourts && courts && courts.length > 0 ? courts : editingSession.courts,
+                maxAttendees: Number(editingSession.maxAttendees),
+            };
+            const capCourts = getCourtsForSession(capSession, recurringSchedules, disabledBuiltinSchedules);
+            const maxPerCourt = getSlotsPerCourt(capSession, recurringSchedules, disabledBuiltinSchedules);
+            const newCap = getSessionEnrollmentCap(capSession, capCourts, maxPerCourt);
+
+            if (preservedAttendees.length > newCap) {
+                setPendingSessionSave({
                     editingSession,
-                    recurringSchedules,
-                    disabledBuiltinSchedules,
-                );
-                if (!config) {
-                    window.alert('Could not find the weekly schedule for this session.');
-                    return;
-                }
-
-                const scheduleFields: Omit<AdminRecurringSchedule, 'id' | 'sport' | 'day'> = {
-                    title: editingSession.title,
-                    sessionType: editingSession.type,
-                    time: timeFields.time,
-                    courts: courts ?? config.courts,
-                    maxPerCourt: slotsPerCourt,
-                    maxAttendees: Number(editingSession.maxAttendees),
-                    maxWaitlistSize: Number(editingSession.maxWaitlistSize ?? 0),
-                    ...(editingSession.type === 'coaching'
-                        ? { coach: editingSession.coach || 'TBD' }
-                        : {}),
-                };
-
-                if (config.scheduleId) {
-                    await updateRecurringSchedule(config.scheduleId, scheduleFields);
-                } else {
-                    await replaceBuiltinRecurringSchedule(
-                        sport as AdminRecurringSchedule['sport'],
-                        config,
-                        scheduleFields,
-                    );
-                }
+                    updateData,
+                    preservedAttendees,
+                    preservedWaitlist,
+                    newCap,
+                });
+                setCapacityReductionPrompt({
+                    sessionTitle: editingSession.title,
+                    newCap,
+                    attendees: preservedAttendees,
+                    requiredRemovals: preservedAttendees.length - newCap,
+                });
+                return;
             }
 
-            await setDoc(doc(db, 'sessions', editingSession.id), updateData, { merge: true });
-            setEditingSession(null);
+            await applySessionSave(editingSession, updateData, preservedAttendees, preservedWaitlist);
         } catch (err) {
             console.error('Error saving session edit:', err);
             window.alert('Error updating session.');
         }
+    };
+
+    const confirmCapacityReduction = async (attendeesToRemove: string[]) => {
+        if (!pendingSessionSave || !capacityReductionPrompt) return;
+        const { editingSession: sessionToSave, updateData, preservedAttendees, preservedWaitlist, newCap } =
+            pendingSessionSave;
+
+        if (attendeesToRemove.length < capacityReductionPrompt.requiredRemovals) {
+            window.alert(
+                `Please select at least ${capacityReductionPrompt.requiredRemovals} player(s) to remove.`,
+            );
+            return;
+        }
+
+        const removeSet = new Set(attendeesToRemove);
+        const finalAttendees = preservedAttendees.filter((entry) => !removeSet.has(entry));
+        if (finalAttendees.length > newCap) {
+            window.alert('Too many players would remain enrolled. Remove more players or cancel.');
+            return;
+        }
+
+        try {
+            await applySessionSave(sessionToSave, updateData, finalAttendees, preservedWaitlist);
+        } catch (err) {
+            console.error('Error saving session edit after capacity reduction:', err);
+            window.alert('Error updating session.');
+        }
+    };
+
+    const cancelCapacityReduction = () => {
+        setCapacityReductionPrompt(null);
+        setPendingSessionSave(null);
     };
 
     const handleDeleteSession = async (session: Session) => {
@@ -405,6 +497,9 @@ export function useSessionAdminOps({
         handleUpdateCoach,
         handleRemoveAttendee,
         handleRemoveWaitlistEntry,
+        capacityReductionPrompt,
+        confirmCapacityReduction,
+        cancelCapacityReduction,
         setCoachDraft,
         setMemberDrafts,
         setNewAttendeeCourt,

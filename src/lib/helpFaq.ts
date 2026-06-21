@@ -79,7 +79,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How does clinic capacity and court layout work?',
-        answer: 'Set Max Capacity to the total roster size (e.g. 6 or 8). Court diagrams on the public site only appear when that total divides evenly across all configured courts into exactly 2 or 4 slots per court (e.g. 8 players on 2 courts = 4 each). Otherwise members see a roster list. The header always shows enrolled count vs your max capacity, not courts × 4.',
+        answer: 'Set Max Capacity to the total roster size (e.g. 6 or 8). Court diagrams on the public site only appear when that total divides evenly across all configured courts into exactly 2 or 4 slots per court (e.g. 8 players on 2 courts = 4 each). Otherwise members see a roster list. The header always shows enrolled count vs your max capacity, not courts × 4. Editing courts or capacity does not remove existing players or waitlist entries — if the new cap is below current enrollment, you must choose who to remove or cancel the save.',
     },
     {
         question: 'Can I edit recurring sessions after they are live?',

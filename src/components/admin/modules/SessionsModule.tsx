@@ -26,6 +26,7 @@ import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurr
 import { useSessionAdminOps } from '../../../hooks/useSessionAdminOps';
 import SessionOpsCard from '../cards/SessionOpsCard';
 import EditSessionModal from '../modals/EditSessionModal';
+import CapacityReductionModal from '../modals/CapacityReductionModal';
 
 interface SessionsModuleProps {
     sessionsList: Session[];
@@ -62,6 +63,9 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             handleUpdateCoach,
             handleRemoveAttendee,
             handleRemoveWaitlistEntry,
+            capacityReductionPrompt,
+            confirmCapacityReduction,
+            cancelCapacityReduction,
             setCoachDraft,
             setMemberDrafts,
             setNewAttendeeCourt,
@@ -745,6 +749,14 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         onEditCourtFieldsChange={setEditCourtFields}
                         onClose={() => setEditingSession(null)}
                         onSubmit={handleSaveSessionEdit}
+                    />
+                )}
+
+                {capacityReductionPrompt && (
+                    <CapacityReductionModal
+                        prompt={capacityReductionPrompt}
+                        onConfirm={confirmCapacityReduction}
+                        onCancel={cancelCapacityReduction}
                     />
                 )}
             </div>
