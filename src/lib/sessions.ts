@@ -6,6 +6,7 @@ import {
     type AdminRecurringSchedule,
     type DayName,
     type OpenPlayDayConfig,
+    type SessionType,
     type Sport,
     SPORTS,
     WEEKDAY_OFFSETS,
@@ -20,7 +21,7 @@ export const BOOKING_HORIZON_DAYS = 14;
 export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = 'Opens Sunday 5pm Eastern';
 
 export type SessionStatus = 'active' | 'hidden' | 'cancelled';
-export type SessionType = 'coaching' | 'court';
+export type { SessionType } from './sports';
 
 export interface Session {
     id: string;
@@ -300,6 +301,31 @@ export const getOpenPlaySessionId = (
     return `open_play_${sportSlug}_${day}_${dateStr}`;
 };
 
+export const getRecurringClinicSessionId = (
+    sport: string,
+    day: DayName,
+    playDate: Date,
+    scheduleId?: string,
+): string => {
+    const dateStr = playDate.toISOString().split('T')[0];
+    if (scheduleId) {
+        return `clinic_custom_${scheduleId}_${day}_${dateStr}`;
+    }
+    const sportSlug = sport.toLowerCase().replace(/ /g, '_');
+    return `clinic_${sportSlug}_${day}_${dateStr}`;
+};
+
+export const getRecurringSessionId = (
+    sessionType: SessionType,
+    sport: string,
+    day: DayName,
+    playDate: Date,
+    scheduleId?: string,
+): string =>
+    sessionType === 'coaching'
+        ? getRecurringClinicSessionId(sport, day, playDate, scheduleId)
+        : getOpenPlaySessionId(sport, day, playDate, scheduleId);
+
 export const isLegacyBundledOpenPlay = (session: Session): boolean => {
     const title = session.title.toLowerCase();
     return (
@@ -372,25 +398,72 @@ export const isWithinBookingHorizon = (date: Date): boolean => {
     return date.getTime() >= today.getTime() && date.getTime() <= horizonEnd.getTime();
 };
 
-export const resolveOpenPlaySession = (
+export const resolveRecurringSession = (
     sessions: Session[],
     sport: Sport,
     config: OpenPlayDayConfig,
     weekOffset: 0 | 7,
 ): Session => {
+    const sessionType = config.sessionType ?? 'court';
     const baseStartOfWeek = getBaseWeekStart(sport);
     const playDate = getPlayDate(baseStartOfWeek, weekOffset === 7, config.day);
-    const sessionId = getOpenPlaySessionId(sport, config.day, playDate, config.scheduleId);
+    const sessionId = getRecurringSessionId(sessionType, sport, config.day, playDate, config.scheduleId);
     const dbSession = sessions.find((s) => s.id === sessionId);
-    const totalMax = config.courts.length * config.maxPerCourt;
+    const slotsPerCourt = config.maxPerCourt || getSlotsPerCourtForSport(sport);
+    const totalMax =
+        config.maxAttendees ??
+        (config.courts.length > 0 ? config.courts.length * slotsPerCourt : getDefaultMaxAttendees(sessionType));
 
+    if (sessionType === 'coaching') {
         if (dbSession) {
+            return {
+                ...dbSession,
+                title: config.title,
+                type: 'coaching',
+                sport,
+                coach: dbSession.coach ?? config.coach ?? 'TBD',
+                maxAttendees: dbSession.maxAttendees ?? totalMax,
+                maxWaitlistSize:
+                    dbSession.maxWaitlistSize ??
+                    config.maxWaitlistSize ??
+                    (config.courts.length > 0 ? config.courts.length * DEFAULT_WAITLIST_PER_COURT : DEFAULT_WAITLIST_PER_COURT * 2),
+                courts: dbSession.courts ?? (config.courts.length > 0 ? config.courts : undefined),
+                slotsPerCourt: dbSession.slotsPerCourt ?? (config.courts.length > 0 ? slotsPerCourt : undefined),
+            };
+        }
+
+        return {
+            id: sessionId,
+            title: config.title,
+            type: 'coaching',
+            date: playDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }),
+            time: config.time,
+            maxAttendees: totalMax,
+            attendees: [],
+            waitlist: [],
+            coach: config.coach ?? 'TBD',
+            coachId: null,
+            maxWaitlistSize:
+                config.maxWaitlistSize ??
+                (config.courts.length > 0 ? config.courts.length * DEFAULT_WAITLIST_PER_COURT : DEFAULT_WAITLIST_PER_COURT * 2),
+            sport,
+            courts: config.courts.length > 0 ? config.courts : undefined,
+            slotsPerCourt: config.courts.length > 0 ? slotsPerCourt : undefined,
+            recurring: true,
+        };
+    }
+
+    if (dbSession) {
         return {
             ...dbSession,
             title: config.title,
+            type: 'court',
             maxAttendees: totalMax,
             sport,
-            maxWaitlistSize: dbSession.maxWaitlistSize ?? config.maxWaitlistSize ?? config.courts.length * DEFAULT_WAITLIST_PER_COURT,
+            maxWaitlistSize:
+                dbSession.maxWaitlistSize ??
+                config.maxWaitlistSize ??
+                config.courts.length * DEFAULT_WAITLIST_PER_COURT,
         };
     }
 
@@ -407,8 +480,12 @@ export const resolveOpenPlaySession = (
         sport,
         courts: config.isCustom ? config.courts : undefined,
         slotsPerCourt: config.isCustom ? config.maxPerCourt : undefined,
+        recurring: true,
     };
 };
+
+/** @deprecated use resolveRecurringSession */
+export const resolveOpenPlaySession = resolveRecurringSession;
 
 export const bucketAttendeesByCourt = (
     attendees: string[],
@@ -467,7 +544,7 @@ export const getOpenPlayInstancesWithinHorizon = (
             const playDate = getPlayDate(baseStartOfWeek, isNextWeek, config.day);
             if (!isWithinBookingHorizon(playDate)) continue;
 
-            const session = resolveOpenPlaySession(sessions, sport, config, weekOffset);
+            const session = resolveRecurringSession(sessions, sport, config, weekOffset);
             instances.push({ session, config, playDate, isNextWeek });
         }
     }
@@ -510,6 +587,8 @@ export const filterRegularSessionsForDisplay = (
     activeSport: Sport,
 ): Session[] => {
     return sessions.filter((s) => {
+        if (isRecurringCoachingSession(s)) return false;
+        if (s.id.startsWith('clinic_')) return false;
         if (s.type === 'court' && s.title.toLowerCase().includes('open play')) {
             return false;
         }
@@ -585,10 +664,17 @@ export const isOpenPlaySession = (session: Session): boolean => {
     );
 };
 
+export const isRecurringCoachingSession = (session: Session): boolean =>
+    session.type === 'coaching' &&
+    (session.id.startsWith('clinic_') || session.recurring === true);
+
+export const isRecurringSession = (session: Session): boolean =>
+    isOpenPlaySession(session) || isRecurringCoachingSession(session);
+
 export const isRecurringCourtSession = (session: Session): boolean => isOpenPlaySession(session);
 
 export const isEditableOneTimeSession = (session: Session): boolean =>
-    !isRecurringCourtSession(session);
+    !isRecurringSession(session);
 
 export const applySessionTypeChange = (
     session: Session,
@@ -630,37 +716,62 @@ export const applySessionTypeChange = (
     };
 };
 
+export const getRecurringConfigForSession = (
+    session: Session,
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): OpenPlayDayConfig | null => {
+    if (!isRecurringSession(session)) return null;
+
+    const sport = inferSport(session);
+    const configs = getMergedScheduleForSport(sport, customSchedules, disabledBuiltin);
+    const sessionType = session.type;
+
+    const byTitle = configs.find(
+        (c) => c.title === session.title && (c.sessionType ?? 'court') === sessionType,
+    );
+    if (byTitle) return byTitle;
+
+    const clinicCustomMatch = session.id.match(
+        new RegExp(`^clinic_custom_([^_]+)_(${WEEKDAY_ID_PATTERN})_`),
+    );
+    if (clinicCustomMatch) {
+        const scheduleId = clinicCustomMatch[1];
+        return configs.find((c) => c.scheduleId === scheduleId && c.sessionType === 'coaching') || null;
+    }
+
+    const openPlayCustomMatch = session.id.match(
+        new RegExp(`^open_play_custom_([^_]+)_(${WEEKDAY_ID_PATTERN})_`),
+    );
+    if (openPlayCustomMatch) {
+        const scheduleId = openPlayCustomMatch[1];
+        return configs.find((c) => c.scheduleId === scheduleId && (c.sessionType ?? 'court') === 'court') || null;
+    }
+
+    const clinicIdMatch = session.id.match(new RegExp(`^clinic_[a-z_]+_(${WEEKDAY_ID_PATTERN})_`));
+    if (clinicIdMatch) {
+        const day = clinicIdMatch[1] as DayName;
+        return configs.find((c) => c.day === day && c.sessionType === 'coaching' && !c.scheduleId) || null;
+    }
+
+    const openPlayIdMatch = session.id.match(new RegExp(`open_play_[a-z_]+_(${WEEKDAY_ID_PATTERN})_`));
+    if (openPlayIdMatch) {
+        const day = openPlayIdMatch[1] as DayName;
+        return configs.find((c) => c.day === day && (c.sessionType ?? 'court') === 'court' && !c.scheduleId) || null;
+    }
+
+    const titleLower = session.title.toLowerCase();
+    return configs.find((c) => titleLower.includes(c.day)) || null;
+};
+
 export const getOpenPlayConfigForSession = (
     session: Session,
     customSchedules: AdminRecurringSchedule[] = [],
     disabledBuiltin: string[] = [],
 ): OpenPlayDayConfig | null => {
-    if (!isOpenPlaySession(session)) return null;
-
-    const sport = inferSport(session);
-    const configs = getMergedScheduleForSport(sport, customSchedules, disabledBuiltin);
-
-    const byTitle = configs.find((c) => c.title === session.title);
-    if (byTitle) return byTitle;
-
-    const customMatch = session.id.match(
-        new RegExp(`^open_play_custom_([^_]+)_(${WEEKDAY_ID_PATTERN})_`),
-    );
-    if (customMatch) {
-        const scheduleId = customMatch[1];
-        return configs.find((c) => c.scheduleId === scheduleId) || null;
-    }
-
-    const idMatch = session.id.match(
-        new RegExp(`open_play_[a-z_]+_(${WEEKDAY_ID_PATTERN})_`),
-    );
-    if (idMatch) {
-        const day = idMatch[1] as DayName;
-        return configs.find((c) => c.day === day && !c.scheduleId) || null;
-    }
-
-    const titleLower = session.title.toLowerCase();
-    return configs.find((c) => titleLower.includes(c.day)) || null;
+    const config = getRecurringConfigForSession(session, customSchedules, disabledBuiltin);
+    if (!config || (config.sessionType ?? 'court') !== 'court') return null;
+    return config;
 };
 
 export const getCourtsForSession = (
@@ -668,8 +779,8 @@ export const getCourtsForSession = (
     customSchedules: AdminRecurringSchedule[] = [],
     disabledBuiltin: string[] = [],
 ): string[] => {
-    const config = getOpenPlayConfigForSession(session, customSchedules, disabledBuiltin);
-    if (config) return config.courts;
+    const config = getRecurringConfigForSession(session, customSchedules, disabledBuiltin);
+    if (config?.courts?.length) return config.courts;
 
     if (session.courts && session.courts.length > 0) return session.courts;
 
@@ -750,6 +861,8 @@ export const buildAdminDisplaySessions = (
 
         const customSessions = sessionsList.filter((s) => {
             if (isLegacyBundledOpenPlay(s)) return false;
+            if (isRecurringCoachingSession(s)) return false;
+            if (s.id.startsWith('clinic_')) return false;
             if (openPlayIds.has(s.id) || regularIds.has(s.id)) return false;
             if (s.type === 'court' && s.title.toLowerCase().includes('open play')) return false;
 

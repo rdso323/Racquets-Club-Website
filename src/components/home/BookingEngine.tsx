@@ -33,6 +33,8 @@ import {
     isAttendeeOnCourt,
     isSessionEnrollmentFull,
     isOpenPlaySessionEnded,
+    isOpenPlaySession,
+    isRecurringCoachingSession,
     parseAttendee,
     NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../lib/sessions';
@@ -236,6 +238,7 @@ const BookingEngine = () => {
 
     useEffect(() => {
         sessions.forEach(async (session) => {
+            if (isRecurringCoachingSession(session)) return;
             if (session.type === 'coaching' || session.title.toLowerCase().includes('clinic')) {
                 const sport = inferSport(session);
                 const baseStartOfWeek = getBaseWeekStart(sport);
@@ -276,7 +279,8 @@ const BookingEngine = () => {
                 disabledBuiltinSchedules,
             );
 
-            instances.forEach(async ({ session, playDate }) => {
+            instances.forEach(async ({ session, playDate, config }) => {
+                if (!isOpenPlaySession(session) && config.sessionType !== 'coaching') return;
                 if (!isOpenPlaySessionEnded(playDate, session.time)) return;
 
                 const hasRoster =
@@ -288,10 +292,14 @@ const BookingEngine = () => {
                 pendingOpenPlayResets.add(resetKey);
 
                 try {
-                    await updateDoc(doc(db, 'sessions', session.id), {
+                    const reset: Record<string, unknown> = {
                         attendees: [],
                         waitlist: [],
-                    });
+                    };
+                    if (config.sessionType === 'coaching') {
+                        reset.coachId = null;
+                    }
+                    await updateDoc(doc(db, 'sessions', session.id), reset);
                 } catch (e) {
                     pendingOpenPlayResets.delete(resetKey);
                     console.error(`Failed to reset ended open play session ${session.id}:`, e);
@@ -818,8 +826,7 @@ const BookingEngine = () => {
         );
     }
 
-    const regularSessions = filterRegularSessionsForDisplay(sessions, activeSport);
-    const openPlayInstances = pickAdminOpenPlayInstances(
+    const allRecurringInstances = pickAdminOpenPlayInstances(
         getOpenPlayInstancesWithinHorizon(
             sessions,
             activeSport,
@@ -828,7 +835,17 @@ const BookingEngine = () => {
         ),
         activeSport,
     );
-    const hasDisplayContent = openPlayInstances.length > 0 || regularSessions.length > 0;
+    const openPlayInstances = allRecurringInstances.filter(
+        (item) => (item.config.sessionType ?? 'court') === 'court',
+    );
+    const recurringClinicInstances = allRecurringInstances.filter(
+        (item) => item.config.sessionType === 'coaching',
+    );
+    const oneTimeSessions = filterRegularSessionsForDisplay(sessions, activeSport);
+    const hasDisplayContent =
+        openPlayInstances.length > 0 ||
+        recurringClinicInstances.length > 0 ||
+        oneTimeSessions.length > 0;
     const theme = getSportTheme(activeSport);
     const accentStyle = {
         '--accent': theme.accent,
@@ -936,9 +953,15 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    {regularSessions.length > 0 && (
+                    {recurringClinicInstances.length > 0 && (
                         <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                            {regularSessions.map((session) => renderCard(session))}
+                            {recurringClinicInstances.map(({ session }) => renderCard(session))}
+                        </div>
+                    )}
+
+                    {oneTimeSessions.length > 0 && (
+                        <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
+                            {oneTimeSessions.map((session) => renderCard(session))}
                         </div>
                     )}
                 </div>

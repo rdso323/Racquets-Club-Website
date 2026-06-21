@@ -6,6 +6,7 @@ import {
     isLegacyBundledOpenPlay,
     isOpenPlaySession,
     isOpenPlaySessionEnded,
+    isRecurringCoachingSession,
     parseSessionDateString,
     type Session,
 } from './sessions';
@@ -94,8 +95,10 @@ export const partitionEventsByPast = <T extends Pick<ClubEvent, 'dateISO' | 'dat
 /** One-time / custom sessions eligible for archive — not recurring open play. */
 export const isSessionArchivable = (session: Session): boolean => {
     if (isOpenPlaySession(session)) return false;
+    if (isRecurringCoachingSession(session)) return false;
     if (isLegacyBundledOpenPlay(session)) return false;
     if (session.id.startsWith('open_play_')) return false;
+    if (session.id.startsWith('clinic_')) return false;
     return !!(session.weekStartDate || parseSessionDateString(session.date));
 };
 

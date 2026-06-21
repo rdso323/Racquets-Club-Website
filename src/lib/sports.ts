@@ -19,6 +19,8 @@ export type DayName =
     | 'saturday'
     | 'sunday';
 
+export type SessionType = 'coaching' | 'court';
+
 export const WEEKDAY_OFFSETS: Record<DayName, number> = {
     monday: 0,
     tuesday: 1,
@@ -44,6 +46,10 @@ export interface OpenPlayDayConfig {
     courts: string[];
     maxPerCourt: number;
     time: string;
+    /** court = open play; coaching = weekly clinic */
+    sessionType?: SessionType;
+    maxAttendees?: number;
+    coach?: string;
     /** Session-level waitlist cap override (common queue for all courts) */
     maxWaitlistSize?: number;
     /** Admin-created template id; built-in schedules omit this */
@@ -52,15 +58,21 @@ export interface OpenPlayDayConfig {
     isCustom?: boolean;
 }
 
-/** Admin-managed weekly court booking template stored in Firestore */
+/** @deprecated alias — recurring templates use OpenPlayDayConfig for both court and coaching */
+export type RecurringDayConfig = OpenPlayDayConfig;
+
+/** Admin-managed weekly session template stored in Firestore */
 export interface AdminRecurringSchedule {
     id: string;
     sport: Sport;
     day: DayName;
     title: string;
     time: string;
+    sessionType: SessionType;
     courts: string[];
     maxPerCourt: number;
+    maxAttendees?: number;
+    coach?: string;
     maxWaitlistSize?: number;
 }
 
@@ -117,6 +129,26 @@ export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
             time: '5:00 PM - 7:00 PM',
         },
     ],
+};
+
+/** Built-in weekly coaching clinic templates (currently Tennis only). */
+export const CLINIC_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
+    Tennis: [
+        {
+            day: 'friday',
+            title: 'Coaching Clinic',
+            sessionType: 'coaching',
+            courts: ['Court 1'],
+            maxPerCourt: SLOTS_PER_COURT,
+            maxAttendees: SLOTS_PER_COURT,
+            coach: 'TBD',
+            time: '3:00 PM - 4:00 PM',
+        },
+    ],
+    Badminton: [],
+    Squash: [],
+    Pickleball: [],
+    'Table Tennis': [],
 };
 
 export const SESSION_STATUS_CATEGORIES = SPORTS.flatMap((sport) => [

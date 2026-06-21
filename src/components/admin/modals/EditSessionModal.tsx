@@ -11,7 +11,7 @@ import {
     buildCourtLabels,
     suggestedCapacityForCourts,
     isEditableOneTimeSession,
-    isRecurringCourtSession,
+    isRecurringSession,
 } from '../../../lib/sessions';
 
 export interface EditCourtFields {
@@ -37,7 +37,7 @@ const EditSessionModal = ({
     onClose,
     onSubmit,
 }: EditSessionModalProps) => {
-    const canEditSchedule = !isRecurringCourtSession(session);
+    const canEditSchedule = !isRecurringSession(session);
     const canEditCourts = isEditableOneTimeSession(session);
     const dateISO = session.weekStartDate || resolveSessionDateISO(session) || '';
     const slotsPerCourt = getSlotsPerCourtForSport(session.sport ?? 'Tennis');

@@ -7,8 +7,8 @@ import {
     parseWaitlistEntry,
     getCourtsForSession,
     inferSport,
-    isRecurringCourtSession,
-    getOpenPlayConfigForSession,
+    isRecurringSession,
+    getRecurringConfigForSession,
 } from '../../../lib/sessions';
 import type { AdminRecurringSchedule } from '../../../lib/sports';
 import { formatRecurringDayLabel } from '../../../lib/recurringSchedules';
@@ -67,9 +67,9 @@ const SessionOpsCard = memo(({
     const enrolledCount = rosterAttendees.length;
     const isFull = enrolledCount >= session.maxAttendees;
     const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
-    const isRecurring = isRecurringCourtSession(session);
+    const isRecurring = isRecurringSession(session);
     const recurringConfig = isRecurring
-        ? getOpenPlayConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
+        ? getRecurringConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
         : null;
 
     return (

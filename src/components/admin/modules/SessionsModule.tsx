@@ -25,10 +25,10 @@ import {
     parseWaitlistEntry,
     getMaxWaitlistSize,
     getSlotsPerCourt,
-    isRecurringCourtSession,
+    isRecurringSession,
     isEditableOneTimeSession,
     applySessionTypeChange,
-    getOpenPlayConfigForSession,
+    getRecurringConfigForSession,
     formatWaitlistEntry,
     findUserAttendeeEntry,
     findUserWaitlistEntry,
@@ -153,26 +153,13 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             setNewSessionSaving(true);
             setNewSessionMsg('');
             try {
-                const courts =
-                    scheduleMode === 'one-time'
-                        ? buildCourtLabels(
-                              newSession.courtCount,
-                              newSession.courtStartNumber,
-                              newSession.customCourtLabels,
-                          )
-                        : newSession.type === 'court'
-                          ? buildCourtLabels(
-                                newSession.courtCount,
-                                newSession.courtStartNumber,
-                                newSession.customCourtLabels,
-                            )
-                          : [];
+                const courts = buildCourtLabels(
+                    newSession.courtCount,
+                    newSession.courtStartNumber,
+                    newSession.customCourtLabels,
+                );
 
                 if (scheduleMode === 'recurring') {
-                    if (newSession.type !== 'court') {
-                        setNewSessionMsg('Weekly recurring schedules are only available for court open play.');
-                        return;
-                    }
                     if (courts.length === 0) {
                         setNewSessionMsg('Please configure at least one court.');
                         return;
@@ -183,11 +170,18 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         day: newSession.recurringDay,
                         title: newSession.title,
                         time: newSession.time,
+                        sessionType: newSession.type,
                         courts,
                         maxPerCourt: getSlotsPerCourtForSport(newSession.sport),
+                        maxAttendees: Number(newSession.maxAttendees),
+                        coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
                         maxWaitlistSize: Number(newSession.maxWaitlistSize),
                     });
-                    setNewSessionMsg('Weekly recurring court schedule created!');
+                    setNewSessionMsg(
+                        newSession.type === 'coaching'
+                            ? 'Weekly recurring clinic schedule created!'
+                            : 'Weekly recurring open play schedule created!',
+                    );
                 } else {
                     const timeFields = buildTimeFields(newSession.startTime, newSession.endTime || undefined);
                     const sessionData: Record<string, unknown> = {
@@ -301,8 +295,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
         };
 
         const handleDeleteSession = async (session: Session) => {
-            if (isRecurringCourtSession(session)) {
-                const config = getOpenPlayConfigForSession(
+            if (isRecurringSession(session)) {
+                const config = getRecurringConfigForSession(
                     session,
                     recurringSchedules,
                     disabledBuiltinSchedules,
@@ -317,7 +311,11 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                     if (config?.scheduleId) {
                         await removeRecurringSchedule(config.scheduleId);
                     } else if (config) {
-                        await disableBuiltinSchedule(sport as AdminRecurringSchedule['sport'], config.day);
+                        await disableBuiltinSchedule(
+                            sport as AdminRecurringSchedule['sport'],
+                            config.day,
+                            config.sessionType ?? 'court',
+                        );
                     }
                     try {
                         await deleteDoc(doc(db, 'sessions', session.id));
@@ -585,7 +583,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                 Schedule New Session
                             </h3>
                             <p className="mb-6 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                Create a one-time clinic or court booking, or add a weekly recurring open play schedule.
+                                Create a one-time session, or add a weekly recurring open play or coaching clinic schedule.
                             </p>
 
                             <div className="mb-6 flex flex-wrap gap-2 rounded-xl border border-gray-200 bg-white/60 p-1 dark:border-gray-800 dark:bg-court-950/40">
@@ -606,8 +604,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         setScheduleMode('recurring');
                                         setNewSession((prev) => ({
                                             ...prev,
-                                            type: 'court',
-                                            title: prev.title || defaultRecurringTitle(prev.recurringDay),
+                                            title: prev.title || defaultRecurringTitle(prev.recurringDay, prev.type),
                                         }));
                                     }}
                                     className={`rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all ${
@@ -616,7 +613,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                             : 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200'
                                     }`}
                                 >
-                                    Weekly recurring court
+                                    Weekly recurring session
                                 </button>
                             </div>
 
@@ -685,7 +682,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                 value={newSession.type}
                                                 onChange={(e) => {
                                                     const type = e.target.value as SessionType;
-                                                    if (scheduleMode === 'recurring' && type !== 'court') return;
                                                     const result = applySessionTypeChange(
                                                         {
                                                             id: 'draft',
@@ -716,9 +712,12 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                         courtCount: result.editCourtFields.courtCount,
                                                         courtStartNumber: result.editCourtFields.courtStartNumber,
                                                         customCourtLabels: result.editCourtFields.customCourtLabels,
+                                                        title:
+                                                            scheduleMode === 'recurring'
+                                                                ? defaultRecurringTitle(newSession.recurringDay, type)
+                                                                : newSession.title,
                                                     });
                                                 }}
-                                                disabled={scheduleMode === 'recurring'}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent disabled:opacity-60 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                                             >
                                                 <option value="court">Court Open Play</option>
@@ -741,7 +740,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                                     setNewSession((prev) => ({
                                                         ...prev,
                                                         recurringDay,
-                                                        title: defaultRecurringTitle(recurringDay),
+                                                        title: defaultRecurringTitle(recurringDay, prev.type),
                                                     }));
                                                 }}
                                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
