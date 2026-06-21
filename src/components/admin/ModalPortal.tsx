@@ -16,8 +16,8 @@ const ModalPortal = ({ children }: ModalPortalProps) => {
     }, []);
 
     return createPortal(
-        <div className="fixed inset-0 z-[160] overflow-y-auto overscroll-contain bg-black/50 p-4 sm:p-6">
-            <div className="flex min-h-full items-start justify-center py-2 sm:items-center sm:py-8">
+        <div className="fixed inset-0 z-[160] bg-black/50 p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-6">
+            <div className="mx-auto flex h-full w-full max-w-md min-h-0 flex-col justify-center">
                 {children}
             </div>
         </div>,

@@ -18,8 +18,8 @@ const AdminModalShell = ({
     submitLabel = 'Save Changes',
 }: AdminModalShellProps) => (
     <ModalPortal>
-        <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-carbon">
-            <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-6 pb-2 pt-6 dark:border-gray-800">
+        <div className="flex min-h-0 max-h-full w-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-carbon">
+            <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 pb-2 pt-4 dark:border-gray-800 sm:px-6 sm:pt-5">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-chalk">{title}</h3>
                 <button
                     type="button"
@@ -30,11 +30,11 @@ const AdminModalShell = ({
                     <X className="h-5 w-5" />
                 </button>
             </div>
-            <form onSubmit={onSubmit} className="flex min-h-0 flex-1 flex-col">
-                <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-6 py-4">
+            <form onSubmit={onSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <div className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain px-4 py-3 sm:space-y-4 sm:px-6 sm:py-4">
                     {children}
                 </div>
-                <div className="flex shrink-0 justify-end gap-2 border-t border-gray-200 bg-white px-6 py-4 dark:border-gray-800 dark:bg-carbon">
+                <div className="flex shrink-0 justify-end gap-2 rounded-b-2xl border-t border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-carbon sm:px-6 sm:py-4">
                     <button
                         type="button"
                         onClick={onClose}
