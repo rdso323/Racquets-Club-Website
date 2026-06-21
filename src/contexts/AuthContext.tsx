@@ -92,9 +92,6 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 const CLUB_ADMIN_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
 
 const DEFAULT_ADMIN_EMAILS = [
-    'rohan@duke.edu',
-    'admin@duke.edu',
-    'rohan.dsouza@duke.edu',
     'hirsh.sinaihede@duke.edu',
     'kathryne.piazza@duke.edu',
     CLUB_ADMIN_EMAIL,
@@ -118,7 +115,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
-    const [firestoreIsAdmin, setFirestoreIsAdmin] = useState(false);
     const migrationAttemptedRef = useRef<string | null>(null);
 
     useEffect(() => {
@@ -144,7 +140,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 } else {
                     setUser(currentUser);
                     setError(null);
-                    setFirestoreIsAdmin(isAdminEmail(currentUser.email));
 
                     setDoc(
                         doc(db, 'users', currentUser.uid),
@@ -163,7 +158,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
-                setFirestoreIsAdmin(false);
                 migrationAttemptedRef.current = null;
             }
             setLoading(false);
@@ -182,17 +176,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             async (snapshot) => {
                 const data = snapshot.exists() ? snapshot.data() : null;
 
-                if (data?.isAdmin === true) {
-                    setFirestoreIsAdmin(true);
-                } else if (isAdminEmail(user.email)) {
-                    setFirestoreIsAdmin(true);
-                    try {
-                        await setDoc(userRef, { isAdmin: true }, { merge: true });
-                    } catch (err) {
-                        console.error('Error bootstrapping admin flag:', err);
+                const onAllowlist = isAdminEmail(user.email);
+
+                if (onAllowlist) {
+                    if (data?.isAdmin !== true) {
+                        try {
+                            await setDoc(userRef, { isAdmin: true }, { merge: true });
+                        } catch (err) {
+                            console.error('Error bootstrapping admin flag:', err);
+                        }
                     }
                 } else {
-                    setFirestoreIsAdmin(false);
+                    if (data?.isAdmin === true) {
+                        try {
+                            await setDoc(userRef, { isAdmin: false }, { merge: true });
+                        } catch (err) {
+                            console.error('Error revoking admin flag:', err);
+                        }
+                    }
                 }
 
                 if (data?.tabPreferences) {
@@ -318,9 +319,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAdmin = user
-        ? isAdminEmail(user.email) || firestoreIsAdmin
-        : false;
+    const isAdmin = user ? isAdminEmail(user.email) : false;
 
     return (
         <AuthContext.Provider value={{
