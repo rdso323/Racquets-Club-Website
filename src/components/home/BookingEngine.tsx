@@ -2,7 +2,7 @@ import { useState, useEffect, type CSSProperties } from 'react';
 import { collection, onSnapshot, doc, updateDoc, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, Rocket, AlertTriangle, Lock, X, PartyPopper } from 'lucide-react';
+import { Users, Rocket, AlertTriangle, Lock, X, PartyPopper, RotateCcw } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type OpenPlayDayConfig, type AdminRecurringSchedule } from '../../lib/sports';
 import CourtDiagram from './CourtDiagram';
 import WaitlistPanel from './WaitlistPanel';
@@ -66,6 +66,34 @@ const SessionLockOverlay = () => (
             <p className="mt-1.5 text-xs font-medium leading-relaxed text-amber-800/90 dark:text-amber-300/90">
                 {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
             </p>
+        </div>
+    </div>
+);
+
+const SessionCancelledOverlay = ({
+    showRestore,
+    onRestore,
+}: {
+    showRestore?: boolean;
+    onRestore?: () => void;
+}) => (
+    <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl bg-white/30 backdrop-blur-[2px] dark:bg-court-950/40">
+        <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
+            <AlertTriangle className="mb-2 h-6 w-6 text-red-500" />
+            <p className="text-sm font-bold text-red-700 dark:text-red-300">Cancelled This Week</p>
+            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/50">
+                This session won&apos;t be running this week.
+            </p>
+            {showRestore && onRestore && (
+                <button
+                    type="button"
+                    onClick={onRestore}
+                    className="mt-4 flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-800 transition-colors hover:bg-emerald-100 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300 dark:hover:bg-emerald-950/60"
+                >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Restore this week
+                </button>
+            )}
         </div>
     </div>
 );
@@ -529,13 +557,10 @@ const BookingEngine = () => {
         return (
             <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
                 {isCancelled && (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
-                        <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
-                            <AlertTriangle className="mb-2 h-6 w-6 text-red-500" />
-                            <p className="text-sm font-bold text-red-700 dark:text-red-300">Cancelled This Week</p>
-                            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/50">This session won't be running this week.</p>
-                        </div>
-                    </div>
+                    <SessionCancelledOverlay
+                        showRestore={isAdmin}
+                        onRestore={() => adminOps.handleRestoreThisWeek(session)}
+                    />
                 )}
 
                 <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
@@ -773,13 +798,10 @@ const BookingEngine = () => {
         return (
             <div key={session.id} className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full md:shrink">
                 {isCancelled && (
-                    <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl backdrop-blur-[2px] bg-white/30 dark:bg-court-950/40">
-                        <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
-                            <AlertTriangle className="mb-2 h-6 w-6 text-red-500" />
-                            <p className="text-sm font-bold text-red-700 dark:text-red-300">Cancelled This Week</p>
-                            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/50">This session won't be running this week.</p>
-                        </div>
-                    </div>
+                    <SessionCancelledOverlay
+                        showRestore={isAdmin}
+                        onRestore={() => adminOps.handleRestoreThisWeek(session)}
+                    />
                 )}
 
                 <div className={`border-b border-chalk/10 p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
