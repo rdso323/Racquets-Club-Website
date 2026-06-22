@@ -25,7 +25,6 @@ const WEEKDAY_ID_PATTERN =
 export const BOOKING_HORIZON_DAYS = 14;
 export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = 'Opens Sunday 5pm Eastern';
 
-export type SessionStatus = 'active' | 'hidden' | 'cancelled';
 export type { SessionType } from './sports';
 
 export interface Session {
@@ -50,6 +49,8 @@ export interface Session {
     slotsPerCourt?: number;
     /** True for admin-created weekly recurring court bookings */
     recurring?: boolean;
+    /** When true, this week's recurring instance is cancelled (auto clears next week) */
+    cancelledThisWeek?: boolean;
 }
 
 export interface ParsedAttendee {
@@ -649,6 +650,9 @@ export const normalizeSessionFromFirestore = (
                 : getDefaultMaxAttendees(type),
         ...(Number.isFinite(parsedWaitlist)
             ? { maxWaitlistSize: clampAdminMaxWaitlist(parsedWaitlist) }
+            : {}),
+        ...(typeof data.cancelledThisWeek === 'boolean'
+            ? { cancelledThisWeek: data.cancelledThisWeek }
             : {}),
     };
 };

@@ -2,23 +2,14 @@ import { useEffect, useState } from 'react';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { maintainArchivedCollections } from '../lib/archive';
-import { SESSION_STATUS_CATEGORIES, type AdminRecurringSchedule } from '../lib/sports';
-import { normalizeSessionFromFirestore, type Session, type SessionStatus } from '../lib/sessions';
-import type { AdminEvent, FeedbackItem, SessionStatusMap } from '../components/admin/types';
-
-const defaultStatuses = (): SessionStatusMap => {
-    const defaults: SessionStatusMap = {};
-    SESSION_STATUS_CATEGORIES.forEach((cat) => {
-        defaults[cat.id] = 'active';
-    });
-    return defaults;
-};
+import { type AdminRecurringSchedule } from '../lib/sports';
+import { normalizeSessionFromFirestore, type Session } from '../lib/sessions';
+import type { AdminEvent, FeedbackItem } from '../components/admin/types';
 
 /** Subscribes to all Operations Deck collections on mount so stats and modules stay in sync. */
 export const useAdminData = (isAdmin = false) => {
     const [initialLoading, setInitialLoading] = useState(true);
     const [tickerText, setTickerText] = useState('');
-    const [sessionStatuses, setSessionStatuses] = useState<SessionStatusMap>(defaultStatuses);
     const [sessionsList, setSessionsList] = useState<Session[]>([]);
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
@@ -39,20 +30,6 @@ export const useAdminData = (isAdmin = false) => {
                     console.error('Ticker subscription error', err);
                     setInitialLoading(false);
                 },
-            ),
-        );
-
-        unsubs.push(
-            onSnapshot(
-                doc(db, 'settings', 'sessionStatus'),
-                (snap) => {
-                    if (snap.exists()) {
-                        setSessionStatuses(snap.data() as SessionStatusMap);
-                    } else {
-                        setSessionStatuses(defaultStatuses());
-                    }
-                },
-                (err) => console.error('Session status subscription error', err),
             ),
         );
 
@@ -130,17 +107,10 @@ export const useAdminData = (isAdmin = false) => {
         void maintainArchivedCollections(eventsList, sessionsList, isAdmin);
     }, [eventsList, sessionsList, isAdmin]);
 
-    const updateStatus = (id: string, status: SessionStatus) => {
-        setSessionStatuses((prev) => ({ ...prev, [id]: status }));
-    };
-
     return {
         initialLoading,
         tickerText,
         setTickerText,
-        sessionStatuses,
-        setSessionStatuses,
-        updateStatus,
         sessionsList,
         recurringSchedules,
         disabledBuiltinSchedules,

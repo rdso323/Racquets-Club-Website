@@ -1,7 +1,7 @@
 export const SPORTS = ['Tennis', 'Badminton', 'Squash', 'Pickleball', 'Table Tennis'] as const;
 export type Sport = (typeof SPORTS)[number];
 
-export const SPORT_FILTER_TABS = ['All', ...SPORTS] as const;
+export const SPORT_FILTER_TABS = [...SPORTS] as const;
 
 export const DEFAULT_OPEN_PLAY_CAPACITY = 8;
 export const SLOTS_PER_COURT = 4;
@@ -164,11 +164,6 @@ export const CLINIC_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
     Pickleball: [],
     'Table Tennis': [],
 };
-
-export const SESSION_STATUS_CATEGORIES = SPORTS.flatMap((sport) => [
-    { id: `${sport}_OpenPlay`, label: `${sport} Open Play` },
-    { id: `${sport}_Clinic`, label: `${sport} Clinic` },
-]);
 
 export interface SportTheme {
     /** Bright accent for dark backgrounds */

@@ -100,6 +100,14 @@ const SessionOpsModal = ({
                             onClose();
                             adminOps.openEditSession(session);
                         }}
+                        onCancelThisWeek={() => {
+                            onClose();
+                            adminOps.handleCancelThisWeek(session);
+                        }}
+                        onRestoreThisWeek={() => {
+                            onClose();
+                            adminOps.handleRestoreThisWeek(session);
+                        }}
                         onDelete={() => {
                             onClose();
                             adminOps.handleDeleteSession(session);

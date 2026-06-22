@@ -286,6 +286,67 @@ export function useSessionAdminOps({
         setPendingSessionSave(null);
     };
 
+    const buildSessionDocFields = (session: Session): Record<string, unknown> => ({
+        title: session.title,
+        sport: session.sport || inferSport(session),
+        type: session.type,
+        date: session.date,
+        time: session.time,
+        maxAttendees: session.maxAttendees,
+        ...(session.weekStartDate ? { weekStartDate: session.weekStartDate } : {}),
+        ...(session.courts?.length
+            ? { courts: session.courts, slotsPerCourt: getSlotsPerCourt(session) }
+            : {}),
+        ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
+        ...(session.type === 'coaching' ? { coach: session.coach || 'TBD', coachId: null } : {}),
+    });
+
+    const handleCancelThisWeek = async (session: Session) => {
+        if (!isRecurringSession(session)) return;
+        if (
+            !window.confirm(
+                `Cancel "${session.title}" for this week only? The session will return next week.`,
+            )
+        ) {
+            return;
+        }
+
+        try {
+            await setDoc(
+                doc(db, 'sessions', session.id),
+                {
+                    ...buildSessionDocFields(session),
+                    cancelledThisWeek: true,
+                    attendees: session.attendees ?? [],
+                    waitlist: session.waitlist ?? [],
+                },
+                { merge: true },
+            );
+        } catch (err) {
+            console.error('Error cancelling session for this week:', err);
+            window.alert('Error cancelling session for this week.');
+        }
+    };
+
+    const handleRestoreThisWeek = async (session: Session) => {
+        if (!isRecurringSession(session) || !session.cancelledThisWeek) return;
+        if (!window.confirm(`Restore "${session.title}" for the current week?`)) return;
+
+        try {
+            await setDoc(
+                doc(db, 'sessions', session.id),
+                {
+                    ...buildSessionDocFields(session),
+                    cancelledThisWeek: false,
+                },
+                { merge: true },
+            );
+        } catch (err) {
+            console.error('Error restoring session for this week:', err);
+            window.alert('Error restoring session for this week.');
+        }
+    };
+
     const handleDeleteSession = async (session: Session) => {
         if (isRecurringSession(session)) {
             const config = getRecurringConfigForSession(
@@ -492,6 +553,8 @@ export function useSessionAdminOps({
         openEditSession,
         handleSaveSessionEdit,
         handleDeleteSession,
+        handleCancelThisWeek,
+        handleRestoreThisWeek,
         handleAddAttendee,
         handleAddToWaitlist,
         handleUpdateCoach,

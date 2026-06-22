@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Edit, Settings, Trash2, Users } from 'lucide-react';
+import { CalendarX, Edit, RotateCcw, Settings, Trash2, Users } from 'lucide-react';
 import { type Session, isRecurringSession } from '../../lib/sessions';
 
 interface BookingCardAdminMenuProps {
     session: Session;
     onEdit: () => void;
     onManageRoster: () => void;
+    onCancelThisWeek?: () => void;
+    onRestoreThisWeek?: () => void;
     onDelete: () => void;
 }
 
@@ -13,11 +15,14 @@ const BookingCardAdminMenu = ({
     session,
     onEdit,
     onManageRoster,
+    onCancelThisWeek,
+    onRestoreThisWeek,
     onDelete,
 }: BookingCardAdminMenuProps) => {
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
     const isRecurring = isRecurringSession(session);
+    const isCancelledThisWeek = session.cancelledThisWeek === true;
 
     useEffect(() => {
         if (!open) return;
@@ -58,7 +63,7 @@ const BookingCardAdminMenu = ({
             </button>
 
             {open && (
-                <div className="absolute right-0 top-full z-50 mt-1.5 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-800 dark:bg-carbon">
+                <div className="absolute right-0 top-full z-50 mt-1.5 w-48 overflow-hidden rounded-xl border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-800 dark:bg-carbon">
                     <button
                         type="button"
                         onClick={() => run(onEdit)}
@@ -75,6 +80,30 @@ const BookingCardAdminMenu = ({
                         <Users className="h-3.5 w-3.5" />
                         Manage roster
                     </button>
+                    {isRecurring && (
+                        <>
+                            <div className="my-1 border-t border-gray-100 dark:border-gray-800" />
+                            {isCancelledThisWeek ? (
+                                <button
+                                    type="button"
+                                    onClick={() => onRestoreThisWeek && run(onRestoreThisWeek)}
+                                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+                                >
+                                    <RotateCcw className="h-3.5 w-3.5" />
+                                    Restore this week
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => onCancelThisWeek && run(onCancelThisWeek)}
+                                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-amber-700 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                                >
+                                    <CalendarX className="h-3.5 w-3.5" />
+                                    Cancel this week
+                                </button>
+                            )}
+                        </>
+                    )}
                     <div className="my-1 border-t border-gray-100 dark:border-gray-800" />
                     <button
                         type="button"
