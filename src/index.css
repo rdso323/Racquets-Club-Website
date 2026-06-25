@@ -66,18 +66,6 @@
     border-color: rgba(244, 239, 226, 0.08);
   }
 
-  .menu-panel-frost {
-    background-color: rgb(250 248 243 / 0.94);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-  }
-
-  .dark .menu-panel-frost {
-    background: linear-gradient(145deg, rgb(15 32 22 / 0.96) 0%, rgb(10 20 14 / 0.98) 100%);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-  }
-
   .clay-gradient {
     background: linear-gradient(135deg, #d97a55 0%, #c75d3d 55%, #a8482e 100%);
   }
