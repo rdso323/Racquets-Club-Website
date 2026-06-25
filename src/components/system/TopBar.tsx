@@ -44,10 +44,10 @@ const TopBar = () => {
 
     return (
         <header
-            className={`fixed inset-x-0 top-0 z-[150] flex items-center justify-between px-5 py-4 backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300 md:px-10 ${
+            className={`fixed inset-x-0 top-0 z-[150] flex items-center justify-between px-5 py-4 transition-[background-color,box-shadow,border-color] duration-300 md:px-10 ${
                 scrolled
-                    ? 'border-b border-gray-200/90 bg-[#F3F0E8]/98 shadow-sm dark:border-chalk/10 dark:bg-court-950/98'
-                    : 'border-b border-gray-200/70 bg-[#F3F0E8]/97 dark:border-chalk/10 dark:bg-court-950/97'
+                    ? 'border-b border-gray-200 bg-[#F3F0E8] shadow-sm dark:border-chalk/10 dark:bg-court-950'
+                    : 'border-b border-gray-200/90 bg-[#F3F0E8] dark:border-chalk/10 dark:bg-court-950'
             }`}
         >
             <div className="flex items-center gap-3 md:gap-4">
