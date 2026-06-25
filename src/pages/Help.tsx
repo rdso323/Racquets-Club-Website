@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLenis } from 'lenis/react';
 import { ChevronDown, MessageCircle, Search, Shield, X } from 'lucide-react';
 import Footer from '../components/home/Footer';
 import { ADMIN_HELP_FAQ, MEMBER_HELP_FAQ, type FaqItem } from '../lib/helpFaq';
@@ -16,6 +17,9 @@ interface FaqSearchEntry {
 }
 
 const faqItemId = (section: FaqSection, index: number) => `faq-${section}-${index}`;
+
+/** Extra clearance below the fixed TopBar when jumping to an FAQ item */
+const FAQ_SCROLL_OFFSET = 120;
 
 const normalizeSearchText = (value: string) => value.toLowerCase().replace(/\s+/g, ' ').trim();
 
@@ -51,7 +55,7 @@ const FaqAccordion = ({
                 <div
                     id={faqItemId(section, index)}
                     key={`${idPrefix}-${item.question}`}
-                    className={`glass-deep scroll-mt-32 overflow-hidden rounded-xl border transition-shadow duration-500 ${
+                    className={`glass-deep scroll-mt-[7.5rem] overflow-hidden rounded-xl border transition-shadow duration-500 ${
                         isHighlighted
                             ? 'border-court-accent/60 shadow-md shadow-court-accent/10 ring-2 ring-court-accent/25'
                             : 'border-gray-200/80 dark:border-chalk/10'
@@ -84,6 +88,7 @@ const FaqAccordion = ({
 const Help = () => {
     const { openFeedback } = useUI();
     const { isAdmin } = useAuth();
+    const lenis = useLenis();
     const [memberOpenIndex, setMemberOpenIndex] = useState<number | null>(0);
     const [adminOpenIndex, setAdminOpenIndex] = useState<number | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
@@ -131,6 +136,19 @@ const Help = () => {
         return () => document.removeEventListener('mousedown', handlePointerDown);
     }, []);
 
+    const scrollToFaqItem = (section: FaqSection, index: number) => {
+        const element = document.getElementById(faqItemId(section, index));
+        if (!element) return;
+
+        if (lenis) {
+            lenis.scrollTo(element, { offset: -FAQ_SCROLL_OFFSET, duration: 1.1 });
+            return;
+        }
+
+        const top = element.getBoundingClientRect().top + window.scrollY - FAQ_SCROLL_OFFSET;
+        window.scrollTo({ top, behavior: 'smooth' });
+    };
+
     const openFaqResult = (entry: FaqSearchEntry) => {
         if (entry.section === 'member') {
             setMemberOpenIndex(entry.index);
@@ -144,9 +162,8 @@ const Help = () => {
         setSearchFocused(false);
 
         window.requestAnimationFrame(() => {
-            document.getElementById(faqItemId(entry.section, entry.index))?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
+            window.requestAnimationFrame(() => {
+                scrollToFaqItem(entry.section, entry.index);
             });
         });
     };
