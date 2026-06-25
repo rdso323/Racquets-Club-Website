@@ -116,7 +116,7 @@ const MenuOverlay = () => {
 
                     <motion.aside
                         data-lenis-prevent
-                        className="fixed left-0 top-0 z-[145] flex h-[100dvh] w-[min(92vw,26rem)] flex-col border-r border-gray-200 bg-[#FAF8F3] shadow-xl dark:border-chalk/10 dark:bg-court-950 sm:w-[min(88vw,30rem)] md:w-[min(48vw,34rem)] lg:w-[min(42vw,38rem)]"
+                        className="menu-panel-frost fixed left-0 top-0 z-[145] flex h-[100dvh] w-[min(92vw,26rem)] flex-col border-r border-gray-200/80 shadow-xl dark:border-chalk/10 sm:w-[min(88vw,30rem)] md:w-[min(48vw,34rem)] lg:w-[min(42vw,38rem)]"
                         initial={{ x: '-100%' }}
                         animate={{ x: 0 }}
                         exit={{ x: '-100%' }}
