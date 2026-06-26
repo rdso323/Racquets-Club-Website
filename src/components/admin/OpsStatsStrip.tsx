@@ -50,8 +50,9 @@ const OpsStatsStrip = ({
         />
         <StatTile
             label="Club wire"
-            value={tickerConfigured ? 'Live' : 'Empty'}
+            value={tickerConfigured ? 'Live' : 'Off'}
             icon={<Radio className="h-4 w-4" />}
+            accent={tickerConfigured ? 'text-emerald-600 dark:text-court-accent' : 'text-gray-400 dark:text-chalk/30'}
         />
     </div>
 );

@@ -6,10 +6,13 @@ export const HARDCODED_TICKER =
     'Indian Wells: Zverev advances | Sabalenka through to round of 16 | All England: Lin Chun-Yi wins men\'s singles | PSA Squash NZ Open: Paul Coll defends title | Fuqua Racquets Club';
 
 let sharedText = HARDCODED_TICKER;
-const subscribers = new Set<() => void>();
+let sharedEnabled = false; // off by default until Firestore confirms
+const textSubscribers = new Set<() => void>();
+const enabledSubscribers = new Set<() => void>();
 let unsubscribeFirestore: (() => void) | null = null;
 
-const notify = () => subscribers.forEach((fn) => fn());
+const notifyText = () => textSubscribers.forEach((fn) => fn());
+const notifyEnabled = () => enabledSubscribers.forEach((fn) => fn());
 
 const ensureFirestoreSubscription = () => {
     if (unsubscribeFirestore) return;
@@ -17,13 +20,28 @@ const ensureFirestoreSubscription = () => {
     unsubscribeFirestore = onSnapshot(
         doc(db, 'settings', 'ticker'),
         (docSnap) => {
-            if (docSnap.exists() && docSnap.data().text?.trim()) {
-                sharedText = docSnap.data().text;
-                notify();
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.text?.trim()) {
+                    sharedText = data.text;
+                    notifyText();
+                }
+                const nextEnabled = data.enabled === true;
+                if (nextEnabled !== sharedEnabled) {
+                    sharedEnabled = nextEnabled;
+                    notifyEnabled();
+                }
             }
         },
         (error) => console.warn('Ticker fallback in use.', error),
     );
+};
+
+const teardownIfUnused = () => {
+    if (textSubscribers.size === 0 && enabledSubscribers.size === 0 && unsubscribeFirestore) {
+        unsubscribeFirestore();
+        unsubscribeFirestore = null;
+    }
 };
 
 const stripTickerHtml = (html: string) =>
@@ -45,15 +63,29 @@ export const useTickerText = () => {
     useEffect(() => {
         ensureFirestoreSubscription();
         const rerender = () => bump((n) => n + 1);
-        subscribers.add(rerender);
+        textSubscribers.add(rerender);
         return () => {
-            subscribers.delete(rerender);
-            if (subscribers.size === 0 && unsubscribeFirestore) {
-                unsubscribeFirestore();
-                unsubscribeFirestore = null;
-            }
+            textSubscribers.delete(rerender);
+            teardownIfUnused();
         };
     }, []);
 
     return sharedText;
+};
+
+/** Returns whether the ticker is enabled in Firestore (defaults false). */
+export const useTickerEnabled = () => {
+    const [, bump] = useState(0);
+
+    useEffect(() => {
+        ensureFirestoreSubscription();
+        const rerender = () => bump((n) => n + 1);
+        enabledSubscribers.add(rerender);
+        return () => {
+            enabledSubscribers.delete(rerender);
+            teardownIfUnused();
+        };
+    }, []);
+
+    return sharedEnabled;
 };

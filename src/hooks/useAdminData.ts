@@ -10,6 +10,7 @@ import type { AdminEvent, FeedbackItem } from '../components/admin/types';
 export const useAdminData = (isAdmin = false) => {
     const [initialLoading, setInitialLoading] = useState(true);
     const [tickerText, setTickerText] = useState('');
+    const [tickerEnabled, setTickerEnabled] = useState(false);
     const [sessionsList, setSessionsList] = useState<Session[]>([]);
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
@@ -23,7 +24,10 @@ export const useAdminData = (isAdmin = false) => {
             onSnapshot(
                 doc(db, 'settings', 'ticker'),
                 (snap) => {
-                    if (snap.exists()) setTickerText(snap.data().text || '');
+                    if (snap.exists()) {
+                        setTickerText(snap.data().text || '');
+                        setTickerEnabled(snap.data().enabled === true);
+                    }
                     setInitialLoading(false);
                 },
                 (err) => {
@@ -111,6 +115,8 @@ export const useAdminData = (isAdmin = false) => {
         initialLoading,
         tickerText,
         setTickerText,
+        tickerEnabled,
+        setTickerEnabled,
         sessionsList,
         recurringSchedules,
         disabledBuiltinSchedules,

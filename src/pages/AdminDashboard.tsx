@@ -21,6 +21,8 @@ const AdminDashboard = () => {
         initialLoading,
         tickerText,
         setTickerText,
+        tickerEnabled,
+        setTickerEnabled,
         sessionsList,
         recurringSchedules,
         disabledBuiltinSchedules,
@@ -70,10 +72,15 @@ const AdminDashboard = () => {
             eventCount={filterUpcomingEvents(eventsList).length}
             archiveCount={archiveCount}
             feedbackCount={feedbackList.length}
-            tickerConfigured={tickerText.trim().length > 0}
+            tickerConfigured={tickerEnabled}
         >
             {activeTab === 'settings' && (
-                <SettingsModule tickerText={tickerText} setTickerText={setTickerText} />
+                <SettingsModule
+                    tickerText={tickerText}
+                    setTickerText={setTickerText}
+                    tickerEnabled={tickerEnabled}
+                    setTickerEnabled={setTickerEnabled}
+                />
             )}
 
             {activeTab === 'sessions' && (

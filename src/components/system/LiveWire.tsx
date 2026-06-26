@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { useTickerText, tickerMarqueeDurationSec } from '../../hooks/useTickerText';
+import { useTickerText, useTickerEnabled, tickerMarqueeDurationSec } from '../../hooks/useTickerText';
+import { SPORTS } from '../../lib/sports';
 
 interface LiveWireProps {
     /** When true, ticker slides out on scroll (hero entrance). */
@@ -8,7 +9,45 @@ interface LiveWireProps {
     id?: string;
 }
 
+const SPORT_CODES = SPORTS.map((s) => {
+    const lookup: Record<string, string> = {
+        Tennis: 'TNS',
+        Badminton: 'BDM',
+        Squash: 'SQH',
+        Pickleball: 'PKL',
+        'Table Tennis': 'TBL',
+    };
+    return lookup[s] ?? s.slice(0, 3).toUpperCase();
+});
+
+/** Shown in place of the ticker when it is disabled — primary (hero) position only. */
+const SportCodesDivider = ({ id }: { id?: string }) => (
+    <div
+        id={id}
+        className="border-y border-gray-200 bg-gray-50/60 py-2.5 dark:border-chalk/10 dark:bg-court-950/60"
+    >
+        <div className="flex items-center justify-center gap-6 md:gap-10">
+            {SPORT_CODES.map((code) => (
+                <span key={code} className="hud-label text-gray-400 dark:text-chalk/25">
+                    {code}
+                </span>
+            ))}
+        </div>
+    </div>
+);
+
 const LiveWire = ({ dismissOnScroll = false, id }: LiveWireProps) => {
+    const enabled = useTickerEnabled();
+
+    // When disabled: primary slot → clean sport codes divider; secondary slot → nothing
+    if (!enabled) {
+        return dismissOnScroll ? <SportCodesDivider id={id} /> : null;
+    }
+
+    return <LiveWireActive dismissOnScroll={dismissOnScroll} id={id} />;
+};
+
+const LiveWireActive = ({ dismissOnScroll, id }: LiveWireProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const inView = useInView(containerRef, { margin: '80px 0px' });
     const prefersReducedMotion = useReducedMotion();
