@@ -1,4 +1,5 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useTickerText, tickerMarqueeDurationSec } from '../../hooks/useTickerText';
 
 interface LiveWireProps {
@@ -8,6 +9,21 @@ interface LiveWireProps {
 }
 
 const LiveWire = ({ dismissOnScroll = false, id }: LiveWireProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const inView = useInView(containerRef, { margin: '80px 0px' });
+    const prefersReducedMotion = useReducedMotion();
+    const [documentHidden, setDocumentHidden] = useState(
+        () => typeof document !== 'undefined' && document.hidden,
+    );
+
+    useEffect(() => {
+        const onVisibility = () => setDocumentHidden(document.hidden);
+        document.addEventListener('visibilitychange', onVisibility);
+        return () => document.removeEventListener('visibilitychange', onVisibility);
+    }, []);
+
+    const shouldAnimate = inView && !documentHidden && !prefersReducedMotion;
+
     const tickerText = useTickerText();
     const durationSec = tickerMarqueeDurationSec(tickerText);
     const { scrollY } = useScroll();
@@ -19,6 +35,7 @@ const LiveWire = ({ dismissOnScroll = false, id }: LiveWireProps) => {
 
     return (
         <motion.div
+            ref={containerRef}
             id={id}
             className="relative border-y border-gray-200 bg-gray-50 py-3 dark:border-chalk/10 dark:bg-court-950"
             style={dismissOnScroll ? { y, opacity } : undefined}
@@ -28,6 +45,7 @@ const LiveWire = ({ dismissOnScroll = false, id }: LiveWireProps) => {
                     className="inline-flex w-max animate-marquee whitespace-nowrap motion-reduce:animate-none hover:[animation-play-state:paused]"
                     style={{
                         animationDuration: `${durationSec}s`,
+                        animationPlayState: shouldAnimate ? 'running' : 'paused',
                     }}
                 >
                     <span className={rowClassName}>
