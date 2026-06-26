@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { doc, setDoc } from 'firebase/firestore';
-import { Radio, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { db } from '../../../lib/firebase';
 
 interface SettingsModuleProps {
     tickerText: string;
     setTickerText: (text: string) => void;
-    tickerEnabled: boolean;
-    setTickerEnabled: (enabled: boolean) => void;
 }
 
-const SettingsModule = ({ tickerText, setTickerText, tickerEnabled, setTickerEnabled }: SettingsModuleProps) => {
+const SettingsModule = ({ tickerText, setTickerText }: SettingsModuleProps) => {
     const [savingTicker, setSavingTicker] = useState(false);
-    const [savingEnabled, setSavingEnabled] = useState(false);
     const [message, setMessage] = useState('');
 
     const handleSaveTicker = async () => {
@@ -30,69 +27,25 @@ const SettingsModule = ({ tickerText, setTickerText, tickerEnabled, setTickerEna
         }
     };
 
-    const handleToggleEnabled = async (next: boolean) => {
-        setTickerEnabled(next);
-        setSavingEnabled(true);
-        try {
-            await setDoc(doc(db, 'settings', 'ticker'), { enabled: next }, { merge: true });
-        } catch (error) {
-            console.error('Error toggling ticker', error);
-            setTickerEnabled(!next);
-        } finally {
-            setSavingEnabled(false);
-        }
-    };
-
     return (
         <div className="animate-fadeIn space-y-8">
             <div>
-                <div className="mb-5 flex items-start justify-between gap-4">
-                    <div>
-                        <h2 className="font-display text-2xl text-gray-900 dark:text-chalk">Club Wire Ticker</h2>
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            Scrolling sports headline bar on the homepage. Edit copy below, then save.
-                        </p>
-                    </div>
-
-                    {/* On/Off toggle */}
-                    <div className="flex shrink-0 flex-col items-end gap-1.5">
-                        <button
-                            type="button"
-                            role="switch"
-                            aria-checked={tickerEnabled}
-                            disabled={savingEnabled}
-                            onClick={() => handleToggleEnabled(!tickerEnabled)}
-                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none disabled:opacity-60 ${
-                                tickerEnabled ? 'bg-wimbledon-green' : 'bg-gray-300 dark:bg-gray-700'
-                            }`}
-                        >
-                            <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                                    tickerEnabled ? 'translate-x-6' : 'translate-x-1'
-                                }`}
-                            />
-                        </button>
-                        <span className="hud-label text-gray-400 dark:text-chalk/40">
-                            {savingEnabled ? 'Saving…' : tickerEnabled ? 'Live' : 'Off'}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
+                <h2 className="font-display text-2xl text-gray-900 dark:text-chalk">Edit Live Ticker</h2>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    Change the message scrollbar on the homepage. Use dots • or lines | to split ideas.
+                </p>
+                <div className="mt-4 space-y-4">
                     <textarea
                         value={tickerText}
                         onChange={(e) => setTickerText(e.target.value)}
                         className="h-32 w-full resize-none rounded-xl border border-gray-300 bg-white p-4 font-mono text-sm text-gray-900 transition-colors focus:border-transparent focus:ring-2 focus:ring-wimbledon-navy dark:border-gray-700 dark:bg-court-950 dark:text-chalk dark:focus:ring-court-accent"
-                        placeholder="Type marquee text…"
+                        placeholder="Type marquee text..."
                     />
                     <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-50 py-3 dark:border-chalk/10 dark:bg-court-950">
                         <p className="hud-label mb-2 px-4 text-gray-400 dark:text-chalk/40">Static preview</p>
                         <div className="px-4">
                             <span className="inline-flex items-center gap-5 text-[11px] font-medium uppercase tracking-hud text-gray-600 dark:text-chalk/70">
-                                <span className="flex items-center gap-1.5 text-emerald-600 dark:text-court-accent">
-                                    <Radio className="h-3 w-3" />
-                                    Club Wire
-                                </span>
+                                <span className="text-emerald-600 dark:text-court-accent">● Club Wire</span>
                                 <span>{tickerText || 'Your ticker copy will appear here…'}</span>
                             </span>
                         </div>
@@ -108,7 +61,7 @@ const SettingsModule = ({ tickerText, setTickerText, tickerEnabled, setTickerEna
                             className="clay-gradient flex items-center rounded-lg px-5 py-2 text-sm font-medium text-white transition-colors hover:brightness-110 disabled:opacity-50"
                         >
                             <Save className="mr-2 h-4 w-4" />
-                            {savingTicker ? 'Saving…' : 'Save Ticker'}
+                            {savingTicker ? 'Saving...' : 'Save Ticker'}
                         </button>
                     </div>
                 </div>
