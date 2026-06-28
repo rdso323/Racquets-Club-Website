@@ -2,6 +2,7 @@ import { memo, useState, useEffect, useCallback } from 'react';
 import { Reorder, useDragControls } from 'framer-motion';
 import { useAuth, type TabPreference } from '../../contexts/AuthContext';
 import { X, Eye, EyeOff, GripVertical } from 'lucide-react';
+import ModalPortal from '../admin/ModalPortal';
 
 interface SettingsModalProps {
     isOpen: boolean;
@@ -109,16 +110,21 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/50" data-lenis-prevent>
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col mt-10 md:mt-0 animate-in fade-in zoom-in-95 duration-200">
-                <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50/50">
-                    <h2 className="text-xl font-semibold text-wimbledon-navy">Booking Engine Settings</h2>
-                    <button onClick={onClose} className="p-1.5 rounded-full hover:bg-gray-200 text-gray-500 transition-colors">
-                        <X className="w-5 h-5" />
+        <ModalPortal>
+            <div className="flex max-h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
+                <div className="flex shrink-0 items-center justify-between border-b border-gray-100 bg-gray-50/50 p-4 sm:p-5">
+                    <h2 className="text-lg font-semibold text-wimbledon-navy sm:text-xl">Booking Engine Settings</h2>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Close settings"
+                        className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-200"
+                    >
+                        <X className="h-5 w-5" />
                     </button>
                 </div>
 
-                <div className="p-5 flex-grow overflow-y-auto">
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5">
                     <p className="text-sm text-gray-600 mb-4">
                         Drag sports to reorder them, or use the eye icon to show or hide tabs in the Booking Engine.
                     </p>
@@ -139,22 +145,24 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
                     </Reorder.Group>
                 </div>
 
-                <div className="p-5 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
+                <div className="flex shrink-0 flex-col gap-3 border-t border-gray-100 bg-gray-50/50 p-4 sm:flex-row sm:justify-end sm:p-5">
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+                        className="min-h-11 touch-manipulation rounded-lg px-4 py-2 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-200"
                     >
                         Cancel
                     </button>
                     <button
+                        type="button"
                         onClick={handleSave}
-                        className="px-4 py-2 text-sm font-semibold text-white bg-wimbledon-navy hover:bg-[#00287a] rounded-lg shadow-sm hover:shadow transition-all"
+                        className="min-h-11 touch-manipulation rounded-lg bg-wimbledon-navy px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#00287a] hover:shadow"
                     >
                         Save Preferences
                     </button>
                 </div>
             </div>
-        </div>
+        </ModalPortal>
     );
 };
 

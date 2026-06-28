@@ -24,8 +24,8 @@ const AdminModalShell = ({
                 <button
                     type="button"
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                     aria-label="Close"
+                    className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-200"
                 >
                     <X className="h-5 w-5" />
                 </button>
@@ -38,13 +38,13 @@ const AdminModalShell = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                        className="min-h-11 touch-manipulation px-4 py-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        className="clay-gradient rounded-lg px-4 py-2 text-sm text-white hover:brightness-110"
+                        className="clay-gradient min-h-11 touch-manipulation rounded-lg px-4 py-2 text-sm text-white hover:brightness-110"
                     >
                         {submitLabel}
                     </button>

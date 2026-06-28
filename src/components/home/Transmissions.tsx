@@ -121,22 +121,70 @@ const Transmissions = () => {
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">Club Events</h2>,
                     ]}
                 />
-                <p className="mb-8 px-5 text-sm text-gray-500 dark:text-chalk/50 md:px-10">
-                    Social gatherings, mixers, and community play — drag to browse upcoming events.
+                <p className="mb-4 px-5 text-sm text-gray-500 dark:text-chalk/50 md:mb-8 md:px-10">
+                    Social gatherings, mixers, and community play — swipe sideways to browse upcoming events.
                 </p>
 
-                <div className="overflow-x-hidden">
+                <div className="-mx-5 overflow-x-hidden md:mx-0">
                     {displayEvents.length === 0 ? (
                         <p className="px-5 text-sm text-gray-500 dark:text-chalk/50 md:px-10">
                             No upcoming club events right now. Check back soon or browse FuquaConnect for the latest socials.
                         </p>
                     ) : (
+                    <>
+                    <div className="flex gap-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:hidden">
+                        {displayEvents.map((event, i) => (
+                            <article
+                                key={`mobile-${event.id}`}
+                                data-cursor
+                                className="glass-deep w-[min(85vw,22rem)] shrink-0 snap-start overflow-hidden"
+                                style={{ borderColor: `${EVENT_ACCENTS[i % EVENT_ACCENTS.length]}33` }}
+                            >
+                                {event.image ? (
+                                    <div className="relative h-40 overflow-hidden">
+                                        <img
+                                            src={event.image}
+                                            alt=""
+                                            className="h-full w-full object-cover"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).style.display = 'none';
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="flex h-32 items-end p-5"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${EVENT_ACCENTS[i % EVENT_ACCENTS.length]}22, transparent)`,
+                                        }}
+                                    >
+                                        <Calendar className="h-8 w-8 text-gray-400 dark:text-chalk/30" />
+                                    </div>
+                                )}
+                                <div className="p-5">
+                                    <p className="hud-label mb-2 text-gray-400 dark:text-chalk/40">{event.date} · {event.time}</p>
+                                    <h3 className="font-display text-xl text-gray-900 dark:text-chalk">{event.title}</h3>
+                                    <p className="mt-2 text-sm text-gray-500 dark:text-chalk/55">{event.location}</p>
+                                    {event.link && (
+                                        <a
+                                            href={event.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-4 inline-flex min-h-11 touch-manipulation items-center gap-1 text-xs font-semibold accent-text hover:underline"
+                                        >
+                                            Details <ExternalLink className="h-3 w-3" />
+                                        </a>
+                                    )}
+                                </div>
+                            </article>
+                        ))}
+                    </div>
                     <motion.div
                         ref={trackRef}
                         drag="x"
                         dragConstraints={{ left: -dragLimit, right: 0 }}
                         dragElastic={0.06}
-                        className="flex cursor-grab gap-5 px-5 active:cursor-grabbing md:px-10"
+                        className="hidden cursor-grab gap-5 px-10 active:cursor-grabbing md:flex"
                     >
                     {displayEvents.map((event, i) => (
                         <article
@@ -175,7 +223,7 @@ const Transmissions = () => {
                                         href={event.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="mt-4 inline-flex items-center gap-1 text-xs font-semibold accent-text hover:underline"
+                                        className="mt-4 inline-flex min-h-11 touch-manipulation items-center gap-1 text-xs font-semibold accent-text hover:underline"
                                     >
                                         Details <ExternalLink className="h-3 w-3" />
                                     </a>
@@ -184,6 +232,7 @@ const Transmissions = () => {
                         </article>
                     ))}
                     </motion.div>
+                    </>
                     )}
                 </div>
             </div>

@@ -88,7 +88,7 @@ const AdminSidebar = ({
             <button
                 type="button"
                 onClick={onQuickSession}
-                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-wimbledon-green py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-150 hover:bg-[#004d00] active:scale-95 dark:bg-wimbledon-green dark:hover:bg-emerald-600"
+                className="flex min-h-11 w-full touch-manipulation items-center justify-center gap-1.5 rounded-xl bg-wimbledon-green py-2.5 text-xs font-bold text-white shadow-sm transition-all duration-150 hover:bg-[#004d00] active:scale-95 dark:bg-wimbledon-green dark:hover:bg-emerald-600"
             >
                 <Plus className="h-3.5 w-3.5" />
                 Quick Session

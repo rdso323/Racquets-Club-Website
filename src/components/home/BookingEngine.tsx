@@ -361,7 +361,7 @@ const BookingEngine = () => {
             <div id="radar" className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
                     <p className="hud-label mb-3 text-court-accent">{sectionHud('booking')}</p>
-                    <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
+                    <h2 className="font-display text-2xl text-gray-900 dark:text-chalk md:text-3xl lg:text-4xl">
                         Reserve your court
                     </h2>
                     <p className="mt-2 max-w-xl text-sm text-gray-500 dark:text-chalk/50">
@@ -402,7 +402,7 @@ const BookingEngine = () => {
                 </div>
             )}
 
-            <div className="mb-10 flex justify-start overflow-x-auto pb-2 scrollbar-hide">
+            <div className="mb-8 flex justify-start overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
                 <div className="flex gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">
                     {displayTabs.map((sport) => {
                         const t = getSportTheme(sport);
@@ -412,7 +412,7 @@ const BookingEngine = () => {
                                 key={sport}
                                 onClick={() => setActiveSport(sport as Sport)}
                                 data-cursor="hover"
-                                className={`flex items-center gap-2.5 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
+                                className={`flex min-h-11 touch-manipulation items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-300 whitespace-nowrap sm:gap-2.5 sm:px-5 ${
                                     active
                                         ? 'bg-white text-gray-900 shadow-sm dark:bg-court-800 dark:text-chalk accent-glow'
                                         : 'text-gray-500 hover:text-gray-800 dark:text-chalk/50 dark:hover:text-chalk'

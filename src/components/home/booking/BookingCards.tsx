@@ -216,7 +216,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
         : formattedClinicDate;
 
     return (
-        <div className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
+        <div className="booking-card relative flex h-full w-[min(calc(100vw-2.5rem),28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full">
             {isCancelled && (
                 <SessionCancelledOverlay
                     showRestore={isAdmin}
@@ -224,7 +224,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                 />
             )}
 
-            <div className={`border-b border-gray-200 p-6 dark:border-chalk/10 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`border-b border-gray-200 p-4 dark:border-chalk/10 md:p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                 <div className="mb-4 flex items-start justify-between gap-3">
                     <div className="flex flex-wrap items-center gap-2">
                         <SessionTags session={session} variant="booking" />
@@ -245,7 +245,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                         </p>
                     </div>
                 </div>
-                <h3 className="font-display text-2xl text-gray-900 dark:text-chalk">{session.title}</h3>
+                <h3 className="font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{session.title}</h3>
                 {recurringDayLabel && (
                     <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
                 )}
@@ -276,7 +276,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                 </div>
             </div>
 
-            <div className={`relative flex-grow p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                 {!user && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center rounded-b-2xl bg-white/60 backdrop-blur-[2px] dark:bg-court-950/60">
                         <div className="mb-8 flex max-w-[80%] flex-col items-center rounded-xl border border-gray-100 bg-white p-5 text-center shadow-lg dark:border-chalk/10 dark:bg-carbon">
@@ -383,7 +383,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                 <button
                                     onClick={() => handlers.onJoin(session)}
                                     disabled={sessionDisabled || userOnWaitlist || (isFull && !isJoining) || bookingBusy === session.id}
-                                    className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                    className={`mt-3 w-full min-h-11 touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
                                         isPast || isCancelled || (isFull && !isJoining) || userOnWaitlist
                                             ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                             : isJoining
@@ -410,7 +410,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                         {session.type === 'coaching' && isAdmin && (
                             <button
                                 onClick={() => handlers.onCoachAction(session)}
-                                className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                className={`mt-3 w-full min-h-11 touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
                                     session.coachId === user?.uid
                                         ? 'border border-amber-300/50 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/20 dark:text-amber-300'
                                         : session.coachId
@@ -489,7 +489,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
     const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
     return (
-        <div className="booking-card relative flex h-full w-[min(92vw,28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full md:shrink">
+        <div className="booking-card relative flex h-full w-[min(calc(100vw-2.5rem),28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full md:shrink">
             {isCancelled && (
                 <SessionCancelledOverlay
                     showRestore={isAdmin}
@@ -497,13 +497,13 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                 />
             )}
 
-            <div className={`border-b border-chalk/10 p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`border-b border-chalk/10 p-4 md:p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
                             <SessionTags session={session} variant="booking" />
                         </div>
-                        <h3 className="mt-3 font-display text-2xl text-gray-900 dark:text-chalk">{config.title}</h3>
+                        <h3 className="mt-3 font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{config.title}</h3>
                         <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2 sm:mt-0">
@@ -542,7 +542,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                 </div>
             </div>
 
-            <div className={`relative flex-grow p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
                 {!user && (
                     <div className="absolute inset-0 z-20 flex items-center justify-center rounded-b-2xl bg-white/60 backdrop-blur-[2px] dark:bg-court-950/60">
                         <div className="mb-8 flex max-w-[80%] flex-col items-center rounded-xl border border-gray-100 bg-white p-5 text-center shadow-lg dark:border-chalk/10 dark:bg-carbon">
@@ -654,7 +654,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                         (isFull && !userEntry) ||
                                         bookingBusy === session.id
                                     }
-                                    className={`mt-3 w-full rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+                                    className={`mt-3 w-full min-h-11 touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
                                         isPast || isCancelled || isLocked || (isFull && !userEntry) || userOnWaitlist
                                             ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                             : userEntry

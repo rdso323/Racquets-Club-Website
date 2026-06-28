@@ -46,7 +46,7 @@ const AdminLayout = ({
             </div>
             <a
                 href="/"
-                className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/70 dark:hover:bg-court-800"
+                className="flex min-h-11 touch-manipulation items-center gap-1.5 rounded-lg border border-gray-300 bg-gray-100 px-3 py-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/70 dark:hover:bg-court-800"
             >
                 <ArrowLeft className="h-3.5 w-3.5" />
                 View Live Website
@@ -70,7 +70,7 @@ const AdminLayout = ({
                 archiveCount={archiveCount}
                 feedbackCount={feedbackCount}
             />
-            <main className="glass-deep min-h-[600px] w-full flex-grow p-6 transition-colors duration-300 md:p-8">
+            <main className="glass-deep min-h-[600px] w-full flex-grow p-4 transition-colors duration-300 sm:p-6 md:p-8">
                 {children}
             </main>
         </div>

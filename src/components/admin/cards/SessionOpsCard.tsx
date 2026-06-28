@@ -158,10 +158,10 @@ const SessionOpsCard = memo(({
                                     <button
                                         type="button"
                                         onClick={() => onRemoveAttendee(player.raw)}
-                                        className="rounded p-1 text-gray-450 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20"
+                                        className="flex min-h-11 min-w-11 shrink-0 touch-manipulation items-center justify-center rounded-lg text-gray-450 transition-colors hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/20"
                                         title="Remove player"
                                     >
-                                        <X className="h-3.5 w-3.5" />
+                                        <X className="h-4 w-4" />
                                     </button>
                                 </div>
                             );
@@ -202,10 +202,10 @@ const SessionOpsCard = memo(({
                                         <button
                                             type="button"
                                             onClick={() => onRemoveWaitlistEntry(entry)}
-                                            className="rounded p-1 text-amber-600 transition-colors hover:bg-amber-100 hover:text-red-500 dark:hover:bg-amber-950/40"
+                                            className="flex min-h-11 min-w-11 shrink-0 touch-manipulation items-center justify-center rounded-lg text-amber-600 transition-colors hover:bg-amber-100 hover:text-red-500 dark:hover:bg-amber-950/40"
                                             title="Remove from waitlist"
                                         >
-                                            <X className="h-3.5 w-3.5" />
+                                            <X className="h-4 w-4" />
                                         </button>
                                     </div>
                                 );
@@ -219,18 +219,20 @@ const SessionOpsCard = memo(({
 
     const actionSection = (
         <div className={`space-y-3 ${embedded ? '' : 'mt-4 border-t border-gray-150 pt-3 dark:border-gray-800/80'}`}>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
                 <MemberLookupInput
                     value={memberDraft.name}
                     members={members}
                     onChange={onMemberDraftChange}
+                    className="min-w-0 flex-1"
                 />
 
+                <div className="flex shrink-0 gap-2">
                 {courtRequired && sessionCourts.length > 0 && (
                     <select
                         value={newAttendeeCourt}
                         onChange={(e) => onNewAttendeeCourtChange(e.target.value)}
-                        className="w-28 rounded-lg border border-gray-350 bg-white p-2 text-[10px] text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                        className="min-w-0 flex-1 rounded-lg border border-gray-350 bg-white p-2 text-xs text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk sm:w-28 sm:flex-none"
                     >
                         <option value="">Court...</option>
                         {sessionCourts.map((court) => (
@@ -248,10 +250,10 @@ const SessionOpsCard = memo(({
                         !memberDraft.name.trim() ||
                         (courtRequired && sessionCourts.length > 0 && !newAttendeeCourt)
                     }
-                    className="clay-gradient rounded-lg p-2 text-white transition-colors hover:brightness-110 disabled:opacity-40"
+                    className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg clay-gradient text-white transition-colors hover:brightness-110 disabled:opacity-40"
                     title="Add to roster"
                 >
-                    <UserPlus className="h-3.5 w-3.5" />
+                    <UserPlus className="h-4 w-4" />
                 </button>
 
                 {maxWaitlistSize > 0 && (
@@ -259,12 +261,13 @@ const SessionOpsCard = memo(({
                         type="button"
                         onClick={onAddToWaitlist}
                         disabled={!memberDraft.name.trim() || waitlist.length >= maxWaitlistSize}
-                        className="rounded-lg border border-amber-200 bg-amber-50 p-2 text-amber-700 transition-colors hover:bg-amber-100 disabled:opacity-40 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-950/50"
+                        className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg border border-amber-200 bg-amber-50 text-amber-700 transition-colors hover:bg-amber-100 disabled:opacity-40 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-950/50"
                         title="Add to waitlist"
                     >
-                        <ListOrdered className="h-3.5 w-3.5" />
+                        <ListOrdered className="h-4 w-4" />
                     </button>
                 )}
+                </div>
             </div>
             <p className="text-[10px] text-gray-400 dark:text-gray-500">
                 Search registered members or type any name manually.

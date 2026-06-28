@@ -72,7 +72,7 @@ const EditSessionModal = ({
                     className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                 />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Sport</label>
                     <select
@@ -181,7 +181,7 @@ const EditSessionModal = ({
                 <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50/50 p-3 dark:border-gray-800 dark:bg-court-950/30">
                     <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Courts</p>
                     <div className="grid grid-cols-1 gap-3">
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <div>
                                 <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
                                     Number of courts
@@ -252,7 +252,7 @@ const EditSessionModal = ({
                 </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Max Capacity</label>
                     <AdminNumericField

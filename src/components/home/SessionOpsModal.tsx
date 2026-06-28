@@ -58,8 +58,8 @@ const SessionOpsModal = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="rounded-lg p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                         aria-label="Close"
+                        className="flex min-h-11 min-w-11 shrink-0 touch-manipulation items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-200"
                     >
                         <X className="h-5 w-5" />
                     </button>

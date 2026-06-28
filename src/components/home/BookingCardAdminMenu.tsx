@@ -55,7 +55,7 @@ const BookingCardAdminMenu = ({
             <button
                 type="button"
                 onClick={() => setOpen((prev) => !prev)}
-                className="rounded-lg border border-gray-200 bg-white/80 p-1.5 text-gray-500 transition-colors hover:border-court-accent/40 hover:text-court-accent dark:border-chalk/10 dark:bg-carbon/80 dark:text-chalk/50 dark:hover:text-court-accent"
+                className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg border border-gray-200 bg-white/80 text-gray-500 transition-colors hover:border-court-accent/40 hover:text-court-accent dark:border-chalk/10 dark:bg-carbon/80 dark:text-chalk/50 dark:hover:text-court-accent"
                 aria-label="Session admin options"
                 aria-expanded={open}
             >
@@ -67,7 +67,7 @@ const BookingCardAdminMenu = ({
                     <button
                         type="button"
                         onClick={() => run(onEdit)}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:text-chalk/80 dark:hover:bg-court-950/60"
+                        className="flex w-full min-h-11 touch-manipulation items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:text-chalk/80 dark:hover:bg-court-950/60"
                     >
                         <Edit className="h-3.5 w-3.5" />
                         Edit details
@@ -75,7 +75,7 @@ const BookingCardAdminMenu = ({
                     <button
                         type="button"
                         onClick={() => run(onManageRoster)}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:text-chalk/80 dark:hover:bg-court-950/60"
+                        className="flex w-full min-h-11 touch-manipulation items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:text-chalk/80 dark:hover:bg-court-950/60"
                     >
                         <Users className="h-3.5 w-3.5" />
                         Manage roster
@@ -87,7 +87,7 @@ const BookingCardAdminMenu = ({
                                 <button
                                     type="button"
                                     onClick={() => onRestoreThisWeek && run(onRestoreThisWeek)}
-                                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
+                                    className="flex w-full min-h-11 touch-manipulation items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-950/30"
                                 >
                                     <RotateCcw className="h-3.5 w-3.5" />
                                     Restore this week
@@ -96,7 +96,7 @@ const BookingCardAdminMenu = ({
                                 <button
                                     type="button"
                                     onClick={() => onCancelThisWeek && run(onCancelThisWeek)}
-                                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-amber-700 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
+                                    className="flex w-full min-h-11 touch-manipulation items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-amber-700 transition-colors hover:bg-amber-50 dark:text-amber-400 dark:hover:bg-amber-950/30"
                                 >
                                     <CalendarX className="h-3.5 w-3.5" />
                                     Cancel this week
@@ -108,7 +108,7 @@ const BookingCardAdminMenu = ({
                     <button
                         type="button"
                         onClick={() => run(onDelete)}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
+                        className="flex w-full min-h-11 touch-manipulation items-center gap-2 px-3 py-2.5 text-left text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
                     >
                         <Trash2 className="h-3.5 w-3.5" />
                         {isRecurring ? 'Remove schedule' : 'Delete session'}

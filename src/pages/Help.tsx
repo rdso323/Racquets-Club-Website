@@ -64,7 +64,7 @@ const FaqAccordion = ({
                     <button
                         type="button"
                         onClick={() => onToggle(isOpen ? -1 : index)}
-                        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                        className="flex w-full min-h-11 touch-manipulation items-center justify-between gap-4 px-5 py-4 text-left"
                         aria-expanded={isOpen}
                     >
                         <span className="font-medium text-gray-900 dark:text-chalk">{item.question}</span>
@@ -193,7 +193,7 @@ const Help = () => {
                         onChange={(event) => setSearchQuery(event.target.value)}
                         onFocus={() => setSearchFocused(true)}
                         placeholder="Search help topics (waitlist, courts, admin, sign in…)"
-                        className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-gray-900 shadow-sm outline-none transition-colors placeholder:text-gray-400 focus:border-court-accent/50 focus:ring-2 focus:ring-court-accent/15 dark:border-chalk/10 dark:bg-carbon dark:text-chalk dark:placeholder:text-chalk/35"
+                        className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-12 text-base text-gray-900 shadow-sm outline-none transition-colors placeholder:text-gray-400 focus:border-court-accent/50 focus:ring-2 focus:ring-court-accent/15 dark:border-chalk/10 dark:bg-carbon dark:text-chalk dark:placeholder:text-chalk/35"
                         autoComplete="off"
                         role="combobox"
                         aria-expanded={showSearchResults}
@@ -207,7 +207,7 @@ const Help = () => {
                                 setSearchQuery('');
                                 setSearchFocused(true);
                             }}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-400 hover:text-gray-600 dark:hover:text-chalk/70"
+                            className="absolute right-2 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 touch-manipulation items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-chalk/70"
                             aria-label="Clear search"
                         >
                             <X className="h-4 w-4" />
@@ -218,7 +218,7 @@ const Help = () => {
                         <div
                             id="help-faq-search-results"
                             role="listbox"
-                            className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-chalk/10 dark:bg-carbon"
+                            className="absolute z-[155] mt-2 w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg dark:border-chalk/10 dark:bg-carbon"
                         >
                             {searchResults.length > 0 ? (
                                 searchResults.map((entry) => (
@@ -227,7 +227,7 @@ const Help = () => {
                                         type="button"
                                         role="option"
                                         onClick={() => openFaqResult(entry)}
-                                        className="flex w-full flex-col gap-1 border-b border-gray-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-gray-50 dark:border-chalk/10 dark:hover:bg-court-950/60"
+                                        className="flex w-full min-h-11 touch-manipulation flex-col gap-1 border-b border-gray-100 px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-gray-50 dark:border-chalk/10 dark:hover:bg-court-950/60"
                                     >
                                         <span className="text-sm font-medium text-gray-900 dark:text-chalk">
                                             {entry.item.question}
@@ -291,14 +291,14 @@ const Help = () => {
                         <button
                             type="button"
                             onClick={openFeedback}
-                            className="clay-gradient inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+                            className="clay-gradient inline-flex min-h-11 touch-manipulation items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white"
                         >
                             <MessageCircle className="h-4 w-4" />
                             Send feedback
                         </button>
                         <Link
                             to="/#booking-section"
-                            className="inline-flex items-center rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-wimbledon-navy transition-colors hover:bg-white dark:border-chalk/20 dark:text-chalk dark:hover:bg-chalk/5"
+                            className="inline-flex min-h-11 touch-manipulation items-center rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-wimbledon-navy transition-colors hover:bg-white dark:border-chalk/20 dark:text-chalk dark:hover:bg-chalk/5"
                         >
                             Go to booking
                         </Link>

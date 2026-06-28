@@ -63,7 +63,7 @@ const Footer = () => {
                                 type="button"
                                 onClick={link.action}
                                 data-cursor
-                                className="group flex items-center gap-1.5 text-left text-sm font-medium text-gray-600 transition-colors hover:text-clay-600 dark:text-chalk/70 dark:hover:text-clay-300"
+                                className="group flex min-h-11 touch-manipulation items-center gap-1.5 py-2 text-left text-sm font-medium text-gray-600 transition-colors hover:text-clay-600 dark:text-chalk/70 dark:hover:text-clay-300"
                             >
                                 {link.label}
                                 <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />

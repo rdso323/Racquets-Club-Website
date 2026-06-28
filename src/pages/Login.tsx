@@ -65,8 +65,8 @@ const Login = () => {
     };
 
     return (
-        <div className="grain flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 py-24 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950">
-            <div className="glass-deep relative flex min-h-[520px] w-full max-w-md flex-col justify-center overflow-hidden p-10">
+        <div className="grain flex min-h-[100dvh] flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 py-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:py-24">
+            <div className="glass-deep relative flex w-full max-w-md flex-col justify-center overflow-hidden p-6 sm:min-h-[520px] sm:p-10">
                 <AnimatePresence mode="wait">
                     {!showForgotPassword ? (
                         <motion.div
@@ -84,7 +84,7 @@ const Login = () => {
                                     className={LOGO_CLASS.login}
                                 />
                                 <p className="hud-label mb-2 text-emerald-600 dark:text-court-accent">Members Access</p>
-                                <h1 className="mb-2 font-display text-3xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk">
+                                <h1 className="mb-2 font-display text-2xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk sm:text-3xl">
                                     Welcome back
                                 </h1>
                                 <p className="mb-6 text-sm text-gray-500 transition-colors dark:text-chalk/50">
@@ -133,7 +133,7 @@ const Login = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="firstname.lastname@duke.edu"
-                                            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                         />
                                     </div>
                                     <div>
@@ -144,18 +144,19 @@ const Login = () => {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="Password"
-                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pr-12 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pr-14 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none transition-colors"
+                                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                                className="absolute right-1 flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-gray-600 focus:outline-none dark:hover:text-gray-200"
                                             >
                                                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
                                         </div>
                                         {!isSignUp && (
-                                            <div className="text-right mt-1.5">
+                                            <div className="mt-1.5 text-right">
                                                 <button
                                                     type="button"
                                                     onClick={() => {
@@ -164,7 +165,7 @@ const Login = () => {
                                                         setResetError(null);
                                                         setResetSuccess(false);
                                                     }}
-                                                    className="text-xs font-medium text-clay-600 hover:underline focus:outline-none transition-colors dark:text-clay-300"
+                                                    className="inline-flex min-h-11 touch-manipulation items-center px-2 text-sm font-medium text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
                                                 >
                                                     Forgot Password?
                                                 </button>
@@ -175,7 +176,7 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         data-cursor
-                                        className="clay-gradient mt-6 flex w-full items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01]"
+                                        className="clay-gradient mt-6 flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01]"
                                     >
                                         {isSignUp ? <UserPlus className="w-5 h-5 mr-2" /> : <LogIn className="w-5 h-5 mr-2" />}
                                         {isSignUp ? 'Create Account' : 'Sign In'}
@@ -185,7 +186,7 @@ const Login = () => {
                                 <div className="mt-6 flex justify-between text-sm">
                                     <button
                                         onClick={() => setIsSignUp(!isSignUp)}
-                                        className="mx-auto text-clay-600 hover:underline focus:outline-none transition-colors dark:text-clay-300"
+                                        className="mx-auto inline-flex min-h-11 touch-manipulation items-center px-2 text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
                                     >
                                         {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
                                     </button>
@@ -246,7 +247,7 @@ const Login = () => {
                                                 value={resetEmail}
                                                 onChange={(e) => setResetEmail(e.target.value)}
                                                 placeholder="firstname.lastname@duke.edu"
-                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                             />
                                         </div>
 
@@ -254,7 +255,7 @@ const Login = () => {
                                             type="submit"
                                             disabled={isResetLoading}
                                             data-cursor
-                                            className="clay-gradient mt-6 flex w-full items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50"
+                                            className="clay-gradient mt-6 flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50"
                                         >
                                             <Mail className="w-5 h-5 mr-2" />
                                             {isResetLoading ? 'Sending Link...' : 'Send Reset Link'}
@@ -270,9 +271,9 @@ const Login = () => {
                                             setResetError(null);
                                             setResetSuccess(false);
                                         }}
-                                        className="inline-flex items-center text-sm font-medium text-clay-600 hover:underline focus:outline-none transition-colors dark:text-clay-300"
+                                        className="inline-flex min-h-11 touch-manipulation items-center px-1 text-sm font-medium text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
                                     >
-                                        <ArrowLeft className="w-4 h-4 mr-1.5" />
+                                        <ArrowLeft className="mr-1.5 h-4 w-4" />
                                         Back to Sign In
                                     </button>
                                 </div>

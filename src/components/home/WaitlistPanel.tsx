@@ -104,7 +104,7 @@ const WaitlistPanel = ({
                         type="button"
                         onClick={onLeaveWaitlist}
                         disabled={disabled || busy}
-                        className="rounded-lg border border-amber-300/60 bg-white px-4 py-2 text-xs font-semibold text-amber-800 transition-colors hover:bg-amber-100 disabled:opacity-50 dark:border-amber-800 dark:bg-carbon dark:text-amber-200 dark:hover:bg-amber-950/40"
+                        className="min-h-11 touch-manipulation rounded-lg border border-amber-300/60 bg-white px-4 py-2.5 text-xs font-semibold text-amber-800 transition-colors hover:bg-amber-100 disabled:opacity-50 dark:border-amber-800 dark:bg-carbon dark:text-amber-200 dark:hover:bg-amber-950/40"
                     >
                         {busy ? 'Updating…' : 'Leave Waitlist'}
                     </button>
@@ -114,7 +114,7 @@ const WaitlistPanel = ({
                     type="button"
                     onClick={onJoinWaitlist}
                     disabled={disabled || busy || waitlistFull}
-                    className="w-full rounded-lg border border-amber-300/60 bg-amber-100 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/50"
+                    className="min-h-11 w-full touch-manipulation rounded-lg border border-amber-300/60 bg-amber-100 px-4 py-2.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/50"
                 >
                     {busy
                         ? 'Joining waitlist…'
