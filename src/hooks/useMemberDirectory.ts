@@ -5,10 +5,15 @@ import { buildMemberDirectory, type ClubMember } from '../lib/members';
 import type { Session } from '../lib/sessions';
 
 /** Club members from Firestore `users` plus anyone on session rosters/waitlists. */
-export const useMemberDirectory = (sessions: Session[]): ClubMember[] => {
+export const useMemberDirectory = (sessions: Session[], enabled = true): ClubMember[] => {
     const [userDocs, setUserDocs] = useState<Array<{ id: string; data: Record<string, unknown> }>>([]);
 
     useEffect(() => {
+        if (!enabled) {
+            setUserDocs([]);
+            return;
+        }
+
         const unsub = onSnapshot(
             collection(db, 'users'),
             (snapshot) => {
@@ -17,7 +22,10 @@ export const useMemberDirectory = (sessions: Session[]): ClubMember[] => {
             (err) => console.error('Users subscription error', err),
         );
         return unsub;
-    }, []);
+    }, [enabled]);
 
-    return useMemo(() => buildMemberDirectory(userDocs, sessions), [userDocs, sessions]);
+    return useMemo(
+        () => (enabled ? buildMemberDirectory(userDocs, sessions) : []),
+        [enabled, userDocs, sessions],
+    );
 };
