@@ -57,21 +57,26 @@ export const toBookingProfile = (user: User): BookingUserProfile => ({
     email: user.email || 'Unknown Email',
 });
 
-const sessionSeedFields = (session: Session, activeSport?: string): Record<string, unknown> => ({
-    title: session.title,
-    type: session.type,
-    date: session.date,
-    time: session.time,
-    ...(session.startTime ? { startTime: session.startTime } : {}),
-    ...(session.endTime ? { endTime: session.endTime } : {}),
-    ...(session.weekStartDate ? { weekStartDate: session.weekStartDate } : {}),
-    maxAttendees: session.maxAttendees,
-    sport: activeSport || session.sport,
-    ...(session.courts?.length
-        ? { courts: session.courts, slotsPerCourt: session.slotsPerCourt ?? getSlotsPerCourt(session) }
-        : {}),
-    ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
-});
+const sessionSeedFields = (session: Session, activeSport?: string): Record<string, unknown> => {
+    const dateFromId = session.id.match(/(\d{4}-\d{2}-\d{2})$/)?.[1];
+    const weekStartDate = session.weekStartDate ?? dateFromId;
+
+    return {
+        title: session.title,
+        type: session.type,
+        date: session.date,
+        time: session.time,
+        ...(session.startTime ? { startTime: session.startTime } : {}),
+        ...(session.endTime ? { endTime: session.endTime } : {}),
+        ...(weekStartDate ? { weekStartDate } : {}),
+        maxAttendees: session.maxAttendees,
+        sport: activeSport || session.sport,
+        ...(session.courts?.length
+            ? { courts: session.courts, slotsPerCourt: session.slotsPerCourt ?? getSlotsPerCourt(session) }
+            : {}),
+        ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
+    };
+};
 
 const readSessionData = (session: Session, snapData: Record<string, unknown> | undefined): Session => ({
     ...session,

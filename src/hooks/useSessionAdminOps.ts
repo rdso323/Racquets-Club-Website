@@ -64,15 +64,18 @@ export interface UseSessionAdminOpsOptions {
     sessionsList: Session[];
     recurringSchedules?: AdminRecurringSchedule[];
     disabledBuiltinSchedules?: string[];
+    /** When false, skips the full `users` collection subscription. */
+    enabled?: boolean;
 }
 
 export function useSessionAdminOps({
     sessionsList,
     recurringSchedules = [],
     disabledBuiltinSchedules = [],
+    enabled = true,
 }: UseSessionAdminOpsOptions) {
     const { user } = useAuth();
-    const members = useMemberDirectory(sessionsList);
+    const members = useMemberDirectory(sessionsList, enabled);
 
     const [editingSession, setEditingSession] = useState<Session | null>(null);
     const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({

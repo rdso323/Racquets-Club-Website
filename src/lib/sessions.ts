@@ -397,6 +397,39 @@ export const getBookingHorizonEnd = (): Date => {
     return end;
 };
 
+/** Earliest ISO date we still need in Firestore queries (current week + horizon + buffer). */
+export const getSessionsLookbackStartISO = (): string => {
+    const lookback = new Date();
+    lookback.setHours(0, 0, 0, 0);
+    lookback.setDate(lookback.getDate() - 7);
+    return lookback.toISOString().split('T')[0];
+};
+
+/** Recurring open-play / clinic doc IDs within the booking horizon (for scoped queries). */
+export const getExpectedRecurringSessionIds = (
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): string[] => {
+    const ids = new Set<string>();
+
+    for (const sport of SPORTS) {
+        const configs = getMergedScheduleForSport(sport, customSchedules, disabledBuiltin);
+        const baseStartOfWeek = getBaseWeekStart(sport);
+
+        for (const weekOffset of [0, 7] as const) {
+            for (const config of configs) {
+                const playDate = getPlayDate(baseStartOfWeek, weekOffset === 7, config.day);
+                if (!isWithinBookingHorizon(playDate)) continue;
+
+                const sessionType = config.sessionType ?? 'court';
+                ids.add(getRecurringSessionId(sessionType, sport, config.day, playDate, config.scheduleId));
+            }
+        }
+    }
+
+    return [...ids];
+};
+
 export const isWithinBookingHorizon = (date: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
