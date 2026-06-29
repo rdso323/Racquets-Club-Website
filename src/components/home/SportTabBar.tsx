@@ -43,7 +43,7 @@ const EditablePill = ({ tab, canHide, onToggle }: EditablePillProps) => {
             onDragStart={() => setIsDragging(true)}
             onDragEnd={() => setIsDragging(false)}
             style={{ touchAction: 'none' }}
-            className={`flex shrink-0 list-none select-none items-center gap-1.5 rounded-full border py-2 pl-2 pr-3 transition-shadow duration-100 ${
+            className={`flex shrink-0 list-none select-none touch-manipulation items-center gap-1.5 rounded-full border py-2 pl-1.5 pr-3 transition-shadow duration-100 sm:pl-2 ${
                 isDragging
                     ? 'z-50 border-wimbledon-navy/30 bg-white shadow-md dark:border-court-accent/40 dark:bg-carbon'
                     : tab.visible
@@ -55,7 +55,7 @@ const EditablePill = ({ tab, canHide, onToggle }: EditablePillProps) => {
                 type="button"
                 tabIndex={-1}
                 onPointerDown={handleGripPointerDown}
-                className="flex min-h-9 min-w-7 cursor-grab touch-none items-center justify-center rounded text-gray-400 outline-none hover:text-gray-700 active:cursor-grabbing dark:text-chalk/35 dark:hover:text-chalk/70"
+                className="flex min-h-11 min-w-10 cursor-grab touch-none items-center justify-center rounded text-gray-400 outline-none hover:text-gray-700 active:cursor-grabbing dark:text-chalk/35 dark:hover:text-chalk/70"
                 title="Drag to reorder"
                 aria-label={`Drag to reorder ${tab.id}`}
             >
@@ -66,7 +66,7 @@ const EditablePill = ({ tab, canHide, onToggle }: EditablePillProps) => {
                 onClick={onToggle}
                 disabled={tab.visible && !canHide}
                 data-cursor
-                className={`flex min-h-9 touch-manipulation items-center gap-1.5 text-sm font-semibold disabled:cursor-not-allowed ${
+                className={`flex min-h-11 touch-manipulation items-center gap-1.5 px-1 text-sm font-semibold disabled:cursor-not-allowed sm:px-0 ${
                     tab.visible
                         ? 'text-gray-900 dark:text-chalk'
                         : 'text-gray-400 line-through dark:text-chalk/40'
@@ -126,21 +126,21 @@ const SportTabBar = ({
     if (editing) {
         return (
             <div className="mb-8 flex flex-col gap-3">
-                <div className="flex items-center justify-between gap-3">
-                    <p className="hud-label text-[11px] text-gray-400 dark:text-chalk/40">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="hud-label max-w-[16rem] text-[11px] leading-relaxed text-gray-400 dark:text-chalk/40 sm:max-w-none">
                         Drag to reorder · tap a sport to show or hide
                     </p>
                     <button
                         type="button"
                         onClick={finishEditing}
                         data-cursor
-                        className="flex min-h-9 shrink-0 touch-manipulation items-center gap-1.5 rounded-full bg-wimbledon-navy px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#00287a] dark:bg-court-accent dark:text-court-950 dark:hover:bg-emerald-300"
+                        className="flex min-h-11 w-full touch-manipulation items-center justify-center gap-1.5 rounded-full bg-wimbledon-navy px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#00287a] sm:w-auto sm:px-4 sm:py-1.5 sm:text-xs dark:bg-court-accent dark:text-court-950 dark:hover:bg-emerald-300"
                     >
-                        <Check className="h-3.5 w-3.5" />
+                        <Check className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
                         Done
                     </button>
                 </div>
-                <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide touch-pan-x">
+                <div className="-mx-4 overflow-x-auto px-4 pb-2 scrollbar-hide touch-pan-x sm:-mx-5 sm:px-5">
                     <Reorder.Group
                         axis="x"
                         values={localTabs}
@@ -164,9 +164,9 @@ const SportTabBar = ({
     const visibleTabs = tabPreferences.filter((t) => t.visible).map((t) => t.id);
 
     return (
-        <div className="mb-8 flex items-center gap-3">
-            <div className="flex justify-start overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
-                <div className="flex gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">
+        <div className="mb-8 flex min-w-0 items-center gap-2 sm:gap-3">
+            <div className="min-w-0 flex-1 overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
+                <div className="flex w-max gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">
                     {visibleTabs.map((sport) => {
                         const t = getSportTheme(sport);
                         const active = activeSport === sport;

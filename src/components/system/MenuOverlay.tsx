@@ -24,23 +24,25 @@ const MenuNavItemRow = ({
     size,
     delay,
     animate,
+    maskedReveal,
 }: {
     item: MenuNavItem;
     size: 'primary' | 'secondary';
     delay: number;
     animate: boolean;
+    maskedReveal: boolean;
 }) => {
     const labelClass =
         size === 'primary'
-            ? 'text-3xl leading-[1.05] sm:text-4xl md:text-[2.75rem]'
-            : 'text-xl leading-tight sm:text-2xl';
+            ? 'text-2xl leading-[1.05] sm:text-3xl md:text-[2.75rem]'
+            : 'text-lg leading-tight sm:text-xl md:text-2xl';
 
     return (
         <button
             type="button"
             onClick={item.action}
             data-cursor
-            className="group flex w-full touch-manipulation items-baseline gap-4 py-2.5 text-left md:py-2"
+            className="group flex min-h-12 w-full touch-manipulation items-baseline gap-3 py-3 text-left active:bg-gray-100/70 sm:gap-4 sm:py-2.5 md:min-h-0 md:py-2 md:hover:bg-transparent dark:active:bg-chalk/10"
         >
             <motion.span
                 className="hud-label w-7 shrink-0 translate-y-0 text-[11px] text-gray-400 transition-transform duration-300 group-hover:-translate-y-0.5 dark:text-chalk/30"
@@ -59,16 +61,22 @@ const MenuNavItemRow = ({
                                 ? 'text-emerald-600 group-hover:text-clay-500 dark:text-court-accent dark:group-hover:text-clay-300'
                                 : 'text-gray-900 group-hover:text-clay-500 dark:text-chalk dark:group-hover:text-clay-300'
                         }`}
-                        initial={animate ? { y: '115%' } : false}
-                        animate={{ y: '0%' }}
-                        transition={{ delay, duration: 0.6, ease: EASE }}
+                        initial={
+                            animate
+                                ? maskedReveal
+                                    ? { y: '115%' }
+                                    : { opacity: 0, y: 6 }
+                                : false
+                        }
+                        animate={maskedReveal ? { y: '0%' } : { opacity: 1, y: 0 }}
+                        transition={{ delay, duration: maskedReveal ? 0.6 : 0.22, ease: EASE }}
                     >
                         {item.label}
                     </motion.span>
                     <ArrowUpRight
-                        className={`shrink-0 -translate-x-2 text-gray-300 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 dark:text-chalk/40 ${
+                        className={`shrink-0 text-gray-300 transition-all duration-300 dark:text-chalk/40 ${
                             size === 'primary' ? 'h-5 w-5' : 'h-4 w-4'
-                        }`}
+                        } -translate-x-1 opacity-60 sm:-translate-x-2 sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100`}
                         aria-hidden
                     />
                 </span>
@@ -90,6 +98,7 @@ const MenuNavGroup = ({
     items,
     size,
     animate,
+    maskedReveal,
     baseDelay,
     stagger,
 }: {
@@ -97,6 +106,7 @@ const MenuNavGroup = ({
     items: MenuNavItem[];
     size: 'primary' | 'secondary';
     animate: boolean;
+    maskedReveal: boolean;
     baseDelay: number;
     stagger: number;
 }) => (
@@ -116,7 +126,8 @@ const MenuNavGroup = ({
                     item={item}
                     size={size}
                     animate={animate}
-                    delay={baseDelay + 0.06 + i * stagger}
+                    maskedReveal={maskedReveal}
+                    delay={animate ? baseDelay + 0.06 + i * stagger : 0}
                 />
             ))}
         </nav>
@@ -131,7 +142,8 @@ const MenuOverlay = () => {
     const { scrollToHomeSection } = useHomeSectionNavigation();
     const prefersReducedMotion = usePrefersReducedMotion();
     const isMobile = useIsMobile();
-    const animateEntries = !prefersReducedMotion && !isMobile;
+    const animateEntries = !prefersReducedMotion;
+    const useMaskedReveal = animateEntries && !isMobile;
 
     const panelRef = useRef<HTMLDivElement>(null);
     const restoreFocusRef = useRef<HTMLElement | null>(null);
@@ -219,7 +231,7 @@ const MenuOverlay = () => {
     );
 
     // Club group reveals just after the primary explore group finishes staggering in.
-    const clubBaseDelay = 0.04 + exploreItems.length * 0.06;
+    const clubBaseDelay = 0.04 + exploreItems.length * (isMobile ? 0.03 : 0.06);
 
     return (
         <AnimatePresence>
@@ -245,32 +257,34 @@ const MenuOverlay = () => {
                         aria-modal="true"
                         aria-label="Site menu"
                         className={`fixed inset-x-0 top-16 z-[145] outline-none md:top-[4.5rem] ${menuPanelSurfaceClasses}`}
-                        initial={animateEntries ? { opacity: 0, y: -14 } : false}
+                        initial={animateEntries ? { opacity: 0, y: isMobile ? -8 : -14 } : false}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={animateEntries ? { opacity: 0, y: -10 } : { opacity: 0 }}
-                        transition={{ duration: prefersReducedMotion ? 0 : 0.32, ease: EASE }}
+                        exit={animateEntries ? { opacity: 0, y: isMobile ? -6 : -10 } : { opacity: 0 }}
+                        transition={{ duration: prefersReducedMotion ? 0 : isMobile ? 0.22 : 0.32, ease: EASE }}
                     >
-                        <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain md:max-h-none md:overflow-visible">
-                            <div className="mx-auto max-w-6xl px-5 py-8 sm:px-6 md:px-10 md:py-12">
-                                <div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-12">
+                        <div className="max-h-[calc(100dvh-4rem-env(safe-area-inset-bottom,0px))] overflow-y-auto overscroll-contain pb-[max(1rem,env(safe-area-inset-bottom))] md:max-h-none md:overflow-visible md:pb-0">
+                            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8 md:px-10 md:py-12">
+                                <div className="grid grid-cols-1 gap-x-10 gap-y-8 sm:gap-y-10 lg:grid-cols-12">
                                     <div className="lg:col-span-7">
                                         <MenuNavGroup
                                             title="Explore"
                                             items={exploreItems}
                                             size="primary"
                                             animate={animateEntries}
+                                            maskedReveal={useMaskedReveal}
                                             baseDelay={0.04}
-                                            stagger={0.06}
+                                            stagger={isMobile ? 0.03 : 0.06}
                                         />
                                     </div>
-                                    <div className="lg:col-span-4 lg:col-start-9 lg:border-l lg:border-gray-200/60 lg:pl-10 dark:lg:border-chalk/8">
+                                    <div className="border-t border-gray-200/60 pt-8 dark:border-chalk/8 lg:col-span-4 lg:col-start-9 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
                                         <MenuNavGroup
                                             title="Club & Account"
                                             items={clubItems}
                                             size="secondary"
                                             animate={animateEntries}
+                                            maskedReveal={useMaskedReveal}
                                             baseDelay={clubBaseDelay}
-                                            stagger={0.05}
+                                            stagger={isMobile ? 0.025 : 0.05}
                                         />
                                     </div>
                                 </div>
