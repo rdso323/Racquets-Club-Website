@@ -32,6 +32,7 @@ import {
     type BookingAdminActions,
     type BookingCardHandlers,
 } from './booking/BookingCards';
+import SportTabBar from './SportTabBar';
 
 const createICSFile = (session: Session, courtName?: string) => {
     let startDate = new Date();
@@ -116,11 +117,10 @@ const createICSFile = (session: Session, courtName?: string) => {
 };
 
 const BookingEngine = () => {
-    const { user, isAdmin, tabPreferences } = useAuth();
+    const { user, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
-    const [displayTabs, setDisplayTabs] = useState<string[]>([]);
     const [bookingBusy, setBookingBusy] = useState<string | null>(null);
     const [promotionAlerts, setPromotionAlerts] = useState<
         Array<{ id: string } & WaitlistPromotionNotification>
@@ -169,7 +169,6 @@ const BookingEngine = () => {
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
         if (visibleTabs.length > 0) {
-            setDisplayTabs(visibleTabs);
             setActiveSport(prev => visibleTabs.includes(prev) ? prev as Sport : visibleTabs[0] as Sport);
         }
     }, [tabPreferences]);
@@ -402,32 +401,12 @@ const BookingEngine = () => {
                 </div>
             )}
 
-            <div className="mb-8 flex justify-start overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
-                <div className="flex gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">
-                    {displayTabs.map((sport) => {
-                        const t = getSportTheme(sport);
-                        const active = activeSport === sport;
-                        return (
-                            <button
-                                key={sport}
-                                onClick={() => setActiveSport(sport as Sport)}
-                                data-cursor="hover"
-                                className={`flex min-h-11 touch-manipulation items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-300 whitespace-nowrap sm:gap-2.5 sm:px-5 ${
-                                    active
-                                        ? 'bg-white text-gray-900 shadow-sm dark:bg-court-800 dark:text-chalk accent-glow'
-                                        : 'text-gray-500 hover:text-gray-800 dark:text-chalk/50 dark:hover:text-chalk'
-                                }`}
-                                style={active ? { '--accent': t.accent, '--accent-light': t.accentLight } as CSSProperties : undefined}
-                            >
-                                <span
-                                    className={`h-2 w-2 rounded-full ${active ? 'animate-blink accent-bg' : 'bg-gray-400 dark:bg-chalk/30'}`}
-                                />
-                                {sport}
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
+            <SportTabBar
+                tabPreferences={tabPreferences}
+                activeSport={activeSport}
+                onSelectSport={setActiveSport}
+                onUpdatePreferences={updateTabPreferences}
+            />
 
             {error ? (
                 <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600 shadow-sm dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">

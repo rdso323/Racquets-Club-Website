@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth, type TabPreference } from '../../contexts/AuthContext';
+import { ArrowUpRight } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
-import SportPreferenceChips from './SportPreferenceChips';
 import { SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
 import { useHomeSectionNavigation } from '../../hooks/useHomeSectionNavigation';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { menuPanelSurfaceClasses, useIsMobile } from '../../lib/navChrome';
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 interface MenuNavItem {
     label: string;
@@ -17,62 +19,113 @@ interface MenuNavItem {
     accent?: boolean;
 }
 
-const MenuNavColumn = ({
+const MenuNavItemRow = ({
+    item,
+    size,
+    delay,
+    animate,
+}: {
+    item: MenuNavItem;
+    size: 'primary' | 'secondary';
+    delay: number;
+    animate: boolean;
+}) => {
+    const labelClass =
+        size === 'primary'
+            ? 'text-3xl leading-[1.05] sm:text-4xl md:text-[2.75rem]'
+            : 'text-xl leading-tight sm:text-2xl';
+
+    return (
+        <button
+            type="button"
+            onClick={item.action}
+            data-cursor
+            className="group flex w-full touch-manipulation items-baseline gap-4 py-2.5 text-left md:py-2"
+        >
+            <motion.span
+                className="hud-label w-7 shrink-0 translate-y-0 text-[11px] text-gray-400 transition-transform duration-300 group-hover:-translate-y-0.5 dark:text-chalk/30"
+                initial={animate ? { opacity: 0 } : false}
+                animate={{ opacity: 1 }}
+                transition={{ delay, duration: 0.4, ease: EASE }}
+            >
+                {item.index}
+            </motion.span>
+
+            <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-2 overflow-hidden pb-[0.06em]">
+                    <motion.span
+                        className={`block font-display tracking-tight transition-colors duration-300 ${labelClass} ${
+                            item.accent
+                                ? 'text-emerald-600 group-hover:text-clay-500 dark:text-court-accent dark:group-hover:text-clay-300'
+                                : 'text-gray-900 group-hover:text-clay-500 dark:text-chalk dark:group-hover:text-clay-300'
+                        }`}
+                        initial={animate ? { y: '115%' } : false}
+                        animate={{ y: '0%' }}
+                        transition={{ delay, duration: 0.6, ease: EASE }}
+                    >
+                        {item.label}
+                    </motion.span>
+                    <ArrowUpRight
+                        className={`shrink-0 -translate-x-2 text-gray-300 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 dark:text-chalk/40 ${
+                            size === 'primary' ? 'h-5 w-5' : 'h-4 w-4'
+                        }`}
+                        aria-hidden
+                    />
+                </span>
+                <motion.span
+                    className="mt-1 block text-xs font-medium text-gray-400 dark:text-chalk/40 sm:text-sm"
+                    initial={animate ? { opacity: 0 } : false}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: delay + 0.08, duration: 0.4, ease: EASE }}
+                >
+                    {item.sub}
+                </motion.span>
+            </span>
+        </button>
+    );
+};
+
+const MenuNavGroup = ({
     title,
     items,
-    animate = true,
-    startDelay = 0,
+    size,
+    animate,
+    baseDelay,
+    stagger,
 }: {
     title: string;
     items: MenuNavItem[];
-    animate?: boolean;
-    startDelay?: number;
+    size: 'primary' | 'secondary';
+    animate: boolean;
+    baseDelay: number;
+    stagger: number;
 }) => (
     <div>
-        <p className="hud-label mb-2 text-xs text-gray-400 dark:text-chalk/35 md:mb-3">{title}</p>
-        <nav className="flex flex-col gap-1">
+        <motion.p
+            className="hud-label mb-4 text-[11px] text-gray-400 dark:text-chalk/35"
+            initial={animate ? { opacity: 0 } : false}
+            animate={{ opacity: 1 }}
+            transition={{ delay: baseDelay, duration: 0.4, ease: EASE }}
+        >
+            {title}
+        </motion.p>
+        <nav className="flex flex-col divide-y divide-gray-200/60 dark:divide-chalk/8">
             {items.map((item, i) => (
-                <motion.button
+                <MenuNavItemRow
                     key={item.label}
-                    type="button"
-                    onClick={item.action}
-                    data-cursor
-                    className="group flex min-h-12 w-full touch-manipulation items-baseline gap-3 rounded-lg py-2.5 text-left transition-colors active:bg-gray-100/80 md:min-h-11 md:py-2 md:hover:bg-gray-100/70 dark:active:bg-chalk/10 dark:md:hover:bg-chalk/5"
-                    initial={animate ? { opacity: 0, y: -6 } : false}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={
-                        animate
-                            ? { delay: startDelay + i * 0.02, duration: 0.25, ease: [0.16, 1, 0.3, 1] }
-                            : { duration: 0 }
-                    }
-                >
-                    <span className="hud-label w-8 shrink-0 text-xs text-gray-400 dark:text-chalk/30">
-                        {item.index}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                        <span
-                            className={`block font-display text-lg leading-tight transition-colors sm:text-xl md:text-2xl ${
-                                item.accent
-                                    ? 'text-emerald-600 group-hover:text-clay-500 dark:text-court-accent dark:group-hover:text-clay-300'
-                                    : 'text-gray-900 group-hover:text-clay-500 dark:text-chalk dark:group-hover:text-clay-300'
-                            }`}
-                        >
-                            {item.label}
-                        </span>
-                        <span className="mt-1 block text-xs font-medium text-gray-400 dark:text-chalk/40 sm:text-sm">
-                            {item.sub}
-                        </span>
-                    </span>
-                </motion.button>
+                    item={item}
+                    size={size}
+                    animate={animate}
+                    delay={baseDelay + 0.06 + i * stagger}
+                />
             ))}
         </nav>
     </div>
 );
 
 const MenuOverlay = () => {
-    const { user, signOut, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
+    const { user, signOut, isAdmin } = useAuth();
     const { menuOpen, setMenuOpen, openFeedback } = useUI();
-    const [localTabs, setLocalTabs] = useState<TabPreference[]>(tabPreferences);
     const location = useLocation();
     const navigate = useNavigate();
     const { scrollToHomeSection } = useHomeSectionNavigation();
@@ -80,9 +133,27 @@ const MenuOverlay = () => {
     const isMobile = useIsMobile();
     const animateEntries = !prefersReducedMotion && !isMobile;
 
+    const panelRef = useRef<HTMLDivElement>(null);
+    const restoreFocusRef = useRef<HTMLElement | null>(null);
+
+    // Escape-to-close + focus move/restore. No body scroll-lock (avoids scrollbar shift).
     useEffect(() => {
-        if (menuOpen) setLocalTabs(tabPreferences);
-    }, [menuOpen, tabPreferences]);
+        if (!menuOpen) return;
+
+        restoreFocusRef.current = document.activeElement as HTMLElement | null;
+        const focusTimer = window.setTimeout(() => panelRef.current?.focus(), 60);
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setMenuOpen(false);
+        };
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.clearTimeout(focusTimer);
+            document.removeEventListener('keydown', handleKeyDown);
+            restoreFocusRef.current?.focus?.();
+        };
+    }, [menuOpen, setMenuOpen]);
 
     const closeAnd = (action: () => void) => {
         setMenuOpen(false);
@@ -94,21 +165,6 @@ const MenuOverlay = () => {
     };
 
     const goTo = (path: string) => closeAnd(() => navigate(path));
-
-    const persistTabs = (next: TabPreference[]) => {
-        setLocalTabs(next);
-        if (next.some((t) => t.visible)) updateTabPreferences(next);
-    };
-
-    const toggleSport = (id: string) => {
-        persistTabs(
-            localTabs.map((t) => (t.id === id ? { ...t, visible: !t.visible } : t)),
-        );
-    };
-
-    const handleReorder = (next: TabPreference[]) => {
-        persistTabs(next);
-    };
 
     const onAdminPage = location.pathname === '/admin';
 
@@ -162,6 +218,9 @@ const MenuOverlay = () => {
               },
     );
 
+    // Club group reveals just after the primary explore group finishes staggering in.
+    const clubBaseDelay = 0.04 + exploreItems.length * 0.06;
+
     return (
         <AnimatePresence>
             {menuOpen && (
@@ -170,67 +229,60 @@ const MenuOverlay = () => {
                         type="button"
                         aria-label="Close menu"
                         data-lenis-prevent
-                        className="fixed inset-0 z-[140] cursor-default bg-black/25 md:bg-black/20 md:backdrop-blur-[2px] dark:bg-black/45"
+                        className="fixed inset-0 z-[140] cursor-default bg-black/30 md:bg-black/20 md:backdrop-blur-[3px] dark:bg-black/50"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
+                        transition={{ duration: prefersReducedMotion ? 0 : 0.25, ease: EASE }}
                         onClick={() => setMenuOpen(false)}
                     />
 
                     <motion.div
+                        ref={panelRef}
+                        tabIndex={-1}
                         data-lenis-prevent
                         role="dialog"
                         aria-modal="true"
                         aria-label="Site menu"
-                        className={`fixed inset-x-0 top-16 z-[145] md:top-[4.5rem] ${menuPanelSurfaceClasses}`}
-                        initial={animateEntries ? { opacity: 0, y: -12 } : false}
+                        className={`fixed inset-x-0 top-16 z-[145] outline-none md:top-[4.5rem] ${menuPanelSurfaceClasses}`}
+                        initial={animateEntries ? { opacity: 0, y: -14 } : false}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={animateEntries ? { opacity: 0, y: -8 } : { opacity: 0 }}
-                        transition={{ duration: prefersReducedMotion ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
+                        exit={animateEntries ? { opacity: 0, y: -10 } : { opacity: 0 }}
+                        transition={{ duration: prefersReducedMotion ? 0 : 0.32, ease: EASE }}
                     >
                         <div className="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain md:max-h-none md:overflow-visible">
-                            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-5 md:px-10 md:py-8">
-                                <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 lg:gap-10">
-                                    <MenuNavColumn
-                                        title="Explore"
-                                        items={exploreItems}
-                                        animate={animateEntries}
-                                        startDelay={0.02}
-                                    />
-                                    <MenuNavColumn
-                                        title="Club"
-                                        items={clubItems}
-                                        animate={animateEntries}
-                                        startDelay={0.04}
-                                    />
-
-                                    <motion.section
-                                        initial={animateEntries ? { opacity: 0, y: -6 } : false}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={
-                                            animateEntries
-                                                ? { delay: 0.06, duration: 0.25, ease: [0.16, 1, 0.3, 1] }
-                                                : { duration: 0 }
-                                        }
-                                    >
-                                        <p className="hud-label mb-1.5 text-xs text-gray-400 dark:text-chalk/35">
-                                            Your sports
-                                        </p>
-                                        <p className="mb-3 text-sm leading-snug text-gray-500 dark:text-chalk/50 md:mb-4">
-                                            Drag to reorder · tap to show or hide
-                                        </p>
-                                        <SportPreferenceChips
-                                            tabs={localTabs}
-                                            onReorder={handleReorder}
-                                            onToggleVisibility={toggleSport}
+                            <div className="mx-auto max-w-6xl px-5 py-8 sm:px-6 md:px-10 md:py-12">
+                                <div className="grid grid-cols-1 gap-x-10 gap-y-10 lg:grid-cols-12">
+                                    <div className="lg:col-span-7">
+                                        <MenuNavGroup
+                                            title="Explore"
+                                            items={exploreItems}
+                                            size="primary"
+                                            animate={animateEntries}
+                                            baseDelay={0.04}
+                                            stagger={0.06}
                                         />
-                                    </motion.section>
+                                    </div>
+                                    <div className="lg:col-span-4 lg:col-start-9 lg:border-l lg:border-gray-200/60 lg:pl-10 dark:lg:border-chalk/8">
+                                        <MenuNavGroup
+                                            title="Club & Account"
+                                            items={clubItems}
+                                            size="secondary"
+                                            animate={animateEntries}
+                                            baseDelay={clubBaseDelay}
+                                            stagger={0.05}
+                                        />
+                                    </div>
                                 </div>
 
-                                <p className="mt-6 hud-label text-xs text-gray-400 dark:text-chalk/30 md:mt-8">
+                                <motion.p
+                                    className="mt-10 hud-label text-[11px] text-gray-400 dark:text-chalk/30 md:mt-14"
+                                    initial={animateEntries ? { opacity: 0 } : false}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: clubBaseDelay + 0.18, duration: 0.5, ease: EASE }}
+                                >
                                     Fuqua School of Business · Duke University
-                                </p>
+                                </motion.p>
                             </div>
                         </div>
                     </motion.div>
