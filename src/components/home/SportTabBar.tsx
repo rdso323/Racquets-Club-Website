@@ -162,9 +162,9 @@ const SportTabBar = ({
     const visibleTabs = tabPreferences.filter((t) => t.visible).map((t) => t.id);
 
     return (
-        <div className="mb-8 flex min-w-0 items-center gap-2 sm:gap-3">
-            <div className="min-w-0 flex-1 overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
-                <div className="flex w-max gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">
+        <div className="mb-8 overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
+            <div className="flex w-max items-center gap-2">
+                <div className="flex gap-2 rounded-full border border-chalk/10 bg-gray-100/80 p-1.5 dark:bg-carbon/80">
                     {visibleTabs.map((sport) => {
                         const t = getSportTheme(sport);
                         const active = activeSport === sport;
@@ -192,17 +192,17 @@ const SportTabBar = ({
                         );
                     })}
                 </div>
+                <button
+                    type="button"
+                    onClick={startEditing}
+                    data-cursor
+                    aria-label="Customize sports"
+                    title="Customize sports"
+                    className="flex min-h-11 min-w-11 shrink-0 touch-manipulation items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-500 transition-colors hover:border-court-accent/40 hover:text-court-accent dark:border-chalk/10 dark:bg-carbon/70 dark:text-chalk/50 dark:hover:text-court-accent"
+                >
+                    <SlidersHorizontal className="h-4 w-4" />
+                </button>
             </div>
-            <button
-                type="button"
-                onClick={startEditing}
-                data-cursor
-                aria-label="Customize sports"
-                title="Customize sports"
-                className="flex min-h-11 min-w-11 shrink-0 touch-manipulation items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-500 transition-colors hover:border-court-accent/40 hover:text-court-accent dark:border-chalk/10 dark:bg-carbon/70 dark:text-chalk/50 dark:hover:text-court-accent"
-            >
-                <SlidersHorizontal className="h-4 w-4" />
-            </button>
         </div>
     );
 };
