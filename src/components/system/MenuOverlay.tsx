@@ -241,7 +241,7 @@ const MenuOverlay = () => {
                         type="button"
                         aria-label="Close menu"
                         data-lenis-prevent
-                        className="fixed inset-0 z-[140] cursor-default bg-black/30 md:bg-black/20 md:backdrop-blur-[3px] dark:bg-black/50"
+                        className="fixed inset-0 z-[140] cursor-pointer bg-black/30 md:bg-black/20 md:backdrop-blur-[3px] dark:bg-black/50"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}

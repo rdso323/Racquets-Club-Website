@@ -125,27 +125,16 @@ const SportTabBar = ({
 
     if (editing) {
         return (
-            <div className="mb-8 flex flex-col gap-3">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="hud-label max-w-[16rem] text-[11px] leading-relaxed text-gray-400 dark:text-chalk/40 sm:max-w-none">
-                        Drag to reorder · tap a sport to show or hide
-                    </p>
-                    <button
-                        type="button"
-                        onClick={finishEditing}
-                        data-cursor
-                        className="flex min-h-11 w-full touch-manipulation items-center justify-center gap-1.5 rounded-full bg-wimbledon-navy px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#00287a] sm:w-auto sm:px-4 sm:py-1.5 sm:text-xs dark:bg-court-accent dark:text-court-950 dark:hover:bg-emerald-300"
-                    >
-                        <Check className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
-                        Done
-                    </button>
-                </div>
-                <div className="-mx-4 overflow-x-auto px-4 pb-2 scrollbar-hide touch-pan-x sm:-mx-5 sm:px-5">
+            <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-gray-200/80 bg-gray-50/50 p-4 dark:border-chalk/10 dark:bg-court-950/30 sm:border-0 sm:bg-transparent sm:p-0">
+                <p className="hud-label text-[11px] leading-relaxed text-gray-400 dark:text-chalk/40">
+                    Drag to reorder · tap a sport to show or hide
+                </p>
+                <div className="-mx-1 min-h-[3.5rem] overflow-x-auto px-1 pb-1 scrollbar-hide touch-pan-x sm:-mx-5 sm:px-5">
                     <Reorder.Group
                         axis="x"
                         values={localTabs}
                         onReorder={setLocalTabs}
-                        className="flex gap-2"
+                        className="flex w-max min-h-[3.25rem] items-center gap-2 py-0.5"
                     >
                         {localTabs.map((tab) => (
                             <EditablePill
@@ -157,6 +146,15 @@ const SportTabBar = ({
                         ))}
                     </Reorder.Group>
                 </div>
+                <button
+                    type="button"
+                    onClick={finishEditing}
+                    data-cursor
+                    className="flex min-h-11 w-full touch-manipulation items-center justify-center gap-1.5 rounded-full bg-wimbledon-navy px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#00287a] sm:w-auto sm:self-end sm:px-4 sm:py-1.5 sm:text-xs dark:bg-court-accent dark:text-court-950 dark:hover:bg-emerald-300"
+                >
+                    <Check className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+                    Done
+                </button>
             </div>
         );
     }
