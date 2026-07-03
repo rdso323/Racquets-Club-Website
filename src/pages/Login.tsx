@@ -2,19 +2,25 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
 import { LogIn, UserPlus, Mail, ArrowLeft, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isDukeEmail, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
 
+const RESEND_COOLDOWN_SECONDS = 60;
+
 const Login = () => {
-    const { signInWithEmail, signUpWithEmail, error } = useAuth();
+    const { signInWithEmail, signUpWithEmail, resendVerificationEmail, error, verificationPending } = useAuth();
     const { theme } = useTheme();
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+
+    const [resendLoading, setResendLoading] = useState(false);
+    const [resendSuccess, setResendSuccess] = useState<string | null>(null);
+    const [resendCooldown, setResendCooldown] = useState(0);
 
     // Use the correct logo per theme — same logic as Navbar
     const logoSrc = logoSrcForTheme(theme);
@@ -26,12 +32,44 @@ const Login = () => {
     const [resetError, setResetError] = useState<string | null>(null);
     const [isResetLoading, setIsResetLoading] = useState(false);
 
+    useEffect(() => {
+        if (resendCooldown <= 0) return;
+        const timer = window.setInterval(() => {
+            setResendCooldown((prev) => (prev <= 1 ? 0 : prev - 1));
+        }, 1000);
+        return () => window.clearInterval(timer);
+    }, [resendCooldown]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setResendSuccess(null);
         if (isSignUp) {
             await signUpWithEmail(email, password);
         } else {
             await signInWithEmail(email, password);
+        }
+    };
+
+    const handleResendVerification = async () => {
+        if (resendCooldown > 0 || resendLoading) return;
+        if (!email.trim() || !password) {
+            return;
+        }
+
+        setResendLoading(true);
+        setResendSuccess(null);
+        try {
+            const result = await resendVerificationEmail(email, password);
+            if (result === 'already-verified') {
+                setResendSuccess('Your email is already verified — try signing in.');
+            } else {
+                setResendSuccess(`Verification email sent to ${email}. Check inbox and spam.`);
+                setResendCooldown(RESEND_COOLDOWN_SECONDS);
+            }
+        } catch {
+            // Error surfaced via AuthContext
+        } finally {
+            setResendLoading(false);
         }
     };
 
@@ -104,25 +142,52 @@ const Login = () => {
                                     )}
                                 </p>
 
-                                {error && (
-                                    error.includes('verify your account') ? (
-                                        <div className="bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 p-4 rounded-xl mb-6 text-sm flex items-start text-left border border-amber-200 dark:border-amber-900/30">
-                                            <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
-                                            <div>
-                                                <span className="font-semibold block mb-0.5 text-amber-900 dark:text-amber-200">Verification Required</span>
-                                                <span>
-                                                    Please check your Duke inbox to verify your account. Be sure to check your <strong>junk/spam folder</strong>, as verification emails often land there.
-                                                </span>
-                                            </div>
+                                {verificationPending && (
+                                    <div className="bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 p-4 rounded-xl mb-6 text-sm flex items-start text-left border border-amber-200 dark:border-amber-900/30">
+                                        <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+                                        <div className="w-full">
+                                            <span className="font-semibold block mb-0.5 text-amber-900 dark:text-amber-200">Verification Required</span>
+                                            <span className="block mb-3">
+                                                Please check your Duke inbox to verify your account. Be sure to check your <strong>junk/spam folder</strong>, as verification emails often land there.
+                                            </span>
+                                            {resendSuccess && (
+                                                <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-300">
+                                                    {resendSuccess}
+                                                </p>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={handleResendVerification}
+                                                disabled={resendLoading || resendCooldown > 0 || !email.trim() || !password}
+                                                className="inline-flex items-center rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60"
+                                            >
+                                                <Mail className="w-4 h-4 mr-2" />
+                                                {resendLoading
+                                                    ? 'Sending...'
+                                                    : resendCooldown > 0
+                                                        ? `Resend in ${resendCooldown}s`
+                                                        : 'Resend verification email'}
+                                            </button>
                                         </div>
-                                    ) : (
-                                        <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100 dark:border-red-900/30">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                            </svg>
-                                            <span>{error}</span>
-                                        </div>
-                                    )
+                                    </div>
+                                )}
+
+                                {error && !verificationPending && (
+                                    <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100 dark:border-red-900/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                        </svg>
+                                        <span>{error}</span>
+                                    </div>
+                                )}
+
+                                {error && verificationPending && (
+                                    <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100 dark:border-red-900/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                        </svg>
+                                        <span>{error}</span>
+                                    </div>
                                 )}
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -185,7 +250,10 @@ const Login = () => {
 
                                 <div className="mt-6 flex justify-between text-sm">
                                     <button
-                                        onClick={() => setIsSignUp(!isSignUp)}
+                                        onClick={() => {
+                                            setIsSignUp(!isSignUp);
+                                            setResendSuccess(null);
+                                        }}
                                         className="mx-auto inline-flex min-h-11 touch-manipulation items-center px-2 text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
                                     >
                                         {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}

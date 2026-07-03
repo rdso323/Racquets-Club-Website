@@ -14,6 +14,10 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
         answer: 'Sign in with whichever @duke.edu address you used when you registered (including older accounts). For new sign-ups, use firstname.lastname@duke.edu — not NetID-only aliases like rjd51@duke.edu, which create a duplicate account.',
     },
     {
+        question: 'I did not receive my verification email — what should I do?',
+        answer: 'Check your junk/spam folder first — verification emails often land there. Confirm you signed up with firstname.lastname@duke.edu (not a NetID-only alias). On the login page, enter your email and password, then tap Resend verification email. If it still does not arrive, contact an admin.',
+    },
+    {
         question: 'Which sports can I book?',
         answer: 'The club supports Tennis, Badminton, Squash, Pickleball, and Table Tennis. Use the sport tabs in the booking section (02 — Matchmaker) to switch between them. Hide or reorder tabs from Menu → Your sports.',
     },

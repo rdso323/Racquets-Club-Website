@@ -75,12 +75,20 @@ const readLegacyTabPreferences = (): TabPreference[] | null => {
     }
 };
 
+const verificationActionCodeSettings = {
+    url: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.fuquaracquetsclub.com'}/login`,
+    handleCodeInApp: false,
+};
+
 interface AuthContextType {
     user: User | null;
     loading: boolean;
     error: string | null;
+    verificationPending: boolean;
     signInWithEmail: (email: string, pass: string) => Promise<void>;
     signUpWithEmail: (email: string, pass: string) => Promise<void>;
+    resendVerificationEmail: (email: string, pass: string) => Promise<'sent' | 'already-verified'>;
+    clearAuthMessage: () => void;
     signOut: () => Promise<void>;
     isAdmin: boolean;
     tabPreferences: TabPreference[];
@@ -114,6 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [verificationPending, setVerificationPending] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const migrationAttemptedRef = useRef<string | null>(null);
 
@@ -136,10 +145,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 } else if (!currentUser.emailVerified) {
                     firebaseSignOut(auth);
                     setUser(null);
-                    setError('Please check your Duke inbox to verify your account.');
+                    setVerificationPending(true);
+                    setError(null);
                 } else {
                     setUser(currentUser);
                     setError(null);
+                    setVerificationPending(false);
 
                     setDoc(
                         doc(db, 'users', currentUser.uid),
@@ -241,8 +252,48 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return unsubscribe;
     }, [user]);
 
+    const clearAuthMessage = () => {
+        setError(null);
+        setVerificationPending(false);
+    };
+
+    const resendVerificationEmail = async (email: string, pass: string): Promise<'sent' | 'already-verified'> => {
+        setError(null);
+        if (!isDukeEmail(email)) {
+            setError(DUKE_SIGNIN_EMAIL_MESSAGE);
+            throw new Error('invalid-email');
+        }
+
+        try {
+            const result = await signInWithEmailAndPassword(auth, email, pass);
+            if (result.user.emailVerified) {
+                await firebaseSignOut(auth);
+                return 'already-verified';
+            }
+
+            await sendEmailVerification(result.user, verificationActionCodeSettings);
+            await firebaseSignOut(auth);
+            setVerificationPending(true);
+            return 'sent';
+        } catch (err: any) {
+            console.error(err);
+            if (err.message === 'invalid-email') {
+                throw err;
+            }
+            if (err.code === 'auth/too-many-requests') {
+                setError('Too many requests. Please wait a minute and try again.');
+            } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+                setError('Invalid email or password.');
+            } else {
+                setError('Failed to send verification email. Please try again.');
+            }
+            throw err;
+        }
+    };
+
     const signInWithEmail = async (email: string, pass: string) => {
         setError(null);
+        setVerificationPending(false);
         if (!isDukeEmail(email)) {
             setError(DUKE_SIGNIN_EMAIL_MESSAGE);
             return;
@@ -251,9 +302,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             const result = await signInWithEmailAndPassword(auth, email, pass);
             if (!result.user.emailVerified) {
-                await sendEmailVerification(result.user);
+                try {
+                    await sendEmailVerification(result.user, verificationActionCodeSettings);
+                } catch (verifyErr) {
+                    console.error(verifyErr);
+                    await firebaseSignOut(auth);
+                    setVerificationPending(true);
+                    setError('We could not send a verification email. Use Resend below to try again.');
+                    return;
+                }
                 await firebaseSignOut(auth);
-                setError('Please check your Duke inbox to verify your account.');
+                setVerificationPending(true);
                 return;
             }
         } catch (err: any) {
@@ -268,6 +327,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signUpWithEmail = async (email: string, pass: string) => {
         setError(null);
+        setVerificationPending(false);
         if (!isAllowedDukeEmail(email)) {
             setError(DUKE_EMAIL_FORMAT_MESSAGE);
             return;
@@ -283,9 +343,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 throw new Error('Invalid domain');
             }
 
-            await sendEmailVerification(result.user);
+            try {
+                await sendEmailVerification(result.user, verificationActionCodeSettings);
+            } catch (verifyErr) {
+                console.error(verifyErr);
+                await firebaseSignOut(auth);
+                setVerificationPending(true);
+                setError('Account created, but we could not send the verification email. Use Resend below.');
+                return;
+            }
+
             await firebaseSignOut(auth);
-            setError('Please check your Duke inbox to verify your account.');
+            setVerificationPending(true);
         } catch (err: any) {
             console.error(err);
             if (err.message === 'Invalid domain') {
@@ -326,8 +395,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             user,
             loading,
             error,
+            verificationPending,
             signInWithEmail,
             signUpWithEmail,
+            resendVerificationEmail,
+            clearAuthMessage,
             signOut,
             isAdmin,
             tabPreferences,
