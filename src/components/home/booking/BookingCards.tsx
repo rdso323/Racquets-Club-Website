@@ -2,7 +2,7 @@ import { memo } from 'react';
 import type { User } from 'firebase/auth';
 import { Users, Rocket, AlertTriangle, Lock, RotateCcw } from 'lucide-react';
 import type { AdminRecurringSchedule, OpenPlayDayConfig, Sport } from '../../../lib/sports';
-import CourtDiagram from '../CourtDiagram';
+import { CourtBookingView } from './CourtBookingView';
 import WaitlistPanel from '../WaitlistPanel';
 import SessionTags from '../../SessionTags';
 import BookingCardAdminMenu from '../BookingCardAdminMenu';
@@ -332,7 +332,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                                       : `Join ${courtName}`;
 
                                         return (
-                                            <CourtDiagram
+                                            <CourtBookingView
                                                 key={courtName}
                                                 sport={activeSport}
                                                 courtName={courtName}
@@ -598,7 +598,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                                       : `Join ${courtName}`;
 
                                         return (
-                                            <CourtDiagram
+                                            <CourtBookingView
                                                 key={courtName}
                                                 sport={activeSport}
                                                 courtName={courtName}

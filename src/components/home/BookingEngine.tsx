@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo, useCallback, type CSSProperties } from 'react';
 import { collection, onSnapshot, doc, updateDoc, query, where } from 'firebase/firestore';
+import { useLenis } from 'lenis/react';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Rocket, PartyPopper, X } from 'lucide-react';
+import { Rocket, PartyPopper, X, ChevronDown } from 'lucide-react';
 import { type Sport, SPORTS, getSportTheme, type AdminRecurringSchedule, type OpenPlayDayConfig } from '../../lib/sports';
 import {
     joinSessionCourt,
@@ -118,6 +119,7 @@ const createICSFile = (session: Session, courtName?: string) => {
 
 const BookingEngine = () => {
     const { user, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
+    const lenis = useLenis();
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [activeSport, setActiveSport] = useState<Sport>('Tennis');
@@ -339,6 +341,15 @@ const BookingEngine = () => {
         openPlayInstances.length > 0 ||
         recurringClinicInstances.length > 0 ||
         oneTimeSessions.length > 0;
+
+    const visibleClinicCount =
+        recurringClinicInstances.length +
+        oneTimeSessions.filter((session) => session.type === 'coaching').length;
+
+    const scrollToClinics = useCallback(() => {
+        const el = document.getElementById('booking-clinics');
+        if (el) lenis?.scrollTo(el, { duration: 1.2, offset: -80 });
+    }, [lenis]);
     const theme = getSportTheme(activeSport);
     const accentStyle = {
         '--accent': theme.accent,
@@ -408,6 +419,20 @@ const BookingEngine = () => {
                 onUpdatePreferences={updateTabPreferences}
             />
 
+            {openPlayInstances.length > 0 && visibleClinicCount > 0 && (
+                <nav aria-label="Clinics in this sport" className="mb-2">
+                    <button
+                        type="button"
+                        onClick={scrollToClinics}
+                        className="inline-flex min-h-11 touch-manipulation items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-chalk/10 dark:bg-court-900/60 dark:text-chalk/80 dark:hover:bg-court-900"
+                    >
+                        <Rocket className="h-4 w-4 accent-text" aria-hidden />
+                        {visibleClinicCount} clinic{visibleClinicCount === 1 ? '' : 's'} below
+                        <ChevronDown className="h-4 w-4 text-gray-400" aria-hidden />
+                    </button>
+                </nav>
+            )}
+
             {error ? (
                 <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600 shadow-sm dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">
                     {error}
@@ -449,42 +474,46 @@ const BookingEngine = () => {
                         </div>
                     )}
 
-                    {recurringClinicInstances.length > 0 && (
-                        <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                            {recurringClinicInstances.map(({ session, playDate, isNextWeek }) => (
-                                <BookingRegularCard
-                                    key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
-                                    session={session}
-                                    recurringWeek={{ playDate, isNextWeek }}
-                                    activeSport={activeSport}
-                                    user={user}
-                                    isAdmin={isAdmin}
-                                    bookingBusy={bookingBusy}
-                                    recurringSchedules={recurringSchedules}
-                                    disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                    adminActions={adminActions}
-                                    handlers={cardHandlers}
-                                />
-                            ))}
-                        </div>
-                    )}
+                    {(recurringClinicInstances.length > 0 || oneTimeSessions.length > 0) && (
+                        <div id="booking-clinics" className="flex flex-col gap-8">
+                            {recurringClinicInstances.length > 0 && (
+                                <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
+                                    {recurringClinicInstances.map(({ session, playDate, isNextWeek }) => (
+                                        <BookingRegularCard
+                                            key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
+                                            session={session}
+                                            recurringWeek={{ playDate, isNextWeek }}
+                                            activeSport={activeSport}
+                                            user={user}
+                                            isAdmin={isAdmin}
+                                            bookingBusy={bookingBusy}
+                                            recurringSchedules={recurringSchedules}
+                                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                                            adminActions={adminActions}
+                                            handlers={cardHandlers}
+                                        />
+                                    ))}
+                                </div>
+                            )}
 
-                    {oneTimeSessions.length > 0 && (
-                        <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                            {oneTimeSessions.map((session) => (
-                                <BookingRegularCard
-                                    key={session.id}
-                                    session={session}
-                                    activeSport={activeSport}
-                                    user={user}
-                                    isAdmin={isAdmin}
-                                    bookingBusy={bookingBusy}
-                                    recurringSchedules={recurringSchedules}
-                                    disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                    adminActions={adminActions}
-                                    handlers={cardHandlers}
-                                />
-                            ))}
+                            {oneTimeSessions.length > 0 && (
+                                <div className="flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
+                                    {oneTimeSessions.map((session) => (
+                                        <BookingRegularCard
+                                            key={session.id}
+                                            session={session}
+                                            activeSport={activeSport}
+                                            user={user}
+                                            isAdmin={isAdmin}
+                                            bookingBusy={bookingBusy}
+                                            recurringSchedules={recurringSchedules}
+                                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                                            adminActions={adminActions}
+                                            handlers={cardHandlers}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
