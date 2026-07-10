@@ -22,6 +22,8 @@ interface CourtDiagramProps {
     onJoinSlot: (slotIndex: number) => void;
 }
 
+export type { CourtDiagramProps };
+
 const slotPosition = (index: number, total: number) => {
     const perSide = Math.max(1, Math.ceil(total / 2));
     const left = index < perSide;

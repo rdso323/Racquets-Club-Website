@@ -4,6 +4,7 @@ export type SiteSectionId = 'home' | 'booking' | 'events' | 'news' | 'help' | 'f
 /** Home page anchor sections linked from footer, menu, and cross-page CTAs. */
 export const HOME_SECTION_IDS = [
     'booking-section',
+    'booking-clinics',
     'events-section',
     'news-section',
     'radar',
