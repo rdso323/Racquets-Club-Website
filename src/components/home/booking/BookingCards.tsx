@@ -489,7 +489,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
     const dayLabel = config.day.charAt(0).toUpperCase() + config.day.slice(1);
 
     return (
-        <div className="booking-card relative flex h-full w-full flex-col overflow-hidden">
+        <div className="booking-card relative flex h-full w-[min(calc(100vw-2.5rem),28rem)] shrink-0 snap-start flex-col overflow-hidden md:w-full md:shrink">
             {isCancelled && (
                 <SessionCancelledOverlay
                     showRestore={isAdmin}
