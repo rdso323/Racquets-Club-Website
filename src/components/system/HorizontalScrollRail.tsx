@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
 const HINT_DURATION_MS = 3200;
 const SCROLL_EDGE_THRESHOLD = 8;
+
+interface DownNavConfig {
+    onClick: () => void;
+    ariaLabel: string;
+}
 
 interface HorizontalScrollRailProps {
     children: ReactNode;
@@ -12,6 +17,8 @@ interface HorizontalScrollRailProps {
     ariaLabel?: string;
     /** Hide arrows and use native overflow only from md breakpoint up */
     mobileOnly?: boolean;
+    /** Optional down arrow overlay (e.g. scroll to content below this rail) */
+    downNav?: DownNavConfig;
 }
 
 const HorizontalScrollRail = ({
@@ -20,11 +27,13 @@ const HorizontalScrollRail = ({
     scrollClassName = '',
     ariaLabel,
     mobileOnly = true,
+    downNav,
 }: HorizontalScrollRailProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
     const [showHint, setShowHint] = useState(false);
+    const [showDownHint, setShowDownHint] = useState(false);
     const prefersReducedMotion = usePrefersReducedMotion();
 
     const updateScrollState = useCallback(() => {
@@ -79,6 +88,16 @@ const HorizontalScrollRail = ({
         };
     }, [updateScrollState, prefersReducedMotion, children]);
 
+    useEffect(() => {
+        if (!downNav || prefersReducedMotion) {
+            setShowDownHint(false);
+            return;
+        }
+        setShowDownHint(true);
+        const timer = window.setTimeout(() => setShowDownHint(false), HINT_DURATION_MS);
+        return () => window.clearTimeout(timer);
+    }, [downNav, prefersReducedMotion]);
+
     const scrollByPage = (direction: 'left' | 'right') => {
         const el = scrollRef.current;
         if (!el) return;
@@ -89,8 +108,8 @@ const HorizontalScrollRail = ({
 
     const arrowVisibility = mobileOnly ? 'md:hidden' : '';
     const scrollClasses = [
-        'overflow-x-auto scrollbar-hide snap-x snap-mandatory touch-pan-x',
-        mobileOnly ? 'md:overflow-visible' : '',
+        'overflow-x-auto overscroll-x-contain scrollbar-hide snap-x snap-proximity',
+        mobileOnly ? 'md:overflow-visible md:snap-none' : '',
         scrollClassName,
     ].filter(Boolean).join(' ');
 
@@ -134,6 +153,28 @@ const HorizontalScrollRail = ({
                         aria-label="Scroll right for more"
                     >
                         <ChevronRight className="h-5 w-5" aria-hidden />
+                    </button>
+                </>
+            )}
+
+            {downNav && (
+                <>
+                    <div
+                        className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-[#F3F0E8] via-[#F3F0E8]/80 to-transparent dark:from-court-950 dark:via-court-950/80 ${arrowVisibility}`}
+                        aria-hidden
+                    />
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setShowDownHint(false);
+                            downNav.onClick();
+                        }}
+                        className={`absolute bottom-2 left-1/2 z-20 -translate-x-1/2 ${arrowVisibility} ${arrowButtonClass} ${
+                            showDownHint ? 'motion-safe:animate-pulse ring-2 ring-court-accent/40' : ''
+                        }`}
+                        aria-label={downNav.ariaLabel}
+                    >
+                        <ChevronDown className="h-5 w-5" aria-hidden />
                     </button>
                 </>
             )}

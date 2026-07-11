@@ -256,7 +256,7 @@ const Transmissions = () => {
                 <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 sm:hidden">
                     Swipe sideways to browse headlines
                 </p>
-                <div className="-mx-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0">
+                <div className="-mx-5 overflow-x-auto overscroll-x-contain px-5 pb-2 scrollbar-hide snap-x snap-proximity sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0 sm:snap-none">
                     <div className="flex gap-4 sm:grid sm:grid-cols-2 sm:gap-px sm:overflow-hidden sm:rounded-xl sm:border sm:border-gray-200 sm:bg-gray-200 lg:grid-cols-4 dark:sm:border-chalk/10 dark:sm:bg-chalk/10">
                         {news.map((item, i) => (
                             <motion.a
