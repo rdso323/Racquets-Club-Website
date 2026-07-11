@@ -5,7 +5,6 @@ import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Rocket, PartyPopper, X } from 'lucide-react';
 import HorizontalScrollRail from '../system/HorizontalScrollRail';
-import ScrollNavButton from '../system/ScrollNavButton';
 import { type Sport, SPORTS, getSportTheme, type AdminRecurringSchedule, type OpenPlayDayConfig } from '../../lib/sports';
 import {
     joinSessionCourt,
@@ -421,14 +420,6 @@ const BookingEngine = () => {
                 onUpdatePreferences={updateTabPreferences}
             />
 
-            {openPlayInstances.length > 0 && visibleClinicCount > 0 && (
-                <ScrollNavButton
-                    label={`Coaching clinic${visibleClinicCount === 1 ? '' : 's'} below`}
-                    onClick={scrollToClinics}
-                    className="mb-4"
-                />
-            )}
-
             {error ? (
                 <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600 shadow-sm dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">
                     {error}
@@ -445,6 +436,14 @@ const BookingEngine = () => {
                         <HorizontalScrollRail
                             className="-mx-5 px-5 md:mx-0 md:px-0"
                             ariaLabel="Open play sessions"
+                            downNav={
+                                visibleClinicCount > 0
+                                    ? {
+                                          onClick: scrollToClinics,
+                                          ariaLabel: 'Scroll to coaching clinics below',
+                                      }
+                                    : undefined
+                            }
                         >
                             <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
                                 {openPlayInstances.map(({ session, config, playDate, isNextWeek }) => (
