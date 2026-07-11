@@ -3,8 +3,8 @@ import { collection, onSnapshot, doc, updateDoc, query, where } from 'firebase/f
 import { useLenis } from 'lenis/react';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Rocket, PartyPopper, X } from 'lucide-react';
-import HorizontalScrollRail from '../system/HorizontalScrollRail';
+import { Rocket, PartyPopper, X, ChevronDown } from 'lucide-react';
+import BookingCardGrid from './booking/BookingCardGrid';
 import { type Sport, SPORTS, getSportTheme, type AdminRecurringSchedule, type OpenPlayDayConfig } from '../../lib/sports';
 import {
     joinSessionCourt,
@@ -433,89 +433,78 @@ const BookingEngine = () => {
             ) : (
                 <div className="flex flex-col gap-8">
                     {openPlayInstances.length > 0 && (
-                        <HorizontalScrollRail
-                            className="-mx-5 px-5 md:mx-0 md:px-0"
-                            ariaLabel="Open play sessions"
-                            downNav={
-                                visibleClinicCount > 0
-                                    ? {
-                                          onClick: scrollToClinics,
-                                          ariaLabel: 'Scroll to coaching clinics below',
-                                      }
-                                    : undefined
-                            }
+                        <BookingCardGrid>
+                            {openPlayInstances.map(({ session, config, playDate, isNextWeek }) => (
+                                <BookingOpenPlayCard
+                                    key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
+                                    session={session}
+                                    config={config}
+                                    playDate={playDate}
+                                    isNextWeek={isNextWeek}
+                                    activeSport={activeSport}
+                                    user={user}
+                                    isAdmin={isAdmin}
+                                    bookingBusy={bookingBusy}
+                                    recurringSchedules={recurringSchedules}
+                                    disabledBuiltinSchedules={disabledBuiltinSchedules}
+                                    adminActions={adminActions}
+                                    handlers={cardHandlers}
+                                />
+                            ))}
+                        </BookingCardGrid>
+                    )}
+
+                    {openPlayInstances.length > 0 && visibleClinicCount > 0 && (
+                        <button
+                            type="button"
+                            onClick={scrollToClinics}
+                            className="mx-auto flex min-h-11 touch-manipulation items-center gap-2 rounded-full border border-gray-200 bg-white/90 px-4 py-2 text-sm font-semibold text-gray-600 shadow-sm transition-colors hover:bg-white md:hidden dark:border-chalk/10 dark:bg-court-900/70 dark:text-chalk/70 dark:hover:bg-court-900"
+                            aria-label="Jump to coaching clinics below"
                         >
-                            <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
-                                {openPlayInstances.map(({ session, config, playDate, isNextWeek }) => (
-                                    <BookingOpenPlayCard
-                                        key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
-                                        session={session}
-                                        config={config}
-                                        playDate={playDate}
-                                        isNextWeek={isNextWeek}
-                                        activeSport={activeSport}
-                                        user={user}
-                                        isAdmin={isAdmin}
-                                        bookingBusy={bookingBusy}
-                                        recurringSchedules={recurringSchedules}
-                                        disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                        adminActions={adminActions}
-                                        handlers={cardHandlers}
-                                    />
-                                ))}
-                            </div>
-                        </HorizontalScrollRail>
+                            Coaching clinics
+                            <ChevronDown className="h-4 w-4" aria-hidden />
+                        </button>
                     )}
 
                     {(recurringClinicInstances.length > 0 || oneTimeSessions.length > 0) && (
                         <div id="booking-clinics" className="flex flex-col gap-8 scroll-mt-24">
                             {recurringClinicInstances.length > 0 && (
-                                <HorizontalScrollRail
-                                    className="-mx-5 px-5 md:mx-0 md:px-0"
-                                    ariaLabel="Recurring coaching clinics"
-                                >
-                                    <div className="flex gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                                        {recurringClinicInstances.map(({ session, playDate, isNextWeek }) => (
-                                            <BookingRegularCard
-                                                key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
-                                                session={session}
-                                                recurringWeek={{ playDate, isNextWeek }}
-                                                activeSport={activeSport}
-                                                user={user}
-                                                isAdmin={isAdmin}
-                                                bookingBusy={bookingBusy}
-                                                recurringSchedules={recurringSchedules}
-                                                disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                                adminActions={adminActions}
-                                                handlers={cardHandlers}
-                                            />
-                                        ))}
-                                    </div>
-                                </HorizontalScrollRail>
+                                <BookingCardGrid>
+                                    {recurringClinicInstances.map(({ session, playDate, isNextWeek }) => (
+                                        <BookingRegularCard
+                                            key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
+                                            session={session}
+                                            recurringWeek={{ playDate, isNextWeek }}
+                                            activeSport={activeSport}
+                                            user={user}
+                                            isAdmin={isAdmin}
+                                            bookingBusy={bookingBusy}
+                                            recurringSchedules={recurringSchedules}
+                                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                                            adminActions={adminActions}
+                                            handlers={cardHandlers}
+                                        />
+                                    ))}
+                                </BookingCardGrid>
                             )}
 
                             {oneTimeSessions.length > 0 && (
-                                <HorizontalScrollRail
-                                    className="-mx-5 px-5 md:mx-0 md:px-0"
-                                    ariaLabel="One-time sessions"
-                                >
-                                    <div className="flex gap-6 md:grid md:grid-cols-2 md:items-start md:gap-6">
-                                        {oneTimeSessions.map((session) => (
-                                            <BookingRegularCard
-                                                key={session.id}
-                                                session={session}
-                                                activeSport={activeSport}
-                                                user={user}
-                                                isAdmin={isAdmin}
-                                                bookingBusy={bookingBusy}
-                                                recurringSchedules={recurringSchedules}
-                                                disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                                adminActions={adminActions}
-                                                handlers={cardHandlers}
-                                            />
-                                        ))}
-                                    </div>
-                                </HorizontalScrollRail>
+                                <BookingCardGrid>
+                                    {oneTimeSessions.map((session) => (
+                                        <BookingRegularCard
+                                            key={session.id}
+                                            session={session}
+                                            activeSport={activeSport}
+                                            user={user}
+                                            isAdmin={isAdmin}
+                                            bookingBusy={bookingBusy}
+                                            recurringSchedules={recurringSchedules}
+                                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                                            adminActions={adminActions}
+                                            handlers={cardHandlers}
+                                        />
+                                    ))}
+                                </BookingCardGrid>
                             )}
                         </div>
                     )}
