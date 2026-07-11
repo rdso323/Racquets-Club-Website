@@ -160,7 +160,7 @@ const SportTabBar = ({
             </AnimatePresence>
 
             <div className="overflow-x-auto pb-2 scrollbar-hide touch-pan-x">
-                <div className="flex w-max items-center gap-2">
+                <div className="mx-auto flex w-max min-w-full items-center justify-center gap-2 sm:min-w-0 sm:justify-start">
                     <motion.div
                         layout
                         transition={prefersReducedMotion ? { duration: 0 } : SHELL_SPRING}

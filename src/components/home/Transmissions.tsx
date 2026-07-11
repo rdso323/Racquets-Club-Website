@@ -4,6 +4,7 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { RevealLines } from '../system/kinetic';
 import { Calendar, ExternalLink } from 'lucide-react';
+import HorizontalScrollRail from '../system/HorizontalScrollRail';
 import { sectionHud } from '../../lib/siteNav';
 import { resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
 import { maintainEventsCollection } from '../../lib/events';
@@ -121,18 +122,22 @@ const Transmissions = () => {
                         <h2 key="b" className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">Club Events</h2>,
                     ]}
                 />
-                <p className="mb-4 px-5 text-sm text-gray-500 dark:text-chalk/50 md:mb-8 md:px-10">
-                    Social gatherings, mixers, and community play — swipe sideways to browse upcoming events.
+                <p className="mb-4 px-5 text-sm text-gray-500 dark:text-chalk/50 md:mb-8 md:px-10 md:hidden">
+                    Social gatherings, mixers, and community play.
                 </p>
 
-                <div className="-mx-5 overflow-x-hidden md:mx-0">
+                <div className="md:mx-0">
                     {displayEvents.length === 0 ? (
                         <p className="px-5 text-sm text-gray-500 dark:text-chalk/50 md:px-10">
                             No upcoming club events right now. Check back soon or browse FuquaConnect for the latest socials.
                         </p>
                     ) : (
                     <>
-                    <div className="flex gap-5 overflow-x-auto px-5 pb-2 scrollbar-hide snap-x snap-mandatory md:hidden">
+                    <HorizontalScrollRail
+                        className="-mx-5 px-5 md:mx-0 md:px-0"
+                        ariaLabel="Upcoming club events"
+                    >
+                        <div className="flex gap-5 md:hidden">
                         {displayEvents.map((event, i) => (
                             <article
                                 key={`mobile-${event.id}`}
@@ -178,7 +183,8 @@ const Transmissions = () => {
                                 </div>
                             </article>
                         ))}
-                    </div>
+                        </div>
+                    </HorizontalScrollRail>
                     <motion.div
                         ref={trackRef}
                         drag="x"

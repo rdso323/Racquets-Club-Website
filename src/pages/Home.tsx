@@ -82,9 +82,9 @@ const Home = () => {
                         </div>
                     </div>
 
-                    <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-24 md:px-10 md:py-28">
-                        <div className="max-w-3xl">
-                            <motion.div {...rise(0)} className="mb-7 flex items-center gap-4">
+                    <div className="relative z-10 mx-auto w-full max-w-7xl px-5 py-24 text-center md:px-10 md:py-28 md:text-left">
+                        <div className="mx-auto max-w-3xl md:mx-0">
+                            <motion.div {...rise(0)} className="mb-7 flex items-center justify-center gap-4 md:justify-start">
                                 <span className="h-px w-12 bg-wimbledon-gold" aria-hidden="true" />
                                 <span className="text-[11px] font-bold uppercase tracking-editorial text-wimbledon-gold sm:text-xs">
                                     Fuqua Racquets Club · Est. 2025
@@ -109,7 +109,7 @@ const Home = () => {
                                 greater Durham communities.
                             </motion.p>
 
-                            <motion.div {...rise(0.28)} className="flex flex-col gap-4 pt-9 sm:flex-row">
+                            <motion.div {...rise(0.28)} className="flex flex-col items-center gap-4 pt-9 sm:flex-row md:items-start">
                                 <button
                                     onClick={() => scrollToSection('booking-section')}
                                     data-cursor="hover"
@@ -129,7 +129,7 @@ const Home = () => {
 
                             <motion.div
                                 {...rise(0.4)}
-                                className="mt-14 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-court-line/40"
+                                className="mx-auto mt-14 flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-court-line/40 md:mx-0 md:max-w-none md:justify-start md:text-left"
                             >
                                 {SPORTS.map((sport, i) => (
                                     <span key={sport} className="inline-flex items-center gap-x-6">
