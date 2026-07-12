@@ -366,7 +366,7 @@ const Login = () => {
                                         href="mailto:fuqua-racquets@duke.edu"
                                         className="text-clay-600 hover:underline dark:text-clay-300"
                                     >
-                                        fuqua-racquets@duke.edu
+                                        Contact fuqua-racquets@duke.edu
                                     </a>
                                 </div>
                             </motion.div>
@@ -449,7 +449,7 @@ const Login = () => {
                                         href="mailto:fuqua-racquets@duke.edu"
                                         className="text-clay-600 hover:underline dark:text-clay-300"
                                     >
-                                        fuqua-racquets@duke.edu
+                                        Contact fuqua-racquets@duke.edu
                                     </a>
                                 </div>
                             </motion.div>
