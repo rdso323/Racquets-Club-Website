@@ -100,8 +100,14 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 const CLUB_ADMIN_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
 
 const DEFAULT_ADMIN_EMAILS = [
+    'altamash.memon@duke.edu',
+    'armin.thomas@duke.edu',
     'hirsh.sinaihede@duke.edu',
+    'joe.chantajunlasin@duke.edu',
     'kathryne.piazza@duke.edu',
+    'laura.wang@duke.edu',
+    'maddie.latimore@duke.edu',
+    'naitik.reshamwala@duke.edu',
     CLUB_ADMIN_EMAIL,
 ];
 
