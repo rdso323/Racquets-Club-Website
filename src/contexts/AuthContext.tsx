@@ -144,6 +144,7 @@ interface AuthContextType {
     signUpWithEmail: (email: string, pass: string) => Promise<void>;
     resendVerificationEmail: (email: string, pass: string) => Promise<'sent' | 'already-verified'>;
     clearAuthMessage: () => void;
+    clearAuthError: () => void;
     signOut: () => Promise<void>;
     isAdmin: boolean;
     tabPreferences: TabPreference[];
@@ -191,6 +192,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
+                const awaitingVerificationSend =
+                    !currentUser.emailVerified && pendingVerificationFlowRef.current;
+
+                if (awaitingVerificationSend) {
+                    setLoading(false);
+                    return;
+                }
+
                 try {
                     // Force token refresh so Firestore rules receive the latest email_verified claim
                     await currentUser.getIdToken(true);
@@ -200,15 +209,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     console.error("Error refreshing token", e);
                 }
 
+                if (!currentUser.emailVerified && pendingVerificationFlowRef.current) {
+                    setLoading(false);
+                    return;
+                }
+
                 if (!currentUser.email?.endsWith('@duke.edu')) {
                     firebaseSignOut(auth);
                     setUser(null);
                     setError('Only @duke.edu email addresses are allowed.');
                 } else if (!currentUser.emailVerified) {
-                    if (pendingVerificationFlowRef.current) {
-                        setLoading(false);
-                        return;
-                    }
                     firebaseSignOut(auth);
                     setUser(null);
                     setVerificationPending(true);
@@ -323,11 +333,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setVerificationPending(false);
     };
 
-    const resendVerificationEmail = async (email: string, pass: string): Promise<'sent' | 'already-verified'> => {
+    const clearAuthError = () => {
         setError(null);
+    };
+
+    const resendVerificationEmail = async (email: string, pass: string): Promise<'sent' | 'already-verified'> => {
         if (!isDukeEmail(email)) {
-            setError(DUKE_SIGNIN_EMAIL_MESSAGE);
-            throw new Error('invalid-email');
+            throw new Error(DUKE_SIGNIN_EMAIL_MESSAGE);
         }
 
         try {
@@ -344,15 +356,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return 'sent';
         } catch (err: any) {
             console.error(err);
-            if (err.message === 'invalid-email') {
+            if (err.message === DUKE_SIGNIN_EMAIL_MESSAGE) {
                 throw err;
             }
             if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                setError('Invalid email or password.');
-            } else {
-                setError(verificationSendErrorMessage(err));
+                throw new Error('Invalid email or password.');
             }
-            throw err;
+            throw new Error(verificationSendErrorMessage(err));
         } finally {
             pendingVerificationFlowRef.current = false;
         }
@@ -473,6 +483,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             signUpWithEmail,
             resendVerificationEmail,
             clearAuthMessage,
+            clearAuthError,
             signOut,
             isAdmin,
             tabPreferences,

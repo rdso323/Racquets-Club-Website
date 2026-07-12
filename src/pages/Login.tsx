@@ -11,7 +11,7 @@ import { isDukeEmail, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
 const RESEND_COOLDOWN_SECONDS = 60;
 
 const Login = () => {
-    const { signInWithEmail, signUpWithEmail, resendVerificationEmail, error, verificationPending } = useAuth();
+    const { signInWithEmail, signUpWithEmail, resendVerificationEmail, error, verificationPending, clearAuthError } = useAuth();
     const { theme } = useTheme();
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
@@ -20,6 +20,7 @@ const Login = () => {
 
     const [resendLoading, setResendLoading] = useState(false);
     const [resendSuccess, setResendSuccess] = useState<string | null>(null);
+    const [resendError, setResendError] = useState<string | null>(null);
     const [resendCooldown, setResendCooldown] = useState(0);
 
     // Use the correct logo per theme — same logic as Navbar
@@ -43,6 +44,7 @@ const Login = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setResendSuccess(null);
+        setResendError(null);
         if (isSignUp) {
             await signUpWithEmail(email, password);
         } else {
@@ -58,6 +60,8 @@ const Login = () => {
 
         setResendLoading(true);
         setResendSuccess(null);
+        setResendError(null);
+        clearAuthError();
         try {
             const result = await resendVerificationEmail(email, password);
             if (result === 'already-verified') {
@@ -66,8 +70,9 @@ const Login = () => {
                 setResendSuccess(`Verification email sent to ${email}. Check inbox and spam.`);
                 setResendCooldown(RESEND_COOLDOWN_SECONDS);
             }
-        } catch {
-            // Error surfaced via AuthContext
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Failed to send verification email. Please try again.';
+            setResendError(message);
         } finally {
             setResendLoading(false);
         }
@@ -153,6 +158,11 @@ const Login = () => {
                                             {resendSuccess && (
                                                 <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-300">
                                                     {resendSuccess}
+                                                </p>
+                                            )}
+                                            {resendError && (
+                                                <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                                                    {resendError}
                                                 </p>
                                             )}
                                             <button
@@ -253,6 +263,7 @@ const Login = () => {
                                         onClick={() => {
                                             setIsSignUp(!isSignUp);
                                             setResendSuccess(null);
+                                            setResendError(null);
                                         }}
                                         className="mx-auto inline-flex min-h-11 touch-manipulation items-center px-2 text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
                                     >
