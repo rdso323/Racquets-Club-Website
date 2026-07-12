@@ -10,6 +10,7 @@ import { resolveDisplayEvents, type ClubEvent } from '../../lib/defaultEvents';
 import { maintainEventsCollection } from '../../lib/events';
 import { maintainSessionsCollection } from '../../lib/archive';
 import { useAuth } from '../../contexts/AuthContext';
+import { useInViewport } from '../../hooks/useInViewport';
 
 interface Event extends ClubEvent {}
 
@@ -64,10 +65,14 @@ const Transmissions = () => {
     const { isAdmin } = useAuth();
     const [events, setEvents] = useState<Event[]>([]);
     const [news, setNews] = useState<NewsItem[]>(MOCK_NEWS);
+    const sectionRef = useRef<HTMLElement>(null);
     const trackRef = useRef<HTMLDivElement>(null);
     const [dragLimit, setDragLimit] = useState(0);
+    const inView = useInViewport(sectionRef);
 
     useEffect(() => {
+        if (!inView) return;
+
         const unsubEvents = onSnapshot(collection(db, 'events'), (snapshot) => {
             const fbEvents = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Event));
             void maintainEventsCollection(fbEvents, isAdmin);
@@ -95,7 +100,7 @@ const Transmissions = () => {
             unsubSessions();
             unsubNews();
         };
-    }, [isAdmin]);
+    }, [inView, isAdmin]);
 
     useEffect(() => {
         const measure = () => {
@@ -111,7 +116,7 @@ const Transmissions = () => {
     const displayEvents = events;
 
     return (
-        <section className="pb-16 pt-8 md:pb-24 md:pt-10">
+        <section ref={sectionRef} className="pb-16 pt-8 md:pb-24 md:pt-10">
             {/* Events carousel */}
             <div id="events-section" className="mb-20 scroll-mt-24">
                 <RevealLines

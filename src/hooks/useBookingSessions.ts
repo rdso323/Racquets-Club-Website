@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
     collection,
     documentId,
@@ -44,9 +44,12 @@ export function useBookingSessions({
         const ids = getExpectedRecurringSessionIds(recurringSchedules, disabledBuiltinSchedules);
         return chunkArray(ids, FIRESTORE_IN_LIMIT);
     }, [recurringSchedules, disabledBuiltinSchedules]);
+    const hasLoadedOnceRef = useRef(false);
 
     useEffect(() => {
-        setLoading(true);
+        if (!hasLoadedOnceRef.current) {
+            setLoading(true);
+        }
         setError(null);
 
         const sourceSessions = new Map<string, Map<string, Session>>();
@@ -73,6 +76,7 @@ export function useBookingSessions({
 
             if (readySources.size >= sourceKeys.length) {
                 setLoading(false);
+                hasLoadedOnceRef.current = true;
             }
         };
 

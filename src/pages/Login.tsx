@@ -7,12 +7,15 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isDukeEmail, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const RESEND_COOLDOWN_SECONDS = 60;
+const MODE_CROSSFADE = { duration: 0.2, ease: [0.16, 1, 0.3, 1] as const };
 
 const Login = () => {
     const { signInWithEmail, signUpWithEmail, resendVerificationEmail, error, verificationPending, clearAuthError } = useAuth();
     const { theme } = useTheme();
+    const prefersReducedMotion = usePrefersReducedMotion();
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -109,7 +112,7 @@ const Login = () => {
 
     return (
         <div className="grain flex min-h-[100dvh] flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 py-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:py-24">
-            <div className="glass-deep relative flex w-full max-w-md flex-col justify-center overflow-hidden p-6 sm:min-h-[520px] sm:p-10">
+            <div className="glass-deep relative flex w-full max-w-md min-h-[520px] flex-col justify-center overflow-hidden p-6 sm:p-10">
                 <AnimatePresence mode="wait">
                     {!showForgotPassword ? (
                         <motion.div
@@ -127,25 +130,47 @@ const Login = () => {
                                     className={LOGO_CLASS.login}
                                 />
                                 <p className="hud-label mb-2 text-emerald-600 dark:text-court-accent">Members Access</p>
-                                <h1 className="mb-2 font-display text-2xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk sm:text-3xl">
-                                    Welcome back
-                                </h1>
-                                <p className="mb-6 text-sm text-gray-500 transition-colors dark:text-chalk/50">
-                                    {isSignUp ? (
-                                        <>
-                                            New accounts require your{' '}
-                                            <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>{' '}
-                                            address — not your NetID alias.
-                                        </>
-                                    ) : (
-                                        <>
-                                            Sign in with the verified{' '}
-                                            <span className="font-medium text-gray-600 dark:text-chalk/70">@duke.edu</span>{' '}
-                                            address you registered. New members: use{' '}
-                                            <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>.
-                                        </>
-                                    )}
-                                </p>
+                                <div className="mb-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
+                                    <AnimatePresence mode="wait" initial={false}>
+                                        <motion.h1
+                                            key={isSignUp ? 'signup-heading' : 'signin-heading'}
+                                            initial={prefersReducedMotion ? false : { opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+                                            transition={MODE_CROSSFADE}
+                                            className="font-display text-2xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk sm:text-3xl"
+                                        >
+                                            {isSignUp ? 'Create your account' : 'Welcome back'}
+                                        </motion.h1>
+                                    </AnimatePresence>
+                                </div>
+                                <div className="mb-6 min-h-[4.5rem]">
+                                    <AnimatePresence mode="wait" initial={false}>
+                                        <motion.p
+                                            key={isSignUp ? 'signup-copy' : 'signin-copy'}
+                                            initial={prefersReducedMotion ? false : { opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+                                            transition={MODE_CROSSFADE}
+                                            className="text-sm text-gray-500 transition-colors dark:text-chalk/50"
+                                        >
+                                            {isSignUp ? (
+                                                <>
+                                                    New accounts require your{' '}
+                                                    <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>{' '}
+                                                    address — not your NetID alias.
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Sign in with the verified{' '}
+                                                    <span className="font-medium text-gray-600 dark:text-chalk/70">@duke.edu</span>{' '}
+                                                    address you registered. New members: use{' '}
+                                                    <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>.
+                                                </>
+                                            )}
+                                        </motion.p>
+                                    </AnimatePresence>
+                                </div>
 
                                 {verificationPending && (
                                     <div className="bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 p-4 rounded-xl mb-6 text-sm flex items-start text-left border border-amber-200 dark:border-amber-900/30">
@@ -230,22 +255,24 @@ const Login = () => {
                                                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
                                         </div>
-                                        {!isSignUp && (
-                                            <div className="mt-1.5 text-right">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setShowForgotPassword(true);
-                                                        setResetEmail(email);
-                                                        setResetError(null);
-                                                        setResetSuccess(false);
-                                                    }}
-                                                    className="inline-flex min-h-11 touch-manipulation items-center px-2 text-sm font-medium text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
-                                                >
-                                                    Forgot Password?
-                                                </button>
-                                            </div>
-                                        )}
+                                        <div className="mt-1.5 flex h-11 items-center justify-end">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowForgotPassword(true);
+                                                    setResetEmail(email);
+                                                    setResetError(null);
+                                                    setResetSuccess(false);
+                                                }}
+                                                className={`inline-flex min-h-11 touch-manipulation items-center px-2 text-sm font-medium text-clay-600 transition-opacity hover:underline focus:outline-none dark:text-clay-300 ${
+                                                    isSignUp ? 'pointer-events-none opacity-0' : 'opacity-100'
+                                                }`}
+                                                tabIndex={isSignUp ? -1 : 0}
+                                                aria-hidden={isSignUp}
+                                            >
+                                                Forgot Password?
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <button

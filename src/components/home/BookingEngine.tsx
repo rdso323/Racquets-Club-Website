@@ -36,6 +36,7 @@ import {
     type BookingCardHandlers,
 } from './booking/BookingCards';
 import SportTabBar from './SportTabBar';
+import BookingCardSkeleton from './booking/BookingCardSkeleton';
 
 const createICSFile = (session: Session, courtName?: string) => {
     let startDate = new Date();
@@ -359,14 +360,6 @@ const BookingEngine = () => {
         '--accent-dim': theme.dim,
     } as CSSProperties;
 
-    if (loading) {
-        return (
-            <div className="flex justify-center py-16">
-                <div className="h-8 w-8 animate-spin rounded-full border-2 border-court-accent border-t-transparent" />
-            </div>
-        );
-    }
-
     return (
         <>
         <section id="booking-section" style={accentStyle} className="transition-[--accent] duration-500">
@@ -383,7 +376,7 @@ const BookingEngine = () => {
                 <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
             </div>
 
-            {promotionAlerts.length > 0 && (
+            {!loading && promotionAlerts.length > 0 && (
                 <div className="mb-8 space-y-3">
                     {promotionAlerts.map((alert) => (
                         <div
@@ -421,7 +414,9 @@ const BookingEngine = () => {
                 onUpdatePreferences={updateTabPreferences}
             />
 
-            {error ? (
+            {loading ? (
+                <BookingCardSkeleton />
+            ) : error ? (
                 <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600 shadow-sm dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">
                     {error}
                 </div>

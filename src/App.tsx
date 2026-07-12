@@ -9,6 +9,7 @@ import TopBar from './components/system/TopBar';
 import MenuOverlay from './components/system/MenuOverlay';
 import FeedbackModal from './components/layout/FeedbackModal';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import { useSessionsPrefetchReady } from './hooks/useSessionsPrefetchReady';
 import { isHomeSectionHash } from './hooks/useHomeSectionNavigation';
 import Home from './pages/Home';
 import Help from './pages/Help';
@@ -92,6 +93,7 @@ const AppRoutes = () => {
 const Shell = () => {
     const [revealed, setRevealed] = useState(false);
     const [preloaderDone, setPreloaderDone] = useState(false);
+    const sessionsReady = useSessionsPrefetchReady();
 
     return (
         <UIProvider>
@@ -100,6 +102,7 @@ const Shell = () => {
                     <Preloader
                         onReveal={() => setRevealed(true)}
                         onDone={() => setPreloaderDone(true)}
+                        sessionsReady={sessionsReady}
                     />
                 )}
 

@@ -12,12 +12,17 @@ const STATUS_LINES = [
     'Courts are loading…',
 ];
 
+const MIN_REVEAL_MS = 800;
+const MAX_REVEAL_MS = 2500;
+const EXIT_DELAY_MS = 150;
+
 interface PreloaderProps {
     onReveal: () => void;
     onDone: () => void;
+    sessionsReady?: boolean;
 }
 
-const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
+const Preloader = ({ onReveal, onDone, sessionsReady = false }: PreloaderProps) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [reduced] = useState(prefersReducedMotion);
@@ -25,40 +30,66 @@ const Preloader = ({ onReveal, onDone }: PreloaderProps) => {
     const [statusIndex, setStatusIndex] = useState(0);
     const [exiting, setExiting] = useState(() => prefersReducedMotion());
     const revealedRef = useRef(false);
+    const startRef = useRef(performance.now());
 
     useEffect(() => {
         if (reduced) {
             onReveal();
             onDone();
-            return;
         }
+    }, [reduced, onReveal, onDone]);
 
-        const start = performance.now();
-        const DURATION = 1800;
+    useEffect(() => {
+        if (reduced) return;
+
         let raf: number;
 
         const tick = (now: number) => {
-            const t = Math.min(1, (now - start) / DURATION);
+            const elapsed = now - startRef.current;
+            const t = Math.min(1, elapsed / MAX_REVEAL_MS);
             const eased = 1 - Math.pow(1 - t, 3);
-            const value = Math.round(eased * 100);
-            setCount(value);
+            setCount(Math.round(eased * 100));
             setStatusIndex(Math.min(STATUS_LINES.length - 1, Math.floor(t * STATUS_LINES.length)));
-            if (t < 1) {
+
+            if (!revealedRef.current) {
                 raf = requestAnimationFrame(tick);
-            } else {
-                window.setTimeout(() => {
-                    if (!revealedRef.current) {
-                        revealedRef.current = true;
-                        onReveal();
-                    }
-                    setExiting(true);
-                }, 300);
             }
         };
 
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
-    }, [reduced, onReveal, onDone]);
+    }, [reduced]);
+
+    useEffect(() => {
+        if (reduced || revealedRef.current) return;
+
+        const tryReveal = () => {
+            const elapsed = performance.now() - startRef.current;
+            const canReveal =
+                elapsed >= MIN_REVEAL_MS && (sessionsReady || elapsed >= MAX_REVEAL_MS);
+
+            if (canReveal && !revealedRef.current) {
+                revealedRef.current = true;
+                onReveal();
+                window.setTimeout(() => setExiting(true), EXIT_DELAY_MS);
+                return true;
+            }
+            return false;
+        };
+
+        if (tryReveal()) return;
+
+        const elapsed = performance.now() - startRef.current;
+        const waitMs = sessionsReady
+            ? Math.max(0, MIN_REVEAL_MS - elapsed)
+            : Math.max(0, MAX_REVEAL_MS - elapsed);
+
+        const timer = window.setTimeout(() => {
+            tryReveal();
+        }, waitMs);
+
+        return () => window.clearTimeout(timer);
+    }, [reduced, sessionsReady, onReveal]);
 
     return (
         <AnimatePresence onExitComplete={onDone}>
