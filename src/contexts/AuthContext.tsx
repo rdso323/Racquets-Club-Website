@@ -75,9 +75,51 @@ const readLegacyTabPreferences = (): TabPreference[] | null => {
     }
 };
 
-const verificationActionCodeSettings = {
-    url: `${typeof window !== 'undefined' ? window.location.origin : 'https://www.fuquaracquetsclub.com'}/login`,
+const PRODUCTION_SITE_ORIGIN = 'https://www.fuquaracquetsclub.com';
+
+/** Firebase only accepts continue URLs on authorized domains — always use canonical www in production. */
+const getVerificationContinueUrl = (): string => {
+    if (typeof window === 'undefined') {
+        return `${PRODUCTION_SITE_ORIGIN}/login`;
+    }
+    const { hostname, origin } = window.location;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return `${origin}/login`;
+    }
+    return `${PRODUCTION_SITE_ORIGIN}/login`;
+};
+
+const getVerificationActionCodeSettings = () => ({
+    url: getVerificationContinueUrl(),
     handleCodeInApp: false,
+});
+
+const isContinueUriError = (err: unknown): boolean => {
+    const code = (err as { code?: string })?.code;
+    return code === 'auth/unauthorized-continue-uri' || code === 'auth/invalid-continue-uri';
+};
+
+const sendVerificationEmailWithFallback = async (user: User): Promise<void> => {
+    try {
+        await sendEmailVerification(user, getVerificationActionCodeSettings());
+    } catch (err) {
+        if (!isContinueUriError(err)) {
+            throw err;
+        }
+        console.warn('Verification continue URI rejected; retrying without custom settings', err);
+        await sendEmailVerification(user);
+    }
+};
+
+const verificationSendErrorMessage = (err: unknown): string => {
+    const code = (err as { code?: string })?.code;
+    if (code === 'auth/too-many-requests') {
+        return 'Too many requests. Please wait a minute and try again.';
+    }
+    if (isContinueUriError(err)) {
+        return 'Could not send verification email due to a site configuration issue. Please contact an admin.';
+    }
+    return 'Failed to send verification email. Please try again.';
 };
 
 interface AuthContextType {
@@ -277,7 +319,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 return 'already-verified';
             }
 
-            await sendEmailVerification(result.user, verificationActionCodeSettings);
+            await sendVerificationEmailWithFallback(result.user);
             await firebaseSignOut(auth);
             setVerificationPending(true);
             return 'sent';
@@ -286,12 +328,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (err.message === 'invalid-email') {
                 throw err;
             }
-            if (err.code === 'auth/too-many-requests') {
-                setError('Too many requests. Please wait a minute and try again.');
-            } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
                 setError('Invalid email or password.');
             } else {
-                setError('Failed to send verification email. Please try again.');
+                setError(verificationSendErrorMessage(err));
             }
             throw err;
         }
@@ -309,7 +349,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const result = await signInWithEmailAndPassword(auth, email, pass);
             if (!result.user.emailVerified) {
                 try {
-                    await sendEmailVerification(result.user, verificationActionCodeSettings);
+                    await sendVerificationEmailWithFallback(result.user);
                 } catch (verifyErr) {
                     console.error(verifyErr);
                     await firebaseSignOut(auth);
@@ -350,7 +390,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             try {
-                await sendEmailVerification(result.user, verificationActionCodeSettings);
+                await sendVerificationEmailWithFallback(result.user);
             } catch (verifyErr) {
                 console.error(verifyErr);
                 await firebaseSignOut(auth);
