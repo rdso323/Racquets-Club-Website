@@ -1,51 +1,74 @@
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
-import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
-import { LogIn, UserPlus, Mail, ArrowLeft, KeyRound, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../lib/firebase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { isDukeEmail, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
+import {
+    AlertCircle,
+    ArrowLeft,
+    CheckCircle2,
+    Eye,
+    EyeOff,
+    KeyRound,
+    LogIn,
+    Mail,
+    UserPlus,
+} from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
+import { auth } from '../lib/firebase';
+import { isDukeEmail, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
 
 const RESEND_COOLDOWN_SECONDS = 60;
-const MODE_CROSSFADE = { duration: 0.2, ease: [0.16, 1, 0.3, 1] as const };
+const MOTION_EASE = [0.16, 1, 0.3, 1] as const;
 
 const Login = () => {
-    const { signInWithEmail, signUpWithEmail, resendVerificationEmail, error, verificationPending, clearAuthError } = useAuth();
+    const {
+        signInWithEmail,
+        signUpWithEmail,
+        resendVerificationEmail,
+        error,
+        verificationPending,
+        clearAuthError,
+    } = useAuth();
     const { theme } = useTheme();
     const prefersReducedMotion = usePrefersReducedMotion();
+
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-
     const [resendLoading, setResendLoading] = useState(false);
     const [resendSuccess, setResendSuccess] = useState<string | null>(null);
     const [resendError, setResendError] = useState<string | null>(null);
     const [resendCooldown, setResendCooldown] = useState(0);
-
-    // Use the correct logo per theme — same logic as Navbar
-    const logoSrc = logoSrcForTheme(theme);
-
-    // Forgot Password States
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState('');
     const [resetSuccess, setResetSuccess] = useState(false);
     const [resetError, setResetError] = useState<string | null>(null);
     const [isResetLoading, setIsResetLoading] = useState(false);
 
+    const logoSrc = logoSrcForTheme(theme);
+    const verificationError = resendError ?? (verificationPending ? error : null);
+    const showVerificationPanel = verificationPending && !showForgotPassword;
+
+    const viewTransition = prefersReducedMotion
+        ? { duration: 0 }
+        : { duration: 0.2, ease: MOTION_EASE };
+    const layoutTransition = prefersReducedMotion
+        ? { duration: 0 }
+        : { layout: { duration: 0.24, ease: MOTION_EASE } };
+
     useEffect(() => {
         if (resendCooldown <= 0) return;
         const timer = window.setInterval(() => {
-            setResendCooldown((prev) => (prev <= 1 ? 0 : prev - 1));
+            setResendCooldown((previous) => (previous <= 1 ? 0 : previous - 1));
         }, 1000);
         return () => window.clearInterval(timer);
     }, [resendCooldown]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
         setResendSuccess(null);
         setResendError(null);
         if (isSignUp) {
@@ -56,10 +79,7 @@ const Login = () => {
     };
 
     const handleResendVerification = async () => {
-        if (resendCooldown > 0 || resendLoading) return;
-        if (!email.trim() || !password) {
-            return;
-        }
+        if (resendCooldown > 0 || resendLoading || !email.trim() || !password) return;
 
         setResendLoading(true);
         setResendSuccess(null);
@@ -73,16 +93,18 @@ const Login = () => {
                 setResendSuccess(`Verification email sent to ${email}. Check inbox and spam.`);
                 setResendCooldown(RESEND_COOLDOWN_SECONDS);
             }
-        } catch (err) {
-            const message = err instanceof Error ? err.message : 'Failed to send verification email. Please try again.';
+        } catch (caughtError) {
+            const message = caughtError instanceof Error
+                ? caughtError.message
+                : 'Failed to send verification email. Please try again.';
             setResendError(message);
         } finally {
             setResendLoading(false);
         }
     };
 
-    const handleResetPassword = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleResetPassword = async (event: React.FormEvent) => {
+        event.preventDefault();
         setResetError(null);
         setResetSuccess(false);
 
@@ -96,11 +118,12 @@ const Login = () => {
         try {
             await sendPasswordResetEmail(auth, emailToReset);
             setResetSuccess(true);
-        } catch (err: any) {
-            console.error("Password reset error:", err);
-            if (err.code === 'auth/user-not-found') {
+        } catch (caughtError) {
+            console.error('Password reset error:', caughtError);
+            const code = (caughtError as { code?: string }).code;
+            if (code === 'auth/user-not-found') {
                 setResetError('This email address is not registered with our club.');
-            } else if (err.code === 'auth/invalid-email') {
+            } else if (code === 'auth/invalid-email') {
                 setResetError('Please enter a valid email address.');
             } else {
                 setResetError('Failed to send reset link. Please try again.');
@@ -110,291 +133,335 @@ const Login = () => {
         }
     };
 
+    const switchMode = () => {
+        setIsSignUp((current) => !current);
+        setResendSuccess(null);
+        setResendError(null);
+    };
+
+    const openForgotPassword = () => {
+        setShowForgotPassword(true);
+        setResetEmail(email);
+        setResetError(null);
+        setResetSuccess(false);
+    };
+
+    const closeForgotPassword = () => {
+        setShowForgotPassword(false);
+        setResetError(null);
+        setResetSuccess(false);
+    };
+
     return (
-        <div className="grain flex min-h-[100dvh] flex-col items-center justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 py-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:py-24">
-            <div className="glass-deep relative flex w-full max-w-md min-h-[520px] flex-col justify-center overflow-hidden p-6 sm:p-10">
-                <AnimatePresence mode="wait">
-                    {!showForgotPassword ? (
-                        <motion.div
-                            key="login-view"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: 20 }}
-                            transition={{ duration: 0.25 }}
-                            className="flex h-full w-full flex-col justify-between"
-                        >
-                            <div>
+        <main
+            className="grain flex min-h-[100dvh] items-start justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 pb-4 pt-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:px-6 sm:pb-6 sm:pt-24"
+        >
+            <motion.div
+                layout={!prefersReducedMotion}
+                transition={layoutTransition}
+                className={`my-auto grid w-full items-start gap-4 sm:gap-5 ${
+                    showVerificationPanel
+                        ? 'max-w-4xl lg:grid-cols-[minmax(0,28rem)_minmax(18rem,22rem)]'
+                        : 'max-w-md'
+                }`}
+            >
+                <motion.section
+                    layout={!prefersReducedMotion}
+                    transition={layoutTransition}
+                    className="glass-deep relative w-full overflow-x-clip p-5 sm:p-7"
+                >
+                    <AnimatePresence initial={false} mode="popLayout">
+                        {!showForgotPassword ? (
+                            <motion.div
+                                key="login-view"
+                                layout={!prefersReducedMotion}
+                                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+                                transition={viewTransition}
+                                className="w-full"
+                            >
                                 <img
                                     src={logoSrc}
                                     alt="Fuqua Racquets Club Logo"
                                     className={LOGO_CLASS.login}
                                 />
-                                <p className="hud-label mb-2 text-emerald-600 dark:text-court-accent">Members Access</p>
-                                <div className="mb-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
-                                    <AnimatePresence mode="wait" initial={false}>
-                                        <motion.h1
-                                            key={isSignUp ? 'signup-heading' : 'signin-heading'}
-                                            initial={prefersReducedMotion ? false : { opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-                                            transition={MODE_CROSSFADE}
-                                            className="font-display text-2xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk sm:text-3xl"
-                                        >
+                                <p className="hud-label mb-2 text-emerald-600 dark:text-court-accent">
+                                    Members Access
+                                </p>
+
+                                <AnimatePresence initial={false} mode="popLayout">
+                                    <motion.div
+                                        key={isSignUp ? 'sign-up-intro' : 'sign-in-intro'}
+                                        layout={!prefersReducedMotion}
+                                        initial={prefersReducedMotion ? false : { opacity: 0, y: 4 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -4 }}
+                                        transition={viewTransition}
+                                    >
+                                        <h1 className="font-display text-2xl tracking-tight text-wimbledon-navy dark:text-chalk sm:text-3xl">
                                             {isSignUp ? 'Create your account' : 'Welcome back'}
-                                        </motion.h1>
-                                    </AnimatePresence>
-                                </div>
-                                <div className="mb-6 min-h-[4.5rem]">
-                                    <AnimatePresence mode="wait" initial={false}>
-                                        <motion.p
-                                            key={isSignUp ? 'signup-copy' : 'signin-copy'}
-                                            initial={prefersReducedMotion ? false : { opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-                                            transition={MODE_CROSSFADE}
-                                            className="text-sm text-gray-500 transition-colors dark:text-chalk/50"
-                                        >
+                                        </h1>
+                                        <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500 dark:text-chalk/55">
                                             {isSignUp ? (
                                                 <>
-                                                    New accounts require your{' '}
-                                                    <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>{' '}
-                                                    address — not your NetID alias.
+                                                    Use your{' '}
+                                                    <span className="font-medium text-gray-700 dark:text-chalk/75">
+                                                        firstname.lastname@duke.edu
+                                                    </span>{' '}
+                                                    address, not your NetID alias.
                                                 </>
                                             ) : (
                                                 <>
-                                                    Sign in with the verified{' '}
-                                                    <span className="font-medium text-gray-600 dark:text-chalk/70">@duke.edu</span>{' '}
-                                                    address you registered. New members: use{' '}
-                                                    <span className="font-medium text-gray-600 dark:text-chalk/70">firstname.lastname@duke.edu</span>.
+                                                    Sign in with your verified{' '}
+                                                    <span className="font-medium text-gray-700 dark:text-chalk/75">
+                                                        @duke.edu
+                                                    </span>{' '}
+                                                    address.
                                                 </>
                                             )}
-                                        </motion.p>
-                                    </AnimatePresence>
-                                </div>
+                                        </p>
+                                    </motion.div>
+                                </AnimatePresence>
 
-                                {verificationPending && (
-                                    <div className="bg-amber-50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 p-4 rounded-xl mb-6 text-sm flex items-start text-left border border-amber-200 dark:border-amber-900/30">
-                                        <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
-                                        <div className="w-full">
-                                            <span className="font-semibold block mb-0.5 text-amber-900 dark:text-amber-200">Verification Required</span>
-                                            <span className="block mb-3">
-                                                Please check your Duke inbox to verify your account. Be sure to check your <strong>junk/spam folder</strong>, as verification emails often land there.
-                                            </span>
-                                            {resendSuccess && (
-                                                <p className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-300">
-                                                    {resendSuccess}
-                                                </p>
-                                            )}
-                                            {resendError && (
-                                                <p className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
-                                                    {resendError}
-                                                </p>
-                                            )}
-                                            <button
-                                                type="button"
-                                                onClick={handleResendVerification}
-                                                disabled={resendLoading || resendCooldown > 0 || !email.trim() || !password}
-                                                className="inline-flex items-center rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60"
-                                            >
-                                                <Mail className="w-4 h-4 mr-2" />
-                                                {resendLoading
-                                                    ? 'Sending...'
-                                                    : resendCooldown > 0
-                                                        ? `Resend in ${resendCooldown}s`
-                                                        : 'Resend verification email'}
-                                            </button>
-                                        </div>
-                                    </div>
+                                {showVerificationPanel && (
+                                    <p className="mt-3 text-xs font-medium text-amber-700 dark:text-amber-300 lg:hidden">
+                                        Verification details follow the sign-in form.
+                                    </p>
                                 )}
 
                                 {error && !verificationPending && (
-                                    <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100 dark:border-red-900/30">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                        </svg>
+                                    <div
+                                        role="alert"
+                                        className="mt-5 flex items-start rounded-xl border border-red-100 bg-red-50 p-3 text-left text-sm text-red-600 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400"
+                                    >
+                                        <AlertCircle className="mr-2 mt-0.5 h-5 w-5 shrink-0" />
                                         <span>{error}</span>
                                     </div>
                                 )}
 
-                                {error && verificationPending && (
-                                    <div className="bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100 dark:border-red-900/30">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0 text-red-500 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                        </svg>
-                                        <span>{error}</span>
-                                    </div>
-                                )}
-
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <input
-                                            type="email"
-                                            required
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="firstname.lastname@duke.edu"
-                                            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
-                                        />
-                                    </div>
+                                <motion.form
+                                    layout={!prefersReducedMotion}
+                                    transition={layoutTransition}
+                                    onSubmit={handleSubmit}
+                                    className="mt-5 space-y-3"
+                                >
+                                    <input
+                                        type="email"
+                                        required
+                                        value={email}
+                                        onChange={(event) => setEmail(event.target.value)}
+                                        placeholder="firstname.lastname@duke.edu"
+                                        autoComplete="email"
+                                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                    />
                                     <div>
                                         <div className="relative flex items-center">
                                             <input
                                                 type={showPassword ? 'text' : 'password'}
                                                 required
                                                 value={password}
-                                                onChange={(e) => setPassword(e.target.value)}
+                                                onChange={(event) => setPassword(event.target.value)}
                                                 placeholder="Password"
+                                                autoComplete={isSignUp ? 'new-password' : 'current-password'}
                                                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 pr-14 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
                                             />
                                             <button
                                                 type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
+                                                onClick={() => setShowPassword((visible) => !visible)}
                                                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                                                 className="absolute right-1 flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg text-gray-400 transition-colors hover:text-gray-600 focus:outline-none dark:hover:text-gray-200"
                                             >
-                                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                                {showPassword
+                                                    ? <EyeOff className="h-5 w-5" />
+                                                    : <Eye className="h-5 w-5" />}
                                             </button>
                                         </div>
-                                        <div className="mt-1.5 flex h-11 items-center justify-end">
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setShowForgotPassword(true);
-                                                    setResetEmail(email);
-                                                    setResetError(null);
-                                                    setResetSuccess(false);
-                                                }}
-                                                className={`inline-flex min-h-11 touch-manipulation items-center px-2 text-sm font-medium text-clay-600 transition-opacity hover:underline focus:outline-none dark:text-clay-300 ${
-                                                    isSignUp ? 'pointer-events-none opacity-0' : 'opacity-100'
-                                                }`}
-                                                tabIndex={isSignUp ? -1 : 0}
-                                                aria-hidden={isSignUp}
-                                            >
-                                                Forgot Password?
-                                            </button>
-                                        </div>
+                                        <AnimatePresence initial={false}>
+                                            {!isSignUp && (
+                                                <motion.div
+                                                    initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={prefersReducedMotion ? undefined : { height: 0, opacity: 0 }}
+                                                    transition={viewTransition}
+                                                    className="flex overflow-hidden pt-1 justify-end"
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        onClick={openForgotPassword}
+                                                        className="inline-flex min-h-11 touch-manipulation items-center px-2 text-sm font-medium text-clay-600 hover:underline focus:outline-none dark:text-clay-300"
+                                                    >
+                                                        Forgot Password?
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </div>
-
                                     <button
                                         type="submit"
                                         data-cursor
-                                        className="clay-gradient mt-6 flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01]"
+                                        className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01]"
                                     >
-                                        {isSignUp ? <UserPlus className="w-5 h-5 mr-2" /> : <LogIn className="w-5 h-5 mr-2" />}
+                                        {isSignUp
+                                            ? <UserPlus className="mr-2 h-5 w-5" />
+                                            : <LogIn className="mr-2 h-5 w-5" />}
                                         {isSignUp ? 'Create Account' : 'Sign In'}
                                     </button>
-                                </form>
+                                </motion.form>
 
-                                <div className="mt-6 flex justify-between text-sm">
-                                    <button
-                                        onClick={() => {
-                                            setIsSignUp(!isSignUp);
-                                            setResendSuccess(null);
-                                            setResendError(null);
-                                        }}
-                                        className="mx-auto inline-flex min-h-11 touch-manipulation items-center px-2 text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
-                                    >
-                                        {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
-                                    </button>
+                                <button
+                                    type="button"
+                                    onClick={switchMode}
+                                    className="mt-3 inline-flex min-h-11 touch-manipulation items-center px-2 text-sm text-clay-600 hover:underline focus:outline-none dark:text-clay-300"
+                                >
+                                    {isSignUp
+                                        ? 'Already have an account? Sign in'
+                                        : 'Need an account? Sign up'}
+                                </button>
+
+                                <div className="mt-4 border-t border-gray-100 pt-4 text-xs text-gray-400 dark:border-gray-800">
+                                    Trouble logging in? Contact the admin.
                                 </div>
-                            </div>
-
-                            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400">
-                                Trouble logging in? Contact the admin.
-                            </div>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="forgot-password-view"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.25 }}
-                            className="w-full flex flex-col justify-between h-full"
-                        >
-                            <div>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="forgot-password-view"
+                                layout={!prefersReducedMotion}
+                                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+                                transition={viewTransition}
+                                className="w-full"
+                            >
                                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 dark:border-court-accent/30 dark:bg-court-accent/10">
                                     <KeyRound className="h-6 w-6 text-emerald-600 dark:text-court-accent" />
                                 </div>
-                                <h1 className="mb-2 font-display text-2xl tracking-tight text-wimbledon-navy transition-colors dark:text-chalk">
+                                <h1 className="font-display text-2xl tracking-tight text-wimbledon-navy dark:text-chalk">
                                     Reset Password
                                 </h1>
-                                <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm transition-colors max-w-xs mx-auto leading-relaxed">
-                                    Enter your Duke email address and we'll send you a link to reset your password.
+                                <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                                    Enter your Duke email address and we&apos;ll send you a reset link.
                                 </p>
 
                                 {resetError && (
-                                    <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm flex items-center text-left border border-red-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                                        </svg>
+                                    <div
+                                        role="alert"
+                                        className="mt-5 flex items-start rounded-xl border border-red-100 bg-red-50 p-3 text-left text-sm text-red-600 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400"
+                                    >
+                                        <AlertCircle className="mr-2 mt-0.5 h-5 w-5 shrink-0" />
                                         <span>{resetError}</span>
                                     </div>
                                 )}
 
                                 {resetSuccess ? (
-                                    <div className="bg-green-50 dark:bg-green-900/10 text-green-700 dark:text-green-400 p-5 rounded-2xl mb-6 text-sm flex flex-col items-center text-center border border-green-200 dark:border-green-900/30 shadow-sm">
-                                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-wimbledon-green dark:text-wimbledon-green-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        </div>
-                                        <span className="font-bold text-base text-wimbledon-green dark:text-wimbledon-green-accent mb-1.5">Reset Link Sent!</span>
-                                        <span className="text-xs text-gray-600 dark:text-gray-400 max-w-xs">
-                                            We sent a reset link to <strong className="text-gray-800 dark:text-gray-200">{resetEmail || 'your email'}</strong>. Please check your inbox.
-                                        </span>
+                                    <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 p-5 text-sm text-green-700 shadow-sm dark:border-green-900/30 dark:bg-green-900/10 dark:text-green-400">
+                                        <CheckCircle2 className="mx-auto mb-3 h-9 w-9" />
+                                        <p className="font-semibold">Reset link sent</p>
+                                        <p className="mt-1 text-xs leading-relaxed text-gray-600 dark:text-gray-400">
+                                            Check the inbox for{' '}
+                                            <strong className="text-gray-800 dark:text-gray-200">
+                                                {resetEmail || 'your Duke email'}
+                                            </strong>.
+                                        </p>
                                     </div>
                                 ) : (
-                                    <form onSubmit={handleResetPassword} className="space-y-4">
-                                        <div className="relative">
-                                            <input
-                                                type="email"
-                                                required
-                                                value={resetEmail}
-                                                onChange={(e) => setResetEmail(e.target.value)}
-                                                placeholder="firstname.lastname@duke.edu"
-                                                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
-                                            />
-                                        </div>
-
+                                    <form onSubmit={handleResetPassword} className="mt-5 space-y-3">
+                                        <input
+                                            type="email"
+                                            required
+                                            value={resetEmail}
+                                            onChange={(event) => setResetEmail(event.target.value)}
+                                            placeholder="firstname.lastname@duke.edu"
+                                            autoComplete="email"
+                                            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                        />
                                         <button
                                             type="submit"
                                             disabled={isResetLoading}
                                             data-cursor
-                                            className="clay-gradient mt-6 flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.01] disabled:opacity-50"
+                                            className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
                                         >
-                                            <Mail className="w-5 h-5 mr-2" />
+                                            <Mail className="mr-2 h-5 w-5" />
                                             {isResetLoading ? 'Sending Link...' : 'Send Reset Link'}
                                         </button>
                                     </form>
                                 )}
 
-                                <div className="mt-6">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setShowForgotPassword(false);
-                                            setResetError(null);
-                                            setResetSuccess(false);
-                                        }}
-                                        className="inline-flex min-h-11 touch-manipulation items-center px-1 text-sm font-medium text-clay-600 transition-colors hover:underline focus:outline-none dark:text-clay-300"
-                                    >
-                                        <ArrowLeft className="mr-1.5 h-4 w-4" />
-                                        Back to Sign In
-                                    </button>
+                                <button
+                                    type="button"
+                                    onClick={closeForgotPassword}
+                                    className="mt-3 inline-flex min-h-11 touch-manipulation items-center px-1 text-sm font-medium text-clay-600 hover:underline focus:outline-none dark:text-clay-300"
+                                >
+                                    <ArrowLeft className="mr-1.5 h-4 w-4" />
+                                    Back to Sign In
+                                </button>
+
+                                <div className="mt-4 border-t border-gray-100 pt-4 text-xs text-gray-400 dark:border-gray-800">
+                                    Trouble logging in? Contact the admin.
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.section>
+
+                <AnimatePresence initial={false}>
+                    {showVerificationPanel && (
+                        <motion.aside
+                            layout={!prefersReducedMotion}
+                            initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+                            transition={viewTransition}
+                            aria-live="polite"
+                            className="glass-deep w-full border-amber-200/80 p-4 text-left dark:border-amber-900/40 sm:p-5"
+                        >
+                            <div className="flex items-start">
+                                <AlertCircle className="mr-3 mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                                <div className="min-w-0">
+                                    <h2 className="font-semibold text-amber-900 dark:text-amber-200">
+                                        Verification required
+                                    </h2>
+                                    <p className="mt-1 text-sm leading-relaxed text-amber-800 dark:text-amber-300">
+                                        Check your Duke inbox and junk/spam folder to finish verifying your account.
+                                    </p>
                                 </div>
                             </div>
 
-                            <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400">
-                                Trouble logging in? Contact the admin.
-                            </div>
-                        </motion.div>
+                            {resendSuccess && (
+                                <div className="mt-4 flex items-start rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-300">
+                                    <CheckCircle2 className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
+                                    <span>{resendSuccess}</span>
+                                </div>
+                            )}
+                            {verificationError && (
+                                <div
+                                    role="alert"
+                                    className="mt-4 flex items-start rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300"
+                                >
+                                    <AlertCircle className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
+                                    <span>{verificationError}</span>
+                                </div>
+                            )}
+
+                            <button
+                                type="button"
+                                onClick={handleResendVerification}
+                                disabled={resendLoading || resendCooldown > 0 || !email.trim() || !password}
+                                className="mt-4 inline-flex min-h-11 w-full touch-manipulation items-center justify-center rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60"
+                            >
+                                <Mail className="mr-2 h-4 w-4" />
+                                {resendLoading
+                                    ? 'Sending...'
+                                    : resendCooldown > 0
+                                        ? `Resend in ${resendCooldown}s`
+                                        : 'Resend verification email'}
+                            </button>
+                        </motion.aside>
                     )}
                 </AnimatePresence>
-            </div>
-        </div>
+            </motion.div>
+        </main>
     );
 };
 
 export default Login;
-

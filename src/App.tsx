@@ -60,7 +60,7 @@ const ScrollReset = () => {
 };
 
 const AppRoutes = () => {
-    const { user, loading } = useAuth();
+    const { user } = useAuth();
     const { feedbackOpen, closeFeedback } = useUI();
 
     return (
@@ -68,7 +68,7 @@ const AppRoutes = () => {
             <Routes>
                 <Route
                     path="/login"
-                    element={loading ? <RouteLoader /> : !user ? <Login /> : <Navigate to="/" replace />}
+                    element={!user ? <Login /> : <Navigate to="/" replace />}
                 />
                 <Route path="/" element={<Home />} />
                 <Route path="/help" element={<Help />} />
@@ -91,8 +91,10 @@ const AppRoutes = () => {
 };
 
 const Shell = () => {
-    const [revealed, setRevealed] = useState(false);
-    const [preloaderDone, setPreloaderDone] = useState(false);
+    const { pathname } = useLocation();
+    const startsOnLogin = pathname === '/login';
+    const [revealed, setRevealed] = useState(startsOnLogin);
+    const [preloaderDone, setPreloaderDone] = useState(startsOnLogin);
     const sessionsReady = useSessionsPrefetchReady();
 
     return (

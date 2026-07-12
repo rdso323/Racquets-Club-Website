@@ -11,6 +11,6 @@ export const logoSrcForTheme = (theme: 'light' | 'dark') =>
 export const LOGO_CLASS = {
     nav: 'h-12 w-auto object-contain md:h-14',
     footer: 'h-14 w-auto object-contain',
-    login: 'mx-auto mb-2 h-32 w-auto max-w-[220px] object-contain',
+    login: 'mx-auto mb-2 h-16 w-auto max-w-[180px] object-contain sm:h-20 lg:h-24',
     preloader: 'h-16 w-auto object-contain md:h-20',
 } as const;
