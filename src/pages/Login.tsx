@@ -159,11 +159,7 @@ const Login = () => {
             <motion.div
                 layout={!prefersReducedMotion}
                 transition={layoutTransition}
-                className={`my-auto grid w-full items-start gap-4 sm:gap-5 ${
-                    showVerificationPanel
-                        ? 'max-w-4xl lg:grid-cols-[minmax(0,28rem)_minmax(18rem,22rem)]'
-                        : 'max-w-md'
-                }`}
+                className="my-auto w-full max-w-md"
             >
                 <motion.section
                     layout={!prefersReducedMotion}
@@ -224,11 +220,56 @@ const Login = () => {
                                     </motion.div>
                                 </AnimatePresence>
 
-                                {showVerificationPanel && (
-                                    <p className="mt-3 text-xs font-medium text-amber-700 dark:text-amber-300 lg:hidden">
-                                        Verification details follow the sign-in form.
-                                    </p>
-                                )}
+                                <AnimatePresence initial={false}>
+                                    {showVerificationPanel && (
+                                        <motion.div
+                                            layout={!prefersReducedMotion}
+                                            initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+                                            animate={{ height: 'auto', opacity: 1 }}
+                                            exit={prefersReducedMotion ? undefined : { height: 0, opacity: 0 }}
+                                            transition={viewTransition}
+                                            aria-live="polite"
+                                            className="mt-5 overflow-hidden rounded-xl border border-amber-200 bg-amber-50 text-left dark:border-amber-900/40 dark:bg-amber-950/20"
+                                        >
+                                            <div className="p-3">
+                                                <div className="flex items-start">
+                                                    <AlertCircle className="mr-2 mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                                                    <p className="text-sm leading-relaxed text-amber-800 dark:text-amber-300">
+                                                        <span className="font-semibold text-amber-900 dark:text-amber-200">
+                                                            Verification required —{' '}
+                                                        </span>
+                                                        check your Duke inbox and junk/spam folder.
+                                                    </p>
+                                                </div>
+
+                                                {resendSuccess && (
+                                                    <p className="mt-2 pl-6 text-sm text-emerald-700 dark:text-emerald-400">
+                                                        {resendSuccess}
+                                                    </p>
+                                                )}
+                                                {verificationError && (
+                                                    <p role="alert" className="mt-2 pl-6 text-sm text-red-700 dark:text-red-400">
+                                                        {verificationError}
+                                                    </p>
+                                                )}
+
+                                                <button
+                                                    type="button"
+                                                    onClick={handleResendVerification}
+                                                    disabled={resendLoading || resendCooldown > 0 || !email.trim() || !password}
+                                                    className="mt-3 inline-flex min-h-9 w-full touch-manipulation items-center justify-center rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60"
+                                                >
+                                                    <Mail className="mr-2 h-4 w-4" />
+                                                    {resendLoading
+                                                        ? 'Sending...'
+                                                        : resendCooldown > 0
+                                                            ? `Resend in ${resendCooldown}s`
+                                                            : 'Resend verification email'}
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
 
                                 {error && !verificationPending && (
                                     <div
@@ -403,62 +444,6 @@ const Login = () => {
                         )}
                     </AnimatePresence>
                 </motion.section>
-
-                <AnimatePresence initial={false}>
-                    {showVerificationPanel && (
-                        <motion.aside
-                            layout={!prefersReducedMotion}
-                            initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
-                            transition={viewTransition}
-                            aria-live="polite"
-                            className="glass-deep w-full border-amber-200/80 p-4 text-left dark:border-amber-900/40 sm:p-5"
-                        >
-                            <div className="flex items-start">
-                                <AlertCircle className="mr-3 mt-0.5 h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
-                                <div className="min-w-0">
-                                    <h2 className="font-semibold text-amber-900 dark:text-amber-200">
-                                        Verification required
-                                    </h2>
-                                    <p className="mt-1 text-sm leading-relaxed text-amber-800 dark:text-amber-300">
-                                        Check your Duke inbox and junk/spam folder to finish verifying your account.
-                                    </p>
-                                </div>
-                            </div>
-
-                            {resendSuccess && (
-                                <div className="mt-4 flex items-start rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:text-emerald-300">
-                                    <CheckCircle2 className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
-                                    <span>{resendSuccess}</span>
-                                </div>
-                            )}
-                            {verificationError && (
-                                <div
-                                    role="alert"
-                                    className="mt-4 flex items-start rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300"
-                                >
-                                    <AlertCircle className="mr-2 mt-0.5 h-4 w-4 shrink-0" />
-                                    <span>{verificationError}</span>
-                                </div>
-                            )}
-
-                            <button
-                                type="button"
-                                onClick={handleResendVerification}
-                                disabled={resendLoading || resendCooldown > 0 || !email.trim() || !password}
-                                className="mt-4 inline-flex min-h-11 w-full touch-manipulation items-center justify-center rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100 dark:hover:bg-amber-950/60"
-                            >
-                                <Mail className="mr-2 h-4 w-4" />
-                                {resendLoading
-                                    ? 'Sending...'
-                                    : resendCooldown > 0
-                                        ? `Resend in ${resendCooldown}s`
-                                        : 'Resend verification email'}
-                            </button>
-                        </motion.aside>
-                    )}
-                </AnimatePresence>
             </motion.div>
         </main>
     );
