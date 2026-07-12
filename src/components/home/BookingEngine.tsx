@@ -429,6 +429,10 @@ const BookingEngine = () => {
             ) : (
                 <div className="flex flex-col gap-8">
                     {openPlayInstances.length > 0 && (
+                        <>
+                        <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 md:hidden">
+                            Swipe sideways to browse open play sessions
+                        </p>
                         <HorizontalScrollRail
                             className="-mx-5 px-5 md:mx-0 md:px-0"
                             ariaLabel="Open play sessions"
@@ -461,6 +465,7 @@ const BookingEngine = () => {
                                 ))}
                             </div>
                         </HorizontalScrollRail>
+                        </>
                     )}
 
                     {(recurringClinicInstances.length > 0 || oneTimeSessions.length > 0) && (

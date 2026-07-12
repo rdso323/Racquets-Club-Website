@@ -15,8 +15,10 @@ interface HorizontalScrollRailProps {
     className?: string;
     scrollClassName?: string;
     ariaLabel?: string;
-    /** Hide arrows and use native overflow only from md breakpoint up */
+    /** Hide arrows and use native overflow only from this breakpoint up */
     mobileOnly?: boolean;
+    /** Tailwind breakpoint where horizontal scroll UI gives way to page layout (default md) */
+    breakpoint?: 'sm' | 'md';
     /** Optional down arrow overlay (e.g. scroll to content below this rail) */
     downNav?: DownNavConfig;
 }
@@ -27,6 +29,7 @@ const HorizontalScrollRail = ({
     scrollClassName = '',
     ariaLabel,
     mobileOnly = true,
+    breakpoint = 'md',
     downNav,
 }: HorizontalScrollRailProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -106,10 +109,10 @@ const HorizontalScrollRail = ({
         setShowHint(false);
     };
 
-    const arrowVisibility = mobileOnly ? 'md:hidden' : '';
+    const arrowVisibility = mobileOnly ? `${breakpoint}:hidden` : '';
     const scrollClasses = [
         'overflow-x-auto overscroll-x-contain scrollbar-hide snap-x snap-proximity',
-        mobileOnly ? 'md:overflow-visible md:snap-none' : '',
+        mobileOnly ? `${breakpoint}:overflow-visible ${breakpoint}:snap-none` : '',
         scrollClassName,
     ].filter(Boolean).join(' ');
 
