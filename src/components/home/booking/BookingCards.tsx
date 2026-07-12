@@ -48,8 +48,8 @@ export interface BookingCardHandlers {
 }
 
 const SessionLockOverlay = () => (
-    <div className="absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/45 backdrop-blur-[1px] dark:bg-court-950/40">
-        <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300/80 bg-white/90 px-5 py-4 text-center shadow-lg backdrop-blur-sm dark:border-amber-800/80 dark:bg-carbon/90">
+    <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/55 dark:bg-court-950/50">
+        <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300/80 bg-white px-5 py-4 text-center shadow-lg dark:border-amber-800/80 dark:bg-carbon">
             <Lock className="mb-2 h-7 w-7 text-amber-600 dark:text-amber-400" />
             <p className="text-sm font-bold text-amber-900 dark:text-amber-100">Booking not open yet</p>
             <p className="mt-1.5 text-xs font-medium leading-relaxed text-amber-800/90 dark:text-amber-300/90">
