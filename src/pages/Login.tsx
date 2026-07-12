@@ -361,7 +361,13 @@ const Login = () => {
                                 </button>
 
                                 <div className="mt-4 border-t border-gray-100 pt-4 text-xs text-gray-400 dark:border-gray-800">
-                                    Trouble logging in? Contact the admin.
+                                    Trouble logging in?{' '}
+                                    <a
+                                        href="mailto:fuqua-racquets@duke.edu"
+                                        className="text-clay-600 hover:underline dark:text-clay-300"
+                                    >
+                                        fuqua-racquets@duke.edu
+                                    </a>
                                 </div>
                             </motion.div>
                         ) : (
@@ -438,7 +444,13 @@ const Login = () => {
                                 </button>
 
                                 <div className="mt-4 border-t border-gray-100 pt-4 text-xs text-gray-400 dark:border-gray-800">
-                                    Trouble logging in? Contact the admin.
+                                    Trouble logging in?{' '}
+                                    <a
+                                        href="mailto:fuqua-racquets@duke.edu"
+                                        className="text-clay-600 hover:underline dark:text-clay-300"
+                                    >
+                                        fuqua-racquets@duke.edu
+                                    </a>
                                 </div>
                             </motion.div>
                         )}
