@@ -77,7 +77,7 @@ const readLegacyTabPreferences = (): TabPreference[] | null => {
 
 const PRODUCTION_SITE_ORIGIN = 'https://www.fuquaracquetsclub.com';
 
-/** Firebase only accepts continue URLs on authorized domains — always use canonical www in production. */
+/** Continue URL for verification emails once the domain is allowlisted in Firebase Console. */
 const getVerificationContinueUrl = (): string => {
     if (typeof window === 'undefined') {
         return `${PRODUCTION_SITE_ORIGIN}/login`;
@@ -99,22 +99,35 @@ const isContinueUriError = (err: unknown): boolean => {
     return code === 'auth/unauthorized-continue-uri' || code === 'auth/invalid-continue-uri';
 };
 
+/**
+ * Send verification without a custom continue URL first — works even when
+ * fuquaracquetsclub.com is not yet on Firebase's authorized-domains list.
+ * Optionally retries with a continue URL when that domain is allowlisted.
+ */
 const sendVerificationEmailWithFallback = async (user: User): Promise<void> => {
     try {
-        await sendEmailVerification(user, getVerificationActionCodeSettings());
-    } catch (err) {
-        if (!isContinueUriError(err)) {
-            throw err;
-        }
-        console.warn('Verification continue URI rejected; retrying without custom settings', err);
         await sendEmailVerification(user);
+        return;
+    } catch (plainErr) {
+        const plainCode = (plainErr as { code?: string })?.code;
+        if (plainCode === 'auth/too-many-requests') {
+            throw plainErr;
+        }
+        try {
+            await sendEmailVerification(user, getVerificationActionCodeSettings());
+        } catch (settingsErr) {
+            if (isContinueUriError(settingsErr)) {
+                throw plainErr;
+            }
+            throw settingsErr;
+        }
     }
 };
 
 const verificationSendErrorMessage = (err: unknown): string => {
     const code = (err as { code?: string })?.code;
     if (code === 'auth/too-many-requests') {
-        return 'Too many requests. Please wait a minute and try again.';
+        return 'Too many verification attempts from this device. Please wait 15–30 minutes and try again.';
     }
     if (isContinueUriError(err)) {
         return 'Could not send verification email due to a site configuration issue. Please contact an admin.';
@@ -173,6 +186,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [verificationPending, setVerificationPending] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const migrationAttemptedRef = useRef<string | null>(null);
+    const pendingVerificationFlowRef = useRef(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -191,6 +205,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setUser(null);
                     setError('Only @duke.edu email addresses are allowed.');
                 } else if (!currentUser.emailVerified) {
+                    if (pendingVerificationFlowRef.current) {
+                        setLoading(false);
+                        return;
+                    }
                     firebaseSignOut(auth);
                     setUser(null);
                     setVerificationPending(true);
@@ -313,6 +331,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         try {
+            pendingVerificationFlowRef.current = true;
             const result = await signInWithEmailAndPassword(auth, email, pass);
             if (result.user.emailVerified) {
                 await firebaseSignOut(auth);
@@ -334,6 +353,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setError(verificationSendErrorMessage(err));
             }
             throw err;
+        } finally {
+            pendingVerificationFlowRef.current = false;
         }
     };
 
@@ -346,6 +367,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         try {
+            pendingVerificationFlowRef.current = true;
             const result = await signInWithEmailAndPassword(auth, email, pass);
             if (!result.user.emailVerified) {
                 try {
@@ -354,7 +376,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     console.error(verifyErr);
                     await firebaseSignOut(auth);
                     setVerificationPending(true);
-                    setError('We could not send a verification email. Use Resend below to try again.');
+                    setError(verificationSendErrorMessage(verifyErr));
                     return;
                 }
                 await firebaseSignOut(auth);
@@ -368,6 +390,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 setError('Failed to sign in. Please try again.');
             }
+        } finally {
+            pendingVerificationFlowRef.current = false;
         }
     };
 
@@ -380,6 +404,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
 
         try {
+            pendingVerificationFlowRef.current = true;
             const result = await createUserWithEmailAndPassword(auth, email, pass);
             const userEmail = result.user.email;
 
@@ -395,7 +420,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 console.error(verifyErr);
                 await firebaseSignOut(auth);
                 setVerificationPending(true);
-                setError('Account created, but we could not send the verification email. Use Resend below.');
+                setError(verificationSendErrorMessage(verifyErr));
                 return;
             }
 
@@ -412,6 +437,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 setError('Failed to create account. Please try again.');
             }
+        } finally {
+            pendingVerificationFlowRef.current = false;
         }
     };
 
