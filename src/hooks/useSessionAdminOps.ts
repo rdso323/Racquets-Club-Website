@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
     doc,
     deleteDoc,
-    updateDoc,
     setDoc,
     getDoc,
     arrayUnion,
@@ -25,7 +24,7 @@ import {
     isRecurringSession,
     parseWaitlistEntry,
 } from '../lib/sessions';
-import { removeAttendeeWithPromotion, removeWaitlistEntry } from '../lib/bookingActions';
+import { assignCoachName, removeAttendeeWithPromotion, removeWaitlistEntry } from '../lib/bookingActions';
 import { buildTimeFields, resolveSessionTimes } from '../lib/dates';
 import { notifyWaitlistPromotion } from '../lib/waitlistNotifications';
 import { useAuth } from '../contexts/AuthContext';
@@ -485,19 +484,16 @@ export function useSessionAdminOps({
         }
     };
 
-    const handleUpdateCoach = async (sessionId: string) => {
-        const coachName = coachDraft[sessionId]?.trim();
-        setSavingCoach((prev) => ({ ...prev, [sessionId]: true }));
+    const handleUpdateCoach = async (session: Session) => {
+        const coachName = coachDraft[session.id]?.trim() ?? '';
+        setSavingCoach((prev) => ({ ...prev, [session.id]: true }));
         try {
-            await updateDoc(doc(db, 'sessions', sessionId), {
-                coach: coachName || 'TBD',
-                coachId: null,
-            });
+            await assignCoachName(session, coachName, session.sport);
         } catch (err) {
             console.error('Error updating coach:', err);
             window.alert('Failed to update coach.');
         } finally {
-            setSavingCoach((prev) => ({ ...prev, [sessionId]: false }));
+            setSavingCoach((prev) => ({ ...prev, [session.id]: false }));
         }
     };
 

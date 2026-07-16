@@ -51,7 +51,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'What are clinics / coaching sessions?',
-        answer: 'Clinics and open play sessions share the same booking cards. Admins set a total capacity (up to 20 roster spots). When that capacity divides evenly across courts into 2 or 4 players per court, you will see court diagrams. Otherwise the card shows a roster list with a Join Session button. Clinics appear below open play when both are scheduled for the same sport. Coach slots may be claimed separately by admins on the public booking card.',
+        answer: 'Clinics and open play sessions share the same booking cards. Admins set a total capacity (up to 20 roster spots). When that capacity divides evenly across courts into 2 or 4 players per court, you will see court diagrams. Otherwise the card shows a roster list with a Join Session button. Clinics appear below open play when both are scheduled for the same sport. Any signed-in member can claim or drop the coach slot on a clinic booking card.',
     },
     {
         question: 'Where are club events and news?',
@@ -79,7 +79,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do I manage sessions from the home page?',
-        answer: 'When signed in as an allowlisted admin, tap the gear icon in the top-right corner of any booking card. Choose Edit details (capacity, courts, time, coach, type), Manage roster (add or remove players, waitlist, assign coach), or Delete / remove weekly schedule. Regular members and guests do not see the gear icon. This mirrors the Operations Deck session controls without leaving the booking page.',
+        answer: 'When signed in as an allowlisted admin, tap the gear icon in the top-right corner of any booking card. Choose Edit details (capacity, courts, time, coach, type), Manage roster (add or remove players, waitlist, assign a coach name), or Delete / remove weekly schedule. Regular members and guests do not see the gear icon, but any signed-in member can still claim the coach slot on clinic cards. This mirrors the Operations Deck session controls without leaving the booking page.',
     },
     {
         question: 'How do I create events and sessions?',

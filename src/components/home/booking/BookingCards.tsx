@@ -407,19 +407,27 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                             onLeaveWaitlist={() => handlers.onLeaveWaitlist(session)}
                         />
 
-                        {session.type === 'coaching' && isAdmin && (
+                        {session.type === 'coaching' && user && (
                             <button
                                 onClick={() => handlers.onCoachAction(session)}
                                 className={`mt-3 w-full min-h-11 touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                                    session.coachId === user?.uid
+                                    session.coachId === user.uid
                                         ? 'border border-amber-300/50 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/20 dark:text-amber-300'
                                         : session.coachId
                                           ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
                                           : 'border border-court-accent/40 bg-court-accent/10 text-emerald-700 hover:bg-court-accent/20 dark:text-court-accent'
                                 }`}
-                                disabled={!!session.coachId && session.coachId !== user?.uid}
+                                disabled={
+                                    sessionDisabled ||
+                                    bookingBusy === `${session.id}:coach` ||
+                                    (!!session.coachId && session.coachId !== user.uid)
+                                }
                             >
-                                {session.coachId === user?.uid ? 'Drop Coach Slot' : session.coachId ? 'Coach Slot Filled' : 'Claim Coach Slot'}
+                                {session.coachId === user.uid
+                                    ? 'Drop Coach Slot'
+                                    : session.coachId
+                                      ? 'Coach Slot Filled'
+                                      : 'Claim Coach Slot'}
                             </button>
                         )}
                     </div>

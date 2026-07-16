@@ -81,7 +81,7 @@ const SessionOpsModal = ({
                         onCoachDraftChange={(value) =>
                             adminOps.setCoachDraft((prev) => ({ ...prev, [session.id]: value }))
                         }
-                        onUpdateCoach={() => adminOps.handleUpdateCoach(session.id)}
+                        onUpdateCoach={() => adminOps.handleUpdateCoach(session)}
                         onMemberDraftChange={(draft) =>
                             adminOps.setMemberDrafts((prev) => ({ ...prev, [session.id]: draft }))
                         }
