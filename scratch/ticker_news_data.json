@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Barbora Krejčíková beats Olympic champion Qinwen Zheng 6-4, 6-4 to reach the Athens Open semifinals, while Gstaad and Bastad set Saturday semis — Tsitsipas faces Shevchenko and Rublev meets Vallejo • [SQUASH] Joachim Chuah and Rouqaia Othman sweep the HCL PSA Challenger titles in Chennai, with the Malaysian top seed beating Adham Roshdy and the Egyptian winning a five-game thriller over Hwayeong Eum • [BADMINTON] PV Sindhu snaps a five-match skid against Chen Yufei to reach the Japan Open Super 750 final — the Indian led 21-19, 15-10 when the Olympic champion retired with a hamstring injury • [PICKLEBALL] Day two at the Macon PPA Challenger brings gender doubles to Rhythm & Rally as 510 players from 37 states and 15 countries chase $10,000 across five pro divisions at the world's largest indoor facility • [TABLE TENNIS] Dempo Goa Challengers demolish Dabang Delhi 12-3 to match UTT's biggest win, Ayhika Mukherjee hands Sofia Polcanova her first Season 7 loss, and Mongolia's WTT Feeder opens Sunday after the Youth Contender wraps Saturday",
+  "tickerText": "[TENNIS] Barbora Krejčíková meets Maria Sakkari in the Athens Open final after edging Clara Tauson, while Gstaad and Båstad crown champions Sunday — Tsitsipas faces Collignon and Rublev meets defending champ Darderi • [SQUASH] Joachim Chuah and Rouqaia Othman remain Chennai Challenger champions as the PSA calendar turns toward the World Squash Masters in Perth from August 30 • [BADMINTON] PV Sindhu ends a 19-month title drought with her maiden Japan Open crown, beating Akane Yamaguchi 21-14, 21-17 on home soil in Tokyo • [PICKLEBALL] Georgia's first PPA Challenger wraps at Macon as 512 players close out pro and amateur brackets Sunday at Rhythm & Rally • [TABLE TENNIS] WTT Feeder Ulaanbaatar opens in Mongolia with qualifying across all five events, while Sun Yingsha and teenage Sora Matsushima carry US Smash momentum toward Brazil's Star Contender",
   "newsItems": [
-    {
-      "title": "Krejčíková Stuns Zheng to Reach Athens Semifinals",
-      "excerpt": "Barbora Krejčíková defeated Olympic champion Qinwen Zheng 6-4, 6-4 in sweltering Athens heat to reach the WTA 250 semifinals. She will face Clara Tauson or Sara Bejlek for a spot in Sunday's final.",
-      "date": "July 18, 2026",
-      "category": "Tennis",
-      "link": "https://www.newsy-today.com/krejcikova-stuns-olympic-champion-to-reach-athens-semifinals/"
-    },
     {
       "title": "Chuah and Othman Crowned Chennai Challenger Champions",
       "excerpt": "Joachim Chuah beat Adham Roshdy 12-10, 11-7, 11-8 and Rouqaia Othman edged Hwayeong Eum in five games to claim the men's and women's titles at the HCL PSA Challenger in Chennai.",
-      "date": "July 18, 2026",
+      "date": "July 19, 2026",
       "category": "Squash",
-      "link": "https://ianslive.in/joachim-chuah-and-rouqaia-othman-emerge-champions-in-psa-challenger-squash-event-in-chennai--20260715183618"
+      "link": "https://www.olympics.com/en/news/hcl-squash-psa-challenger-tour-india-chennai-2026-final-report"
     },
     {
-      "title": "Sindhu Into Japan Open Final After Chen Retires",
-      "excerpt": "PV Sindhu reached her first tour final in two years at the Japan Open, leading Chen Yufei 21-19, 15-10 when the Olympic champion retired with a hamstring injury. She will face Akane Yamaguchi or Putri Kusuma Wardani on Sunday.",
-      "date": "July 18, 2026",
+      "title": "Sindhu Wins Maiden Japan Open Title",
+      "excerpt": "PV Sindhu defeated Akane Yamaguchi 21-14, 21-17 in Tokyo to capture her first Japan Open crown and end a 19-month drought on the BWF World Tour.",
+      "date": "July 19, 2026",
       "category": "Badminton",
-      "link": "https://ianslive.in/sindhu-storms-into-japan-open-final-after-chen-retires-injured--20260718101206"
+      "link": "https://indianexpress.com/article/sports/badminton/pv-sindhu-wins-maiden-japan-open-title-yamaguchi-title-drought-end-10793302/"
     },
     {
-      "title": "Macon PPA Challenger Doubles Day Underway",
-      "excerpt": "The 2026 Macon PPA Challenger continues at Rhythm & Rally with gender doubles on Saturday after 510 players opened the Georgia stop Friday. The event runs through Sunday at the world's largest indoor pickleball facility.",
-      "date": "July 18, 2026",
+      "title": "Macon PPA Challenger Concludes in Georgia",
+      "excerpt": "The 2026 Macon PPA Challenger wraps Sunday at Rhythm & Rally as 512 players finish pro and amateur brackets at Georgia's first PPA Challenger stop.",
+      "date": "July 19, 2026",
       "category": "Pickleball",
-      "link": "https://wgxa.tv/sports/city-guide/rhythm-rally-confirms-first-pro-pickleball-tournament-at-macon-mall-this-weekend-hunter-aiono-mayor-miller-rafa-hewitt-nicole-conard-jake-anderson-anderson-scarpa-professional-pickleball-association-ppa-challenger-2026-john-roberts-geneal-manager-biggest"
+      "link": "https://ppachallenger.com/tournament/2026-macon-ga/"
+    },
+    {
+      "title": "WTT Feeder Ulaanbaatar Opens in Mongolia",
+      "excerpt": "More than 300 players from 30 nations begin qualifying at the Buyant-Ukhaa Sports Complex as Mongolia hosts its first ITTF world-ranking event through July 23.",
+      "date": "July 19, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.dhapress.com/en/news/sports/52635"
     }
   ]
 }
