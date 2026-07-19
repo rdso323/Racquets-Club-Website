@@ -273,7 +273,7 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                         onCoachDraftChange={(value) =>
                                             setCoachDraft((prev) => ({ ...prev, [session.id]: value }))
                                         }
-                                        onUpdateCoach={() => handleUpdateCoach(session.id)}
+                                        onUpdateCoach={() => handleUpdateCoach(session)}
                                         onMemberDraftChange={(draft) =>
                                             setMemberDrafts((prev) => ({ ...prev, [session.id]: draft }))
                                         }

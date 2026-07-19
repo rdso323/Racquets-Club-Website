@@ -343,3 +343,89 @@ export const ensureSessionDoc = async (session: Session, activeSport?: string): 
     const sessionRef = doc(db, 'sessions', session.id);
     await setDoc(sessionRef, sessionSeedFields(session, activeSport), { merge: true });
 };
+
+export type CoachSlotResult = { action: 'claimed' } | { action: 'dropped' };
+
+const coachDisplayName = (profile: BookingUserProfile): string => {
+    if (profile.displayName && profile.displayName !== 'Player') {
+        return profile.displayName;
+    }
+    const local = profile.email.split('@')[0] || '';
+    const parts = local.split(/[.\-_]+/).filter(Boolean);
+    if (parts.length === 0) return 'Coach';
+    return parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join(' ');
+};
+
+/**
+ * Claim or drop the instructor slot on a coaching clinic.
+ * Uses a transaction + merge so virtual recurring sessions (no Firestore doc yet) still work.
+ * Available to any signed-in member — not admin-only.
+ */
+export const toggleCoachSlot = async (
+    session: Session,
+    profile: BookingUserProfile,
+    activeSport?: string,
+): Promise<CoachSlotResult> => {
+    if (session.type !== 'coaching') {
+        throw new Error('Only coaching clinics have a coach slot.');
+    }
+
+    const sessionRef = doc(db, 'sessions', session.id);
+
+    return runTransaction(db, async (tx) => {
+        const docSnap = await tx.get(sessionRef);
+        const data = readSessionData(session, docSnap.data());
+        const currentCoachId = (docSnap.exists() ? (docSnap.data()?.coachId as string | null | undefined) : data.coachId) ?? null;
+
+        if (currentCoachId && currentCoachId === profile.uid) {
+            tx.set(
+                sessionRef,
+                {
+                    ...sessionSeedFields(data, activeSport),
+                    attendees: data.attendees || [],
+                    waitlist: data.waitlist || [],
+                    coachId: null,
+                    coach: 'TBD',
+                },
+                { merge: true },
+            );
+            return { action: 'dropped' as const };
+        }
+
+        if (currentCoachId) {
+            throw new Error('This coach slot is already claimed.');
+        }
+
+        tx.set(
+            sessionRef,
+            {
+                ...sessionSeedFields(data, activeSport),
+                attendees: data.attendees || [],
+                waitlist: data.waitlist || [],
+                coachId: profile.uid,
+                coach: coachDisplayName(profile),
+            },
+            { merge: true },
+        );
+        return { action: 'claimed' as const };
+    });
+};
+
+/** Admin: set a free-text coach name (clears claimed coachId). Safe for virtual sessions. */
+export const assignCoachName = async (
+    session: Session,
+    coachName: string,
+    activeSport?: string,
+): Promise<void> => {
+    const sessionRef = doc(db, 'sessions', session.id);
+    const trimmed = coachName.trim();
+    await setDoc(
+        sessionRef,
+        {
+            ...sessionSeedFields(session, activeSport),
+            coach: trimmed || 'TBD',
+            coachId: null,
+        },
+        { merge: true },
+    );
+};

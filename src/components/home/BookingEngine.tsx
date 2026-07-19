@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback, type CSSProperties } from 'react';
-import { collection, onSnapshot, doc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, doc, query, where } from 'firebase/firestore';
 import { useLenis } from 'lenis/react';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,6 +12,7 @@ import {
     joinWaitlist,
     leaveWaitlist,
     toBookingProfile,
+    toggleCoachSlot,
 } from '../../lib/bookingActions';
 import { dismissNotification, notifyWaitlistPromotion, type WaitlistPromotionNotification } from '../../lib/waitlistNotifications';
 import {
@@ -268,37 +269,28 @@ const BookingEngine = () => {
     }, [user, activeSport]);
 
     const handleCoachAction = useCallback(async (session: Session) => {
-        if (!user || !isAdmin) return;
-        const sessionRef = doc(db, 'sessions', session.id);
+        if (!user) return;
+        setBookingBusy(`${session.id}:coach`);
+        const profile = toBookingProfile(user);
 
         try {
-            if (session.coachId === user.uid) {
-                await updateDoc(sessionRef, {
-                    coachId: null,
-                    coach: null
-                });
-            } else {
-                const nameParts = user.email ? user.email.split('@')[0].split('.') : ['Coach'];
-                const formattedName = nameParts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
-
-                await updateDoc(sessionRef, {
-                    coachId: user.uid,
-                    coach: formattedName
-                });
-
+            const result = await toggleCoachSlot(session, profile, activeSport);
+            if (result.action === 'claimed') {
                 if (window.confirm("You've claimed the coaching slot! Would you like to download a calendar invite?")) {
                     const coachSession = {
                         ...session,
-                        title: `Coaching: ${session.title}`
+                        title: `Coaching: ${session.title}`,
                     };
                     createICSFile(coachSession);
                 }
             }
         } catch (error) {
-            console.error("Error updating coach slot", error);
-            alert("Failed to update coach slot.");
+            console.error('Error updating coach slot', error);
+            alert(error instanceof Error ? error.message : 'Failed to update coach slot.');
+        } finally {
+            setBookingBusy(null);
         }
-    }, [user, isAdmin]);
+    }, [user, activeSport]);
 
     const cardHandlers = useMemo<BookingCardHandlers>(() => ({
         onJoin: handleJoin,
