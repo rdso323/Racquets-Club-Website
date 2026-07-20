@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Barbora Krejčíková meets Maria Sakkari in the Athens Open final after edging Clara Tauson, while Gstaad and Båstad crown champions Sunday — Tsitsipas faces Collignon and Rublev meets defending champ Darderi • [SQUASH] Joachim Chuah and Rouqaia Othman remain Chennai Challenger champions as the PSA calendar turns toward the World Squash Masters in Perth from August 30 • [BADMINTON] PV Sindhu ends a 19-month title drought with her maiden Japan Open crown, beating Akane Yamaguchi 21-14, 21-17 on home soil in Tokyo • [PICKLEBALL] Georgia's first PPA Challenger wraps at Macon as 512 players close out pro and amateur brackets Sunday at Rhythm & Rally • [TABLE TENNIS] WTT Feeder Ulaanbaatar opens in Mongolia with qualifying across all five events, while Sun Yingsha and teenage Sora Matsushima carry US Smash momentum toward Brazil's Star Contender",
+  "tickerText": "[TENNIS] WTA's one-time SRY gene screening takes effect today as Tsitsipas lifts the Gstaad title and rain-delayed finals set Badosa vs Sherif in Iași and Sakkari vs Krejcikova in Athens • [SQUASH] World Squash Junior Championships open in Niagara-on-the-Lake as top seed Anahat Singh leads India's individual campaign through July 25 • [BADMINTON] Sindhu and Popov sweep Japan Open singles crowns in Tokyo as the $2 million VICTOR China Open Super 1000 opens Tuesday in Changzhou • [PICKLEBALL] Collin Johns and Len Yang headline the inaugural PPA Asia 500 Singapore Open from July 23–26 with a $79,000 purse at Sports Arina • [TABLE TENNIS] WTT Feeder Ulaanbaatar qualifying rolls on in Mongolia while Kanak Jha and Lily Zhang head to Brazil for Star Contender São José dos Campos starting July 21",
   "newsItems": [
     {
-      "title": "Chuah and Othman Crowned Chennai Challenger Champions",
-      "excerpt": "Joachim Chuah beat Adham Roshdy 12-10, 11-7, 11-8 and Rouqaia Othman edged Hwayeong Eum in five games to claim the men's and women's titles at the HCL PSA Challenger in Chennai.",
-      "date": "July 19, 2026",
-      "category": "Squash",
-      "link": "https://www.olympics.com/en/news/hcl-squash-psa-challenger-tour-india-chennai-2026-final-report"
+      "title": "WTA Rolls Out One-Time Gene Screening",
+      "excerpt": "The WTA's updated eligibility policy takes effect today, requiring a one-time SRY gene test via cheek swab or blood sample for all players competing on the women's tour.",
+      "date": "July 20, 2026",
+      "category": "Tennis",
+      "link": "https://www.aljazeera.com/sports/2026/7/20/womens-tennis-players-must-take-one-time-gene-test-for-eligibility"
     },
     {
-      "title": "Sindhu Wins Maiden Japan Open Title",
-      "excerpt": "PV Sindhu defeated Akane Yamaguchi 21-14, 21-17 in Tokyo to capture her first Japan Open crown and end a 19-month drought on the BWF World Tour.",
-      "date": "July 19, 2026",
+      "title": "China Open Super 1000 Opens in Changzhou",
+      "excerpt": "The VICTOR China Open begins Tuesday with a $2 million prize pool at Changzhou's Olympic Sports Center, the first BWF Super 1000 stop after Sindhu's Japan Open triumph.",
+      "date": "July 20, 2026",
       "category": "Badminton",
-      "link": "https://indianexpress.com/article/sports/badminton/pv-sindhu-wins-maiden-japan-open-title-yamaguchi-title-drought-end-10793302/"
+      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5622/victor-china-open-2026/overview"
     },
     {
-      "title": "Macon PPA Challenger Concludes in Georgia",
-      "excerpt": "The 2026 Macon PPA Challenger wraps Sunday at Rhythm & Rally as 512 players finish pro and amateur brackets at Georgia's first PPA Challenger stop.",
-      "date": "July 19, 2026",
+      "title": "PPA Asia 500 Singapore Open Set for Debut",
+      "excerpt": "Collin Johns, Len Yang and Long Yufei headline the inaugural PPA Asia 500 at Sports Arina from July 23–26, Singapore's highest-tier pro pickleball event with $79,000 on offer.",
+      "date": "July 20, 2026",
       "category": "Pickleball",
-      "link": "https://ppachallenger.com/tournament/2026-macon-ga/"
+      "link": "https://www.straitstimes.com/sport/strong-international-line-up-confirmed-for-inaugural-ppa-asia-500-singapore-open"
     },
     {
-      "title": "WTT Feeder Ulaanbaatar Opens in Mongolia",
-      "excerpt": "More than 300 players from 30 nations begin qualifying at the Buyant-Ukhaa Sports Complex as Mongolia hosts its first ITTF world-ranking event through July 23.",
-      "date": "July 19, 2026",
+      "title": "WTT Star Contender São José dos Campos Begins",
+      "excerpt": "Kanak Jha, the Naresh brothers and Lily Zhang join Hugo Calderano's home field as Brazil hosts a WTT Star Contender from July 21–26 with 600 ranking points to the champion.",
+      "date": "July 20, 2026",
       "category": "Table Tennis",
-      "link": "https://www.dhapress.com/en/news/sports/52635"
+      "link": "https://www.usatt.org/news/2026/july/17/americans-take-aim-at-wtt-star-contender-sao-jos-dos-campos"
     }
   ]
 }
