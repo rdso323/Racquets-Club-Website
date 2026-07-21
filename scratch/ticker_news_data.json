@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] WTA's one-time SRY gene screening takes effect today as Tsitsipas lifts the Gstaad title and rain-delayed finals set Badosa vs Sherif in Iași and Sakkari vs Krejcikova in Athens • [SQUASH] World Squash Junior Championships open in Niagara-on-the-Lake as top seed Anahat Singh leads India's individual campaign through July 25 • [BADMINTON] Sindhu and Popov sweep Japan Open singles crowns in Tokyo as the $2 million VICTOR China Open Super 1000 opens Tuesday in Changzhou • [PICKLEBALL] Collin Johns and Len Yang headline the inaugural PPA Asia 500 Singapore Open from July 23–26 with a $79,000 purse at Sports Arina • [TABLE TENNIS] WTT Feeder Ulaanbaatar qualifying rolls on in Mongolia while Kanak Jha and Lily Zhang head to Brazil for Star Contender São José dos Campos starting July 21",
+  "tickerText": "[TENNIS] WTA's one-time SRY gene screening takes effect today as Tsitsipas ends a 16-month drought with the Gstaad title • [SQUASH] World Squash Junior Championships roll on in Niagara-on-the-Lake with 185 U-19 players competing through July 31 • [BADMINTON] VICTOR China Open Super 1000 opens in Changzhou as Sindhu and Lakshya Sen lead India's first-round charge • [PICKLEBALL] Collin Johns and Len Yang headline the PPA Asia 500 Singapore Open from July 23–26 with a $79,000 purse at Sports Arina • [TABLE TENNIS] WTT Star Contender São José dos Campos qualifying begins in Brazil as Kanak Jha and Lily Zhang chase 600 ranking points",
   "newsItems": [
     {
-      "title": "WTA Rolls Out One-Time Gene Screening",
-      "excerpt": "The WTA's updated eligibility policy takes effect today, requiring a one-time SRY gene test via cheek swab or blood sample for all players competing on the women's tour.",
-      "date": "July 20, 2026",
+      "title": "WTA Gene Screening Policy Takes Effect",
+      "excerpt": "The WTA's updated eligibility policy begins today, requiring a one-time SRY gene test for all players competing on the women's tour ahead of the 2028 Olympics.",
+      "date": "July 21, 2026",
       "category": "Tennis",
-      "link": "https://www.aljazeera.com/sports/2026/7/20/womens-tennis-players-must-take-one-time-gene-test-for-eligibility"
+      "link": "https://www.skysports.com/tennis/news/12040/13565278/wta-tour-announces-mandatory-sry-gene-test-for-players-to-determine-their-sex-in-order-to-compete"
+    },
+    {
+      "title": "World Squash Junior Championships Underway",
+      "excerpt": "Niagara-on-the-Lake hosts 185 U-19 players at White Oaks and Ridley College for individual play through July 25, with team competition to follow.",
+      "date": "July 21, 2026",
+      "category": "Squash",
+      "link": "https://squash.ca/2026/07/2026-world-squash-junior-championships-back-on-canadian-soil-next-week/"
     },
     {
       "title": "China Open Super 1000 Opens in Changzhou",
-      "excerpt": "The VICTOR China Open begins Tuesday with a $2 million prize pool at Changzhou's Olympic Sports Center, the first BWF Super 1000 stop after Sindhu's Japan Open triumph.",
-      "date": "July 20, 2026",
+      "excerpt": "The $2 million VICTOR China Open begins today at Changzhou's Olympic Sports Center, with PV Sindhu facing Unnati Hooda in an all-India women's singles opener.",
+      "date": "July 21, 2026",
       "category": "Badminton",
       "link": "https://bwfworldtour.bwfbadminton.com/tournament/5622/victor-china-open-2026/overview"
     },
     {
       "title": "PPA Asia 500 Singapore Open Set for Debut",
-      "excerpt": "Collin Johns, Len Yang and Long Yufei headline the inaugural PPA Asia 500 at Sports Arina from July 23–26, Singapore's highest-tier pro pickleball event with $79,000 on offer.",
-      "date": "July 20, 2026",
+      "excerpt": "Collin Johns, Len Yang and Long Yufei headline the inaugural PPA Asia 500 at Sports Arina from July 23–26, Singapore's highest-tier pro pickleball event.",
+      "date": "July 21, 2026",
       "category": "Pickleball",
       "link": "https://www.straitstimes.com/sport/strong-international-line-up-confirmed-for-inaugural-ppa-asia-500-singapore-open"
-    },
-    {
-      "title": "WTT Star Contender São José dos Campos Begins",
-      "excerpt": "Kanak Jha, the Naresh brothers and Lily Zhang join Hugo Calderano's home field as Brazil hosts a WTT Star Contender from July 21–26 with 600 ranking points to the champion.",
-      "date": "July 20, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.usatt.org/news/2026/july/17/americans-take-aim-at-wtt-star-contender-sao-jos-dos-campos"
     }
   ]
 }
