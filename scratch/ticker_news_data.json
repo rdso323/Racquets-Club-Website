@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] WTA Hamburg Ladies Open heads into the round of 16 at Am Rothenbaum as Udvardy and Kraus advance on clay • [SQUASH] World Junior Championships Day 3 begins in Niagara-on-the-Lake with top seeds Zakaria and Singh into the last 16 • [BADMINTON] World No. 1 An Se-young withdraws from China Open as first-round action continues in Changzhou through July 22 • [PICKLEBALL] PPA Asia 500 Singapore Open opens tomorrow at Sports Arina with 659 players and a $79,000 purse • [TABLE TENNIS] WTT Star Contender São José qualifying wraps with women's singles and doubles joining the fray ahead of Thursday's main draw",
+  "tickerText": "[TENNIS] WTA Hamburg wraps round of 16 on clay as Kalinina and Bondar advance into Thursday's quarterfinals • [SQUASH] World Junior Championships quarter-finals get underway in Niagara-on-the-Lake with top seeds Zakaria and Singh in action • [BADMINTON] PV Sindhu squanders four match points in China Open round-of-16 loss to Chen Yufei in Changzhou • [PICKLEBALL] Inaugural PPA Asia 500 Singapore Open kicks off at Sports Arina with Collin Johns and 659 players • [TABLE TENNIS] WTT Star Contender São José main draw begins in Brazil as Calderano and Takahashi join the field",
   "newsItems": [
     {
-      "title": "WTA Hamburg Ladies Open Reaches Round of 16",
-      "excerpt": "The MSC Hamburg Ladies Open continues at Am Rothenbaum with third seed Panna Udvardy and eighth seed Sinja Kraus among those advancing through Tuesday's round of 32.",
-      "date": "July 22, 2026",
+      "title": "Hamburg Quarterfinal Field Takes Shape",
+      "excerpt": "Anhelina Kalinina and Anna Bondar headline Wednesday's round-of-16 winners at the WTA Hamburg Ladies Open, setting up quarterfinal clashes on Thursday at Am Rothenbaum.",
+      "date": "July 23, 2026",
       "category": "Tennis",
-      "link": "https://www.madisoncourier.com/ap/sports/wta-hamburg-european-open-results/article_aa3ca1f4-5885-570d-99f5-e027cc0d73ce.html"
+      "link": "https://www.madisoncourier.com/ap/sports/wta-hamburg-european-open-results/article_8d5e18a5-37c9-5ed4-92e3-de80cb882b4c.html"
     },
     {
-      "title": "Junior Squash Seeds Reach Last 16",
-      "excerpt": "Mohamad Zakaria and Anahat Singh cruise into the round of 16 at Niagara-on-the-Lake, while Brazil's Laura Silva rallies from two sets down to stay alive.",
-      "date": "July 22, 2026",
+      "title": "Junior Squash Quarter-Finals Begin",
+      "excerpt": "Mohamad Zakaria and Anahat Singh lead the field into individual quarter-finals at Niagara-on-the-Lake after top seeds tumbled through the round of 16.",
+      "date": "July 23, 2026",
       "category": "Squash",
-      "link": "https://www.worldsquash.sport/silva-survives-scare-as-seeds-progress-to-round-of-16/"
+      "link": "https://www.worldsquash.sport/top-seeds-tumble-with-quarter-finalists-confirmed-in-niagara-on-the-lake/"
     },
     {
-      "title": "An Se-young Withdraws from China Open",
-      "excerpt": "World No. 1 An Se-young pulls out of the Super 1000 in Changzhou with a foot injury, elevating Chen Yufei to top seed as first-round play continues.",
-      "date": "July 22, 2026",
+      "title": "Sindhu Falls to Chen at China Open",
+      "excerpt": "PV Sindhu lets a 21-16, 20-16 lead slip away, losing 18-21 in the decider to Chen Yufei in the China Open round of 16 in Changzhou.",
+      "date": "July 23, 2026",
       "category": "Badminton",
-      "link": "https://www.chosun.com/english/sports-en/2026/07/22/5LP5IRHFTBAFZJM3DGK5JMKJ7A/"
+      "link": "https://indianexpress.com/article/sports/badminton/sindhu-fritters-4-match-points-lose-chen-yufei-at-china-open-10799477/"
     },
     {
-      "title": "WTT São José Qualifying Enters Final Day",
-      "excerpt": "Qualifying at the Star Contender in Brazil concludes today with women's singles and doubles joining the fray; Hugo Calderano and Bruna Takahashi enter the main draw Thursday.",
-      "date": "July 22, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.olympics.com/pt/noticias/wtt-star-contender-sao-jose-dos-campos-primeiro-dia"
+      "title": "PPA Asia 500 Singapore Open Underway",
+      "excerpt": "The inaugural PPA Asia 500 Singapore Open opens at Sports Arina with 659 players, headlined by Collin Johns and China's Long Yufei.",
+      "date": "July 23, 2026",
+      "category": "Pickleball",
+      "link": "https://www.straitstimes.com/sport/strong-international-line-up-confirmed-for-inaugural-ppa-asia-500-singapore-open"
     }
   ]
 }
