@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] WTA Hamburg wraps round of 16 on clay as Kalinina and Bondar advance into Thursday's quarterfinals • [SQUASH] World Junior Championships quarter-finals get underway in Niagara-on-the-Lake with top seeds Zakaria and Singh in action • [BADMINTON] PV Sindhu squanders four match points in China Open round-of-16 loss to Chen Yufei in Changzhou • [PICKLEBALL] Inaugural PPA Asia 500 Singapore Open kicks off at Sports Arina with Collin Johns and 659 players • [TABLE TENNIS] WTT Star Contender São José main draw begins in Brazil as Calderano and Takahashi join the field",
+  "tickerText": "[TENNIS] Andrey Rublev rolls past Timofey Skatov 6-1, 6-1 into Estoril quarterfinals as Portugal's Jaime Faria advances at home • [SQUASH] World Junior Championships semi-finals begin at White Oaks with Assal, Salem and Zakaria in the last four • [BADMINTON] Chen Yufei and Wang Zhiyi headline China Open quarterfinals day in Changzhou after Thursday comeback wins • [PICKLEBALL] PPA Asia 500 Singapore Open and Italy 125 Portoroz continue with international fields chasing ranking points • [TABLE TENNIS] Hugo Calderano and Bruna Takahashi reach mixed doubles quarterfinals at WTT Star Contender São José dos Campos",
   "newsItems": [
     {
-      "title": "Hamburg Quarterfinal Field Takes Shape",
-      "excerpt": "Anhelina Kalinina and Anna Bondar headline Wednesday's round-of-16 winners at the WTA Hamburg Ladies Open, setting up quarterfinal clashes on Thursday at Am Rothenbaum.",
-      "date": "July 23, 2026",
-      "category": "Tennis",
-      "link": "https://www.madisoncourier.com/ap/sports/wta-hamburg-european-open-results/article_8d5e18a5-37c9-5ed4-92e3-de80cb882b4c.html"
-    },
-    {
-      "title": "Junior Squash Quarter-Finals Begin",
-      "excerpt": "Mohamad Zakaria and Anahat Singh lead the field into individual quarter-finals at Niagara-on-the-Lake after top seeds tumbled through the round of 16.",
-      "date": "July 23, 2026",
+      "title": "Junior Squash Semi-Finals Set",
+      "excerpt": "Marwan Assal and Ruqayya Salem fight back into the last four at Niagara-on-the-Lake, joining Mohamad Zakaria as semi-finals begin Friday at White Oaks.",
+      "date": "July 24, 2026",
       "category": "Squash",
-      "link": "https://www.worldsquash.sport/top-seeds-tumble-with-quarter-finalists-confirmed-in-niagara-on-the-lake/"
+      "link": "https://www.worldsquash.sport/assal-and-salem-fight-back-to-reach-world-junior-semi-finals/"
     },
     {
-      "title": "Sindhu Falls to Chen at China Open",
-      "excerpt": "PV Sindhu lets a 21-16, 20-16 lead slip away, losing 18-21 in the decider to Chen Yufei in the China Open round of 16 in Changzhou.",
-      "date": "July 23, 2026",
+      "title": "China Open Quarterfinals Day",
+      "excerpt": "Chen Yufei and defending champion Wang Zhiyi lead Friday's field in Changzhou after booking last-eight spots with comeback round-of-16 wins.",
+      "date": "July 24, 2026",
       "category": "Badminton",
-      "link": "https://indianexpress.com/article/sports/badminton/sindhu-fritters-4-match-points-lose-chen-yufei-at-china-open-10799477/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/07/23/china-open-tide-turned/"
     },
     {
-      "title": "PPA Asia 500 Singapore Open Underway",
-      "excerpt": "The inaugural PPA Asia 500 Singapore Open opens at Sports Arina with 659 players, headlined by Collin Johns and China's Long Yufei.",
-      "date": "July 23, 2026",
+      "title": "PPA Asia 500 Singapore Open Rolls On",
+      "excerpt": "The inaugural PPA Asia 500 at Sports Arina continues alongside the PPA Italy 125 in Portoroz as pros compete across two international tour stops.",
+      "date": "July 24, 2026",
       "category": "Pickleball",
-      "link": "https://www.straitstimes.com/sport/strong-international-line-up-confirmed-for-inaugural-ppa-asia-500-singapore-open"
+      "link": "https://ppatour.com/tournament/2026/ppa-asia-500-singapore-open/"
+    },
+    {
+      "title": "Calderano and Takahashi Into Mixed QF",
+      "excerpt": "World No. 2 mixed pair Hugo Calderano and Bruna Takahashi sweep into the quarterfinals at WTT Star Contender São José dos Campos with a 3-0 win.",
+      "date": "July 24, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.olympics.com/pt/noticias/wtt-star-contender-sao-jose-dos-campos-terceiro-dia"
     }
   ]
 }
