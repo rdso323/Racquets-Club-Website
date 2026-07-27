@@ -1,64 +1,33 @@
 {
-<<<<<<< Updated upstream
-  "tickerText": "[TENNIS] Jannik Sinner and Novak Djokovic withdraw from the National Bank Open in Montreal as Luca Van Assche stuns Andrey Rublev to reach Estoril semis • [SQUASH] Om Semwal, Sandhesh Ravikumar and Rathika Seelan advance to PSA Singapore Challenger quarterfinals • [BADMINTON] China Open semifinals day in Changzhou features Wang Zhiyi vs Akane Yamaguchi and Chen Yufei vs Tomoka Miyazaki • [PICKLEBALL] PPA Asia 500 Singapore Open weekend action continues at Sports Arina with Collin Johns and Len Yang in the field • [TABLE TENNIS] Hugo Calderano and Bruna Takahashi reach mixed doubles semifinals at WTT Star Contender São José dos Campos",
+  "tickerText": "[TENNIS] North American hard-court season begins as the Mubadala DC Open main draw starts in Washington with Alex Eala facing Olympic champion Zheng Qinwen • [SQUASH] India's junior teams surge at the World Team Championships as the men top Group 5 and the women beat Chinese Taipei • [BADMINTON] Chou Tien Chen becomes the oldest Super 1000 champion at 36, beating Toma Junior Popov to win the China Open in Changzhou • [PICKLEBALL] Wong Hong Kit claims his third straight PPA Asia men's singles title at the inaugural Singapore Open while Long Yufei sweeps women's singles and doubles • [TABLE TENNIS] Hugo Calderano ends a year-long drought with WTT Star Contender glory in São José dos Campos, edging Alexis Lebrun 4-3 in a seven-set final",
   "newsItems": [
     {
-      "title": "Sinner and Djokovic Skip Montreal",
-      "excerpt": "World No. 1 Jannik Sinner and Novak Djokovic have withdrawn from the National Bank Open, leaving Alexander Zverev and Félix Auger-Aliassime as top seeds.",
-      "date": "July 25, 2026",
+      "title": "DC Open Kicks Off Hard-Court Swing",
+      "excerpt": "The Mubadala DC Open main draw begins today in Washington as Alex Eala draws Olympic champion Zheng Qinwen in the first round of the North American hard-court season.",
+      "date": "July 27, 2026",
       "category": "Tennis",
-      "link": "https://tennisconnected.com/sinner-and-djokovic-withdraw-from-2026-national-bank-open/"
+      "link": "https://www.philstar.com/sports/2026/07/27/2544955/eala-draws-olympic-champ-first-round-assignment"
     },
     {
-      "title": "China Open Semifinals Day",
-      "excerpt": "Wang Zhiyi faces Akane Yamaguchi and Chen Yufei meets Tomoka Miyazaki as the Super 1000 in Changzhou reaches the last four across all five categories.",
-      "date": "July 25, 2026",
-      "category": "Badminton",
-      "link": "https://badmintonworldtour.com/china-open-2026-daily-match-schedule-and-results/"
-    },
-    {
-      "title": "PPA Asia 500 Singapore Open Weekend",
-      "excerpt": "The inaugural PPA Asia 500 at Sports Arina enters its final days with Collin Johns, Len Yang and top Asian pros chasing ranking points and prize money.",
-      "date": "July 25, 2026",
-=======
-  "tickerText": "[TENNIS] Quentin Halys defeats Alexander Bublik 6-4, 7-6(6) to claim his first ATP title at the Generali Open in Kitzbühel, climbing to world No. 51 • [SQUASH] World Squash Junior Team Championships begin in Niagara-on-the-Lake after Egypt's Mohamad Zakaria and India's Anahat Singh capture historic individual titles • [BADMINTON] China Open finals day in Changzhou features Chou Tien Chen vs Toma Junior Popov in men's singles and Chen Yu Fei vs Akane Yamaguchi in women's singles • [PICKLEBALL] Inaugural PPA Asia 500 Singapore Open concludes at Sports Arina @ Expo as Pickleball Inc opens door for PPA pros at the 2027 World Cup • [TABLE TENNIS] Hugo Calderano and Bruna Takahashi face Japan's Togami Shinsuke and Odo Satsuki in the WTT Star Contender São José mixed doubles final",
-  "newsItems": [
-    {
-      "title": "Halys Wins Maiden ATP Title",
-      "excerpt": "Quentin Halys beat Alexander Bublik 6-4, 7-6(6) in Kitzbühel for his first ATP crown, denying the defending champion a repeat title and leaping to world No. 51.",
-      "date": "July 26, 2026",
-      "category": "Tennis",
-      "link": "https://www.tennismajors.com/atp-actualite/halys-wins-maiden-atp-title-ends-bubliks-kitzbuhel-repeat-bid-856865.html"
-    },
-    {
-      "title": "Junior Team Championships Begin",
-      "excerpt": "National squads take the court in Niagara-on-the-Lake after Mohamad Zakaria became the first three-time men's junior champion and Anahat Singh won India's first women's junior title.",
-      "date": "July 26, 2026",
+      "title": "India Juniors Advance in Canada",
+      "excerpt": "India's men's junior team topped Group 5 with 3-0 wins over the Netherlands and Brazil, while the women opened with a 3-0 victory over Chinese Taipei in Niagara-on-the-Lake.",
+      "date": "July 27, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/news/records-broken-and-history-made-as-zakaria-and-singh-win-2026-world-squash-junior-championships/"
+      "link": "https://www.rediff.com/sports/report/indian-men-enter-pre-quarters-in-world-junior-squash/20260727.htm"
     },
     {
-      "title": "Singapore Open Crowns Final Day",
-      "excerpt": "The inaugural PPA Asia 500 at Sports Arina @ Expo wraps its $79,000 weekend while Pickleball Inc. clears PPA professionals to represent their countries at the 2027 World Cup.",
-      "date": "July 26, 2026",
->>>>>>> Stashed changes
-      "category": "Pickleball",
-      "link": "https://ppatour.com/pickleball-inc-and-pickleball-world-cup-unite/"
+      "title": "Chou Makes Super 1000 History",
+      "excerpt": "At 36, Chou Tien Chen became the oldest BWF Super 1000 champion by beating Toma Junior Popov 21-15, 7-21, 21-13 in the China Open final in Changzhou.",
+      "date": "July 27, 2026",
+      "category": "Badminton",
+      "link": "https://www.scmp.com/sport/china/article/3361912/chinese-taipeis-chou-tien-chen-becomes-oldest-super-1000-winner-badmintons-china-open"
     },
     {
-<<<<<<< Updated upstream
-      "title": "Calderano and Bruna Into Mixed Semis",
-      "excerpt": "World No. 2 mixed pair Hugo Calderano and Bruna Takahashi beat Guilherme Teodoro and Giulia Takahashi 3-1 to reach the semifinals in São José dos Campos.",
-      "date": "July 25, 2026",
+      "title": "Calderano Ends Title Drought",
+      "excerpt": "Hugo Calderano rallied from two sets down to beat Alexis Lebrun 4-3 and win the WTT Star Contender São José dos Campos, his first circuit title in a year.",
+      "date": "July 27, 2026",
       "category": "Table Tennis",
-      "link": "https://www.olimpiadatododia.com.br/tenis-de-mesa/755511-calderano-bruna-semifinal-wtt-sao-jose-dos-campos/"
-=======
-      "title": "Calderashi in Mixed Doubles Final",
-      "excerpt": "Hugo Calderano and Bruna Takahashi face Japan's Togami Shinsuke and Odo Satsuki for the WTT Star Contender São José title as Calderano also chases singles glory.",
-      "date": "July 26, 2026",
-      "category": "Table Tennis",
-      "link": "https://agenciabrasil.ebc.com.br/esportes/noticia/2026-07/dupla-calderashi-avanca-final-do-wtt-star-contender-em-sao-paulo"
->>>>>>> Stashed changes
+      "link": "https://ge.globo.com/tenis-de-mesa/noticia/2026/07/26/calderano-e-campeao-do-wtt-de-sao-jose-dos-campos-e-encerra-jejum-de-um-ano-no-circuito.ghtml"
     }
   ]
 }
