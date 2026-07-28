@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] North American hard-court season begins as the Mubadala DC Open main draw starts in Washington with Alex Eala facing Olympic champion Zheng Qinwen • [SQUASH] India's junior teams surge at the World Team Championships as the men top Group 5 and the women beat Chinese Taipei • [BADMINTON] Chou Tien Chen becomes the oldest Super 1000 champion at 36, beating Toma Junior Popov to win the China Open in Changzhou • [PICKLEBALL] Wong Hong Kit claims his third straight PPA Asia men's singles title at the inaugural Singapore Open while Long Yufei sweeps women's singles and doubles • [TABLE TENNIS] Hugo Calderano ends a year-long drought with WTT Star Contender glory in São José dos Campos, edging Alexis Lebrun 4-3 in a seven-set final",
+  "tickerText": "[TENNIS] Day two at the Mubadala DC Open brings Alex Eala vs Olympic champion Zheng Qinwen, while Kei Nishikori earned his first 2026 win and Frances Tiafoe fell to Terence Atmane • [SQUASH] World Junior Team Championships continue in Niagara-on-the-Lake as defending champions Egypt and top seeds push toward knockout play • [BADMINTON] The Philippines hosts its first BWF-sanctioned tournament as Philippine International Challenge qualifying begins at Gameville Central Park • [PICKLEBALL] Pickleball Inc. and the Pickleball World Cup unite, clearing PPA Tour pros to represent their countries starting at the 2027 edition • [TABLE TENNIS] The elite circuit shifts to WTT Champions Yokohama on August 4 after Hugo Calderano edged Alexis Lebrun 4-3 to win São José dos Campos",
   "newsItems": [
     {
-      "title": "DC Open Kicks Off Hard-Court Swing",
-      "excerpt": "The Mubadala DC Open main draw begins today in Washington as Alex Eala draws Olympic champion Zheng Qinwen in the first round of the North American hard-court season.",
-      "date": "July 27, 2026",
+      "title": "Eala Faces Zheng in DC Open",
+      "excerpt": "Alex Eala meets Olympic champion Zheng Qinwen in Washington today as the Mubadala DC Open highlights a loaded day-two slate on the North American hard-court swing.",
+      "date": "July 28, 2026",
       "category": "Tennis",
       "link": "https://www.philstar.com/sports/2026/07/27/2544955/eala-draws-olympic-champ-first-round-assignment"
     },
     {
-      "title": "India Juniors Advance in Canada",
-      "excerpt": "India's men's junior team topped Group 5 with 3-0 wins over the Netherlands and Brazil, while the women opened with a 3-0 victory over Chinese Taipei in Niagara-on-the-Lake.",
-      "date": "July 27, 2026",
+      "title": "Junior Team Titles Heat Up",
+      "excerpt": "The World Squash Junior Team Championships roll on in Niagara-on-the-Lake after Egypt's Mohamad Zakaria and India's Anahat Singh made history in the individual finals.",
+      "date": "July 28, 2026",
       "category": "Squash",
-      "link": "https://www.rediff.com/sports/report/indian-men-enter-pre-quarters-in-world-junior-squash/20260727.htm"
+      "link": "https://www.psasquashtour.com/news/records-broken-and-history-made-as-zakaria-and-singh-win-2026-world-squash-junior-championships/"
     },
     {
-      "title": "Chou Makes Super 1000 History",
-      "excerpt": "At 36, Chou Tien Chen became the oldest BWF Super 1000 champion by beating Toma Junior Popov 21-15, 7-21, 21-13 in the China Open final in Changzhou.",
-      "date": "July 27, 2026",
+      "title": "Philippines Debuts BWF Event",
+      "excerpt": "Qualifying begins today at Gameville Central Park as the Philippines stages its first BWF-sanctioned International Challenge, led by Clarence Villaflor and Mika De Guzman.",
+      "date": "July 28, 2026",
       "category": "Badminton",
-      "link": "https://www.scmp.com/sport/china/article/3361912/chinese-taipeis-chou-tien-chen-becomes-oldest-super-1000-winner-badmintons-china-open"
+      "link": "https://www.philstar.com/sports/2026/07/28/2545276/marquee-badminton-tourney-unwraps-gameville"
     },
     {
-      "title": "Calderano Ends Title Drought",
-      "excerpt": "Hugo Calderano rallied from two sets down to beat Alexis Lebrun 4-3 and win the WTT Star Contender São José dos Campos, his first circuit title in a year.",
-      "date": "July 27, 2026",
-      "category": "Table Tennis",
-      "link": "https://ge.globo.com/tenis-de-mesa/noticia/2026/07/26/calderano-e-campeao-do-wtt-de-sao-jose-dos-campos-e-encerra-jejum-de-um-ano-no-circuito.ghtml"
+      "title": "PPA Pros Cleared for World Cup",
+      "excerpt": "Pickleball Inc. and the Pickleball World Cup announced a partnership that lifts prior tour restrictions, letting eligible PPA professionals represent their countries from 2027.",
+      "date": "July 28, 2026",
+      "category": "Pickleball",
+      "link": "https://ppatour.com/pickleball-inc-and-pickleball-world-cup-unite/"
     }
   ]
 }
