@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Day two at the Mubadala DC Open brings Alex Eala vs Olympic champion Zheng Qinwen, while Kei Nishikori earned his first 2026 win and Frances Tiafoe fell to Terence Atmane • [SQUASH] World Junior Team Championships continue in Niagara-on-the-Lake as defending champions Egypt and top seeds push toward knockout play • [BADMINTON] The Philippines hosts its first BWF-sanctioned tournament as Philippine International Challenge qualifying begins at Gameville Central Park • [PICKLEBALL] Pickleball Inc. and the Pickleball World Cup unite, clearing PPA Tour pros to represent their countries starting at the 2027 edition • [TABLE TENNIS] The elite circuit shifts to WTT Champions Yokohama on August 4 after Hugo Calderano edged Alexis Lebrun 4-3 to win São José dos Campos",
+  "tickerText": "[TENNIS] Alex Eala rallied past Olympic champion Zheng Qinwen 4-6, 6-4, 6-1 at the Mubadala DC Open and will face defending champion Leylah Fernandez, while Cruz Hewitt notched his first ATP Tour win • [SQUASH] The Victorian Open 2026 gets underway in Melbourne as the PSA circuit shifts to Australia, with the Dallas Squash Challenger following in Plano from July 30 • [BADMINTON] Main-draw action opens at the HSBC BWF Taipei Open with Lee Zii Jia, Justin Hoh, and Eogene Ewe among the headline names • [PICKLEBALL] Hong Kit Wong climbed to a career-best PPA world No. 10 after winning his third straight Singapore Open singles title • [TABLE TENNIS] Attention turns to WTT Champions Yokohama starting August 4 after Hugo Calderano edged Alexis Lebrun 4-3 in the São José dos Campos final",
   "newsItems": [
     {
-      "title": "Eala Faces Zheng in DC Open",
-      "excerpt": "Alex Eala meets Olympic champion Zheng Qinwen in Washington today as the Mubadala DC Open highlights a loaded day-two slate on the North American hard-court swing.",
-      "date": "July 28, 2026",
-      "category": "Tennis",
-      "link": "https://www.philstar.com/sports/2026/07/27/2544955/eala-draws-olympic-champ-first-round-assignment"
-    },
-    {
-      "title": "Junior Team Titles Heat Up",
-      "excerpt": "The World Squash Junior Team Championships roll on in Niagara-on-the-Lake after Egypt's Mohamad Zakaria and India's Anahat Singh made history in the individual finals.",
-      "date": "July 28, 2026",
+      "title": "Victorian Open Kicks Off",
+      "excerpt": "The PSA Victorian Open 2026 begins in Melbourne today, opening a busy Australasian stretch before the Dallas Squash Challenger starts in Plano on July 30.",
+      "date": "July 29, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/news/records-broken-and-history-made-as-zakaria-and-singh-win-2026-world-squash-junior-championships/"
+      "link": "https://www.psasquashtour.com/tournaments/"
     },
     {
-      "title": "Philippines Debuts BWF Event",
-      "excerpt": "Qualifying begins today at Gameville Central Park as the Philippines stages its first BWF-sanctioned International Challenge, led by Clarence Villaflor and Mika De Guzman.",
-      "date": "July 28, 2026",
+      "title": "Taipei Open Main Draw Opens",
+      "excerpt": "The HSBC BWF Taipei Open Super 300 is underway at Taipei Arena, with Lee Zii Jia, Justin Hoh, and Eogene Ewe leading a packed main-draw field.",
+      "date": "July 29, 2026",
       "category": "Badminton",
-      "link": "https://www.philstar.com/sports/2026/07/28/2545276/marquee-badminton-tourney-unwraps-gameville"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/07/28/smashing-stats-taipei-open-2026/"
     },
     {
-      "title": "PPA Pros Cleared for World Cup",
-      "excerpt": "Pickleball Inc. and the Pickleball World Cup announced a partnership that lifts prior tour restrictions, letting eligible PPA professionals represent their countries from 2027.",
-      "date": "July 28, 2026",
+      "title": "Wong Breaks Into PPA Top 10",
+      "excerpt": "Hong Kong's Hong Kit Wong rose to a career-best world No. 10 after capturing his third consecutive men's singles title at the PPA Tour Asia Singapore Open.",
+      "date": "July 29, 2026",
       "category": "Pickleball",
-      "link": "https://ppatour.com/pickleball-inc-and-pickleball-world-cup-unite/"
+      "link": "https://www.timesnownews.com/sports/pickleball/hong-kit-wong-enters-ppa-top-10-as-singapore-open-sparks-major-rankings-shake-up-article-155191828"
+    },
+    {
+      "title": "Yokohama Champions Next Up",
+      "excerpt": "The WTT circuit moves on to Champions Yokohama on August 4 after Hugo Calderano outlasted Alexis Lebrun 4-3 to win the Star Contender in São José dos Campos.",
+      "date": "July 29, 2026",
+      "category": "Table Tennis",
+      "link": "https://butterflyonline.com/calderano-wins-japan-takes-3-of-5-events-in-brazil/"
     }
   ]
 }
