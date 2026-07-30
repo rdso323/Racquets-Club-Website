@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Alex Eala rallied past Olympic champion Zheng Qinwen 4-6, 6-4, 6-1 at the Mubadala DC Open and will face defending champion Leylah Fernandez, while Cruz Hewitt notched his first ATP Tour win • [SQUASH] The Victorian Open 2026 gets underway in Melbourne as the PSA circuit shifts to Australia, with the Dallas Squash Challenger following in Plano from July 30 • [BADMINTON] Main-draw action opens at the HSBC BWF Taipei Open with Lee Zii Jia, Justin Hoh, and Eogene Ewe among the headline names • [PICKLEBALL] Hong Kit Wong climbed to a career-best PPA world No. 10 after winning his third straight Singapore Open singles title • [TABLE TENNIS] Attention turns to WTT Champions Yokohama starting August 4 after Hugo Calderano edged Alexis Lebrun 4-3 in the São José dos Campos final",
+  "tickerText": "[TENNIS] Alex de Minaur beat Stefanos Tsitsipas 6-4, 3-6, 6-3 to launch his DC Open title defense and will face 17-year-old Cruz Hewitt, while Alex Eala ousted defending champion Leylah Fernandez • [SQUASH] The Dallas Squash Challenger opens today in Plano, Texas, with top seed Leonel Cardenas leading a 32-player main draw through August 2 • [BADMINTON] Defending mixed doubles champions Chen Tang Jie and Toh Ee Wei withdrew from the BWF World Championships as Toh continues ACL rehab; Wong Tien Ci and Lim Chiew Sien were promoted • [PICKLEBALL] The Wisconsin PPA Challenger begins July 31 in Lake Hallie, while Pickleball Inc. and the Pickleball World Cup opened the door for PPA pros to represent their countries from 2027 • [TABLE TENNIS] WTT Champions Yokohama starts August 4 after Hugo Calderano edged Alexis Lebrun 4-3 to win the Star Contender in São José dos Campos",
   "newsItems": [
     {
-      "title": "Victorian Open Kicks Off",
-      "excerpt": "The PSA Victorian Open 2026 begins in Melbourne today, opening a busy Australasian stretch before the Dallas Squash Challenger starts in Plano on July 30.",
-      "date": "July 29, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournaments/"
+      "title": "De Minaur Beats Tsitsipas at DC Open",
+      "excerpt": "Top seed Alex de Minaur overcame Stefanos Tsitsipas in three sets to begin his Washington title defense and will next face 17-year-old qualifier Cruz Hewitt.",
+      "date": "July 30, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/washington-2026-results"
     },
     {
-      "title": "Taipei Open Main Draw Opens",
-      "excerpt": "The HSBC BWF Taipei Open Super 300 is underway at Taipei Arena, with Lee Zii Jia, Justin Hoh, and Eogene Ewe leading a packed main-draw field.",
-      "date": "July 29, 2026",
+      "title": "Chen/Toh Withdraw From Worlds",
+      "excerpt": "Defending mixed doubles champions Chen Tang Jie and Toh Ee Wei pulled out of the BWF World Championships in New Delhi as Toh continues rehab from ACL surgery.",
+      "date": "July 30, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/07/28/smashing-stats-taipei-open-2026/"
+      "link": "https://bwfworldchampionships.bwfbadminton.com/news-single/2026/07/29/world-championships-chen-toh-withdraw-wong-lim-qualify/"
     },
     {
-      "title": "Wong Breaks Into PPA Top 10",
-      "excerpt": "Hong Kong's Hong Kit Wong rose to a career-best world No. 10 after capturing his third consecutive men's singles title at the PPA Tour Asia Singapore Open.",
-      "date": "July 29, 2026",
+      "title": "Wisconsin Challenger Up Next",
+      "excerpt": "The PPA Challenger Series heads to Lake Hallie, Wisconsin, from July 31 to August 2, bringing amateur and aspiring pros to Gower Park for the Midwest stop.",
+      "date": "July 30, 2026",
       "category": "Pickleball",
-      "link": "https://www.timesnownews.com/sports/pickleball/hong-kit-wong-enters-ppa-top-10-as-singapore-open-sparks-major-rankings-shake-up-article-155191828"
+      "link": "https://ppatour.com/tournament/2026/2026-eau-claire-wi/"
     },
     {
-      "title": "Yokohama Champions Next Up",
-      "excerpt": "The WTT circuit moves on to Champions Yokohama on August 4 after Hugo Calderano outlasted Alexis Lebrun 4-3 to win the Star Contender in São José dos Campos.",
-      "date": "July 29, 2026",
+      "title": "Yokohama Champions Await",
+      "excerpt": "The WTT circuit shifts to Champions Yokohama on August 4 after Hugo Calderano outlasted Alexis Lebrun 4-3 to win the Star Contender in São José dos Campos.",
+      "date": "July 30, 2026",
       "category": "Table Tennis",
       "link": "https://butterflyonline.com/calderano-wins-japan-takes-3-of-5-events-in-brazil/"
     }
