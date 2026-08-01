@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alex de Minaur beat Stefanos Tsitsipas 6-4, 3-6, 6-3 to launch his DC Open title defense and will face 17-year-old Cruz Hewitt, while Alex Eala ousted defending champion Leylah Fernandez • [SQUASH] The Dallas Squash Challenger opens today in Plano, Texas, with top seed Leonel Cardenas leading a 32-player main draw through August 2 • [BADMINTON] Defending mixed doubles champions Chen Tang Jie and Toh Ee Wei withdrew from the BWF World Championships as Toh continues ACL rehab; Wong Tien Ci and Lim Chiew Sien were promoted • [PICKLEBALL] The Wisconsin PPA Challenger begins July 31 in Lake Hallie, while Pickleball Inc. and the Pickleball World Cup opened the door for PPA pros to represent their countries from 2027 • [TABLE TENNIS] WTT Champions Yokohama starts August 4 after Hugo Calderano edged Alexis Lebrun 4-3 to win the Star Contender in São José dos Campos",
+  "tickerText": "[TENNIS] Defending champion Alex de Minaur beat 17-year-old Cruz Hewitt 6-2, 6-3 to reach the Washington Open quarterfinals, while WTA qualifying continues at the National Bank Open in Toronto ahead of main-draw play Sunday • [SQUASH] The Dallas Squash Challenger is underway in Plano, Texas, with top seeds Juan Torres and Nathan Kueh leading the 32-player field through August 2 • [BADMINTON] The BWF World Championships in New Delhi unveiled mascot Peacko and an official anthem as the 30-day countdown begins for the August 17–23 event • [PICKLEBALL] The Wisconsin PPA Challenger wraps August 2 in Lake Hallie, with the PPA Asia 500 Ho Chi Minh City Open set for August 6–9 • [TABLE TENNIS] WTT Champions Yokohama opens August 4, while Sun Yingsha will lead China at the Europe Smash in Malmö from August 8 as world No. 1 Wang Chuqin rests",
   "newsItems": [
     {
-      "title": "De Minaur Beats Tsitsipas at DC Open",
-      "excerpt": "Top seed Alex de Minaur overcame Stefanos Tsitsipas in three sets to begin his Washington title defense and will next face 17-year-old qualifier Cruz Hewitt.",
-      "date": "July 30, 2026",
+      "title": "De Minaur Tops Hewitt in DC",
+      "excerpt": "Defending champion Alex de Minaur eased past 17-year-old qualifier Cruz Hewitt 6-2, 6-3 to reach the Washington Open quarterfinals and will face Brandon Nakashima next.",
+      "date": "August 1, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/washington-2026-results"
+      "link": "https://www.manilatimes.net/2026/08/01/sports/de-minaur-beats-hewitt-to-advance/2395802"
     },
     {
-      "title": "Chen/Toh Withdraw From Worlds",
-      "excerpt": "Defending mixed doubles champions Chen Tang Jie and Toh Ee Wei pulled out of the BWF World Championships in New Delhi as Toh continues rehab from ACL surgery.",
-      "date": "July 30, 2026",
+      "title": "Dallas Challenger Hits QF Stage",
+      "excerpt": "The PSA Dallas Squash Challenger continues in Plano, Texas, through August 2, with top seeds Juan Torres and Nathan Kueh among the contenders in the $6,000 event.",
+      "date": "August 1, 2026",
+      "category": "Squash",
+      "link": "https://www.psasquashtour.com/tournament/dallas-squash-challenger-2026/"
+    },
+    {
+      "title": "Peacko Unveiled for Worlds",
+      "excerpt": "India launched mascot Peacko and an official anthem as the 30-day countdown begins for the BWF World Championships in New Delhi, running August 17–23.",
+      "date": "August 1, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldchampionships.bwfbadminton.com/news-single/2026/07/29/world-championships-chen-toh-withdraw-wong-lim-qualify/"
+      "link": "https://www.newkerala.com/news/a/sports-minister-mansukh-mandaviya-unveils-official-mascot-bwf-709.htm"
     },
     {
-      "title": "Wisconsin Challenger Up Next",
-      "excerpt": "The PPA Challenger Series heads to Lake Hallie, Wisconsin, from July 31 to August 2, bringing amateur and aspiring pros to Gower Park for the Midwest stop.",
-      "date": "July 30, 2026",
-      "category": "Pickleball",
-      "link": "https://ppatour.com/tournament/2026/2026-eau-claire-wi/"
-    },
-    {
-      "title": "Yokohama Champions Await",
-      "excerpt": "The WTT circuit shifts to Champions Yokohama on August 4 after Hugo Calderano outlasted Alexis Lebrun 4-3 to win the Star Contender in São José dos Campos.",
-      "date": "July 30, 2026",
+      "title": "Europe Smash Draws Near",
+      "excerpt": "Sun Yingsha will headline China at the WTT Europe Smash in Malmö from August 8–16, while world No. 1 Wang Chuqin rests ahead of the $1.55 million Grand Smash.",
+      "date": "August 1, 2026",
       "category": "Table Tennis",
-      "link": "https://butterflyonline.com/calderano-wins-japan-takes-3-of-5-events-in-brazil/"
+      "link": "https://www.globalgameguide.com/article/wtt-europe-smash-sweden-2026"
     }
   ]
 }
