@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Defending champion Alex de Minaur beat 17-year-old Cruz Hewitt 6-2, 6-3 to reach the Washington Open quarterfinals, while WTA qualifying continues at the National Bank Open in Toronto ahead of main-draw play Sunday • [SQUASH] The Dallas Squash Challenger is underway in Plano, Texas, with top seeds Juan Torres and Nathan Kueh leading the 32-player field through August 2 • [BADMINTON] The BWF World Championships in New Delhi unveiled mascot Peacko and an official anthem as the 30-day countdown begins for the August 17–23 event • [PICKLEBALL] The Wisconsin PPA Challenger wraps August 2 in Lake Hallie, with the PPA Asia 500 Ho Chi Minh City Open set for August 6–9 • [TABLE TENNIS] WTT Champions Yokohama opens August 4, while Sun Yingsha will lead China at the Europe Smash in Malmö from August 8 as world No. 1 Wang Chuqin rests",
+  "tickerText": "[TENNIS] Alexandra Eala stunned Naomi Osaka 6-4, 6-2 to reach the Washington Open final against Jessica Pegula, while Taylor Fritz beat Brandon Nakashima 6-3, 3-6, 6-3 in the men's semis • [SQUASH] Pakistan's Hamza Khan and Nasir Iqbal reached the PN Fleet Club Open quarter-finals with seed upsets as the 2026/27 PSA season opens in Karachi • [BADMINTON] 17-year-old Tanvi Sharma faces Nguyen Thuy Linh in the Taipei Open final after becoming the youngest women's singles finalist in tournament history • [PICKLEBALL] The Wisconsin PPA Challenger concludes in Lake Hallie today ahead of the PPA Asia 500 Ho Chi Minh City Open on August 6–9 • [TABLE TENNIS] WTT Champions Yokohama begins August 4 at the BUNTAI in Japan, while tickets are now on sale for WTT Champions Macao September 8–13",
   "newsItems": [
     {
-      "title": "De Minaur Tops Hewitt in DC",
-      "excerpt": "Defending champion Alex de Minaur eased past 17-year-old qualifier Cruz Hewitt 6-2, 6-3 to reach the Washington Open quarterfinals and will face Brandon Nakashima next.",
-      "date": "August 1, 2026",
+      "title": "Eala Stuns Osaka in DC",
+      "excerpt": "Alexandra Eala upset Naomi Osaka 6-4, 6-2 to reach her first WTA 500 final at the Washington Open, where she will face top seed Jessica Pegula on Sunday.",
+      "date": "August 2, 2026",
       "category": "Tennis",
-      "link": "https://www.manilatimes.net/2026/08/01/sports/de-minaur-beats-hewitt-to-advance/2395802"
+      "link": "https://www.wtatennis.com/news/4551846/pegula-fends-off-shnaider-to-reach-fourth-final-of-2026-in-dc"
     },
     {
-      "title": "Dallas Challenger Hits QF Stage",
-      "excerpt": "The PSA Dallas Squash Challenger continues in Plano, Texas, through August 2, with top seeds Juan Torres and Nathan Kueh among the contenders in the $6,000 event.",
-      "date": "August 1, 2026",
+      "title": "Pakistan Duo Stars in Karachi",
+      "excerpt": "Hamza Khan and Nasir Iqbal delighted home crowds with quarter-final upsets at the PN Fleet Club Open, the first World Event of the new PSA Squash Tour season.",
+      "date": "August 2, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournament/dallas-squash-challenger-2026/"
+      "link": "https://www.psasquashtour.com/featured-news/pakistan-duo-khan-iqbal-stage-upsets-to-reach-pn-fleet-club-open-quarter-finals/"
     },
     {
-      "title": "Peacko Unveiled for Worlds",
-      "excerpt": "India launched mascot Peacko and an official anthem as the 30-day countdown begins for the BWF World Championships in New Delhi, running August 17–23.",
-      "date": "August 1, 2026",
+      "title": "Tanvi's Taipei Final Run",
+      "excerpt": "At 17, Tanvi Sharma became the youngest Taipei Open women's singles finalist ever and will face Nguyen Thuy Linh on Sunday chasing her maiden BWF World Tour title.",
+      "date": "August 2, 2026",
       "category": "Badminton",
-      "link": "https://www.newkerala.com/news/a/sports-minister-mansukh-mandaviya-unveils-official-mascot-bwf-709.htm"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/08/01/taipei-open-teen-trailblazer-tanvis-time/"
     },
     {
-      "title": "Europe Smash Draws Near",
-      "excerpt": "Sun Yingsha will headline China at the WTT Europe Smash in Malmö from August 8–16, while world No. 1 Wang Chuqin rests ahead of the $1.55 million Grand Smash.",
-      "date": "August 1, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.globalgameguide.com/article/wtt-europe-smash-sweden-2026"
+      "title": "Wisconsin Challenger Wraps",
+      "excerpt": "The Wisconsin PPA Challenger concludes today in Lake Hallie as the tour shifts to Asia, with the PPA Asia 500 Ho Chi Minh City Open set for August 6–9.",
+      "date": "August 2, 2026",
+      "category": "Pickleball",
+      "link": "https://ppatour.com/tournament/2026/2026-eau-claire-wi/"
     }
   ]
 }
