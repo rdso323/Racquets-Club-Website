@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alexandra Eala stunned Naomi Osaka 6-4, 6-2 to reach the Washington Open final against Jessica Pegula, while Taylor Fritz beat Brandon Nakashima 6-3, 3-6, 6-3 in the men's semis • [SQUASH] Pakistan's Hamza Khan and Nasir Iqbal reached the PN Fleet Club Open quarter-finals with seed upsets as the 2026/27 PSA season opens in Karachi • [BADMINTON] 17-year-old Tanvi Sharma faces Nguyen Thuy Linh in the Taipei Open final after becoming the youngest women's singles finalist in tournament history • [PICKLEBALL] The Wisconsin PPA Challenger concludes in Lake Hallie today ahead of the PPA Asia 500 Ho Chi Minh City Open on August 6–9 • [TABLE TENNIS] WTT Champions Yokohama begins August 4 at the BUNTAI in Japan, while tickets are now on sale for WTT Champions Macao September 8–13",
+  "tickerText": "[TENNIS] DC Open finals resume Monday with Jessica Pegula leading Alexandra Eala 6-4, 1-2 after rain delays, followed by Taylor Fritz vs Rafael Jodar for the men's title • [SQUASH] Asim Khan upset top seed Noor Zaman as Pakistan places two players in today's PN Fleet Club Open semi-finals in Karachi • [BADMINTON] 17-year-old Tanvi Sharma won the Taipei Open 21-16, 21-16 — the youngest champion in tournament history • [PICKLEBALL] The PPA Asia 500 Ho Chi Minh City Open runs August 6–9 as the tour's international swing continues after the Wisconsin Challenger • [TABLE TENNIS] WTT Champions Yokohama opens August 4 at the BUNTAI without world No. 1 Wang Chuqin as Tomokazu Harimoto defends his title",
   "newsItems": [
     {
-      "title": "Eala Stuns Osaka in DC",
-      "excerpt": "Alexandra Eala upset Naomi Osaka 6-4, 6-2 to reach her first WTA 500 final at the Washington Open, where she will face top seed Jessica Pegula on Sunday.",
-      "date": "August 2, 2026",
-      "category": "Tennis",
-      "link": "https://www.wtatennis.com/news/4551846/pegula-fends-off-shnaider-to-reach-fourth-final-of-2026-in-dc"
-    },
-    {
-      "title": "Pakistan Duo Stars in Karachi",
-      "excerpt": "Hamza Khan and Nasir Iqbal delighted home crowds with quarter-final upsets at the PN Fleet Club Open, the first World Event of the new PSA Squash Tour season.",
-      "date": "August 2, 2026",
+      "title": "Asim Stuns Top Seed in Karachi",
+      "excerpt": "Pakistan's Asim Khan upset No. 1 seed Noor Zaman to reach the PN Fleet Club Open semi-finals, joining Nasir Iqbal as two home players chase the $41,000 title.",
+      "date": "August 3, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/pakistan-duo-khan-iqbal-stage-upsets-to-reach-pn-fleet-club-open-quarter-finals/"
+      "link": "https://tribune.com.pk/story/2621688/asim-khan-stuns-top-seed-noor-zaman-to-reach-pn-fleet-club-open-semi-finals/"
     },
     {
-      "title": "Tanvi's Taipei Final Run",
-      "excerpt": "At 17, Tanvi Sharma became the youngest Taipei Open women's singles finalist ever and will face Nguyen Thuy Linh on Sunday chasing her maiden BWF World Tour title.",
-      "date": "August 2, 2026",
+      "title": "Tanvi Claims Taipei Open",
+      "excerpt": "At 17, Tanvi Sharma beat Nguyen Thuy Linh 21-16, 21-16 to win her maiden BWF Super 300 title — the youngest Taipei Open champion in tournament history.",
+      "date": "August 3, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/08/01/taipei-open-teen-trailblazer-tanvis-time/"
+      "link": "https://sportstar.thehindu.com/badminton/taipei-open-2026-final-tanvi-sharma-vs-nguyen-thuy-linh-result/article71294121.ece"
     },
     {
-      "title": "Wisconsin Challenger Wraps",
-      "excerpt": "The Wisconsin PPA Challenger concludes today in Lake Hallie as the tour shifts to Asia, with the PPA Asia 500 Ho Chi Minh City Open set for August 6–9.",
-      "date": "August 2, 2026",
+      "title": "PPA Asia 500 Up Next",
+      "excerpt": "The Wisconsin PPA Challenger has wrapped in Lake Hallie as the tour heads to Vietnam for the PPA Asia 500 Ho Chi Minh City Open, August 6–9.",
+      "date": "August 3, 2026",
       "category": "Pickleball",
-      "link": "https://ppatour.com/tournament/2026/2026-eau-claire-wi/"
+      "link": "https://ppatour.com/schedule/"
+    },
+    {
+      "title": "Yokohama Draw Set",
+      "excerpt": "WTT Champions Yokohama begins August 4 with world No. 1 Wang Chuqin absent from the draw, opening the door for defending champion Tomokazu Harimoto at home.",
+      "date": "August 3, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.prismnews.com/sports/ping-pong/wang-chuqin-absent-as-wtt-champions-yokohama-2026-looms"
     }
   ]
 }
