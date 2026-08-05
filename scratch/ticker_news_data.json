@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alexandra Eala stunned Jessica Pegula 4-6, 6-4, 6-0 for her first WTA title as Taylor Fritz beat Rafael Jodar 7-6(2), 6-4 to end his 2026 title drought at the DC Open • [SQUASH] Pakistan's Nasir Iqbal faces Egypt's Salman Khalil today in the PN Fleet Club Open final in Karachi after sweeping his semi-final in 24 minutes • [BADMINTON] BWF World Championships kick off August 17 in New Delhi as Tanvi Sharma's Taipei Open breakthrough sets the tone for India's home showcase • [PICKLEBALL] The PPA Asia 500 Ho Chi Minh City Open begins August 6 as the tour's Vietnam swing follows a record Singapore stop • [TABLE TENNIS] WTT Champions Yokohama opens at the BUNTAI with an all-Japan men's clash between Uda and Shinozuka and Matsushima facing Zhou Qihao on day one",
+  "tickerText": "[TENNIS] Talia Gibson upset Roland-Garros finalist Maja Chwalińska 7-5, 6-1 in Toronto as world No. 1 Aryna Sabalenka cruised past Moyuka Uchijima 6-3, 6-3 at the Canadian Open • [SQUASH] Egypt's Salman Khalil swept Nasir Iqbal 14-12, 11-3, 13-11 to win the PN Fleet Club Open in Karachi — the first PSA World Event of 2026/27 • [BADMINTON] The BWF World Championships draw ceremony takes place today in New Delhi ahead of the August 17–23 worlds at Indira Gandhi Arena, with PV Sindhu seeded ninth • [PICKLEBALL] PPA Tour Europe launches with a 20-event inaugural season across nine countries, as the PPA Asia 500 Ho Chi Minh City Open opens tomorrow • [TABLE TENNIS] Sreeja Akula reached her first WTT Champions round of 16 with a win over Sofia Polcanova as Yokohama's $500K event continues at the BUNTAI",
   "newsItems": [
     {
-      "title": "Eala Claims Historic DC Open",
-      "excerpt": "Alexandra Eala became the first Filipina to win a WTA singles title, rallying past Jessica Pegula 4-6, 6-4, 6-0 after rain delays in Washington.",
-      "date": "August 4, 2026",
+      "title": "Gibson Stuns at Canadian Open",
+      "excerpt": "Talia Gibson upset 18th seed Maja Chwalińska 7-5, 6-1 in Toronto as the National Bank Open builds toward the US Open.",
+      "date": "August 5, 2026",
       "category": "Tennis",
-      "link": "https://sports.inquirer.net/689060/alex-eala-wins-mubadala-dc-open-title-beats-jessica-pegula"
+      "link": "https://www.nine.com.au/sport/tennis/canadian-open-news-talia-gibson-beats-maja-chwaliska-highlights-wta-1000-results-20260805-p60lkn.html"
     },
     {
-      "title": "Worlds Preview: New Delhi",
-      "excerpt": "The 2026 BWF World Championships run August 17–23 at Indira Gandhi Arena — India's first worlds since 2009, with Tanvi Sharma riding Taipei Open momentum.",
-      "date": "August 4, 2026",
-      "category": "Badminton",
-      "link": "https://en.wikipedia.org/wiki/2026_BWF_World_Championships"
+      "title": "Khalil Wins Karachi Crown",
+      "excerpt": "Egypt's Salman Khalil swept past Pakistan's Nasir Iqbal 14-12, 11-3, 13-11 to claim the PN Fleet Club Open in Karachi.",
+      "date": "August 5, 2026",
+      "category": "Squash",
+      "link": "https://tribune.com.pk/story/2622056/egypts-salman-khalil-conquers-nasir-iqbal-to-clinch-squash-crown"
     },
     {
-      "title": "PPA Asia Heads to Vietnam",
-      "excerpt": "After a record Singapore stop, the PPA Tour Asia 500 Ho Chi Minh City Open runs August 6–9 as the tour's international swing continues.",
-      "date": "August 4, 2026",
+      "title": "PPA Tour Europe Launches",
+      "excerpt": "The PPA announced PPA Tour Europe — a 20-event inaugural season across nine countries with a €545,000 prize pool.",
+      "date": "August 5, 2026",
       "category": "Pickleball",
-      "link": "https://www.timesnownews.com/sports/pickleball/ppa-tour-asia-vietnam-open-india-future-tour-stop-article-155187960"
+      "link": "https://pickleball.com/news/a-new-frontier-ppa-tour-europe-is-born"
     },
     {
-      "title": "Yokohama Opens Today",
-      "excerpt": "WTT Champions Yokohama begins at the BUNTAI with defending champion Tomokazu Harimoto, Matsushima Sora, and an all-Japan men's opener on day one.",
-      "date": "August 4, 2026",
+      "title": "Akula Breaks Through in Yokohama",
+      "excerpt": "India's Sreeja Akula reached her first WTT Champions round of 16, beating Sofia Polcanova as day two continues in Yokohama.",
+      "date": "August 5, 2026",
       "category": "Table Tennis",
-      "link": "https://www.globalgameguide.com/article/wtt-champions-yokohama-2026"
+      "link": "https://sportstar.thehindu.com/table-tennis/sreeja-akula-beats-sofia-polcanova-wtt-champions-yokohama-round-of-32-score-results-details/article71305328.ece"
     }
   ]
 }
