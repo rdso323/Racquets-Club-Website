@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Talia Gibson upset Roland-Garros finalist Maja Chwalińska 7-5, 6-1 in Toronto as world No. 1 Aryna Sabalenka cruised past Moyuka Uchijima 6-3, 6-3 at the Canadian Open • [SQUASH] Egypt's Salman Khalil swept Nasir Iqbal 14-12, 11-3, 13-11 to win the PN Fleet Club Open in Karachi — the first PSA World Event of 2026/27 • [BADMINTON] The BWF World Championships draw ceremony takes place today in New Delhi ahead of the August 17–23 worlds at Indira Gandhi Arena, with PV Sindhu seeded ninth • [PICKLEBALL] PPA Tour Europe launches with a 20-event inaugural season across nine countries, as the PPA Asia 500 Ho Chi Minh City Open opens tomorrow • [TABLE TENNIS] Sreeja Akula reached her first WTT Champions round of 16 with a win over Sofia Polcanova as Yokohama's $500K event continues at the BUNTAI",
+  "tickerText": "[TENNIS] Top seed Alexander Zverev fell to Tallon Griekspoor 6-7, 6-2, 6-4 in Montreal as Caty McNally upset Wimbledon champ Linda Noskova 7-6, 6-1 in Toronto • [SQUASH] Egypt's Salman Khalil swept Nasir Iqbal 14-12, 11-3, 13-11 to claim his maiden PSA World Event title at the PN Fleet Club Open in Karachi • [BADMINTON] BWF World Championships draw pits India's Ayush Shetty against defending champion Shi Yu Qi in a blockbuster New Delhi opener August 17–23 • [PICKLEBALL] Carvana PPA Tour launches unified World Pickleball Rankings for 2026–27, weighting gender doubles, mixed, and singles into one global leaderboard • [TABLE TENNIS] WTT Champions Yokohama round of 16 begins without China's Wang Chuqin as Sreeja Akula eyes a quarterfinal run at the $500K BUNTAI event",
   "newsItems": [
     {
-      "title": "Gibson Stuns at Canadian Open",
-      "excerpt": "Talia Gibson upset 18th seed Maja Chwalińska 7-5, 6-1 in Toronto as the National Bank Open builds toward the US Open.",
-      "date": "August 5, 2026",
+      "title": "Zverev, Noskova Exit Canadian Open",
+      "excerpt": "Top seed Alexander Zverev lost to Tallon Griekspoor in Montreal while Caty McNally upset Wimbledon champion Linda Noskova 7-6, 6-1 in Toronto.",
+      "date": "August 6, 2026",
       "category": "Tennis",
-      "link": "https://www.nine.com.au/sport/tennis/canadian-open-news-talia-gibson-beats-maja-chwaliska-highlights-wta-1000-results-20260805-p60lkn.html"
+      "link": "https://www-pp.afp.com/en/zverev-auger-aliassime-exit-star-short-montreal-masters"
     },
     {
-      "title": "Khalil Wins Karachi Crown",
-      "excerpt": "Egypt's Salman Khalil swept past Pakistan's Nasir Iqbal 14-12, 11-3, 13-11 to claim the PN Fleet Club Open in Karachi.",
-      "date": "August 5, 2026",
+      "title": "Khalil Claims Karachi Crown",
+      "excerpt": "Egypt's Salman Khalil swept Pakistan's Nasir Iqbal 14-12, 11-3, 13-11 to win his first PSA World Event title at the PN Fleet Club Open.",
+      "date": "August 6, 2026",
       "category": "Squash",
-      "link": "https://tribune.com.pk/story/2622056/egypts-salman-khalil-conquers-nasir-iqbal-to-clinch-squash-crown"
+      "link": "https://www.psasquashtour.com/featured-news/salman-khalil-wins-maiden-world-events-title-at-pn-fleet-club-squash-open/"
     },
     {
-      "title": "PPA Tour Europe Launches",
-      "excerpt": "The PPA announced PPA Tour Europe — a 20-event inaugural season across nine countries with a €545,000 prize pool.",
-      "date": "August 5, 2026",
+      "title": "Shetty Draws Shi in Worlds Opener",
+      "excerpt": "BWF World Championships draw sets up a first-round rematch between India's Ayush Shetty and defending champion Shi Yu Qi in New Delhi.",
+      "date": "August 6, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldchampionships.bwfbadminton.com/news-single/2026/08/05/top-seed-shi-runs-into-shetty/"
+    },
+    {
+      "title": "PPA Debuts World Rankings",
+      "excerpt": "The Carvana PPA Tour unveiled World Pickleball Rankings — a unified global leaderboard combining gender doubles, mixed, and singles results.",
+      "date": "August 6, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/a-new-frontier-ppa-tour-europe-is-born"
-    },
-    {
-      "title": "Akula Breaks Through in Yokohama",
-      "excerpt": "India's Sreeja Akula reached her first WTT Champions round of 16, beating Sofia Polcanova as day two continues in Yokohama.",
-      "date": "August 5, 2026",
-      "category": "Table Tennis",
-      "link": "https://sportstar.thehindu.com/table-tennis/sreeja-akula-beats-sofia-polcanova-wtt-champions-yokohama-round-of-32-score-results-details/article71305328.ece"
+      "link": "https://pickleball.com/news/carvana-ppa-tour-announces-global-world-pickleball-rankings-system"
     }
   ]
 }
