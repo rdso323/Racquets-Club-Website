@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alex de Minaur double-faulted on match point and fell to Cameron Norrie 5-7, 7-6 (5), 6-1 in Montreal as Aryna Sabalenka beat Zhang Shuai 6-3, 6-4 and Iga Swiatek rolled past Viktorija Golubic 6-2, 6-1 in Toronto • [SQUASH] PSA Squash Tour sets a record $13.5M in 2025–26 prize money across 1,297 events as Assore Tour Challenger semis play out in Johannesburg • [BADMINTON] BAI unveils fully renovated IGI Stadium ahead of the BWF World Championships in New Delhi, August 17–23, with Ayush Shetty set to face Shi Yu Qi in the opener • [PICKLEBALL] PPA Tour Europe launches a 20-event, nine-country circuit with €545K on offer as the Carvana PPA Tour debuts unified World Pickleball Rankings for 2026–27 • [TABLE TENNIS] Miwa Harimoto rallies from 0-2 to reach Yokohama quarterfinals; Sreeja Akula claims her first WTT Champions win and Sora Matsushima opens with a round-of-32 victory at BUNTAI",
+  "tickerText": "[TENNIS] Leylah Fernandez upsets No. 5 Mirra Andreeva 6-1, 6-4 in Toronto as Ben Shelton and Joao Fonseca advance in Montreal ahead of Saturday's NBO quarterfinals • [SQUASH] London Squash Classic draws are out — Paul Coll defends as top seed and Hania El Hammamy leads the women's field; Salman Khalil won his maiden World Events title in Karachi • [BADMINTON] Indonesia withdraws two mixed doubles pairs from the BWF World Championships amid a match-fixing probe as New Delhi readies for August 17–23 • [PICKLEBALL] Carvana PPA Tour debuts unified World Pickleball Rankings for 2026–27; Veolia National Championships in Cary opens the global season August 31 • [TABLE TENNIS] Harimoto, Matsushima and Shinozuka lead a Japanese charge into WTT Yokohama quarterfinals as the Lebrun brothers also advance; Sreeja Akula's five-game run ends vs Shin Yubin",
   "newsItems": [
     {
-      "title": "De Minaur Fumbles Match Point",
-      "excerpt": "Alex de Minaur double-faulted on match point and lost to Cameron Norrie 5-7, 7-6 (5), 6-1 in Montreal as the Canadian Open men's draw thins further.",
-      "date": "August 7, 2026",
-      "category": "Tennis",
-      "link": "https://www.foxsports.com.au/news/tennis-2026-alex-de-minaur-blows-match-point-with-doublefault-in-loss-to-cameron-norrie-at-canadian-open-latest-news/news-story/39e7e82ed5162ecc348855a3d29ff410"
-    },
-    {
-      "title": "Delhi Venue Ready for Worlds",
-      "excerpt": "BAI says Indira Gandhi Indoor Stadium has been fully renovated ahead of the BWF World Championships in New Delhi, August 17–23.",
-      "date": "August 7, 2026",
-      "category": "Badminton",
-      "link": "https://thebridge.in/badminton/igi-stadium-renovated-bwf-world-championships-2026-57201"
-    },
-    {
-      "title": "PSA Sets Prize Money Record",
-      "excerpt": "The PSA Squash Tour reported $13.5M in total prize money for 2025–26 — an 8% rise with 1,297 sanctioned events across 81 countries.",
-      "date": "August 7, 2026",
+      "title": "London Classic Draws Set",
+      "excerpt": "Paul Coll returns as defending champion and top seed at the London Squash Classic, while Hania El Hammamy heads the women's field for the season's first Gold event.",
+      "date": "August 8, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/psa-squash-tour-prize-money-reaches-record-total/"
+      "link": "https://www.psasquashtour.com/featured-news/el-hammamy-and-orfi-set-to-renew-rivalry-as-coll-returns-to-defend-london-classic-title/"
     },
     {
-      "title": "PPA Tour Europe Debuts",
-      "excerpt": "PPA Tour Europe launches with 20 events across nine countries and a €545,000 prize pool, culminating in the PPA Finals Europe in May 2027.",
-      "date": "August 7, 2026",
+      "title": "Indonesia Pulls Pairs From Worlds",
+      "excerpt": "PBSI withdrew two mixed doubles pairs from the BWF World Championships in New Delhi amid an ongoing BWF match-fixing investigation.",
+      "date": "August 8, 2026",
+      "category": "Badminton",
+      "link": "https://www.nst.com.my/sports/badminton/2026/08/1503886/indonesia-drop-two-mixed-doubles-pairs-over-match-fixing-probe"
+    },
+    {
+      "title": "PPA Season Opens in Cary",
+      "excerpt": "The 2026–27 Carvana PPA Tour kicks off with the Veolia Pickleball National Championships in Cary, North Carolina, running August 31 to September 6.",
+      "date": "August 8, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/a-new-frontier-ppa-tour-europe-is-born"
+      "link": "https://www.timesnownews.com/sports/pickleball/veolia-pickleball-national-championships-to-open-2026-27-ppa-tour-season-in-cary-article-155361624"
+    },
+    {
+      "title": "Japan Trio Into Yokohama QFs",
+      "excerpt": "Tomokazu Harimoto, Sora Matsushima and Hiroto Shinozuka all reached the WTT Champions Yokohama quarterfinals as Sreeja Akula fell in five games to Shin Yubin.",
+      "date": "August 8, 2026",
+      "category": "Table Tennis",
+      "link": "https://news.livedoor.com/article/detail/32018020/"
     }
   ]
 }
