@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Leylah Fernandez upsets No. 5 Mirra Andreeva 6-1, 6-4 in Toronto as Ben Shelton and Joao Fonseca advance in Montreal ahead of Saturday's NBO quarterfinals • [SQUASH] London Squash Classic draws are out — Paul Coll defends as top seed and Hania El Hammamy leads the women's field; Salman Khalil won his maiden World Events title in Karachi • [BADMINTON] Indonesia withdraws two mixed doubles pairs from the BWF World Championships amid a match-fixing probe as New Delhi readies for August 17–23 • [PICKLEBALL] Carvana PPA Tour debuts unified World Pickleball Rankings for 2026–27; Veolia National Championships in Cary opens the global season August 31 • [TABLE TENNIS] Harimoto, Matsushima and Shinozuka lead a Japanese charge into WTT Yokohama quarterfinals as the Lebrun brothers also advance; Sreeja Akula's five-game run ends vs Shin Yubin",
+  "tickerText": "[TENNIS] Alexandrova stuns world No. 1 Sabalenka 7-6, 4-6, 6-4 in Toronto as Shnaider also ousts Pegula; Shelton powers into Montreal's round of 16 • [SQUASH] PSA Valencia opens August 11 as London Classic Gold tickets sell ahead of September's Ally Pally return; Salman Khalil claimed his maiden World Events title in Karachi • [BADMINTON] Ashmita Chaliha wins maiden BWF World Tour title at Korea Masters, rallying past Han Qian Xi 14-21, 21-14, 21-14 in Asan • [PICKLEBALL] PPA Tour Europe launches with 20 events across nine countries for 2026–27; Veolia National Championships in Cary opens the global season August 31 • [TABLE TENNIS] Matsushima rallies from 4-8 down to beat Jang Woo-jin and reach Yokohama semis alongside Harimoto and Shinozuka on WTT Champions final day",
   "newsItems": [
     {
-      "title": "London Classic Draws Set",
-      "excerpt": "Paul Coll returns as defending champion and top seed at the London Squash Classic, while Hania El Hammamy heads the women's field for the season's first Gold event.",
-      "date": "August 8, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/el-hammamy-and-orfi-set-to-renew-rivalry-as-coll-returns-to-defend-london-classic-title/"
+      "title": "Alexandrova Upsets Sabalenka",
+      "excerpt": "Ekaterina Alexandrova knocked out world No. 1 Aryna Sabalenka 7-6, 4-6, 6-4 at the National Bank Open in Toronto to reach her first quarterfinal at the event.",
+      "date": "August 9, 2026",
+      "category": "Tennis",
+      "link": "https://www.sportsnet.ca/wta/article/aggressive-yet-calm-alexandrova-pulls-off-upset-win-over-no-1-sabalenka/"
     },
     {
-      "title": "Indonesia Pulls Pairs From Worlds",
-      "excerpt": "PBSI withdrew two mixed doubles pairs from the BWF World Championships in New Delhi amid an ongoing BWF match-fixing investigation.",
-      "date": "August 8, 2026",
+      "title": "Chaliha Wins Korea Masters",
+      "excerpt": "Ashmita Chaliha captured her maiden BWF World Tour title, rallying past Han Qian Xi 14-21, 21-14, 21-14 in the Korea Masters Super 300 final in Asan.",
+      "date": "August 9, 2026",
       "category": "Badminton",
-      "link": "https://www.nst.com.my/sports/badminton/2026/08/1503886/indonesia-drop-two-mixed-doubles-pairs-over-match-fixing-probe"
+      "link": "https://www.news18.com/amp/agency-feeds/ashmita-stuns-han-to-win-maiden-bwf-tour-title-at-korea-masters-10261746.html"
     },
     {
-      "title": "PPA Season Opens in Cary",
-      "excerpt": "The 2026–27 Carvana PPA Tour kicks off with the Veolia Pickleball National Championships in Cary, North Carolina, running August 31 to September 6.",
-      "date": "August 8, 2026",
+      "title": "PPA Tour Europe Launches",
+      "excerpt": "The Carvana PPA Tour debuts PPA Tour Europe — 20 professional events across nine countries with a €545,000 prize pool for the 2026–27 season.",
+      "date": "August 9, 2026",
       "category": "Pickleball",
-      "link": "https://www.timesnownews.com/sports/pickleball/veolia-pickleball-national-championships-to-open-2026-27-ppa-tour-season-in-cary-article-155361624"
+      "link": "https://www.timesnownews.com/sports/pickleball/ppa-tour-europe-launch-2026-27-season-article-155296659"
     },
     {
-      "title": "Japan Trio Into Yokohama QFs",
-      "excerpt": "Tomokazu Harimoto, Sora Matsushima and Hiroto Shinozuka all reached the WTT Champions Yokohama quarterfinals as Sreeja Akula fell in five games to Shin Yubin.",
-      "date": "August 8, 2026",
+      "title": "Matsushima Into Yokohama Semis",
+      "excerpt": "Sora Matsushima rallied from 4-8 down to beat Jang Woo-jin in Yokohama, joining Tomokazu Harimoto and Hiroto Shinozuka in the WTT Champions semifinals.",
+      "date": "August 9, 2026",
       "category": "Table Tennis",
-      "link": "https://news.livedoor.com/article/detail/32018020/"
+      "link": "https://spread-sports.jp/archives/394472"
     }
   ]
 }
