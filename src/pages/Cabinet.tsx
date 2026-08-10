@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/home/Footer';
 import CabinetMemberPortrait from '../components/cabinet/CabinetMemberPortrait';
-import { RevealLines } from '../components/system/kinetic';
 import {
     CABINET_CO_PRESIDENTS,
     CABINET_OFFICERS,
@@ -42,7 +41,7 @@ const Cabinet = () => {
     });
 
     return (
-        <div className="min-h-screen">
+        <main className="min-h-screen">
             {/* Hero */}
             <section className="relative overflow-hidden">
                 <div className="relative bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 pt-28 dark:from-court-900 dark:via-court-950 dark:to-court-950 md:pt-32">
@@ -85,22 +84,13 @@ const Cabinet = () => {
 
             {/* Co-Presidents */}
             <section className="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20">
-                <RevealLines
-                    className="mb-10"
-                    lineClassName="flex items-baseline gap-4"
-                    lines={[
-                        <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">
-                            Leadership
-                        </span>,
-                        <h2
-                            key="b"
-                            className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl"
-                        >
-                            Co-Presidents
-                        </h2>,
-                    ]}
-                />
-                <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-8">
+                <div className="mb-10">
+                    <p className="hud-label mb-3 text-emerald-600 dark:text-court-accent">Leadership</p>
+                    <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
+                        Co-Presidents
+                    </h2>
+                </div>
+                <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
                     {CABINET_CO_PRESIDENTS.map((member, i) => (
                         <CabinetMemberPortrait
                             key={member.id}
@@ -115,21 +105,12 @@ const Cabinet = () => {
             {/* Officers */}
             <section className="border-t border-gray-200/80 bg-[#FAF8F3]/60 dark:border-chalk/10 dark:bg-court-950/40">
                 <div className="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20">
-                    <RevealLines
-                        className="mb-10"
-                        lineClassName="flex items-baseline gap-4"
-                        lines={[
-                            <span key="a" className="hud-label text-emerald-600 dark:text-court-accent">
-                                Operations
-                            </span>,
-                            <h2
-                                key="b"
-                                className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl"
-                            >
-                                Sport Leads &amp; Treasury
-                            </h2>,
-                        ]}
-                    />
+                    <div className="mb-10">
+                        <p className="hud-label mb-3 text-emerald-600 dark:text-court-accent">Operations</p>
+                        <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
+                            Sport Leads &amp; Treasury
+                        </h2>
+                    </div>
                     <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-8 sm:gap-y-12">
                         {CABINET_OFFICERS.map((member, i) => (
                             <CabinetMemberPortrait key={member.id} member={member} index={i} />
@@ -158,7 +139,7 @@ const Cabinet = () => {
                             className="clay-gradient inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02]"
                         >
                             Book a Court
-                            <ArrowRight className="h-4 w-4" />
+                            <ArrowRight className="h-4 w-4" aria-hidden="true" />
                         </button>
                         <Link
                             to="/help"
@@ -172,7 +153,7 @@ const Cabinet = () => {
             </section>
 
             <Footer />
-        </div>
+        </main>
     );
 };
 
