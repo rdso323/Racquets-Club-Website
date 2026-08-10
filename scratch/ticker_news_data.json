@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alexandrova stuns world No. 1 Sabalenka 7-6, 4-6, 6-4 in Toronto as Shnaider also ousts Pegula; Shelton powers into Montreal's round of 16 • [SQUASH] PSA Valencia opens August 11 as London Classic Gold tickets sell ahead of September's Ally Pally return; Salman Khalil claimed his maiden World Events title in Karachi • [BADMINTON] Ashmita Chaliha wins maiden BWF World Tour title at Korea Masters, rallying past Han Qian Xi 14-21, 21-14, 21-14 in Asan • [PICKLEBALL] PPA Tour Europe launches with 20 events across nine countries for 2026–27; Veolia National Championships in Cary opens the global season August 31 • [TABLE TENNIS] Matsushima rallies from 4-8 down to beat Jang Woo-jin and reach Yokohama semis alongside Harimoto and Shinozuka on WTT Champions final day",
+  "tickerText": "[TENNIS] Osaka beats Fernandez 6-4, 6-4 in Toronto as Rybakina rallies past Samsonova; Shelton tops Fonseca 6-3, 7-6(3) to reach Montreal QFs with all eight quarterfinalists aged 25 or under • [SQUASH] PSA tour prize money hits record $13.5M for 2025–26 season; PSA Valencia Memorial Chimo Marmaneu opens August 11 in Spain • [BADMINTON] Tee Kai Wun and Yap Roy King claim Korea Masters men's doubles title 21-13, 21-18 over compatriots Man Wei Chong and Soh Wooi Yik in all-Malaysia final • [PICKLEBALL] Carvana PPA Tour unveils World Pickleball Rankings and \"BE THE BEST.\" rallying cry for unified global leaderboard in 2026–27 season • [TABLE TENNIS] Miwa and Tomokazu Harimoto both win WTT Champions Yokohama singles — sister beats Chen Xingtong 4-2, brother defends crown 4-1 over Oh Jun-seong",
   "newsItems": [
     {
-      "title": "Alexandrova Upsets Sabalenka",
-      "excerpt": "Ekaterina Alexandrova knocked out world No. 1 Aryna Sabalenka 7-6, 4-6, 6-4 at the National Bank Open in Toronto to reach her first quarterfinal at the event.",
-      "date": "August 9, 2026",
+      "title": "Shelton Into Montreal QFs",
+      "excerpt": "Defending champion Ben Shelton beat João Fonseca 6-3, 7-6(3) at the National Bank Open in Montreal, joining an all-under-25 quarterfinal field.",
+      "date": "August 10, 2026",
       "category": "Tennis",
-      "link": "https://www.sportsnet.ca/wta/article/aggressive-yet-calm-alexandrova-pulls-off-upset-win-over-no-1-sabalenka/"
+      "link": "https://nationalbankopen.com/news/read/2026/montreal-day-9-recap-served-up-iga-its-down-final-eight"
     },
     {
-      "title": "Chaliha Wins Korea Masters",
-      "excerpt": "Ashmita Chaliha captured her maiden BWF World Tour title, rallying past Han Qian Xi 14-21, 21-14, 21-14 in the Korea Masters Super 300 final in Asan.",
-      "date": "August 9, 2026",
-      "category": "Badminton",
-      "link": "https://www.news18.com/amp/agency-feeds/ashmita-stuns-han-to-win-maiden-bwf-tour-title-at-korea-masters-10261746.html"
+      "title": "PSA Prize Money Record",
+      "excerpt": "The PSA Squash Tour distributed a record $13.5 million in prize money during the 2025–26 season, an 8% increase with 1,297 sanctioned events worldwide.",
+      "date": "August 10, 2026",
+      "category": "Squash",
+      "link": "https://www.psasquashtour.com/featured-news/psa-squash-tour-prize-money-reaches-record-total/"
     },
     {
-      "title": "PPA Tour Europe Launches",
-      "excerpt": "The Carvana PPA Tour debuts PPA Tour Europe — 20 professional events across nine countries with a €545,000 prize pool for the 2026–27 season.",
-      "date": "August 9, 2026",
+      "title": "World Pickleball Rankings Launch",
+      "excerpt": "The Carvana PPA Tour debuts a unified World Pickleball Rankings system for 2026–27, combining results across singles, doubles, and mixed doubles on one global leaderboard.",
+      "date": "August 10, 2026",
       "category": "Pickleball",
-      "link": "https://www.timesnownews.com/sports/pickleball/ppa-tour-europe-launch-2026-27-season-article-155296659"
+      "link": "https://www.ppatour.com/world-pickleball-rankings-be-the-best/"
     },
     {
-      "title": "Matsushima Into Yokohama Semis",
-      "excerpt": "Sora Matsushima rallied from 4-8 down to beat Jang Woo-jin in Yokohama, joining Tomokazu Harimoto and Hiroto Shinozuka in the WTT Champions semifinals.",
-      "date": "August 9, 2026",
+      "title": "Harimoto Siblings Sweep Yokohama",
+      "excerpt": "Miwa and Tomokazu Harimoto both won WTT Champions Yokohama singles titles — Miwa beat Chen Xingtong 4-2 and Tomokazu defended his crown 4-1 over Oh Jun-seong.",
+      "date": "August 10, 2026",
       "category": "Table Tennis",
-      "link": "https://spread-sports.jp/archives/394472"
+      "link": "https://english.kyodonews.net/articles/-/81857"
     }
   ]
 }
