@@ -39,6 +39,18 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         link: 'https://fuquaconnect.duke.edu/events',
     },
     {
+        id: 'us-open-watch-party',
+        title: "US Open Men's Final Watch Party",
+        date: 'Sunday, Sep 13',
+        dateISO: '2026-09-13',
+        time: '1:30 PM – 6:00 PM ET',
+        startTime: '13:30',
+        endTime: '18:00',
+        location: 'Station Nine',
+        image: '/events/us-open-watch-party.jpg',
+        link: 'https://fuquaconnect.duke.edu/events',
+    },
+    {
         id: 'fall-doubles-mixer',
         title: 'Fall Doubles Mixer',
         date: 'Saturday, Oct 18',
