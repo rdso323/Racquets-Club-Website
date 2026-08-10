@@ -46,7 +46,7 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         time: '1:30 PM – 6:00 PM ET',
         startTime: '13:30',
         endTime: '18:00',
-        location: 'Geneen Auditorium · Fuqua',
+        location: 'Station Nine',
         image: '/events/us-open-watch-party.jpg',
         link: 'https://fuquaconnect.duke.edu/events',
     },
