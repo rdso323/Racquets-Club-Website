@@ -51,7 +51,7 @@ export const CABINET_MEMBERS: CabinetMember[] = [
     {
         id: 'altamash-memon',
         name: 'Altamash Memon',
-        role: 'Badminton Lead',
+        role: 'Badminton',
         kind: 'officer',
         sport: 'Badminton',
         photo: '/cabinet/altamash-memon.jpg',
@@ -60,7 +60,7 @@ export const CABINET_MEMBERS: CabinetMember[] = [
     {
         id: 'armin-thomas',
         name: 'Armin Thomas',
-        role: 'Pickleball Lead',
+        role: 'Pickleball',
         kind: 'officer',
         sport: 'Pickleball',
         photo: '/cabinet/armin-thomas.jpg',
@@ -69,7 +69,7 @@ export const CABINET_MEMBERS: CabinetMember[] = [
     {
         id: 'joe-chantajunlasin',
         name: 'Joe Chantajunlasin',
-        role: 'Table Tennis Lead',
+        role: 'Table Tennis',
         kind: 'officer',
         sport: 'Table Tennis',
         photo: '/cabinet/joe-chantajunlasin.jpg',
@@ -78,7 +78,7 @@ export const CABINET_MEMBERS: CabinetMember[] = [
     {
         id: 'laura-wang',
         name: 'Laura Wang',
-        role: 'Tennis Lead',
+        role: 'Tennis',
         kind: 'officer',
         sport: 'Tennis',
         photo: '/cabinet/laura-wang.jpg',
@@ -87,7 +87,7 @@ export const CABINET_MEMBERS: CabinetMember[] = [
     {
         id: 'maddie-latimore',
         name: 'Maddie Latimore',
-        role: 'Squash Lead',
+        role: 'Squash',
         kind: 'officer',
         sport: 'Squash',
         photo: '/cabinet/maddie-latimore.jpg',

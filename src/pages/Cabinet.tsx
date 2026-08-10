@@ -83,14 +83,14 @@ const Cabinet = () => {
             </section>
 
             {/* Co-Presidents */}
-            <section className="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20">
-                <div className="mb-10">
+            <section className="mx-auto max-w-5xl px-5 py-12 md:px-10 md:py-16">
+                <div className="mb-8">
                     <p className="hud-label mb-3 text-emerald-600 dark:text-court-accent">Leadership</p>
                     <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
                         Co-Presidents
                     </h2>
                 </div>
-                <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
                     {CABINET_CO_PRESIDENTS.map((member, i) => (
                         <CabinetMemberPortrait
                             key={member.id}
@@ -104,14 +104,14 @@ const Cabinet = () => {
 
             {/* Officers */}
             <section className="border-t border-gray-200/80 bg-[#FAF8F3]/60 dark:border-chalk/10 dark:bg-court-950/40">
-                <div className="mx-auto max-w-7xl px-5 py-16 md:px-10 md:py-20">
-                    <div className="mb-10">
+                <div className="mx-auto max-w-6xl px-5 py-12 md:px-10 md:py-16">
+                    <div className="mb-8">
                         <p className="hud-label mb-3 text-emerald-600 dark:text-court-accent">Operations</p>
                         <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
                             Sport Leads &amp; Treasury
                         </h2>
                     </div>
-                    <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-8 sm:gap-y-12">
+                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 sm:gap-y-10">
                         {CABINET_OFFICERS.map((member, i) => (
                             <CabinetMemberPortrait key={member.id} member={member} index={i} />
                         ))}

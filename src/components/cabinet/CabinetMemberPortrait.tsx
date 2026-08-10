@@ -35,13 +35,9 @@ const CabinetMemberPortrait = ({
                 delay: prefersReducedMotion ? 0 : index * 0.07,
                 ease: [0.22, 1, 0.36, 1],
             }}
-            className="group flex flex-col"
+            className="group mx-auto flex w-full max-w-sm flex-col md:mx-0 md:max-w-none"
         >
-            <div
-                className={`relative overflow-hidden bg-gray-100 dark:bg-court-900 ${
-                    featured ? 'aspect-[4/5]' : 'aspect-[4/5]'
-                }`}
-            >
+            <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 dark:bg-court-900">
                 <span
                     aria-hidden="true"
                     className="absolute inset-x-0 top-0 z-10 h-0.5 transition-opacity duration-300"
@@ -61,25 +57,22 @@ const CabinetMemberPortrait = ({
                         className="flex h-full w-full items-center justify-center bg-gradient-to-br from-emerald-50 via-[#F3F0E8] to-orange-50/60 dark:from-court-900 dark:via-court-950 dark:to-court-900"
                         aria-hidden="true"
                     >
-                        <span className="font-display text-4xl text-wimbledon-navy/70 dark:text-court-accent/80 md:text-5xl">
+                        <span className="font-display text-3xl text-wimbledon-navy/70 dark:text-court-accent/80 md:text-4xl">
                             {member.initials}
                         </span>
                     </div>
                 )}
             </div>
 
-            <div className={`mt-4 ${featured ? 'md:mt-5' : ''}`}>
+            <div className="mt-3 md:mt-3.5">
                 <p className="hud-label text-court-accent">{member.role}</p>
                 <h3
-                    className={`mt-1.5 font-display tracking-tight text-gray-900 dark:text-chalk ${
-                        featured ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'
+                    className={`mt-1 font-display tracking-tight text-gray-900 dark:text-chalk ${
+                        featured ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'
                     }`}
                 >
                     {member.name}
                 </h3>
-                {member.sport && (
-                    <p className="mt-1 text-sm text-gray-500 dark:text-chalk/50">{member.sport}</p>
-                )}
             </div>
         </motion.article>
     );
