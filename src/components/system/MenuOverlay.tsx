@@ -181,7 +181,7 @@ const MenuOverlay = () => {
     const onAdminPage = location.pathname === '/admin';
 
     const exploreIds: SiteSectionId[] = ['home', 'booking', 'events', 'news'];
-    const clubIds: SiteSectionId[] = ['help', 'feedback'];
+    const clubIds: SiteSectionId[] = ['cabinet', 'help', 'feedback'];
 
     const exploreItems: MenuNavItem[] = exploreIds.map((id) => ({
         label: SITE_NAV_SECTIONS[id].menuLabel,
@@ -202,14 +202,19 @@ const MenuOverlay = () => {
         label: SITE_NAV_SECTIONS[id].menuLabel,
         sub: SITE_NAV_SECTIONS[id].menuSub,
         index: SITE_NAV_SECTIONS[id].index,
-        action: id === 'help' ? () => goTo('/help') : () => closeAnd(openFeedback),
+        action:
+            id === 'cabinet'
+                ? () => goTo('/cabinet')
+                : id === 'help'
+                  ? () => goTo('/help')
+                  : () => closeAnd(openFeedback),
     }));
 
     if (isAdmin) {
         clubItems.push({
             label: onAdminPage ? 'Home' : 'Admin',
             sub: onAdminPage ? 'Return to site' : 'Operations Deck',
-            index: '07',
+            index: '08',
             action: () => goTo(onAdminPage ? '/' : '/admin'),
         });
     }
@@ -219,13 +224,13 @@ const MenuOverlay = () => {
             ? {
                   label: 'Sign Out',
                   sub: 'End session',
-                  index: isAdmin ? '08' : '07',
+                  index: isAdmin ? '09' : '08',
                   action: () => closeAnd(() => signOut()),
               }
             : {
                   label: 'Sign In',
                   sub: 'Duke.edu accounts',
-                  index: isAdmin ? '08' : '07',
+                  index: isAdmin ? '09' : '08',
                   action: () => goTo('/login'),
               },
     );
