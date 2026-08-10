@@ -1,5 +1,5 @@
 /** Shared section index + labels — keep menu and on-page HUD numbers aligned. */
-export type SiteSectionId = 'home' | 'booking' | 'events' | 'news' | 'help' | 'feedback';
+export type SiteSectionId = 'home' | 'booking' | 'events' | 'news' | 'cabinet' | 'help' | 'feedback';
 
 /** Home page anchor sections linked from footer, menu, and cross-page CTAs. */
 export const HOME_SECTION_IDS = [
@@ -40,14 +40,20 @@ export const SITE_NAV_SECTIONS: Record<
         menuSub: 'Latest results',
         hudLabel: 'News',
     },
-    help: {
+    cabinet: {
         index: '05',
+        menuLabel: 'Cabinet',
+        menuSub: '2026–27 officers',
+        hudLabel: 'Cabinet',
+    },
+    help: {
+        index: '06',
         menuLabel: 'Help',
         menuSub: 'Booking FAQ',
         hudLabel: 'Help',
     },
     feedback: {
-        index: '06',
+        index: '07',
         menuLabel: 'Feedback',
         menuSub: 'Share your thoughts',
         hudLabel: 'Feedback',

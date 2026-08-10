@@ -63,7 +63,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do I share feedback or report a problem?',
-        answer: 'Use Feedback in the menu (06) or footer to send a message to the club. For booking issues, include the sport, session date, and what you expected to happen.',
+        answer: 'Use Feedback in the menu (07) or footer to send a message to the club. For booking issues, include the sport, session date, and what you expected to happen.',
     },
     {
         question: 'I am a club officer — where is the admin guide?',

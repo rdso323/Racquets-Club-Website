@@ -13,6 +13,7 @@ import { useSessionsPrefetchReady } from './hooks/useSessionsPrefetchReady';
 import { isHomeSectionHash } from './hooks/useHomeSectionNavigation';
 import Home from './pages/Home';
 import Help from './pages/Help';
+import Cabinet from './pages/Cabinet';
 import Login from './pages/Login';
 
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -71,6 +72,7 @@ const AppRoutes = () => {
                     element={!user ? <Login /> : <Navigate to="/" replace />}
                 />
                 <Route path="/" element={<Home />} />
+                <Route path="/cabinet" element={<Cabinet />} />
                 <Route path="/help" element={<Help />} />
                 <Route
                     path="/admin"

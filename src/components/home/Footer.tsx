@@ -21,6 +21,13 @@ const Footer = () => {
         { label: 'Events', action: () => scrollToHomeSection('events-section') },
         { label: 'News', action: () => scrollToHomeSection('news-section') },
         {
+            label: 'Cabinet',
+            action: () => {
+                if (location.pathname !== '/cabinet') navigate('/cabinet');
+                else lenis?.scrollTo(0, { duration: 1.2 });
+            },
+        },
+        {
             label: 'Help',
             action: () => {
                 if (location.pathname !== '/help') navigate('/help');
