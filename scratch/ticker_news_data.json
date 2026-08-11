@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Osaka beats Fernandez 6-4, 6-4 in Toronto as Rybakina rallies past Samsonova; Shelton tops Fonseca 6-3, 7-6(3) to reach Montreal QFs with all eight quarterfinalists aged 25 or under • [SQUASH] PSA tour prize money hits record $13.5M for 2025–26 season; PSA Valencia Memorial Chimo Marmaneu opens August 11 in Spain • [BADMINTON] Tee Kai Wun and Yap Roy King claim Korea Masters men's doubles title 21-13, 21-18 over compatriots Man Wei Chong and Soh Wooi Yik in all-Malaysia final • [PICKLEBALL] Carvana PPA Tour unveils World Pickleball Rankings and \"BE THE BEST.\" rallying cry for unified global leaderboard in 2026–27 season • [TABLE TENNIS] Miwa and Tomokazu Harimoto both win WTT Champions Yokohama singles — sister beats Chen Xingtong 4-2, brother defends crown 4-1 over Oh Jun-seong",
+  "tickerText": "[TENNIS] Montreal QFs feature an all-2000s lineup as Shelton meets Mensik and Jodar faces Fils; Cincinnati qualifying opens today with Tsitsipas headlining after Sinner withdraws with a knee injury • [SQUASH] PSA Valencia Memorial Chimo Marmaneu opens in Spain with Patrick Rooney top seed; 2026/27 season also underway at PN Fleet Club Open in Karachi • [BADMINTON] Indonesia withdraws two mixed doubles pairs from BWF Worlds amid integrity probe; Ayush Shetty set for R1 clash with defending champion Shi Yu Qi in New Delhi Aug 17–23 • [PICKLEBALL] Carvana PPA Tour debuts World Pickleball Rankings for 2026–27; Veolia National Championships open the season Aug 31 in Cary, NC • [TABLE TENNIS] Miwa and Tomokazu Harimoto sweep WTT Champions Yokohama singles — sister beats Chen Xingtong 4-2, brother defends 4-1 over Oh Jun-seong",
   "newsItems": [
     {
-      "title": "Shelton Into Montreal QFs",
-      "excerpt": "Defending champion Ben Shelton beat João Fonseca 6-3, 7-6(3) at the National Bank Open in Montreal, joining an all-under-25 quarterfinal field.",
-      "date": "August 10, 2026",
+      "title": "Cincinnati Qualifying Opens",
+      "excerpt": "Cincinnati Open qualifying begins today with Stefanos Tsitsipas headlining the field; world No. 1 Jannik Sinner withdrew citing a right knee injury ahead of the Masters 1000.",
+      "date": "August 11, 2026",
       "category": "Tennis",
-      "link": "https://nationalbankopen.com/news/read/2026/montreal-day-9-recap-served-up-iga-its-down-final-eight"
+      "link": "https://cincinnatiopen.com/news/cincinnati-open-reveals-2026-qualifying-fields/"
     },
     {
-      "title": "PSA Prize Money Record",
-      "excerpt": "The PSA Squash Tour distributed a record $13.5 million in prize money during the 2025–26 season, an 8% increase with 1,297 sanctioned events worldwide.",
-      "date": "August 10, 2026",
+      "title": "PSA Valencia Opens in Spain",
+      "excerpt": "The PSA Valencia Memorial Chimo Marmaneu begins today in Spain, a $36,000 World Event running through August 15 with Patrick Rooney as the top seed.",
+      "date": "August 11, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/psa-squash-tour-prize-money-reaches-record-total/"
+      "link": "https://www.psasquashtour.com/tournament/psa-valencia-2026-memorial-chimo-marmaneu/"
     },
     {
-      "title": "World Pickleball Rankings Launch",
-      "excerpt": "The Carvana PPA Tour debuts a unified World Pickleball Rankings system for 2026–27, combining results across singles, doubles, and mixed doubles on one global leaderboard.",
-      "date": "August 10, 2026",
-      "category": "Pickleball",
-      "link": "https://www.ppatour.com/world-pickleball-rankings-be-the-best/"
+      "title": "Indonesia Pairs Withdrawn from Worlds",
+      "excerpt": "PBSI pulled two mixed doubles pairs from the BWF World Championships in New Delhi amid an ongoing BWF integrity investigation into alleged match manipulation.",
+      "date": "August 11, 2026",
+      "category": "Badminton",
+      "link": "https://www.outlookindia.com/sports/badminton/bwf-world-championships-2026-indonesian-pairs-withdrawn-fixing-investigation"
     },
     {
       "title": "Harimoto Siblings Sweep Yokohama",
-      "excerpt": "Miwa and Tomokazu Harimoto both won WTT Champions Yokohama singles titles — Miwa beat Chen Xingtong 4-2 and Tomokazu defended his crown 4-1 over Oh Jun-seong.",
-      "date": "August 10, 2026",
+      "excerpt": "Miwa and Tomokazu Harimoto both won WTT Champions Yokohama singles — Miwa beat Chen Xingtong 4-2 and Tomokazu defended his crown 4-1 over Oh Jun-seong.",
+      "date": "August 11, 2026",
       "category": "Table Tennis",
       "link": "https://english.kyodonews.net/articles/-/81857"
     }
