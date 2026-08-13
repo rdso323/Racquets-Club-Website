@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Defending champ Ben Shelton crushes Mensik 6-3, 6-1 to reach Montreal semis vs Learner Tien today; Rafael Jodar and Brandon Nakashima also debut in Masters 1000 semis • [SQUASH] Hamza Khan and Nasir Iqbal upset seeds to reach PN Fleet Club Open quarters in Karachi; PSA Valencia Memorial Chimo Marmaneu round two underway in Spain • [BADMINTON] BWF World Championships return to India after 17 years — Delhi hosts Aug 17–23 with Lakshya Sen, PV Sindhu and Ayush Shetty vs Shi Yu Qi in R1 • [PICKLEBALL] Andie Dikosavljevic wins singles and doubles at PPA Asia HCMC Open; Hien Truong and Quan Do claim men's doubles gold on home soil • [TABLE TENNIS] Qualifier Diya Chitale stuns Sreeja Akula 3-0 at WTT Europe Smash Malmö; Harimoto siblings head to Sweden after sweeping Yokohama titles",
+  "tickerText": "[TENNIS] Shelton beats Tien 6-2, 6-3 and Nakashima tops Jodar 7-6(3), 6-4 to set the first all-American Montreal Masters final since 2003 — Shelton bids to repeat today • [SQUASH] Marek Panacek stuns top seed Patrick Rooney 3-1 at PSA Valencia Memorial; quarter-finals play today as London Classic Gold event looms Sept 1 • [BADMINTON] BWF Worlds open in Delhi Aug 17–23 — Shi Yu Qi vs Ayush Shetty headline R1; An Se Young and PV Sindhu lead India's medal push • [PICKLEBALL] Carvana PPA unveils World Pickleball Rankings blending all three formats; PPA Tour Europe launches 20-event circuit across nine countries • [TABLE TENNIS] Ovtcharov ousts defending champ Moregard 3-0 at WTT Europe Smash Malmö; Wang Manyu returns from injury with a 16-min 3-0 over Meshref",
   "newsItems": [
     {
-      "title": "Shelton Rolls Into Montreal Semis",
-      "excerpt": "Defending champion Ben Shelton demolished Jakub Mensik 6-3, 6-1 to reach the Montreal Masters semis and faces Learner Tien today; Rafael Jodar and Brandon Nakashima also make maiden Masters 1000 semis.",
-      "date": "August 12, 2026",
-      "category": "Tennis",
-      "link": "https://www.straitstimes.com/sport/tennis/defending-champion-shelton-rolls-into-montreal-semis"
-    },
-    {
-      "title": "Pakistan Duo Stars in Karachi",
-      "excerpt": "Hamza Khan and Nasir Iqbal upset seeded opponents to reach the PN Fleet Club Open quarter-finals, delighting home crowds at the first World Event of the 2026/27 PSA season.",
-      "date": "August 12, 2026",
+      "title": "Panacek Stuns Rooney in Valencia",
+      "excerpt": "Czech Marek Panacek upset top seed Patrick Rooney 3-1 at the PSA Valencia Memorial Chimo Marmaneu as quarter-finals get underway in Spain through Aug 15.",
+      "date": "August 13, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/pakistan-duo-khan-iqbal-stage-upsets-to-reach-pn-fleet-club-open-quarter-finals/"
+      "link": "https://www.psasquashtour.com/tournament/psa-valencia-2026-memorial-chimo-marmaneu/"
     },
     {
-      "title": "Worlds Return to Delhi",
-      "excerpt": "The BWF World Championships return to India after 17 years, running Aug 17–23 in New Delhi with Lakshya Sen, PV Sindhu and Ayush Shetty facing a star-studded field on home soil.",
-      "date": "August 12, 2026",
+      "title": "Delhi Countdown Begins",
+      "excerpt": "BWF World Championships open Aug 17 at Indira Gandhi Arena — defending champ Shi Yu Qi faces India's Ayush Shetty in a blockbuster R1 as An Se Young and PV Sindhu head the field.",
+      "date": "August 13, 2026",
       "category": "Badminton",
-      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-worlds-best-set-for-delhi-showdown-as-lakshya-sen-pv-sindhu-face-star-studded-field/articleshow/133168314.cms"
+      "link": "https://bwfworldchampionships.bwfbadminton.com/news-single/2026/08/05/top-seed-shi-runs-into-shetty/"
     },
     {
-      "title": "Dikosavljevic Doubles in HCMC",
-      "excerpt": "Andie Dikosavljevic won women's singles and doubles at the PPA Asia Ho Chi Minh City Open; Hien Truong and Quan Do claimed men's doubles gold in front of home fans.",
-      "date": "August 12, 2026",
+      "title": "PPA Debuts World Rankings",
+      "excerpt": "The Carvana PPA Tour launched unified World Pickleball Rankings for 2026–27, weighting gender doubles, mixed and singles across one global leaderboard ahead of the Cary season opener.",
+      "date": "August 13, 2026",
       "category": "Pickleball",
-      "link": "https://sports.yahoo.com/articles/andie-dikosavljevic-takes-double-pro-161459981.html"
+      "link": "https://www.ppatour.com/world-pickleball-rankings-be-the-best/"
+    },
+    {
+      "title": "Moregard Out in Malmö",
+      "excerpt": "Defending WTT Europe Smash champion Truls Moregard fell 3-0 to Dimitrij Ovtcharov in round one; Wang Manyu marked her injury return with a 16-minute sweep of Dina Meshref.",
+      "date": "August 13, 2026",
+      "category": "Table Tennis",
+      "link": "https://news.cgtn.com/news/2026-08-12/WTT-Europe-Smash-Moregard-exits-early-China-s-Wang-Manyu-shines-1PxJ0qWUPKM/p.html"
     }
   ]
 }
