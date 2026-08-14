@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Shelton beats Tien 6-2, 6-3 and Nakashima tops Jodar 7-6(3), 6-4 to set the first all-American Montreal Masters final since 2003 — Shelton bids to repeat today • [SQUASH] Marek Panacek stuns top seed Patrick Rooney 3-1 at PSA Valencia Memorial; quarter-finals play today as London Classic Gold event looms Sept 1 • [BADMINTON] BWF Worlds open in Delhi Aug 17–23 — Shi Yu Qi vs Ayush Shetty headline R1; An Se Young and PV Sindhu lead India's medal push • [PICKLEBALL] Carvana PPA unveils World Pickleball Rankings blending all three formats; PPA Tour Europe launches 20-event circuit across nine countries • [TABLE TENNIS] Ovtcharov ousts defending champ Moregard 3-0 at WTT Europe Smash Malmö; Wang Manyu returns from injury with a 16-min 3-0 over Meshref",
+  "tickerText": "[TENNIS] Shelton defends Montreal title 6-3, 7-6(4) over Nakashima — first back-to-back Canadian Open champ since Nadal, unbeaten through the draw • [SQUASH] Kolkata PSA Challenger finals today: Gohar vs Refaay and Hazem vs Walid after Indian seeds Khanna and Chand exit in semis; Valencia semis also on court in Spain • [BADMINTON] BWF Worlds kick off in Delhi Aug 17 — defending champ Shi Yu Qi faces home hope Ayush Shetty in a blockbuster R1 at Indira Gandhi Arena • [PICKLEBALL] Seattle PPA Challenger opens today at Sideout Tsunami with $10K purses across five pro disciplines through Sunday • [TABLE TENNIS] Singles quarter-finals underway at WTT Europe Smash Malmö; wildcard Ranefur stunned No. 12 Wen 3-2 as Wang Manyu eyes the last four",
   "newsItems": [
     {
-      "title": "Panacek Stuns Rooney in Valencia",
-      "excerpt": "Czech Marek Panacek upset top seed Patrick Rooney 3-1 at the PSA Valencia Memorial Chimo Marmaneu as quarter-finals get underway in Spain through Aug 15.",
-      "date": "August 13, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournament/psa-valencia-2026-memorial-chimo-marmaneu/"
+      "title": "Shelton Repeats in Montreal",
+      "excerpt": "Ben Shelton beat Brandon Nakashima 6-3, 7-6(4) to defend his National Bank Open crown — the first man to win back-to-back Canadian titles since Rafael Nadal in 2019.",
+      "date": "August 14, 2026",
+      "category": "Tennis",
+      "link": "https://nationalbankopen.com/news/read/2026/shelton-goes-back-to-back-montreal-hitting-heights-against-nakashima"
     },
     {
-      "title": "Delhi Countdown Begins",
-      "excerpt": "BWF World Championships open Aug 17 at Indira Gandhi Arena — defending champ Shi Yu Qi faces India's Ayush Shetty in a blockbuster R1 as An Se Young and PV Sindhu head the field.",
-      "date": "August 13, 2026",
+      "title": "Delhi Worlds Three Days Out",
+      "excerpt": "The BWF World Championships open Aug 17 at Indira Gandhi Arena — defending champ Shi Yu Qi faces India's Ayush Shetty in a blockbuster R1 as India hosts for the first time in 17 years.",
+      "date": "August 14, 2026",
       "category": "Badminton",
       "link": "https://bwfworldchampionships.bwfbadminton.com/news-single/2026/08/05/top-seed-shi-runs-into-shetty/"
     },
     {
-      "title": "PPA Debuts World Rankings",
-      "excerpt": "The Carvana PPA Tour launched unified World Pickleball Rankings for 2026–27, weighting gender doubles, mixed and singles across one global leaderboard ahead of the Cary season opener.",
-      "date": "August 13, 2026",
+      "title": "Seattle Challenger Begins",
+      "excerpt": "The Carvana PPA Tour's Seattle Challenger opens today at Sideout Tsunami Pickleball Center — a Challengers 250 stop with $10,000 purses across five pro disciplines through Aug 16.",
+      "date": "August 14, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/world-pickleball-rankings-be-the-best/"
+      "link": "https://www.ppatour.com/events/"
     },
     {
-      "title": "Moregard Out in Malmö",
-      "excerpt": "Defending WTT Europe Smash champion Truls Moregard fell 3-0 to Dimitrij Ovtcharov in round one; Wang Manyu marked her injury return with a 16-minute sweep of Dina Meshref.",
-      "date": "August 13, 2026",
+      "title": "QF Day in Malmö",
+      "excerpt": "Singles quarter-finals are underway at the WTT Europe Smash in Malmö — wildcard Elias Ranefur stunned No. 12 Ruibo Wen 3-2 while Wang Manyu pushes for the last four after her injury return.",
+      "date": "August 14, 2026",
       "category": "Table Tennis",
-      "link": "https://news.cgtn.com/news/2026-08-12/WTT-Europe-Smash-Moregard-exits-early-China-s-Wang-Manyu-shines-1PxJ0qWUPKM/p.html"
+      "link": "https://time.news/elias-ranefur-upsets-world-no-12-ruibo-wen-to-reach-europe-smash-round-of-16/"
     }
   ]
 }
