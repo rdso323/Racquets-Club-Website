@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Cincinnati: Arango shocks Venus Williams 6-2, 6-2; Gibson rallies past Tagger to set up Sabalenka R2 • [SQUASH] Refaay and Hazem sweep Kolkata PSA Challenger titles; PSA Valencia final tonight in Spain • [BADMINTON] BWF Worlds open Monday in Delhi — Shi Yu Qi vs Ayush Shetty headlines R1 as India hosts for the first time in 17 years • [PICKLEBALL] Seattle PPA Challenger Day 2 — pro medal rounds underway at Sideout Tsunami through Sunday • [TABLE TENNIS] Lin/Kuai defend Malmö mixed doubles crown; five Chinese women reach singles QFs as Lebrun ends China's men's run",
+  "tickerText": "[TENNIS] Cincinnati R64: Tirante stuns Djokovic 2-6, 6-4, 6-4; Sabalenka, Gauff & Medvedev headline Sunday's order of play • [SQUASH] Evans vs Perez set for PSA Valencia final; Refaay & Hazem swept Kolkata Challenger titles • [BADMINTON] BWF Worlds open Monday in Delhi — Chinese contingent praises upgraded Indira Gandhi Stadium ahead of R64 • [PICKLEBALL] Seattle PPA Challenger final day — pro medal rounds at Sideout Tsunami as 482-player field wraps up • [TABLE TENNIS] WTT Europe Smash: three Chinese women reach semis; Lebrun brothers claim men's doubles title in Malmö",
   "newsItems": [
     {
-      "title": "Arango Stuns Venus in Cincinnati",
-      "excerpt": "Colombia's Emiliana Arango beat seven-time Grand Slam champion Venus Williams 6-2, 6-2 in Cincinnati — her second WTA 1000 win of 2026 — and next faces Toronto champion Iga Swiatek.",
-      "date": "August 15, 2026",
+      "title": "Tirante Stuns Djokovic in Cincinnati",
+      "excerpt": "Argentina's Thiago Agustin Tirante rallied past No. 3 seed Novak Djokovic 2-6, 6-4, 6-4 in Cincinnati's Round of 64 — one of the biggest upsets on Day 1 of the WTA 1000 / ATP Masters 1000 event.",
+      "date": "August 16, 2026",
       "category": "Tennis",
-      "link": "https://www.wtatennis.com/news/4559754/arango-wins-surreal-cincinnati-match-with-venus-gibson-to-meet-sabalenka"
+      "link": "https://www.sofascore.com/news/atp-cincinnati-tirante-upsets-djokovic-2-6-6-4-6-4"
     },
     {
-      "title": "Egyptians Sweep Kolkata Titles",
-      "excerpt": "Seif Refaay rallied past Mohamed Gohar and Sohayla Hazem beat Menna Walid as Egyptian players claimed both crowns at the HCL Squash PSA Challenger Tour in Kolkata.",
-      "date": "August 15, 2026",
+      "title": "Evans & Perez Set Valencia Final",
+      "excerpt": "Wales' Rhys Evans swept Abdulla Al-Tamimi while Spain's Ivan Perez rallied from 0-2 down to beat Sam Osborne-Wylde, setting up an all-European PSA Valencia Memorial Chimo Marmaneu final.",
+      "date": "August 16, 2026",
       "category": "Squash",
-      "link": "https://www.rediff.com/sports/report/refaay-sohayla-win-psa-challenger-tour-kolkata/20260814.htm"
+      "link": "https://www.psasquashtour.com/featured-news/evans-and-perez-set-up-psa-valencia-final-after-contrasting-semi-final-wins/"
     },
     {
-      "title": "Seattle Challenger Day 2",
-      "excerpt": "The Carvana PPA Tour's Seattle Challenger enters its second day at Sideout Tsunami — a Challengers 250 stop with $10,000 purses across five pro disciplines through Aug 16.",
-      "date": "August 15, 2026",
+      "title": "Delhi Ready for BWF Worlds",
+      "excerpt": "The 30th BWF World Championships open Monday at New Delhi's Indira Gandhi Arena — India's first Worlds in 17 years, with PV Sindhu, Lakshya Sen and Satwik-Chirag leading the home charge.",
+      "date": "August 16, 2026",
+      "category": "Badminton",
+      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-world-championships-2026-all-you-need-to-know-ahead-of-delhis-badminton-showpiece/articleshow/133154244.cms"
+    },
+    {
+      "title": "Seattle Challenger Final Day",
+      "excerpt": "The Carvana PPA Tour's Seattle Challenger concludes today at Sideout Tsunami — birthplace of pickleball — with pro medal rounds across five disciplines wrapping a 482-player weekend.",
+      "date": "August 16, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/tournament/2026/2026-seattle-wa/"
-    },
-    {
-      "title": "Lin & Kuai Repeat in Malmö",
-      "excerpt": "Lin Shidong and Kuai Man retained the WTT Europe Smash mixed doubles title with a 3-1 comeback over Hong Kong's Wong/Doo, while five Chinese women advanced to the singles quarter-finals.",
-      "date": "August 15, 2026",
-      "category": "Table Tennis",
-      "link": "https://english.news.cn/20260815/0086338efa274740a1a304a341841998/c.html"
+      "link": "https://ppachallenger.com/tournament/2026-seattle-wa/"
     }
   ]
 }
