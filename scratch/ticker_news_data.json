@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Cincinnati R64: Tirante stuns Djokovic 2-6, 6-4, 6-4; Sabalenka, Gauff & Medvedev headline Sunday's order of play • [SQUASH] Evans vs Perez set for PSA Valencia final; Refaay & Hazem swept Kolkata Challenger titles • [BADMINTON] BWF Worlds open Monday in Delhi — Chinese contingent praises upgraded Indira Gandhi Stadium ahead of R64 • [PICKLEBALL] Seattle PPA Challenger final day — pro medal rounds at Sideout Tsunami as 482-player field wraps up • [TABLE TENNIS] WTT Europe Smash: three Chinese women reach semis; Lebrun brothers claim men's doubles title in Malmö",
+  "tickerText": "[TENNIS] Cincinnati R32: Nakashima upsets Medvedev in twin tiebreaks; Sabalenka extends Masters streak to 45, Gauff & Swiatek advance • [SQUASH] Sana Bahadar claims first PSA title at Bendigo Open; Ivan Perez wins Valencia Memorial in 110-minute final • [BADMINTON] Delhi Worlds Day 3 — R32 underway as Lakshya Sen faces Tan; Ayush Shetty stunned defending champ Shi Yuqi on Day 1 • [PICKLEBALL] 2026-27 Carvana PPA season opens Aug 31 at Veolia Nationals in Cary — Waters, Johns headline $1.6M purse • [TABLE TENNIS] WTT Europe Smash wraps: Wang Manyu & Felix Lebrun lift singles trophies; Lebrun brothers also win men's doubles in Malmö",
   "newsItems": [
     {
-      "title": "Tirante Stuns Djokovic in Cincinnati",
-      "excerpt": "Argentina's Thiago Agustin Tirante rallied past No. 3 seed Novak Djokovic 2-6, 6-4, 6-4 in Cincinnati's Round of 64 — one of the biggest upsets on Day 1 of the WTA 1000 / ATP Masters 1000 event.",
-      "date": "August 16, 2026",
+      "title": "Nakashima Stuns Medvedev in Cincinnati",
+      "excerpt": "Brandon Nakashima rallied from twin tiebreaks to upset No. 4 Daniil Medvedev 6-7, 7-6, 6-1 in Cincinnati's Round of 32 — while Aryna Sabalenka hammered Wang Xinyu to extend her Masters 1000 win streak to 45.",
+      "date": "August 19, 2026",
       "category": "Tennis",
-      "link": "https://www.sofascore.com/news/atp-cincinnati-tirante-upsets-djokovic-2-6-6-4-6-4"
+      "link": "https://www.straitstimes.com/sport/tennis/aryna-sabalenka-slams-wang-to-advance-at-cincinnati-nakashima-upsets-medvedev"
     },
     {
-      "title": "Evans & Perez Set Valencia Final",
-      "excerpt": "Wales' Rhys Evans swept Abdulla Al-Tamimi while Spain's Ivan Perez rallied from 0-2 down to beat Sam Osborne-Wylde, setting up an all-European PSA Valencia Memorial Chimo Marmaneu final.",
-      "date": "August 16, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/evans-and-perez-set-up-psa-valencia-final-after-contrasting-semi-final-wins/"
-    },
-    {
-      "title": "Delhi Ready for BWF Worlds",
-      "excerpt": "The 30th BWF World Championships open Monday at New Delhi's Indira Gandhi Arena — India's first Worlds in 17 years, with PV Sindhu, Lakshya Sen and Satwik-Chirag leading the home charge.",
-      "date": "August 16, 2026",
+      "title": "Delhi Worlds Enter Round of 32",
+      "excerpt": "Day 3 of the BWF World Championships in New Delhi brings knockout action — Lakshya Sen, PV Sindhu and Satwik-Chirag lead India's charge after Ayush Shetty's shock win over defending champion Shi Yuqi.",
+      "date": "August 19, 2026",
       "category": "Badminton",
-      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-world-championships-2026-all-you-need-to-know-ahead-of-delhis-badminton-showpiece/articleshow/133154244.cms"
+      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-world-championships-2026-live-updates-today-ayush-shetty-satwik-chirag-dhruv-kapila-unnati-hooda-treesa-gayatri-lakshya-sen-pv-sindhu-india-matches-scores-results/liveblog/133335780.cms"
     },
     {
-      "title": "Seattle Challenger Final Day",
-      "excerpt": "The Carvana PPA Tour's Seattle Challenger concludes today at Sideout Tsunami — birthplace of pickleball — with pro medal rounds across five disciplines wrapping a 482-player weekend.",
-      "date": "August 16, 2026",
+      "title": "Veolia Nationals Open PPA Season",
+      "excerpt": "The 2026-27 Carvana PPA Tour kicks off Aug 31 at Cary Tennis Park — the Veolia Pickleball National Championships debut the new World Pickleball Rankings with Anna Leigh Waters and Ben Johns headlining.",
+      "date": "August 19, 2026",
       "category": "Pickleball",
-      "link": "https://ppachallenger.com/tournament/2026-seattle-wa/"
+      "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
+    },
+    {
+      "title": "Lebrun & Wang Manyu Rule Malmö",
+      "excerpt": "France's Felix Lebrun beat Tomokazu Harimoto 4-1 for his first WTT Grand Smash singles title, while China's Wang Manyu edged Wang Yidi 4-2 to claim her third — capping WTT Europe Smash Sweden 2026.",
+      "date": "August 19, 2026",
+      "category": "Table Tennis",
+      "link": "https://news.cgtn.com/news/2026-08-17/Wang-Manyu-wins-third-Grand-Smash-title-in-Malmo-1PFY00VK5xe/p.html"
     }
   ]
 }
