@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Cincinnati QF day: Paul saves MP to upset Zverev 4-6, 7-6, 6-4; Fils blitzes de Minaur; Swiatek-Rybakina Toronto rematch headlines women's draw • [SQUASH] Sana Bahadar claims first PSA title at Bendigo Open; London Classic opens Sep 1 with defending champ Paul Coll • [BADMINTON] Delhi Worlds Day 4 — R16 as Sindhu faces Wang Zhi Yi and Ayush Shetty meets Alwi Farhan; Satwik-Chirag in men's doubles • [PICKLEBALL] 2026-27 PPA season opens Aug 31 at Veolia Nationals in Cary — debut of World Pickleball Rankings system • [TABLE TENNIS] WTT Europe Smash wraps: Felix Lebrun claims first Grand Smash title; Wang Manyu wins third — Chinese men exit early in Malmö",
+  "tickerText": "[TENNIS] Bejlek stuns No. 1 Sabalenka; Paul saves MP to beat Zverev — American-heavy Cincinnati QF lineup set • [SQUASH] Sana Bahadar wins first PSA title at Bendigo Open, beating former world No. 1 Grinham • [BADMINTON] Delhi Worlds QF day — Satwik-Chirag & Treesa-Gayatri carry India's medal hopes after Sindhu exits • [PICKLEBALL] PPA season opens Aug 31 in Cary; Shenzhen Open underway ahead of Veolia Nationals • [TABLE TENNIS] WTT Europe Smash wraps: Lebrun's first Grand Smash; Wang Manyu wins third — Chinese men blank",
   "newsItems": [
     {
-      "title": "Cincinnati QFs: Paul Upsets Zverev",
-      "excerpt": "Tommy Paul saved a match point to beat top seed Alexander Zverev 4-6, 7-6, 6-4 as Cincinnati's quarterfinal lineup features a Swiatek-Rybakina rematch and an all-American Anisimova-Pegula clash.",
-      "date": "August 20, 2026",
-      "category": "Tennis",
-      "link": "https://tennisconnected.com/cincinnati-open-2026-quarterfinal-preview-swiatek-rybakina-rematch-headlines-blockbuster-thursday-as-americans-anisimova-and-paul-chase-semifinals/"
-    },
-    {
       "title": "Bahadar Wins First PSA Title",
-      "excerpt": "Pakistan's Sana Bahadar captured her first PSA Tour title at the Bendigo Open, rallying past Rachael Grinham in four games — a breakthrough for the 20-year-old athlete.",
-      "date": "August 20, 2026",
+      "excerpt": "Pakistan's Sana Bahadar captured her first PSA Tour title at the Bendigo Open, rallying past former world No. 1 Rachael Grinham in four games.",
+      "date": "August 21, 2026",
       "category": "Squash",
       "link": "https://www.psasquashtour.com/featured-news/sana-bahadar-continues-remarkable-squash-journey-with-first-psa-tour-title/"
     },
     {
+      "title": "Delhi Worlds: Doubles Carry India",
+      "excerpt": "Satwik-Chirag and Treesa-Gayatri reach the BWF World Championships quarterfinals as India's last medal hopes after Sindhu and Shetty exit in the round of 16.",
+      "date": "August 21, 2026",
+      "category": "Badminton",
+      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-badminton-world-championships-2026-live-updates-today-treesa-jolly-gayatri-gopichand-satwiksairaj-rankireddy-chirag-shetty-india-matches-scores-results-latest-news/liveblog/133393220.cms"
+    },
+    {
       "title": "Veolia Nationals Open PPA Season",
-      "excerpt": "The 2026-27 Carvana PPA Tour kicks off Aug 31 in Cary with the Veolia Pickleball National Championships — debuting the unified World Pickleball Rankings across all disciplines.",
-      "date": "August 20, 2026",
+      "excerpt": "The 2026-27 Carvana PPA Tour kicks off Aug 31 in Cary with the Veolia Pickleball National Championships, debuting the unified World Pickleball Rankings system.",
+      "date": "August 21, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
     },
     {
       "title": "Lebrun & Wang Manyu Crown Malmö",
-      "excerpt": "Felix Lebrun beat Tomokazu Harimoto 4-1 for his first WTT Grand Smash singles crown while Wang Manyu edged Wang Yidi 4-2 — as Chinese men failed to reach the quarters in Malmö.",
-      "date": "August 20, 2026",
+      "excerpt": "Felix Lebrun beat Tomokazu Harimoto 4-1 for his first WTT Grand Smash singles crown while Wang Manyu edged Wang Yidi 4-2 in an all-Chinese final.",
+      "date": "August 21, 2026",
       "category": "Table Tennis",
       "link": "https://news.cgtn.com/news/2026-08-17/Wang-Manyu-wins-third-Grand-Smash-title-in-Malmo-1PFY00VK5xe/p.html"
     }
