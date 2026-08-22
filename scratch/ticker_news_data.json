@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Bejlek stuns No. 1 Sabalenka; Paul saves MP to beat Zverev — American-heavy Cincinnati QF lineup set • [SQUASH] Sana Bahadar wins first PSA title at Bendigo Open, beating former world No. 1 Grinham • [BADMINTON] Delhi Worlds QF day — Satwik-Chirag & Treesa-Gayatri carry India's medal hopes after Sindhu exits • [PICKLEBALL] PPA season opens Aug 31 in Cary; Shenzhen Open underway ahead of Veolia Nationals • [TABLE TENNIS] WTT Europe Smash wraps: Lebrun's first Grand Smash; Wang Manyu wins third — Chinese men blank",
+  "tickerText": "[TENNIS] Nakashima upsets Fritz; Tiafoe sets all-American Cincinnati semifinal — Bejlek stuns Keys to face Gauff • [SQUASH] Home hero Pérez wins 110-min Valencia final over Evans; Gohar set for Qatar Classic return • [BADMINTON] Treesa-Gayatri lock bronze at Delhi Worlds; face top-seeded Chinese pair in semis • [PICKLEBALL] 2026-27 PPA Tour opens Aug 31 at Veolia Nationals; World Pickleball Rankings debut • [TABLE TENNIS] Lebrun's first Grand Smash crown; Chinese men blank Malmö — WTT Macao next",
   "newsItems": [
     {
-      "title": "Bahadar Wins First PSA Title",
-      "excerpt": "Pakistan's Sana Bahadar captured her first PSA Tour title at the Bendigo Open, rallying past former world No. 1 Rachael Grinham in four games.",
-      "date": "August 21, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/sana-bahadar-continues-remarkable-squash-journey-with-first-psa-tour-title/"
+      "title": "All-American Cincinnati Semifinal",
+      "excerpt": "Brandon Nakashima rallied past Taylor Fritz and Frances Tiafoe beat Lorenzo Musetti to set up a U.S. semifinal clash, while Sara Bejlek upset Madison Keys to reach her first WTA 1000 semifinal.",
+      "date": "August 22, 2026",
+      "category": "Tennis",
+      "link": "https://www.espn.com/tennis/story/_/id/49687102/coco-gauff-frances-tiafoe-brandon-nakashima-jessica-pegula-reach-cincinnati-semis"
     },
     {
-      "title": "Delhi Worlds: Doubles Carry India",
-      "excerpt": "Satwik-Chirag and Treesa-Gayatri reach the BWF World Championships quarterfinals as India's last medal hopes after Sindhu and Shetty exit in the round of 16.",
-      "date": "August 21, 2026",
+      "title": "Treesa-Gayatri Assure India Bronze",
+      "excerpt": "Treesa Jolly and Gayatri Gopichand upset China's fourth seeds to reach the Delhi Worlds semifinals, guaranteeing India's first women's doubles medal in 15 years.",
+      "date": "August 22, 2026",
       "category": "Badminton",
-      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-badminton-world-championships-2026-live-updates-today-treesa-jolly-gayatri-gopichand-satwiksairaj-rankireddy-chirag-shetty-india-matches-scores-results-latest-news/liveblog/133393220.cms"
+      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-badminton-world-championships-2026-live-updates-today-treesa-jolly-gayatri-gopichand-semifinal-india-matches-scores-results-latest-news/liveblog/133417360.cms"
     },
     {
       "title": "Veolia Nationals Open PPA Season",
       "excerpt": "The 2026-27 Carvana PPA Tour kicks off Aug 31 in Cary with the Veolia Pickleball National Championships, debuting the unified World Pickleball Rankings system.",
-      "date": "August 21, 2026",
+      "date": "August 22, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
     },
     {
       "title": "Lebrun & Wang Manyu Crown Malmö",
       "excerpt": "Felix Lebrun beat Tomokazu Harimoto 4-1 for his first WTT Grand Smash singles crown while Wang Manyu edged Wang Yidi 4-2 in an all-Chinese final.",
-      "date": "August 21, 2026",
+      "date": "August 22, 2026",
       "category": "Table Tennis",
       "link": "https://news.cgtn.com/news/2026-08-17/Wang-Manyu-wins-third-Grand-Smash-title-in-Malmo-1PFY00VK5xe/p.html"
     }
