@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Nakashima upsets Fritz; Tiafoe sets all-American Cincinnati semifinal — Bejlek stuns Keys to face Gauff • [SQUASH] Home hero Pérez wins 110-min Valencia final over Evans; Gohar set for Qatar Classic return • [BADMINTON] Treesa-Gayatri lock bronze at Delhi Worlds; face top-seeded Chinese pair in semis • [PICKLEBALL] 2026-27 PPA Tour opens Aug 31 at Veolia Nationals; World Pickleball Rankings debut • [TABLE TENNIS] Lebrun's first Grand Smash crown; Chinese men blank Malmö — WTT Macao next",
+  "tickerText": "[TENNIS] Fils vs Tiafoe & Gauff vs Pegula headline Cincinnati finals today — first all-American women's final since 1970 • [SQUASH] Budapest Open kicks off Aug 24; Pérez lifts Valencia title in 110-min epic over Evans • [BADMINTON] BWF Worlds finals day in Delhi — An Se-young faces Yamaguchi; Liu/Tan take women's doubles gold • [PICKLEBALL] Veolia Nationals open 2026-27 PPA season Aug 31 in Cary — World Pickleball Rankings debut • [TABLE TENNIS] WTT Champions Macao runs Sep 8–13; Lebrun & Wang Manyu fresh off Malmö Grand Smash wins",
   "newsItems": [
     {
-      "title": "All-American Cincinnati Semifinal",
-      "excerpt": "Brandon Nakashima rallied past Taylor Fritz and Frances Tiafoe beat Lorenzo Musetti to set up a U.S. semifinal clash, while Sara Bejlek upset Madison Keys to reach her first WTA 1000 semifinal.",
-      "date": "August 22, 2026",
+      "title": "Cincinnati Finals Day: Fils-Tiafoe & Gauff-Pegula",
+      "excerpt": "Arthur Fils and Frances Tiafoe clash in the men's final after semifinal wins over Cobolli and Nakashima, while Coco Gauff and Jessica Pegula meet in the first all-American women's final since 1970.",
+      "date": "August 23, 2026",
       "category": "Tennis",
-      "link": "https://www.espn.com/tennis/story/_/id/49687102/coco-gauff-frances-tiafoe-brandon-nakashima-jessica-pegula-reach-cincinnati-semis"
+      "link": "https://www.atptour.com/en/news/cincinnati-2026-atp-masters-1000-history-draw-schedule"
     },
     {
-      "title": "Treesa-Gayatri Assure India Bronze",
-      "excerpt": "Treesa Jolly and Gayatri Gopichand upset China's fourth seeds to reach the Delhi Worlds semifinals, guaranteeing India's first women's doubles medal in 15 years.",
-      "date": "August 22, 2026",
-      "category": "Badminton",
-      "link": "https://timesofindia.indiatimes.com/sports/badminton/bwf-badminton-world-championships-2026-live-updates-today-treesa-jolly-gayatri-gopichand-semifinal-india-matches-scores-results-latest-news/liveblog/133417360.cms"
+      "title": "Pérez Wins Valencia in 110-Minute Epic",
+      "excerpt": "Spain's Iván Pérez edged Rhys Evans 3-2 in a gripping PSA Valencia final, converting his second Copper title after surviving a fourth-set tiebreak and a deciding-game push.",
+      "date": "August 17, 2026",
+      "category": "Squash",
+      "link": "https://www.psasquashtour.com/featured-news/home-hero-perez-crowned-psa-valencia-champion-after-110-minute-epic/"
     },
     {
       "title": "Veolia Nationals Open PPA Season",
       "excerpt": "The 2026-27 Carvana PPA Tour kicks off Aug 31 in Cary with the Veolia Pickleball National Championships, debuting the unified World Pickleball Rankings system.",
-      "date": "August 22, 2026",
+      "date": "August 23, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
     },
     {
-      "title": "Lebrun & Wang Manyu Crown Malmö",
-      "excerpt": "Felix Lebrun beat Tomokazu Harimoto 4-1 for his first WTT Grand Smash singles crown while Wang Manyu edged Wang Yidi 4-2 in an all-Chinese final.",
-      "date": "August 22, 2026",
+      "title": "WTT Macao & Malmö Champions",
+      "excerpt": "WTT Champions Macao runs Sep 8–13 with 64 top singles players, while Felix Lebrun and Wang Manyu claimed Malmö Grand Smash crowns earlier this month.",
+      "date": "August 23, 2026",
       "category": "Table Tennis",
-      "link": "https://news.cgtn.com/news/2026-08-17/Wang-Manyu-wins-third-Grand-Smash-title-in-Malmo-1PFY00VK5xe/p.html"
+      "link": "https://www.galaxymacau.com/offers/entertainment/wtt-champions-macao-2026-presented-galaxy-entertainment-group/"
     }
   ]
 }
