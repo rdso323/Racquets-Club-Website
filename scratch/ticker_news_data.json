@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Gauff & Fils take Cincinnati; Sinner withdraws from US Open as Zheng & Andreescu advance in qualifying • [SQUASH] PSA Budapest Open underway — Ng tops Copper draw with London Classic looming Sep 1 • [BADMINTON] France's BWF Worlds double: Lanier & Gicquel/Delrue; An Se-young tops Yamaguchi • [PICKLEBALL] Canes & Cup Pro-Am Sept 3 pairs Hurricanes stars with PPA pros; Veolia Nationals open season Aug 31 • [TABLE TENNIS] WTT Champions Macao Sep 8–13 draws 64 elite singles players; Lebrun & Wang Manyu fresh off Malmö Grand Smash",
+  "tickerText": "[TENNIS] US Open qual Round 2 — Jordan Lee (16) chases main draw; Glasspool/Routliffe face Alcaraz/Williams in mixed doubles • [SQUASH] Budapest Open quarter-finals today — Takacs & Farkas hunt Copper crown after dramatic five-game wins • [BADMINTON] Aaron Chia–Soh Wooi Yik weigh future after Worlds silver; Soh axed from Asian Games squad • [PICKLEBALL] Veolia Nationals Cary Aug 31; Hong Kong Slam offers record $1.1M prize Oct 19–25 • [TABLE TENNIS] WTT Champions Macao Sep 8–13 at East Asian Games Dome; 1,000 ranking points on line",
   "newsItems": [
     {
-      "title": "Cincinnati Crowns & US Open Qualifying",
-      "excerpt": "Coco Gauff and Arthur Fils won Cincinnati Masters titles as Jannik Sinner withdrew from the US Open; Zheng Qinwen and Bianca Andreescu are among those advancing through qualifying.",
-      "date": "August 25, 2026",
+      "title": "US Open Qualifying & Mixed Doubles Blockbuster",
+      "excerpt": "Lloyd Glasspool and Erin Routliffe will face Carlos Alcaraz and Serena Williams in mixed doubles while round two of US Open singles qualifying continues at Flushing Meadows today.",
+      "date": "August 26, 2026",
       "category": "Tennis",
-      "link": "https://www.philstar.com/campus/sports/2026/08/25/2551529/gauff-fils-reign-supreme-cincinnati"
+      "link": "https://www.lta.org.uk/fan-zone/grand-slam/us-open/news/2026/results-updates/"
     },
     {
-      "title": "France's Historic BWF Worlds Double",
-      "excerpt": "Alex Lanier and Thom Gicquel/Delphine Delrue delivered France's first men's singles and mixed doubles world titles, while An Se-young reclaimed the women's crown over Akane Yamaguchi.",
-      "date": "August 25, 2026",
-      "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/badminton/bwf-world-championships-2026-an-se-young-alex-lanier-men-women-singles-winner-full-list-of-champions/article71381715.ece"
+      "title": "Budapest Open Quarter-Finals",
+      "excerpt": "The PSA Budapest Open reaches quarter-final day, with home hopes Benedek Takacs and Balazs Farkas still alive after dramatic five-game wins on opening day at the Copper event.",
+      "date": "August 26, 2026",
+      "category": "Squash",
+      "link": "https://www.psasquashtour.com/tournament/budapest-open-2026/"
     },
     {
-      "title": "Canes & Cup Pro-Am at Veolia Nationals",
-      "excerpt": "Carolina Hurricanes Stanley Cup champions join top PPA pros for the Canes and the Cup Pro-Am on Sept 3, kicking off the Veolia Pickleball National Championships in Cary.",
+      "title": "Hong Kong Slam Sets $1.1M Record",
+      "excerpt": "The Hang Seng Bank Hong Kong Slam — Asia's first PPA Slam — will offer a record $1.1 million prize purse Oct 19–25 at Kai Tak Sports Park, with 860+ players expected.",
       "date": "August 25, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/canes-and-the-cup-pro-am/"
+      "link": "https://www.timesnownews.com/sports/pickleball/hong-kong-slam-asias-biggest-professional-pickleball-tournament-to-offer-1-1-million-prize-purse-article-155982955"
     },
     {
-      "title": "WTT Macao Draws Elite Field",
-      "excerpt": "WTT Champions Macao runs Sep 8–13 with 64 top singles players chasing 1,000 ranking points, as Felix Lebrun and Wang Manyu arrive off Malmö Grand Smash titles.",
-      "date": "August 25, 2026",
+      "title": "WTT Champions Macao Returns",
+      "excerpt": "WTT Champions Macao runs Sep 8–13 at the East Asian Games Dome, drawing 32 men's and women's singles players with 1,000 ranking points for the champions.",
+      "date": "August 26, 2026",
       "category": "Table Tennis",
       "link": "https://www.galaxymacau.com/offers/entertainment/wtt-champions-macao-2026-presented-galaxy-entertainment-group/"
     }
