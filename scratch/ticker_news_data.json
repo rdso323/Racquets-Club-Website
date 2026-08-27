@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] US Open qual Round 2 — Jordan Lee (16) chases main draw; Glasspool/Routliffe face Alcaraz/Williams in mixed doubles • [SQUASH] Budapest Open quarter-finals today — Takacs & Farkas hunt Copper crown after dramatic five-game wins • [BADMINTON] Aaron Chia–Soh Wooi Yik weigh future after Worlds silver; Soh axed from Asian Games squad • [PICKLEBALL] Veolia Nationals Cary Aug 31; Hong Kong Slam offers record $1.1M prize Oct 19–25 • [TABLE TENNIS] WTT Champions Macao Sep 8–13 at East Asian Games Dome; 1,000 ranking points on line",
+  "tickerText": "[TENNIS] US Open qualifying final day — 32 singles qualifiers decided at Flushing Meadows ahead of main draw Aug 30 • [SQUASH] Budapest Open semi-finals tonight — Copper event crowns champion Friday after dramatic quarter-finals • [BADMINTON] France's historic Worlds double — Alex Lanier & Gicquel/Delrue crowned in New Delhi; An Se-young reclaims title • [PICKLEBALL] Veolia Nationals Cary Aug 31 — PPA Slam season opener with $1.65M purse; Canes & the Cup Pro-Am Sep 3 • [TABLE TENNIS] WTT Champions Macao Sep 8–13 — 1,000 ranking points on line; Felix Lebrun rises after Europe Smash sweep",
   "newsItems": [
     {
-      "title": "US Open Qualifying & Mixed Doubles Blockbuster",
-      "excerpt": "Lloyd Glasspool and Erin Routliffe will face Carlos Alcaraz and Serena Williams in mixed doubles while round two of US Open singles qualifying continues at Flushing Meadows today.",
-      "date": "August 26, 2026",
+      "title": "US Open Qualifying Final Day",
+      "excerpt": "The last day of US Open singles qualifying at Flushing Meadows decides the final 32 qualifiers — 16 men and 16 women — before the main draw begins Sunday, August 30.",
+      "date": "August 27, 2026",
       "category": "Tennis",
       "link": "https://www.lta.org.uk/fan-zone/grand-slam/us-open/news/2026/results-updates/"
     },
     {
-      "title": "Budapest Open Quarter-Finals",
-      "excerpt": "The PSA Budapest Open reaches quarter-final day, with home hopes Benedek Takacs and Balazs Farkas still alive after dramatic five-game wins on opening day at the Copper event.",
-      "date": "August 26, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournament/budapest-open-2026/"
-    },
-    {
-      "title": "Hong Kong Slam Sets $1.1M Record",
-      "excerpt": "The Hang Seng Bank Hong Kong Slam — Asia's first PPA Slam — will offer a record $1.1 million prize purse Oct 19–25 at Kai Tak Sports Park, with 860+ players expected.",
-      "date": "August 25, 2026",
+      "title": "Veolia Nationals Open PPA Season",
+      "excerpt": "The Veolia Pickleball National Championships kick off Aug 31 in Cary, NC — a PPA Slam with $1.65M in payouts, 2,000 ranking points, and the new World Pickleball Rankings in effect.",
+      "date": "August 27, 2026",
       "category": "Pickleball",
-      "link": "https://www.timesnownews.com/sports/pickleball/hong-kong-slam-asias-biggest-professional-pickleball-tournament-to-offer-1-1-million-prize-purse-article-155982955"
+      "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
     },
     {
-      "title": "WTT Champions Macao Returns",
+      "title": "France's Historic Worlds Double Gold",
+      "excerpt": "Alex Lanier became France's first men's singles world champion and Thom Gicquel/Delphine Delrue won mixed doubles as Europe celebrated a landmark BWF Worlds in New Delhi.",
+      "date": "August 27, 2026",
+      "category": "Badminton",
+      "link": "https://sportstar.thehindu.com/badminton/bwf-world-championships-2026-an-se-young-alex-lanier-men-women-singles-winner-full-list-of-champions/article71381715.ece"
+    },
+    {
+      "title": "WTT Champions Macao on Deck",
       "excerpt": "WTT Champions Macao runs Sep 8–13 at the East Asian Games Dome, drawing 32 men's and women's singles players with 1,000 ranking points for the champions.",
-      "date": "August 26, 2026",
+      "date": "August 27, 2026",
       "category": "Table Tennis",
       "link": "https://www.galaxymacau.com/offers/entertainment/wtt-champions-macao-2026-presented-galaxy-entertainment-group/"
     }
