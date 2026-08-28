@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open qualifying final day — 32 singles qualifiers decided at Flushing Meadows ahead of main draw Aug 30 • [SQUASH] Budapest Open semi-finals tonight — Copper event crowns champion Friday after dramatic quarter-finals • [BADMINTON] France's historic Worlds double — Alex Lanier & Gicquel/Delrue crowned in New Delhi; An Se-young reclaims title • [PICKLEBALL] Veolia Nationals Cary Aug 31 — PPA Slam season opener with $1.65M purse; Canes & the Cup Pro-Am Sep 3 • [TABLE TENNIS] WTT Champions Macao Sep 8–13 — 1,000 ranking points on line; Felix Lebrun rises after Europe Smash sweep",
+  "tickerText": "[TENNIS] US Open main draw set — Zverev & Sabalenka top seeds as qualifying wraps today after rain delays; first round Sunday Aug 30 • [SQUASH] World Squash Masters Championships open Aug 30 in Perth — accreditation & opening ceremony Aug 29 • [BADMINTON] BWF Worlds wrap — France's first men's singles & mixed doubles golds; An Se-young reclaims title in New Delhi • [PICKLEBALL] MLP Finals NYC Aug 28–30 — NJ 5s, Brooklyn, St. Louis & Dallas battle at Wollman Rink; CBS title match Sunday • [TABLE TENNIS] ETTU Champions League Stage 1 Aug 28–30 — 16 men's clubs in Lille & 8 women's clubs in Budaörs chase knockout spots",
   "newsItems": [
     {
-      "title": "US Open Qualifying Final Day",
-      "excerpt": "The last day of US Open singles qualifying at Flushing Meadows decides the final 32 qualifiers — 16 men and 16 women — before the main draw begins Sunday, August 30.",
-      "date": "August 27, 2026",
+      "title": "US Open Draw Set, Qualifying Wraps",
+      "excerpt": "The 2026 US Open main draw was released Aug 27 — Zverev and Sabalenka lead the fields as rain pushes the final qualifying round to Friday; first-round play begins Sunday at Flushing Meadows.",
+      "date": "August 28, 2026",
       "category": "Tennis",
-      "link": "https://www.lta.org.uk/fan-zone/grand-slam/us-open/news/2026/results-updates/"
+      "link": "https://www.bbc.com/sport/tennis/articles/cddv720123vo"
     },
     {
-      "title": "Veolia Nationals Open PPA Season",
-      "excerpt": "The Veolia Pickleball National Championships kick off Aug 31 in Cary, NC — a PPA Slam with $1.65M in payouts, 2,000 ranking points, and the new World Pickleball Rankings in effect.",
-      "date": "August 27, 2026",
+      "title": "MLP Finals Hit Central Park",
+      "excerpt": "The DoorDash MLP Finals run Aug 28–30 at CityPickle in NYC's Wollman Rink, with the NJ 5s, Brooklyn, St. Louis Shock and Dallas Flash in best-of-three semifinals and a Sunday CBS championship.",
+      "date": "August 28, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
+      "link": "https://www.thedinkpickleball.com/how-to-watch-the-2026-mlp-finals-schedule-tv-streams/"
     },
     {
-      "title": "France's Historic Worlds Double Gold",
-      "excerpt": "Alex Lanier became France's first men's singles world champion and Thom Gicquel/Delphine Delrue won mixed doubles as Europe celebrated a landmark BWF Worlds in New Delhi.",
-      "date": "August 27, 2026",
+      "title": "BWF Worlds Crown New Champions",
+      "excerpt": "The 2026 BWF World Championships closed in New Delhi with France's first men's singles and mixed doubles titles, An Se-young reclaiming women's singles gold, and India's Treesa-Gayatri earning women's doubles bronze.",
+      "date": "August 28, 2026",
       "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/badminton/bwf-world-championships-2026-an-se-young-alex-lanier-men-women-singles-winner-full-list-of-champions/article71381715.ece"
+      "link": "https://sportstar.thehindu.com/badminton/bwf-world-championships-2026-medal-winners-full-list/article71383023.ece"
     },
     {
-      "title": "WTT Champions Macao on Deck",
-      "excerpt": "WTT Champions Macao runs Sep 8–13 at the East Asian Games Dome, drawing 32 men's and women's singles players with 1,000 ranking points for the champions.",
-      "date": "August 27, 2026",
+      "title": "ETTU Champions League Stage 1 Begins",
+      "excerpt": "The 2026/27 ETTU Champions League opens Aug 28–30 with men's Stage 1 in Lille (16 clubs, top two per group advance) and women's Stage 1 in Budaörs (eight clubs, two group winners progress).",
+      "date": "August 28, 2026",
       "category": "Table Tennis",
-      "link": "https://www.galaxymacau.com/offers/entertainment/wtt-champions-macao-2026-presented-galaxy-entertainment-group/"
+      "link": "https://www.ettu.org/hylo-ettu-champions-league-men-stage-1-set-for-three-days-of-action-in-lille/"
     }
   ]
 }
