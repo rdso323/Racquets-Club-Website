@@ -100,16 +100,33 @@ const Home = () => {
                                 <em className="italic text-clay-500 text-glow-gold dark:text-clay-300">One club.</em>
                             </motion.h1>
 
+                            <motion.div
+                                {...rise(0.16)}
+                                className="mx-auto mt-8 flex max-w-md flex-wrap items-center justify-center gap-x-5 gap-y-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-court-line/40 md:mx-0 md:max-w-none md:justify-start md:text-left"
+                                aria-label="Club sports"
+                            >
+                                {SPORTS.map((sport, i) => (
+                                    <span key={sport} className="inline-flex items-center gap-x-5">
+                                        {i > 0 && (
+                                            <span
+                                                className="inline-block h-1.5 w-1.5 rounded-full bg-gradient-to-br from-lime-300 to-lime-500 shadow-[0_0_10px_rgba(163,230,53,0.35)]"
+                                                aria-hidden="true"
+                                            />
+                                        )}
+                                        {sport}
+                                    </span>
+                                ))}
+                            </motion.div>
+
                             <motion.p
-                                {...rise(0.18)}
+                                {...rise(0.24)}
                                 className="mt-7 max-w-2xl text-base font-light leading-relaxed text-gray-700 dark:text-court-line/70 sm:text-lg"
                             >
-                                A community for racquet sports players of every level — tennis, badminton, squash,
-                                pickleball, and table tennis. We host open play and social events for the Fuqua, Duke, and
-                                greater Durham communities.
+                                A community for racquet sports players of every level. We host open play and social
+                                events for the Fuqua, Duke, and greater Durham communities.
                             </motion.p>
 
-                            <motion.div {...rise(0.28)} className="flex flex-col items-center gap-4 pt-9 sm:flex-row md:items-start">
+                            <motion.div {...rise(0.34)} className="flex flex-col items-center gap-4 pt-9 sm:flex-row md:items-start">
                                 <button
                                     onClick={() => scrollToSection('booking-section')}
                                     data-cursor="hover"
@@ -125,20 +142,6 @@ const Home = () => {
                                 >
                                     Club News <ArrowRight className="ml-2 h-4 w-4" />
                                 </button>
-                            </motion.div>
-
-                            <motion.div
-                                {...rise(0.4)}
-                                className="mx-auto mt-14 flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-3 text-center text-xs font-semibold uppercase tracking-[0.2em] text-gray-500 dark:text-court-line/40 md:mx-0 md:max-w-none md:justify-start md:text-left"
-                            >
-                                {SPORTS.map((sport, i) => (
-                                    <span key={sport} className="inline-flex items-center gap-x-6">
-                                        {i > 0 && (
-                                            <span className="text-clay-500 dark:text-clay-400" aria-hidden="true">·</span>
-                                        )}
-                                        {sport}
-                                    </span>
-                                ))}
                             </motion.div>
                         </div>
                     </div>
