@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open main draw set — Zverev & Sabalenka top seeds as qualifying wraps today after rain delays; first round Sunday Aug 30 • [SQUASH] World Squash Masters Championships open Aug 30 in Perth — accreditation & opening ceremony Aug 29 • [BADMINTON] BWF Worlds wrap — France's first men's singles & mixed doubles golds; An Se-young reclaims title in New Delhi • [PICKLEBALL] MLP Finals NYC Aug 28–30 — NJ 5s, Brooklyn, St. Louis & Dallas battle at Wollman Rink; CBS title match Sunday • [TABLE TENNIS] ETTU Champions League Stage 1 Aug 28–30 — 16 men's clubs in Lille & 8 women's clubs in Budaörs chase knockout spots",
+  "tickerText": "[TENNIS] US Open main draw begins Sunday Aug 30 — Alcaraz opens title defense vs Safiullin; Venus Williams faces Kenin; Fan Week wraps today • [SQUASH] Velavan Senthilkumar wins maiden PSA title at Budapest Open, beating Farkas 11-4, 11-2, 11-3; World Squash Masters opening ceremony tonight in Perth • [BADMINTON] Lee Zii Jia eyes Vietnam Open reset after skipping Asian Games — Malaysia star looks to rebuild form post-BWF Worlds • [PICKLEBALL] MLP Finals Day 2 in Central Park — St. Louis Shock sweep Dallas into Sunday final; NJ 5s lead Brooklyn 1-0, Game 2 at 10 a.m. ET • [TABLE TENNIS] ETTU Champions League Stage 1 Day 2 — men's groups continue in Lille, women's in Budaörs; Stage 2 spots decided Sunday",
   "newsItems": [
     {
-      "title": "US Open Draw Set, Qualifying Wraps",
-      "excerpt": "The 2026 US Open main draw was released Aug 27 — Zverev and Sabalenka lead the fields as rain pushes the final qualifying round to Friday; first-round play begins Sunday at Flushing Meadows.",
-      "date": "August 28, 2026",
+      "title": "US Open Ready for First Round",
+      "excerpt": "Fan Week ends Aug 29 as the 2026 US Open main draw opens Sunday — Carlos Alcaraz begins his title defense against Roman Safiullin and Venus Williams faces Sofia Kenin in a wild-card clash at Flushing Meadows.",
+      "date": "August 29, 2026",
       "category": "Tennis",
-      "link": "https://www.bbc.com/sport/tennis/articles/cddv720123vo"
+      "link": "https://apnews.com/article/us-open-tennis-draw-e9fed64f4d4e0290e17c4cab023c50e3"
     },
     {
-      "title": "MLP Finals Hit Central Park",
-      "excerpt": "The DoorDash MLP Finals run Aug 28–30 at CityPickle in NYC's Wollman Rink, with the NJ 5s, Brooklyn, St. Louis Shock and Dallas Flash in best-of-three semifinals and a Sunday CBS championship.",
-      "date": "August 28, 2026",
+      "title": "Shock Punch MLP Finals Ticket",
+      "excerpt": "St. Louis swept Dallas 2-0 on Friday to reach the DoorDash MLP Finals at Wollman Rink, while New Jersey leads Brooklyn 1-0 ahead of Saturday's semifinal Game 2 at 10 a.m. ET.",
+      "date": "August 29, 2026",
       "category": "Pickleball",
-      "link": "https://www.thedinkpickleball.com/how-to-watch-the-2026-mlp-finals-schedule-tv-streams/"
+      "link": "https://thekitchenpickle.com/blogs/news/major-league-pickleball-finals-2026-live-blog/"
     },
     {
-      "title": "BWF Worlds Crown New Champions",
-      "excerpt": "The 2026 BWF World Championships closed in New Delhi with France's first men's singles and mixed doubles titles, An Se-young reclaiming women's singles gold, and India's Treesa-Gayatri earning women's doubles bronze.",
-      "date": "August 28, 2026",
+      "title": "Zii Jia Targets Vietnam Open",
+      "excerpt": "Malaysia's Lee Zii Jia is using the September Vietnam Open to regroup after early exits and skipping the Asian Games, with a month of training behind his bid for a first title since 2024.",
+      "date": "August 29, 2026",
       "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/badminton/bwf-world-championships-2026-medal-winners-full-list/article71383023.ece"
+      "link": "https://www.thestar.com.my/sport/badminton/2026/08/29/zii-jiaseeks-firm-footing-as-vietnam-offers-fresh-start"
     },
     {
-      "title": "ETTU Champions League Stage 1 Begins",
-      "excerpt": "The 2026/27 ETTU Champions League opens Aug 28–30 with men's Stage 1 in Lille (16 clubs, top two per group advance) and women's Stage 1 in Budaörs (eight clubs, two group winners progress).",
-      "date": "August 28, 2026",
+      "title": "ETTU Champions League Heats Up",
+      "excerpt": "Stage 1 rolls into Day 2 with 16 men's clubs battling in Lille and eight women's sides in Budaörs — top finishers in each group clinch berths in the next Champions League round by Sunday.",
+      "date": "August 29, 2026",
       "category": "Table Tennis",
-      "link": "https://www.ettu.org/hylo-ettu-champions-league-men-stage-1-set-for-three-days-of-action-in-lille/"
+      "link": "https://www.ettu.org/lille-welcomes-the-start-of-the-hylo-ettu-champions-league-men/"
     }
   ]
 }
