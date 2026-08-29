@@ -13,6 +13,7 @@ interface AdminLayoutProps {
     eventCount: number;
     archiveCount: number;
     feedbackCount: number;
+    cabinetCount: number;
     tickerConfigured: boolean;
     children: ReactNode;
 }
@@ -26,6 +27,7 @@ const AdminLayout = ({
     eventCount,
     archiveCount,
     feedbackCount,
+    cabinetCount,
     tickerConfigured,
     children,
 }: AdminLayoutProps) => (
@@ -69,6 +71,7 @@ const AdminLayout = ({
                 eventCount={eventCount}
                 archiveCount={archiveCount}
                 feedbackCount={feedbackCount}
+                cabinetCount={cabinetCount}
             />
             <main className="glass-deep min-h-[600px] w-full flex-grow p-4 transition-colors duration-300 sm:p-6 md:p-8">
                 {children}

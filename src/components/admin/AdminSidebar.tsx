@@ -5,6 +5,7 @@ import {
     Plus,
     Sliders,
     Sparkles,
+    Users,
 } from 'lucide-react';
 import type { AdminTab } from './types';
 
@@ -16,6 +17,7 @@ interface AdminSidebarProps {
     eventCount: number;
     archiveCount: number;
     feedbackCount: number;
+    cabinetCount: number;
 }
 
 const navButtonClass = (active: boolean) =>
@@ -33,6 +35,7 @@ const AdminSidebar = ({
     eventCount,
     archiveCount,
     feedbackCount,
+    cabinetCount,
 }: AdminSidebarProps) => (
     <aside className="glass-deep flex w-full shrink-0 flex-col gap-2 p-4 lg:w-64">
         <div className="mb-2 border-b border-gray-100 px-3 py-2 dark:border-chalk/10">
@@ -60,6 +63,16 @@ const AdminSidebar = ({
             {eventCount > 0 && (
                 <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600 dark:bg-court-950 dark:text-gray-300">
                     {eventCount}
+                </span>
+            )}
+        </button>
+
+        <button onClick={() => onTabChange('cabinet')} className={navButtonClass(activeTab === 'cabinet')}>
+            <Users className="h-4 w-4" />
+            Cabinet
+            {cabinetCount > 0 && (
+                <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600 dark:bg-court-950 dark:text-gray-300">
+                    {cabinetCount}
                 </span>
             )}
         </button>

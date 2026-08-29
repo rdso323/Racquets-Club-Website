@@ -5,6 +5,7 @@ import AdminLayout from '../components/admin/AdminLayout';
 import SettingsModule from '../components/admin/modules/SettingsModule';
 import SessionsModule from '../components/admin/modules/SessionsModule';
 import EventsModule from '../components/admin/modules/EventsModule';
+import CabinetModule from '../components/admin/modules/CabinetModule';
 import ArchiveModule from '../components/admin/modules/ArchiveModule';
 import FeedbackModule from '../components/admin/modules/FeedbackModule';
 import type { AdminTab } from '../components/admin/types';
@@ -26,6 +27,9 @@ const AdminDashboard = () => {
         disabledBuiltinSchedules,
         eventsList,
         feedbackList,
+        cabinetYear,
+        cabinetMembers,
+        cabinetLoaded,
     } = useAdminData(isAdmin);
 
     const upcomingSessions = useMemo(
@@ -70,6 +74,7 @@ const AdminDashboard = () => {
             eventCount={filterUpcomingEvents(eventsList).length}
             archiveCount={archiveCount}
             feedbackCount={feedbackList.length}
+            cabinetCount={cabinetMembers.length}
             tickerConfigured={tickerText.trim().length > 0}
         >
             {activeTab === 'settings' && (
@@ -86,6 +91,14 @@ const AdminDashboard = () => {
             )}
 
             {activeTab === 'events' && <EventsModule eventsList={eventsList} />}
+
+            {activeTab === 'cabinet' && (
+                <CabinetModule
+                    cabinetYear={cabinetYear}
+                    cabinetMembers={cabinetMembers}
+                    cabinetLoaded={cabinetLoaded}
+                />
+            )}
 
             {activeTab === 'archive' && (
                 <ArchiveModule eventsList={eventsList} sessionsList={sessionsList} />

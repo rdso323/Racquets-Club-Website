@@ -4,6 +4,13 @@ import { db } from '../lib/firebase';
 import { maintainArchivedCollections } from '../lib/archive';
 import { type AdminRecurringSchedule } from '../lib/sports';
 import { normalizeSessionFromFirestore, type Session } from '../lib/sessions';
+import {
+    CABINET_SETTINGS_COLLECTION,
+    CABINET_SETTINGS_DOC_ID,
+    CABINET_YEAR,
+    normalizeCabinetRoster,
+    type CabinetMember,
+} from '../lib/cabinet';
 import type { AdminEvent, FeedbackItem } from '../components/admin/types';
 
 /** Subscribes to all Operations Deck collections on mount so stats and modules stay in sync. */
@@ -15,6 +22,9 @@ export const useAdminData = (isAdmin = false) => {
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [eventsList, setEventsList] = useState<AdminEvent[]>([]);
     const [feedbackList, setFeedbackList] = useState<FeedbackItem[]>([]);
+    const [cabinetYear, setCabinetYear] = useState(CABINET_YEAR);
+    const [cabinetMembers, setCabinetMembers] = useState<CabinetMember[]>([]);
+    const [cabinetLoaded, setCabinetLoaded] = useState(false);
 
     useEffect(() => {
         const unsubs: (() => void)[] = [];
@@ -29,6 +39,27 @@ export const useAdminData = (isAdmin = false) => {
                 (err) => {
                     console.error('Ticker subscription error', err);
                     setInitialLoading(false);
+                },
+            ),
+        );
+
+        unsubs.push(
+            onSnapshot(
+                doc(db, CABINET_SETTINGS_COLLECTION, CABINET_SETTINGS_DOC_ID),
+                (snap) => {
+                    if (snap.exists()) {
+                        const roster = normalizeCabinetRoster(snap.data());
+                        setCabinetYear(roster?.year || CABINET_YEAR);
+                        setCabinetMembers(roster?.members || []);
+                    } else {
+                        setCabinetYear(CABINET_YEAR);
+                        setCabinetMembers([]);
+                    }
+                    setCabinetLoaded(true);
+                },
+                (err) => {
+                    console.error('Cabinet subscription error', err);
+                    setCabinetLoaded(true);
                 },
             ),
         );
@@ -116,5 +147,8 @@ export const useAdminData = (isAdmin = false) => {
         disabledBuiltinSchedules,
         eventsList,
         feedbackList,
+        cabinetYear,
+        cabinetMembers,
+        cabinetLoaded,
     };
 };

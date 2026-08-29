@@ -1,13 +1,17 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Footer from '../components/home/Footer';
 import CabinetMemberPortrait from '../components/cabinet/CabinetMemberPortrait';
 import {
-    CABINET_CO_PRESIDENTS,
-    CABINET_OFFICERS,
-    CABINET_YEAR,
+    CABINET_SETTINGS_COLLECTION,
+    CABINET_SETTINGS_DOC_ID,
+    resolveCabinetDisplay,
+    type ResolvedCabinet,
 } from '../lib/cabinet';
+import { db } from '../lib/firebase';
 import { sectionHud } from '../lib/siteNav';
 import { useHomeSectionNavigation } from '../hooks/useHomeSectionNavigation';
 
@@ -33,6 +37,21 @@ const HeroCourtArt = () => (
 const Cabinet = () => {
     const prefersReducedMotion = useReducedMotion();
     const { scrollToHomeSection } = useHomeSectionNavigation();
+    const [roster, setRoster] = useState<ResolvedCabinet>(() => resolveCabinetDisplay(null));
+
+    useEffect(() => {
+        const unsub = onSnapshot(
+            doc(db, CABINET_SETTINGS_COLLECTION, CABINET_SETTINGS_DOC_ID),
+            (snap) => {
+                setRoster(resolveCabinetDisplay(snap.exists() ? snap.data() : null));
+            },
+            (err) => {
+                console.error('Cabinet page subscription error', err);
+                setRoster(resolveCabinetDisplay(null));
+            },
+        );
+        return () => unsub();
+    }, []);
 
     const rise = (delay: number) => ({
         initial: prefersReducedMotion ? false : { opacity: 0, y: 28 },
@@ -57,7 +76,7 @@ const Cabinet = () => {
                         <motion.div {...rise(0)} className="mb-6 flex items-center gap-4">
                             <span className="h-px w-12 bg-wimbledon-gold" aria-hidden="true" />
                             <span className="text-[11px] font-bold uppercase tracking-editorial text-wimbledon-gold sm:text-xs">
-                                Cabinet · {CABINET_YEAR}
+                                Cabinet · {roster.year}
                             </span>
                         </motion.div>
 
@@ -90,16 +109,20 @@ const Cabinet = () => {
                         Co-Presidents
                     </h2>
                 </div>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
-                    {CABINET_CO_PRESIDENTS.map((member, i) => (
-                        <CabinetMemberPortrait
-                            key={member.id}
-                            member={member}
-                            size="featured"
-                            index={i}
-                        />
-                    ))}
-                </div>
+                {roster.coPresidents.length === 0 ? (
+                    <p className="text-sm text-gray-500 dark:text-chalk/50">No co-presidents listed yet.</p>
+                ) : (
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6">
+                        {roster.coPresidents.map((member, i) => (
+                            <CabinetMemberPortrait
+                                key={member.id}
+                                member={member}
+                                size="featured"
+                                index={i}
+                            />
+                        ))}
+                    </div>
+                )}
             </section>
 
             {/* Officers */}
@@ -111,11 +134,15 @@ const Cabinet = () => {
                             Sport Leads &amp; Treasury
                         </h2>
                     </div>
-                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 sm:gap-y-10">
-                        {CABINET_OFFICERS.map((member, i) => (
-                            <CabinetMemberPortrait key={member.id} member={member} index={i} />
-                        ))}
-                    </div>
+                    {roster.officers.length === 0 ? (
+                        <p className="text-sm text-gray-500 dark:text-chalk/50">No officers listed yet.</p>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 sm:gap-y-10">
+                            {roster.officers.map((member, i) => (
+                                <CabinetMemberPortrait key={member.id} member={member} index={i} />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 

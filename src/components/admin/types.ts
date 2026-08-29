@@ -1,4 +1,4 @@
-export type AdminTab = 'settings' | 'sessions' | 'events' | 'archive' | 'feedback';
+export type AdminTab = 'settings' | 'sessions' | 'events' | 'cabinet' | 'archive' | 'feedback';
 
 export interface AdminEvent {
     id: string;
