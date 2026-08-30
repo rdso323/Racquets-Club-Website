@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open main draw begins Sunday Aug 30 — Alcaraz opens title defense vs Safiullin; Venus Williams faces Kenin; Fan Week wraps today • [SQUASH] Velavan Senthilkumar wins maiden PSA title at Budapest Open, beating Farkas 11-4, 11-2, 11-3; World Squash Masters opening ceremony tonight in Perth • [BADMINTON] Lee Zii Jia eyes Vietnam Open reset after skipping Asian Games — Malaysia star looks to rebuild form post-BWF Worlds • [PICKLEBALL] MLP Finals Day 2 in Central Park — St. Louis Shock sweep Dallas into Sunday final; NJ 5s lead Brooklyn 1-0, Game 2 at 10 a.m. ET • [TABLE TENNIS] ETTU Champions League Stage 1 Day 2 — men's groups continue in Lille, women's in Budaörs; Stage 2 spots decided Sunday",
+  "tickerText": "[TENNIS] US Open Day 1 Aug 30 — Djokovic opens vs Navone, Pegula vs Ruse on Ashe; Venus Williams faces Kenin in wild-card night session at Flushing Meadows • [SQUASH] World Squash Masters underway in Perth — 900+ players across 21 age groups; Alex Preston claims first win on Karrinyup all-glass court • [BADMINTON] Lee Zii Jia targets Vietnam Open reset Sept 8 after Korean Masters exit — Malaysia star skipping Asian Games to rebuild form • [PICKLEBALL] MLP Championship Sunday at Wollman Rink — NJ 5s vs St. Louis Shock on CBS at noon ET in best-of-three title series • [TABLE TENNIS] ETTU Champions League Stage 1 finale in Lille — final group matches today decide eight clubs advancing to Stage 2",
   "newsItems": [
     {
-      "title": "US Open Ready for First Round",
-      "excerpt": "Fan Week ends Aug 29 as the 2026 US Open main draw opens Sunday — Carlos Alcaraz begins his title defense against Roman Safiullin and Venus Williams faces Sofia Kenin in a wild-card clash at Flushing Meadows.",
-      "date": "August 29, 2026",
-      "category": "Tennis",
-      "link": "https://apnews.com/article/us-open-tennis-draw-e9fed64f4d4e0290e17c4cab023c50e3"
+      "title": "World Squash Masters Opens in Perth",
+      "excerpt": "The 2026 World Squash Masters Championships kicked off Sunday with 900+ players across 21 age categories — England's Alex Preston claimed the first win on the all-glass show court at Karrinyup Shopping Centre.",
+      "date": "August 30, 2026",
+      "category": "Squash",
+      "link": "https://www.worldsquash.sport/alex-preston-claims-first-win-on-all-glass-court-at-2026-world-squash-masters-championships/"
     },
     {
-      "title": "Shock Punch MLP Finals Ticket",
-      "excerpt": "St. Louis swept Dallas 2-0 on Friday to reach the DoorDash MLP Finals at Wollman Rink, while New Jersey leads Brooklyn 1-0 ahead of Saturday's semifinal Game 2 at 10 a.m. ET.",
-      "date": "August 29, 2026",
+      "title": "MLP Title Sunday in Central Park",
+      "excerpt": "New Jersey 5s and St. Louis Shock meet in the DoorDash MLP Finals best-of-three at Wollman Rink — Championship Sunday airs on CBS at noon ET with Tennis Channel coverage from 2 p.m.",
+      "date": "August 30, 2026",
       "category": "Pickleball",
-      "link": "https://thekitchenpickle.com/blogs/news/major-league-pickleball-finals-2026-live-blog/"
+      "link": "https://www.thedinkpickleball.com/how-to-watch-the-2026-mlp-finals-schedule-tv-streams/"
     },
     {
-      "title": "Zii Jia Targets Vietnam Open",
-      "excerpt": "Malaysia's Lee Zii Jia is using the September Vietnam Open to regroup after early exits and skipping the Asian Games, with a month of training behind his bid for a first title since 2024.",
-      "date": "August 29, 2026",
+      "title": "Zii Jia Eyes Vietnam Open Reset",
+      "excerpt": "Malaysia's Lee Zii Jia will use the Sept 8–13 Vietnam Open to regroup after a Korean Masters first-round exit and skipping the Asian Games, chasing his first title since the 2024 Australian Open.",
+      "date": "August 30, 2026",
       "category": "Badminton",
-      "link": "https://www.thestar.com.my/sport/badminton/2026/08/29/zii-jiaseeks-firm-footing-as-vietnam-offers-fresh-start"
+      "link": "https://www.thestar.com.my/sport/badminton/2026/08/28/zii-jia-out-to-find-his-mojo-in-vietnam"
     },
     {
-      "title": "ETTU Champions League Heats Up",
-      "excerpt": "Stage 1 rolls into Day 2 with 16 men's clubs battling in Lille and eight women's sides in Budaörs — top finishers in each group clinch berths in the next Champions League round by Sunday.",
-      "date": "August 29, 2026",
+      "title": "ETTU Stage 1 Wraps in Lille",
+      "excerpt": "The HYLO ETTU Champions League men's Stage 1 concludes Sunday in Lille — top two clubs in each of four groups secure berths in Stage 2, joining eight seeded sides in the Round of 16.",
+      "date": "August 30, 2026",
       "category": "Table Tennis",
-      "link": "https://www.ettu.org/lille-welcomes-the-start-of-the-hylo-ettu-champions-league-men/"
+      "link": "https://www.ettu.org/day-2-brings-first-qualification-clues-in-hylo-ettu-champions-league-men-video/"
     }
   ]
 }
