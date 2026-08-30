@@ -6,16 +6,16 @@ export interface FaqItem {
 /** Member-facing FAQ — always shown on /help */
 export const MEMBER_HELP_FAQ: FaqItem[] = [
     {
-        question: 'Who can sign up and book courts?',
-        answer: 'Booking is for verified Duke members. Sign up with your firstname.lastname@duke.edu address (not your NetID alias), verify your inbox, then sign in. The home page shows availability, but you must be signed in to join a session or court.',
+        question: 'Who can sign in and book courts?',
+        answer: 'Booking is for Duke members. Open Sign in, enter your firstname.lastname@duke.edu address (not your NetID alias), and use the one-time link we email you — no password. The home page shows availability, but you must be signed in to join a session or court. You stay signed in on that browser until you sign out.',
     },
     {
         question: 'Which email should I use to sign in?',
-        answer: 'Sign in with whichever @duke.edu address you used when you registered (including older accounts). For new sign-ups, use firstname.lastname@duke.edu — not NetID-only aliases like rjd51@duke.edu, which create a duplicate account.',
+        answer: 'Use firstname.lastname@duke.edu — not NetID-only aliases like rjd51@duke.edu. Always request and open the sign-in link with the same address.',
     },
     {
-        question: 'I did not receive my verification email — what should I do?',
-        answer: 'Check your junk/spam folder first — verification emails often land there. Confirm you signed up with firstname.lastname@duke.edu (not a NetID-only alias). On the login page, enter your email and password, then tap Resend verification email. If it still does not arrive, contact an admin.',
+        question: 'I did not receive my sign-in link — what should I do?',
+        answer: 'Check your junk/spam folder first — sign-in emails often land there. Confirm you used firstname.lastname@duke.edu (not a NetID-only alias). On the login page, tap Email me a sign-in link again. Links expire after about an hour; request a fresh one if needed. If it still does not arrive, contact an admin.',
     },
     {
         question: 'Which sports can I book?',
@@ -75,7 +75,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
 export const ADMIN_HELP_FAQ: FaqItem[] = [
     {
         question: 'What is the Operations Deck?',
-        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Archive, and Feedback Inbox. Only allowlisted @duke.edu emails see the Admin link and can access this area. You can also manage many session tasks directly from the home page booking cards (see below).',
+        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Cabinet, Archive, and Feedback Inbox. Only allowlisted @duke.edu emails see the Admin link and can access this area. You can also manage many session tasks directly from the home page booking cards (see below).',
     },
     {
         question: 'How do I manage sessions from the home page?',
@@ -111,7 +111,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do co-officers get admin access?',
-        answer: 'Add their firstname.lastname@duke.edu to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign up at /login with that address and verify their inbox. The Admin link appears automatically.',
+        answer: 'Add their firstname.lastname@duke.edu to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign in at /login with that address via the email link. The Admin link appears automatically.',
     },
     {
         question: 'How are waitlists managed?',
