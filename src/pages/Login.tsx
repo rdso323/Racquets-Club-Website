@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
+import { DUKE_EMAIL_FORMAT_MESSAGE, isAllowedDukeEmail } from '../lib/memberNames';
 
 const MOTION_EASE = [0.16, 1, 0.3, 1] as const;
 const SUPPORT_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
@@ -25,8 +26,10 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [sending, setSending] = useState(false);
     const [completing, setCompleting] = useState(false);
+    const [localError, setLocalError] = useState<string | null>(null);
 
     const logoSrc = logoSrcForTheme(theme);
+    const displayError = localError || error;
 
     const viewTransition = prefersReducedMotion
         ? { duration: 0 }
@@ -48,6 +51,13 @@ const Login = () => {
     const handleSendLink = async (event: React.FormEvent) => {
         event.preventDefault();
         clearAuthError();
+        setLocalError(null);
+
+        if (!isAllowedDukeEmail(email)) {
+            setLocalError(DUKE_EMAIL_FORMAT_MESSAGE);
+            return;
+        }
+
         setSending(true);
         try {
             await sendSignInLink(email);
@@ -59,6 +69,7 @@ const Login = () => {
     const handleCompleteLink = async (event: React.FormEvent) => {
         event.preventDefault();
         clearAuthError();
+        setLocalError(null);
         setCompleting(true);
         try {
             await completeEmailLinkSignIn(email);
@@ -141,13 +152,13 @@ const Login = () => {
                             </div>
                         )}
 
-                        {error && (
+                        {displayError && (
                             <div
                                 role="alert"
                                 className="mt-5 flex items-start rounded-xl border border-red-100 bg-red-50 p-3 text-left text-sm text-red-600 dark:border-red-900/30 dark:bg-red-950/20 dark:text-red-400"
                             >
                                 <AlertCircle className="mr-2 mt-0.5 h-5 w-5 shrink-0" />
-                                <span>{error}</span>
+                                <span>{displayError}</span>
                             </div>
                         )}
 
