@@ -188,6 +188,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
+        // Email-link sign-in always verifies; reject leftover unverified password accounts.
+        if (!currentUser.emailVerified) {
+            await firebaseSignOut(auth);
+            setUser(null);
+            setError('Please sign in with the email link sent to your Duke inbox.');
+            return;
+        }
+
         setUser(currentUser);
         setError(null);
         setLinkSentPending(false);
