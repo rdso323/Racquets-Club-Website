@@ -83,7 +83,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do I create events and sessions?',
-        answer: 'In the Operations Deck → Courts & Sessions, use calendar date pickers and 12-hour AM/PM time pickers — no free-text dates or times. Choose one-time or weekly recurring, Open Play or Clinic, configure courts (up to 5), max capacity (up to 20 roster spots), and waitlist size (up to 10, or 0 to disable). Events are created under Events Manager with the same date/time pickers.',
+        answer: 'In the Operations Deck → Courts & Sessions, use calendar date pickers and 12-hour AM/PM time pickers — no free-text dates or times. Choose one-time or weekly recurring, Open Play or Clinic, configure courts (up to 5), max capacity (up to 20 roster spots), and waitlist size (up to 10, or 0 to disable). For club socials, open Events Manager and paste a public Fuqua Connect event URL (…/event/12345678) into Import from Fuqua Connect to pre-fill title, image, date, time, and location — review, then save. Events can still be created manually with the same date/time pickers.',
     },
     {
         question: 'What are the maximum session size limits?',
