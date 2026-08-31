@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore';
-import { Plus, Sparkles } from 'lucide-react';
+import { Download, Plus, Sparkles } from 'lucide-react';
 import { db } from '../../../lib/firebase';
 import { filterUpcomingEvents } from '../../../lib/events';
 import { ARCHIVE_RETENTION_DAYS } from '../../../lib/archive';
@@ -10,6 +10,7 @@ import {
     resolveEventDateISO,
     resolveEventTimes,
 } from '../../../lib/dates';
+import { importFuquaConnectEvent } from '../../../lib/fuquaConnect';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import type { AdminEvent } from '../types';
@@ -37,6 +38,9 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
     const [savingEvent, setSavingEvent] = useState(false);
     const [eventMessage, setEventMessage] = useState('');
     const [editingEvent, setEditingEvent] = useState<AdminEvent | null>(null);
+    const [fuquaConnectUrl, setFuquaConnectUrl] = useState('');
+    const [importingFuquaConnect, setImportingFuquaConnect] = useState(false);
+    const [importError, setImportError] = useState<string | null>(null);
 
     const upcomingEvents = filterUpcomingEvents(eventsList);
 
@@ -113,6 +117,34 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
         }
     };
 
+    const handleImportFuquaConnect = async (event: React.FormEvent) => {
+        event.preventDefault();
+        setImportError(null);
+        setEventMessage('');
+        setImportingFuquaConnect(true);
+        try {
+            const imported = await importFuquaConnectEvent(fuquaConnectUrl);
+            setNewEvent({
+                title: imported.title,
+                dateISO: imported.dateISO,
+                date: imported.date,
+                startTime: imported.startTime,
+                endTime: imported.endTime,
+                time: imported.time,
+                location: imported.location,
+                image: imported.image,
+                link: imported.link,
+            });
+            setEventMessage('Imported from Fuqua Connect — review the fields below, then save.');
+            window.setTimeout(() => setEventMessage(''), 5000);
+        } catch (err) {
+            console.error('Fuqua Connect import failed', err);
+            setImportError(err instanceof Error ? err.message : 'Failed to import from Fuqua Connect.');
+        } finally {
+            setImportingFuquaConnect(false);
+        }
+    };
+
     return (
         <div className="animate-fadeIn space-y-8">
             <div>
@@ -160,8 +192,37 @@ const EventsModule = ({ eventsList }: EventsModuleProps) => {
                     Add New Club Event
                 </h3>
                 <p className="mb-6 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    New events appear on the home page carousel as soon as they are saved.
+                    New events appear on the home page carousel as soon as they are saved. Paste a public
+                    Fuqua Connect event link to pre-fill the form.
                 </p>
+
+                <form onSubmit={handleImportFuquaConnect} className="mb-6 space-y-3 rounded-xl border border-dashed border-gray-200 bg-white/60 p-4 dark:border-gray-700 dark:bg-court-950/30">
+                    <label className="block text-xs font-bold uppercase text-gray-500">
+                        Import from Fuqua Connect
+                    </label>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                        <input
+                            type="url"
+                            value={fuquaConnectUrl}
+                            onChange={(e) => setFuquaConnectUrl(e.target.value)}
+                            placeholder="https://fuquaconnect.duke.edu/event/12603290"
+                            className="w-full flex-1 rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                        />
+                        <button
+                            type="submit"
+                            disabled={importingFuquaConnect || !fuquaConnectUrl.trim()}
+                            className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-lg border border-court-accent/30 bg-court-accent/10 px-4 py-2.5 text-sm font-semibold text-wimbledon-navy transition-colors hover:bg-court-accent/20 disabled:opacity-50 dark:text-chalk"
+                        >
+                            <Download className="mr-2 h-4 w-4" />
+                            {importingFuquaConnect ? 'Importing…' : 'Import details'}
+                        </button>
+                    </div>
+                    {importError && (
+                        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+                            {importError}
+                        </p>
+                    )}
+                </form>
 
                 <form onSubmit={handleAddEvent} className="space-y-4">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

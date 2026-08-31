@@ -10,7 +10,7 @@ Standard commands live in `package.json` scripts; use them directly:
 - Dev server: `npm run dev` (Vite, serves on `http://localhost:5173`).
 - Lint: `npm run lint` (`eslint .`). Note: the repo currently has pre-existing lint errors; a non-zero exit from lint does not mean your environment is broken.
 - Build: `npm run build` (`tsc -b && vite build`). Output goes to `dist/`.
-- Preview production build: `npm run preview`.
+- Preview production build (includes Worker API routes): `npm run preview`.
 
 Non-obvious notes:
 - **Firebase env vars are required for the app to initialize.** Create a local `.env` (gitignored) with `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`, and optional `VITE_FIREBASE_MEASUREMENT_ID` (see `src/lib/firebase.ts` and the README). Without a `.env`, Vite injects `undefined` for these values. Placeholder values are enough for the public home page to render in dev — only live Auth/Firestore calls need a real Firebase project.

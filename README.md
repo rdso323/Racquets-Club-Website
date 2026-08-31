@@ -51,7 +51,7 @@ No pre-created Firebase accounts needed. **Forgot Password** on the login page h
 
 - **Frontend:** React 19, TypeScript, Vite 7, Tailwind CSS, Framer Motion, Lenis
 - **Backend:** Firebase Auth + Firestore (client-only; no separate API server)
-- **Deploy:** Cloudflare Workers + Assets via Wrangler (`dist/` SPA fallback)
+- **Deploy:** Cloudflare Workers + Assets via Wrangler (`dist/` SPA fallback). A small Worker route (`/api/fuqua-connect/import`) fetches public Fuqua Connect event pages for the admin Events import.
 
 ## Getting started
 
