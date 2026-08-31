@@ -5,13 +5,13 @@ export const DUKE_EMAIL_FORMAT_MESSAGE =
     'Use your firstname.lastname@duke.edu address (e.g. rohan.dsouza@duke.edu). NetID-only aliases are not supported.';
 
 export const DUKE_SIGNIN_EMAIL_MESSAGE =
-    'Enter a verified @duke.edu address for the account you already registered.';
+    'Enter the same @duke.edu address you used when you requested the sign-in link.';
 
-/** Any Duke address — for sign-in and password reset on existing accounts. */
+/** Any Duke address — for completing an inbound email sign-in link. */
 export const isDukeEmail = (email: string): boolean =>
     email.trim().toLowerCase().endsWith('@duke.edu');
 
-/** firstname.lastname@duke.edu — required for new sign-ups only. */
+/** firstname.lastname@duke.edu — required when requesting a new sign-in link. */
 export const isAllowedDukeEmail = (email: string): boolean => {
     const trimmed = email.trim().toLowerCase();
     return trimmed.endsWith('@duke.edu') && DUKE_EMAIL_FORMAT_REGEX.test(trimmed);

@@ -1,16 +1,22 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
+    isSignInWithEmailLink,
     onAuthStateChanged,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    sendEmailVerification,
-    signOut as firebaseSignOut
+    sendSignInLinkToEmail,
+    signInWithEmailLink,
+    signOut as firebaseSignOut,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { SPORTS } from '../lib/sports';
-import { formatMemberNameFromEmail, isAllowedDukeEmail, isDukeEmail, DUKE_EMAIL_FORMAT_MESSAGE, DUKE_SIGNIN_EMAIL_MESSAGE } from '../lib/memberNames';
+import {
+    formatMemberNameFromEmail,
+    isAllowedDukeEmail,
+    isDukeEmail,
+    DUKE_EMAIL_FORMAT_MESSAGE,
+    DUKE_SIGNIN_EMAIL_MESSAGE,
+} from '../lib/memberNames';
 
 export interface TabPreference {
     id: string;
@@ -19,6 +25,7 @@ export interface TabPreference {
 
 const DEFAULT_TABS: TabPreference[] = SPORTS.map((id) => ({ id, visible: true }));
 const LEGACY_TAB_PREFS_KEY = 'booking_tabs_preferences';
+export const EMAIL_FOR_SIGN_IN_KEY = 'emailForSignIn';
 
 const tabPrefsCacheKey = (uid: string) => `booking_tabs_preferences_${uid}`;
 
@@ -77,8 +84,8 @@ const readLegacyTabPreferences = (): TabPreference[] | null => {
 
 const PRODUCTION_SITE_ORIGIN = 'https://www.fuquaracquetsclub.com';
 
-/** Continue URL for verification emails once the domain is allowlisted in Firebase Console. */
-const getVerificationContinueUrl = (): string => {
+/** Continue URL for email sign-in links — localhost for local testing, production otherwise. */
+const getSignInContinueUrl = (): string => {
     if (typeof window === 'undefined') {
         return `${PRODUCTION_SITE_ORIGIN}/login`;
     }
@@ -89,9 +96,9 @@ const getVerificationContinueUrl = (): string => {
     return `${PRODUCTION_SITE_ORIGIN}/login`;
 };
 
-const getVerificationActionCodeSettings = () => ({
-    url: getVerificationContinueUrl(),
-    handleCodeInApp: false,
+const getEmailLinkActionCodeSettings = () => ({
+    url: getSignInContinueUrl(),
+    handleCodeInApp: true,
 });
 
 const isContinueUriError = (err: unknown): boolean => {
@@ -99,50 +106,33 @@ const isContinueUriError = (err: unknown): boolean => {
     return code === 'auth/unauthorized-continue-uri' || code === 'auth/invalid-continue-uri';
 };
 
-/**
- * Send verification without a custom continue URL first — works even when
- * fuquaracquetsclub.com is not yet on Firebase's authorized-domains list.
- * Optionally retries with a continue URL when that domain is allowlisted.
- */
-const sendVerificationEmailWithFallback = async (user: User): Promise<void> => {
-    try {
-        await sendEmailVerification(user);
-        return;
-    } catch (plainErr) {
-        const plainCode = (plainErr as { code?: string })?.code;
-        if (plainCode === 'auth/too-many-requests') {
-            throw plainErr;
-        }
-        try {
-            await sendEmailVerification(user, getVerificationActionCodeSettings());
-        } catch (settingsErr) {
-            if (isContinueUriError(settingsErr)) {
-                throw plainErr;
-            }
-            throw settingsErr;
-        }
-    }
-};
-
-const verificationSendErrorMessage = (err: unknown): string => {
+const emailLinkSendErrorMessage = (err: unknown): string => {
     const code = (err as { code?: string })?.code;
     if (code === 'auth/too-many-requests') {
-        return 'Too many verification attempts from this device. Please wait 15–30 minutes and try again.';
+        return 'Too many sign-in attempts from this device. Please wait 15–30 minutes and try again.';
+    }
+    if (code === 'auth/invalid-email') {
+        return 'Please enter a valid email address.';
     }
     if (isContinueUriError(err)) {
-        return 'Could not send verification email due to a site configuration issue. Please contact an admin.';
+        return 'Could not send sign-in link due to a site configuration issue. Ask an admin to allowlist this domain in Firebase Authentication → Settings → Authorized domains.';
     }
-    return 'Failed to send verification email. Please try again.';
+    if (code === 'auth/operation-not-allowed') {
+        return 'Email link sign-in is not enabled yet. Ask an admin to enable Email/Password → Email link (passwordless) in Firebase Authentication.';
+    }
+    return 'Failed to send sign-in link. Please try again.';
 };
 
 interface AuthContextType {
     user: User | null;
     loading: boolean;
     error: string | null;
-    verificationPending: boolean;
-    signInWithEmail: (email: string, pass: string) => Promise<void>;
-    signUpWithEmail: (email: string, pass: string) => Promise<void>;
-    resendVerificationEmail: (email: string, pass: string) => Promise<'sent' | 'already-verified'>;
+    /** True after a sign-in link was sent and we are waiting for the user to open their inbox. */
+    linkSentPending: boolean;
+    /** True when the URL is an email sign-in link but we still need the user to confirm their email. */
+    emailLinkNeedsEmail: boolean;
+    sendSignInLink: (email: string) => Promise<void>;
+    completeEmailLinkSignIn: (email: string) => Promise<void>;
     clearAuthMessage: () => void;
     clearAuthError: () => void;
     signOut: () => Promise<void>;
@@ -184,64 +174,119 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [verificationPending, setVerificationPending] = useState(false);
+    const [linkSentPending, setLinkSentPending] = useState(false);
+    const [emailLinkNeedsEmail, setEmailLinkNeedsEmail] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const migrationAttemptedRef = useRef<string | null>(null);
-    const pendingVerificationFlowRef = useRef(false);
+    const completingEmailLinkRef = useRef(false);
+
+    const acceptAuthenticatedUser = async (currentUser: User) => {
+        if (!currentUser.email?.endsWith('@duke.edu')) {
+            await firebaseSignOut(auth);
+            setUser(null);
+            setError('Only @duke.edu email addresses are allowed.');
+            return;
+        }
+
+        // Email-link sign-in always verifies; reject leftover unverified password accounts.
+        if (!currentUser.emailVerified) {
+            await firebaseSignOut(auth);
+            setUser(null);
+            setError('Please sign in with the email link sent to your Duke inbox.');
+            return;
+        }
+
+        setUser(currentUser);
+        setError(null);
+        setLinkSentPending(false);
+        setEmailLinkNeedsEmail(false);
+
+        setDoc(
+            doc(db, 'users', currentUser.uid),
+            {
+                email: currentUser.email || '',
+                displayName: currentUser.displayName || formatMemberNameFromEmail(currentUser.email),
+            },
+            { merge: true },
+        ).catch((err) => console.error('Error syncing user profile:', err));
+
+        const cached = readCachedTabPreferences(currentUser.uid);
+        if (cached) {
+            setTabPreferences(mergeTabPreferences(cached));
+        }
+    };
+
+    const completeEmailLinkSignIn = async (email: string) => {
+        const trimmed = email.trim().toLowerCase();
+        setError(null);
+
+        if (!isDukeEmail(trimmed)) {
+            setError(DUKE_SIGNIN_EMAIL_MESSAGE);
+            return;
+        }
+
+        if (!isSignInWithEmailLink(auth, window.location.href)) {
+            setError('This sign-in link is invalid or has expired. Request a new one.');
+            setEmailLinkNeedsEmail(false);
+            return;
+        }
+
+        completingEmailLinkRef.current = true;
+        setLoading(true);
+        try {
+            const result = await signInWithEmailLink(auth, trimmed, window.location.href);
+            window.localStorage.setItem(EMAIL_FOR_SIGN_IN_KEY, trimmed);
+            window.history.replaceState({}, document.title, '/login');
+            setEmailLinkNeedsEmail(false);
+            setLinkSentPending(false);
+            await acceptAuthenticatedUser(result.user);
+        } catch (err: unknown) {
+            console.error(err);
+            const code = (err as { code?: string })?.code;
+            if (code === 'auth/invalid-action-code' || code === 'auth/expired-action-code') {
+                setError('This sign-in link is invalid or has expired. Request a new one.');
+            } else if (code === 'auth/invalid-email') {
+                setError('That email does not match the link. Use the same @duke.edu address you requested.');
+            } else {
+                setError('Failed to complete sign-in. Request a new link and try again.');
+            }
+            setEmailLinkNeedsEmail(true);
+        } finally {
+            completingEmailLinkRef.current = false;
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (!isSignInWithEmailLink(auth, window.location.href)) return;
+
+        const stored = window.localStorage.getItem(EMAIL_FOR_SIGN_IN_KEY);
+        if (stored) {
+            void completeEmailLinkSignIn(stored);
+        } else {
+            setEmailLinkNeedsEmail(true);
+            setLoading(false);
+        }
+        // Intentionally run once on mount to complete inbound email links.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (completingEmailLinkRef.current) {
+                return;
+            }
+
             if (currentUser) {
-                const awaitingVerificationSend =
-                    !currentUser.emailVerified && pendingVerificationFlowRef.current;
-
-                if (awaitingVerificationSend) {
-                    setLoading(false);
-                    return;
-                }
-
                 try {
-                    // Force token refresh so Firestore rules receive the latest email_verified claim
                     await currentUser.getIdToken(true);
-                    // Also reload the user to get the latest emailVerification flag from Auth on this client
                     await currentUser.reload();
                 } catch (e) {
-                    console.error("Error refreshing token", e);
+                    console.error('Error refreshing token', e);
                 }
 
-                if (!currentUser.emailVerified && pendingVerificationFlowRef.current) {
-                    setLoading(false);
-                    return;
-                }
-
-                if (!currentUser.email?.endsWith('@duke.edu')) {
-                    firebaseSignOut(auth);
-                    setUser(null);
-                    setError('Only @duke.edu email addresses are allowed.');
-                } else if (!currentUser.emailVerified) {
-                    firebaseSignOut(auth);
-                    setUser(null);
-                    setVerificationPending(true);
-                    setError(null);
-                } else {
-                    setUser(currentUser);
-                    setError(null);
-                    setVerificationPending(false);
-
-                    setDoc(
-                        doc(db, 'users', currentUser.uid),
-                        {
-                            email: currentUser.email || '',
-                            displayName: currentUser.displayName || formatMemberNameFromEmail(currentUser.email),
-                        },
-                        { merge: true },
-                    ).catch((err) => console.error('Error syncing user profile:', err));
-
-                    const cached = readCachedTabPreferences(currentUser.uid);
-                    if (cached) {
-                        setTabPreferences(mergeTabPreferences(cached));
-                    }
-                }
+                await acceptAuthenticatedUser(currentUser);
             } else {
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
@@ -273,13 +318,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                             console.error('Error bootstrapping admin flag:', err);
                         }
                     }
-                } else {
-                    if (data?.isAdmin === true) {
-                        try {
-                            await setDoc(userRef, { isAdmin: false }, { merge: true });
-                        } catch (err) {
-                            console.error('Error revoking admin flag:', err);
-                        }
+                } else if (data?.isAdmin === true) {
+                    try {
+                        await setDoc(userRef, { isAdmin: false }, { merge: true });
+                    } catch (err) {
+                        console.error('Error revoking admin flag:', err);
                     }
                 }
 
@@ -330,125 +373,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const clearAuthMessage = () => {
         setError(null);
-        setVerificationPending(false);
+        setLinkSentPending(false);
     };
 
     const clearAuthError = () => {
         setError(null);
     };
 
-    const resendVerificationEmail = async (email: string, pass: string): Promise<'sent' | 'already-verified'> => {
-        if (!isDukeEmail(email)) {
-            throw new Error(DUKE_SIGNIN_EMAIL_MESSAGE);
-        }
-
-        try {
-            pendingVerificationFlowRef.current = true;
-            const result = await signInWithEmailAndPassword(auth, email, pass);
-            if (result.user.emailVerified) {
-                await firebaseSignOut(auth);
-                return 'already-verified';
-            }
-
-            await sendVerificationEmailWithFallback(result.user);
-            await firebaseSignOut(auth);
-            setVerificationPending(true);
-            return 'sent';
-        } catch (err: any) {
-            console.error(err);
-            if (err.message === DUKE_SIGNIN_EMAIL_MESSAGE) {
-                throw err;
-            }
-            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                throw new Error('Invalid email or password.');
-            }
-            throw new Error(verificationSendErrorMessage(err));
-        } finally {
-            pendingVerificationFlowRef.current = false;
-        }
-    };
-
-    const signInWithEmail = async (email: string, pass: string) => {
+    const sendSignInLink = async (email: string) => {
         setError(null);
-        setVerificationPending(false);
-        if (!isDukeEmail(email)) {
-            setError(DUKE_SIGNIN_EMAIL_MESSAGE);
-            return;
-        }
+        setLinkSentPending(false);
 
-        try {
-            pendingVerificationFlowRef.current = true;
-            const result = await signInWithEmailAndPassword(auth, email, pass);
-            if (!result.user.emailVerified) {
-                try {
-                    await sendVerificationEmailWithFallback(result.user);
-                } catch (verifyErr) {
-                    console.error(verifyErr);
-                    await firebaseSignOut(auth);
-                    setVerificationPending(true);
-                    setError(verificationSendErrorMessage(verifyErr));
-                    return;
-                }
-                await firebaseSignOut(auth);
-                setVerificationPending(true);
-                return;
-            }
-        } catch (err: any) {
-            console.error(err);
-            if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
-                setError('Invalid email or password.');
-            } else {
-                setError('Failed to sign in. Please try again.');
-            }
-        } finally {
-            pendingVerificationFlowRef.current = false;
-        }
-    };
-
-    const signUpWithEmail = async (email: string, pass: string) => {
-        setError(null);
-        setVerificationPending(false);
-        if (!isAllowedDukeEmail(email)) {
+        const trimmed = email.trim().toLowerCase();
+        if (!isAllowedDukeEmail(trimmed)) {
             setError(DUKE_EMAIL_FORMAT_MESSAGE);
             return;
         }
 
         try {
-            pendingVerificationFlowRef.current = true;
-            const result = await createUserWithEmailAndPassword(auth, email, pass);
-            const userEmail = result.user.email;
-
-            if (!userEmail?.endsWith('@duke.edu')) {
-                await firebaseSignOut(auth);
-                setError('Only @duke.edu email addresses are allowed.');
-                throw new Error('Invalid domain');
-            }
-
-            try {
-                await sendVerificationEmailWithFallback(result.user);
-            } catch (verifyErr) {
-                console.error(verifyErr);
-                await firebaseSignOut(auth);
-                setVerificationPending(true);
-                setError(verificationSendErrorMessage(verifyErr));
-                return;
-            }
-
-            await firebaseSignOut(auth);
-            setVerificationPending(true);
-        } catch (err: any) {
+            await sendSignInLinkToEmail(auth, trimmed, getEmailLinkActionCodeSettings());
+            window.localStorage.setItem(EMAIL_FOR_SIGN_IN_KEY, trimmed);
+            setLinkSentPending(true);
+        } catch (err: unknown) {
             console.error(err);
-            if (err.message === 'Invalid domain') {
-                // Error already set
-            } else if (err.code === 'auth/email-already-in-use') {
-                setError('An account with this email already exists.');
-            } else if (err.code === 'auth/weak-password') {
-                setError('Password is too weak. Please use at least 6 characters.');
-            } else {
-                setError('Failed to create account. Please try again.');
-            }
-        } finally {
-            pendingVerificationFlowRef.current = false;
+            setError(emailLinkSendErrorMessage(err));
         }
     };
 
@@ -467,28 +415,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             await setDoc(doc(db, 'users', user.uid), { tabPreferences: merged }, { merge: true });
         } catch (err) {
-            console.error("Error saving preferences:", err);
+            console.error('Error saving preferences:', err);
         }
     };
 
     const isAdmin = user ? isAdminEmail(user.email) : false;
 
     return (
-        <AuthContext.Provider value={{
-            user,
-            loading,
-            error,
-            verificationPending,
-            signInWithEmail,
-            signUpWithEmail,
-            resendVerificationEmail,
-            clearAuthMessage,
-            clearAuthError,
-            signOut,
-            isAdmin,
-            tabPreferences,
-            updateTabPreferences
-        }}>
+        <AuthContext.Provider
+            value={{
+                user,
+                loading,
+                error,
+                linkSentPending,
+                emailLinkNeedsEmail,
+                sendSignInLink,
+                completeEmailLinkSignIn,
+                clearAuthMessage,
+                clearAuthError,
+                signOut,
+                isAdmin,
+                tabPreferences,
+                updateTabPreferences,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

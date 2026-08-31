@@ -35,17 +35,23 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 
 ### Auth
 
-- **Duke-only** — `firstname.lastname@duke.edu` required (NetID-only aliases not supported); verified inbox required to book
+- **Duke-only passwordless** — Members sign in with a one-time email link to `firstname.lastname@duke.edu` (NetID-only aliases not supported). No passwords. Session stays on that browser until Sign out.
+- **Public pages** — Home, Cabinet, and Help stay browseable without signing in; booking actions require sign-in.
 - **Court display names** — Members show as **First L.** on court diagrams (parsed from email)
 - **Admin access** — Email allowlist in [`AuthContext.tsx`](src/contexts/AuthContext.tsx) plus optional `VITE_ADMIN_EMAILS` env override
+
+#### Firebase Console (one-time, before testing email links)
+
+1. Authentication → Sign-in method → enable **Email/Password**, then enable **Email link (passwordless sign-in)**.
+2. Authentication → Settings → **Authorized domains**: include `localhost` and `fuquaracquetsclub.com` / `www.fuquaracquetsclub.com`.
 
 #### Adding a new admin (co-officers)
 
 1. Add their `firstname.lastname@duke.edu` to `DEFAULT_ADMIN_EMAILS` in code (or `VITE_ADMIN_EMAILS` in Cloudflare).
-2. They **sign up** at `/login` with that same address and choose a password.
-3. They verify their Duke inbox — the **Admin** link appears automatically.
+2. They open `/login`, request a sign-in link to that same address, and complete it from their Duke inbox.
+3. The **Admin** link appears automatically.
 
-No pre-created Firebase accounts needed. **Forgot Password** on the login page handles resets.
+No pre-created Firebase accounts or passwords needed.
 
 ## Tech stack
 
@@ -59,7 +65,7 @@ No pre-created Firebase accounts needed. **Forgot Password** on the login page h
 
 - Node.js 18+
 - npm
-- A Firebase project with Auth (email/password) and Firestore
+- A Firebase project with Auth (Email link / passwordless) and Firestore
 
 ### Install & run
 
