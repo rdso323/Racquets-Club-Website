@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open Day 1 — Djokovic stunned by Navone in five sets, ending a 78-match Grand Slam first-round streak; Pegula cruises past Ruse, Medvedev beats Gaston; rain halts outside courts at Flushing Meadows • [SQUASH] World Squash Masters Day 2 in Perth — Heather Manifold claims first women's win on the all-glass court in Women's 60+; 900+ players across 21 age groups at Karrinyup • [BADMINTON] Pontianak International Challenge finals — India's Tanvi Patri (15) and Ginpaul Sonna reach championship matches after upsetting seeded opponents in Indonesia • [PICKLEBALL] New Jersey 5s win first MLP title — 2-0 sweep of St. Louis Shock at Central Park; Staksrud named Finals MVP after 21-9 DreamBreaker clincher • [TABLE TENNIS] HYLO ETTU Champions League Stage 1 concludes — Linz AG Froschberg goes 3-0 in Budaörs women; HB Ostrov perfect in Lille men's Group A",
+  "tickerText": "[TENNIS] US Open Day 2 — Alcaraz returns from wrist injury with 6-4, 6-4, 6-4 win over Safiullin; Sabalenka beats Osorio 6-2, 6-4 to begin third-title bid; Shelton rallies past Griekspoor; Tsitsipas upsets 10th seed Fils • [SQUASH] World Squash Masters Day 3 in Perth — seven-time champ Davenport and six-time champ Manley advance; 900+ players across 21 age groups at Karrinyup glass court • [BADMINTON] China Masters Super 750 opens in Shenzhen — Sindhu and Shetty withdraw for Asian Games prep; Christie beats Jun Hao in men's singles R1 • [PICKLEBALL] MLP proposes 2027 draft reset — $1M cap and $500K floor as 2024 picks enter draft pool; NJ 5s captured first title Sunday at Central Park • [TABLE TENNIS] ETTU Champions League Stage 1 done — Linz women go 3-0 in Budaörs; HB Ostrov perfect in Lille; Santa Tecla wins dramatic 3-2 qualifier",
   "newsItems": [
     {
-      "title": "Djokovic Stunned in US Open Opener",
-      "excerpt": "Novak Djokovic lost a five-set first-round thriller to Mariano Navone on Arthur Ashe, ending a 78-match Grand Slam first-round win streak while visibly battling illness through the four-hour marathon.",
-      "date": "August 31, 2026",
+      "title": "Champions Begin US Open Defence",
+      "excerpt": "Carlos Alcaraz marked his return from a wrist injury with a straight-set win over Roman Safiullin, while Aryna Sabalenka cruised past Camila Osorio — Ben Shelton rallied past Tallon Griekspoor and Stefanos Tsitsipas upset 10th seed Arthur Fils.",
+      "date": "September 1, 2026",
       "category": "Tennis",
-      "link": "https://www.cbssports.com/tennis/news/2026-us-open-results-novak-djokovic-mariano-navone-upset-record/"
+      "link": "https://apnews.com/article/us-open-day-two-results-dab9269cab26c62320f96000f3362e6f"
     },
     {
-      "title": "Indian Teens Star in Pontianak",
-      "excerpt": "15-year-old Tanvi Patri beat world No. 51 Rachel Chan to reach the Pontianak International Challenge final, while Ginpaul Sonna upset former world No. 15 Chico Aura Dwi Wardoyo in the men's semis.",
-      "date": "August 30, 2026",
+      "title": "China Masters Opens With Withdrawals",
+      "excerpt": "PV Sindhu, Ayush Shetty and several Indians pulled out of the Shenzhen Super 750 to focus on Asian Games prep — Jonatan Christie beat Leong Jun Hao 17-21, 19-21 in early men's singles action on Day 1.",
+      "date": "September 1, 2026",
       "category": "Badminton",
-      "link": "https://www.indiasportshub.com/articles/tanvi-patri-stuns-world-no-51-rachel-chan-to-reach-pontianak-international-challenge-final"
+      "link": "https://sportstar.thehindu.com/badminton/china-masters-2026-india-withdrawals-full-list-sindhu-ayush/article71410143.ece"
     },
     {
-      "title": "NJ 5s Finally Win MLP Crown",
-      "excerpt": "After two straight runner-up finishes, the New Jersey 5s swept St. Louis Shock 2-0 at Central Park — Anna Leigh Waters earned her first MLP title and Federico Staksrud was named Finals MVP.",
-      "date": "August 30, 2026",
+      "title": "MLP Plans 2027 Roster Reset",
+      "excerpt": "Major League Pickleball is proposing a $1M salary cap, $500K spending floor and limited right of first refusal as all 2024 draft picks return to the pool — aiming for competitive balance after the New Jersey 5s' first title.",
+      "date": "September 1, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/third-times-the-charm-new-jersey-defeats-st-louis-to-clinch-2026-mlp-title-as-staksrud-earns-finals-mvp-honors"
+      "link": "https://pickleball.com/news/big-changes-coming-in-2027-to-mlp-draft-process"
     },
     {
-      "title": "ETTU Stage 1 Qualifiers Set",
-      "excerpt": "Linz AG Froschberg completed a perfect Group A run at the ETTU Champions League Women in Budaörs, while HB Ostrov and ASD TT Santa Tecla Nulvi secured men's berths from Lille.",
+      "title": "ETTU Stage 1 Wraps, R16 Awaits",
+      "excerpt": "Linz AG Froschberg completed a perfect Group A run in Budaörs, while HB Ostrov went unbeaten in Lille and ASD TT Santa Tecla clinched a dramatic 3-2 win — eight Stage 1 clubs advance to the Round of 16.",
       "date": "August 30, 2026",
       "category": "Table Tennis",
-      "link": "https://www.ettu.org/final-day-underway-in-ettu-champions-league-women-in-budaors/"
+      "link": "https://www.ettu.org/round-of-16-places-on-the-line-on-final-day-in-lille/"
     }
   ]
 }
