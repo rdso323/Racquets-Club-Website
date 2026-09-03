@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open — Gauff beats Sonmez to reach Round 2; Fritz and Keys cruise; Cobolli rallies from two sets down; Rybakina races past Frodin as rain delays outdoor play nearly four hours • [SQUASH] London Classic Round 2 at Alexandra Palace — Coll meets Todd, El Hammamy vs Azman; PSA CEO Gough says tour competition at an all-time high • [BADMINTON] China Masters Day 2 in Shenzhen — Shi Yuqi exits to Loh Kean Yew; Feng/Huang survive 27-25 decider; top seeds Kim/Seo knocked out in men's doubles • [PICKLEBALL] PPA Veolia National Championships open in Cary — fall season starts with World Pickleball Rankings debut; Haworth top seed in men's singles • [TABLE TENNIS] ETTU Champions League Stage 2 draw set — eight Stage 1 survivors join top seeds; Europe Cup Men group-stage draw also completed",
+  "tickerText": "[TENNIS] US Open Day 4 — Sabalenka routs Iatcenko 6-1 6-1; Alcaraz survives scare vs Faria; Pegula and Medvedev cruise; Shelton edges Hurkacz in four sets • [SQUASH] London Classic Round 2 Day 2 at Alexandra Palace — Coll faces Todd; eight more last-16 matches set quarter-finalists • [BADMINTON] China Masters Round of 16 in Shenzhen — Naraoka tops Li Shifeng; world champs Gicquel-Delrue out; wide open draw after two days of shocks • [PICKLEBALL] Veolia Nationals Round of 16 in Cary — PPA Major worth 2,000 ranking points; Tennis Channel coverage from 11:30am ET • [TABLE TENNIS] ETTU Champions League Stage 2 underway — Saarbrücken vs Lille Metropole; Ljubljana European Individuals accreditations open until Sept 28",
   "newsItems": [
     {
-      "title": "Gauff and Fritz Advance at US Open",
-      "excerpt": "Coco Gauff opened with a straight-set win over Zeynep Sonmez, while Taylor Fritz and Madison Keys cruised through first-round matches — Flavio Cobolli rallied from two sets down as rain delayed outdoor play nearly four hours.",
-      "date": "September 2, 2026",
+      "title": "Sabalenka and Alcaraz Reach US Open Third Round",
+      "excerpt": "Defending champion Aryna Sabalenka routed Polina Iatcenko 6-1, 6-1 while Carlos Alcaraz survived a first-set scare to beat Jaime Faria — Jessica Pegula, Daniil Medvedev and Ben Shelton also advanced on Day 4.",
+      "date": "September 3, 2026",
       "category": "Tennis",
-      "link": "https://www.straitstimes.com/sport/tennis/flavio-cobolli-claws-out-five-set-victory-at-rain-delayed-us-open-as-elena-rybakina-races"
+      "link": "https://www.straitstimes.com/sport/tennis/medvedev-pegula-advance-as-rain-disrupts-us-open-schedule"
     },
     {
-      "title": "London Classic Round 2 Begins",
-      "excerpt": "The PSA Gold London Squash Classic moves to Alexandra Palace for Round 2 — defending champion Paul Coll faces Sam Todd while top seeds Hania El Hammamy and Amina Orfi lead the women's draw at the iconic venue.",
-      "date": "September 2, 2026",
+      "title": "London Classic Round 2 Continues at Ally Pally",
+      "excerpt": "The PSA Gold London Squash Classic moves through Round 2 Day 2 at Alexandra Palace — defending champion Paul Coll faces Sam Todd while Jasmine Hutton and Anahat Singh carry home-nation hopes into the last 16.",
+      "date": "September 3, 2026",
       "category": "Squash",
       "link": "https://www.psasquashtour.com/tournament/london-classic-2026/"
     },
     {
-      "title": "PPA Fall Season Opens in Cary",
-      "excerpt": "The Veolia Pickleball National Championships kick off the Carvana PPA Tour fall slate in Cary, NC — debuting the unified World Pickleball Rankings after New Jersey 5s claimed their first MLP title.",
-      "date": "September 2, 2026",
-      "category": "Pickleball",
-      "link": "https://pickleball.com/news/ppa-tour-returns-with-new-season-new-partnerships"
+      "title": "China Masters Round of 16 Underway",
+      "excerpt": "The Super 750 tournament in Shenzhen enters the last 16 after two days of shocks — Kodai Naraoka beat Li Shifeng and newly crowned mixed doubles world champions Gicquel-Delrue fell in the opening round.",
+      "date": "September 3, 2026",
+      "category": "Badminton",
+      "link": "https://www.badmintonplanet.com/badminton-news/li-shifeng-gicquel-delrue-china-masters-upsets.html"
     },
     {
-      "title": "ETTU Stage 2 Draw Completed",
-      "excerpt": "Eight clubs advanced from HYLO Champions League Stage 1 in Lille and were paired with the top seeds — Saarbrücken drew Lille Metropole while Borussia Düsseldorf faces AS Pontoise Cergy in the Round of 16.",
-      "date": "September 2, 2026",
+      "title": "ETTU Stage 2 and Ljubljana Preview",
+      "excerpt": "HYLO Champions League Stage 2 matchups are set with Saarbrücken facing Lille Metropole — media accreditation also opened for the European Individual Championships in Ljubljana, running October 11–18.",
+      "date": "September 3, 2026",
       "category": "Table Tennis",
-      "link": "https://www.ettu.org/stage-2-draw-sets-up-next-battles-in-hylo-ettu-champions-league-men/"
+      "link": "https://www.ettu.org/media-accreditation-open-for-2026-european-individual-championships-in-ljubljana/"
     }
   ]
 }
