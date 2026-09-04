@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open Day 4 — Sabalenka routs Iatcenko 6-1 6-1; Alcaraz survives scare vs Faria; Pegula and Medvedev cruise; Shelton edges Hurkacz in four sets • [SQUASH] London Classic Round 2 Day 2 at Alexandra Palace — Coll faces Todd; eight more last-16 matches set quarter-finalists • [BADMINTON] China Masters Round of 16 in Shenzhen — Naraoka tops Li Shifeng; world champs Gicquel-Delrue out; wide open draw after two days of shocks • [PICKLEBALL] Veolia Nationals Round of 16 in Cary — PPA Major worth 2,000 ranking points; Tennis Channel coverage from 11:30am ET • [TABLE TENNIS] ETTU Champions League Stage 2 underway — Saarbrücken vs Lille Metropole; Ljubljana European Individuals accreditations open until Sept 28",
+  "tickerText": "[TENNIS] US Open Day 6 — third round: Pegula vs Fernandez, Alcaraz vs Wu Yibing, Shelton vs Shapovalov; Khachanov stunned Auger-Aliassime overnight as Swiatek, Osaka and Gauff advance • [SQUASH] London Classic quarter-finals at Alexandra Palace — Yow Ng upset Eleinen to reach the last eight; semi-finals Saturday • [BADMINTON] China Masters quarter-finals in Shenzhen — Kidambi Srikanth faces Lee Cheuk Yiu; Satwik-Chirag take on Astrup-Rasmussen • [PICKLEBALL] Veolia Nationals quarter-finals in Cary — PPA Major worth 2,000 ranking points; PickleballTV and Tennis Channel from 10am ET • [TABLE TENNIS] ETTU Europe Cup group-stage draw completed; HYLO Champions League Stage 2 Round of 16 set — Saarbrücken vs Lille Metropole among eight ties",
   "newsItems": [
     {
-      "title": "Sabalenka and Alcaraz Reach US Open Third Round",
-      "excerpt": "Defending champion Aryna Sabalenka routed Polina Iatcenko 6-1, 6-1 while Carlos Alcaraz survived a first-set scare to beat Jaime Faria — Jessica Pegula, Daniil Medvedev and Ben Shelton also advanced on Day 4.",
-      "date": "September 3, 2026",
+      "title": "Khachanov Stuns Auger-Aliassime at US Open",
+      "excerpt": "Karen Khachanov knocked out third seed Felix Auger-Aliassime 6-7, 6-3, 6-2, 6-2 as Iga Swiatek, Naomi Osaka and Coco Gauff all reached the third round on Day 5 — Pegula, Alcaraz and Shelton headline Day 6.",
+      "date": "September 4, 2026",
       "category": "Tennis",
-      "link": "https://www.straitstimes.com/sport/tennis/medvedev-pegula-advance-as-rain-disrupts-us-open-schedule"
+      "link": "https://www.theguardian.com/sport/live/2026/sep/03/tennis-us-open-tennis-swiatek-osaka-gauff-zverev-fritz-day-five"
     },
     {
-      "title": "London Classic Round 2 Continues at Ally Pally",
-      "excerpt": "The PSA Gold London Squash Classic moves through Round 2 Day 2 at Alexandra Palace — defending champion Paul Coll faces Sam Todd while Jasmine Hutton and Anahat Singh carry home-nation hopes into the last 16.",
-      "date": "September 3, 2026",
+      "title": "London Classic Quarter-Finals Underway",
+      "excerpt": "The PSA Gold London Squash Classic reaches the quarter-final stage at Alexandra Palace — Malaysia's Eain Yow Ng upset Youssef Eleinen to join the last eight as semi-finals loom on Saturday.",
+      "date": "September 4, 2026",
       "category": "Squash",
       "link": "https://www.psasquashtour.com/tournament/london-classic-2026/"
     },
     {
-      "title": "China Masters Round of 16 Underway",
-      "excerpt": "The Super 750 tournament in Shenzhen enters the last 16 after two days of shocks — Kodai Naraoka beat Li Shifeng and newly crowned mixed doubles world champions Gicquel-Delrue fell in the opening round.",
-      "date": "September 3, 2026",
+      "title": "China Masters Quarter-Finals Begin",
+      "excerpt": "The Super 750 in Shenzhen enters the business end — Kidambi Srikanth faces Lee Cheuk Yiu after beating Victor Lai, while Satwiksairaj Rankireddy and Chirag Shetty take on Denmark's Astrup-Rasmussen.",
+      "date": "September 4, 2026",
       "category": "Badminton",
-      "link": "https://www.badmintonplanet.com/badminton-news/li-shifeng-gicquel-delrue-china-masters-upsets.html"
+      "link": "https://sportstar.thehindu.com/badminton/china-masters-2026-quarterfinals-schedule-indians-in-action-kidambi-srikanth-satwik-chirag-timing/article71425734.ece"
     },
     {
-      "title": "ETTU Stage 2 and Ljubljana Preview",
-      "excerpt": "HYLO Champions League Stage 2 matchups are set with Saarbrücken facing Lille Metropole — media accreditation also opened for the European Individual Championships in Ljubljana, running October 11–18.",
-      "date": "September 3, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.ettu.org/media-accreditation-open-for-2026-european-individual-championships-in-ljubljana/"
+      "title": "Veolia Nationals Reach Quarter-Finals",
+      "excerpt": "The PPA Major in Cary moves into quarter-final Friday with 2,000 ranking points on the line — over 1,400 players in the draw as the new World Pickleball Rankings debut at the season opener.",
+      "date": "September 4, 2026",
+      "category": "Pickleball",
+      "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
     }
   ]
 }
