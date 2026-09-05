@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open Day 6 — third round: Pegula vs Fernandez, Alcaraz vs Wu Yibing, Shelton vs Shapovalov; Khachanov stunned Auger-Aliassime overnight as Swiatek, Osaka and Gauff advance • [SQUASH] London Classic quarter-finals at Alexandra Palace — Yow Ng upset Eleinen to reach the last eight; semi-finals Saturday • [BADMINTON] China Masters quarter-finals in Shenzhen — Kidambi Srikanth faces Lee Cheuk Yiu; Satwik-Chirag take on Astrup-Rasmussen • [PICKLEBALL] Veolia Nationals quarter-finals in Cary — PPA Major worth 2,000 ranking points; PickleballTV and Tennis Channel from 10am ET • [TABLE TENNIS] ETTU Europe Cup group-stage draw completed; HYLO Champions League Stage 2 Round of 16 set — Saarbrücken vs Lille Metropole among eight ties",
+  "tickerText": "[TENNIS] US Open third round wraps Saturday — Alcaraz beat Wu 6-3, 6-4, 6-1 and Medvedev rolled through on Friday; Sabalenka, Pegula and Navarro advance as round-of-16 play begins Sunday • [SQUASH] London Classic semi-finals at Alexandra Palace — Paul Coll faces Eain Yow Ng, Marwan ElShorbagy meets Victor Crouin; Hania El Hammamy vs Georgina Kennedy and Sivasangari Subramaniam vs Amina Orfi • [BADMINTON] China Masters semi-finals in Shenzhen — An Se-young faces Akane Yamaguchi; Satwik-Chirag meet Azriyn-Wee Kiong; Goh-Shevon challenge world No. 1 Feng-Huang • [PICKLEBALL] Veolia Nationals semi-finals in Cary — singles and mixed doubles from 9am ET on PickleballTV and Tennis Channel; Championship Sunday tomorrow • [TABLE TENNIS] HYLO Champions League Stage 2 Round of 16 draw set — Saarbrücken vs Lille Metropole among eight ties; Europe Cup men and women group-stage draws completed",
   "newsItems": [
     {
-      "title": "Khachanov Stuns Auger-Aliassime at US Open",
-      "excerpt": "Karen Khachanov knocked out third seed Felix Auger-Aliassime 6-7, 6-3, 6-2, 6-2 as Iga Swiatek, Naomi Osaka and Coco Gauff all reached the third round on Day 5 — Pegula, Alcaraz and Shelton headline Day 6.",
-      "date": "September 4, 2026",
-      "category": "Tennis",
-      "link": "https://www.theguardian.com/sport/live/2026/sep/03/tennis-us-open-tennis-swiatek-osaka-gauff-zverev-fritz-day-five"
-    },
-    {
-      "title": "London Classic Quarter-Finals Underway",
-      "excerpt": "The PSA Gold London Squash Classic reaches the quarter-final stage at Alexandra Palace — Malaysia's Eain Yow Ng upset Youssef Eleinen to join the last eight as semi-finals loom on Saturday.",
-      "date": "September 4, 2026",
+      "title": "London Classic Semi-Finals Day",
+      "excerpt": "The PSA Gold London Squash Classic reaches the semi-final stage at Alexandra Palace — Paul Coll faces Eain Yow Ng and Marwan ElShorbagy meets Victor Crouin, while Hania El Hammamy takes on Georgina Kennedy.",
+      "date": "September 5, 2026",
       "category": "Squash",
       "link": "https://www.psasquashtour.com/tournament/london-classic-2026/"
     },
     {
-      "title": "China Masters Quarter-Finals Begin",
-      "excerpt": "The Super 750 in Shenzhen enters the business end — Kidambi Srikanth faces Lee Cheuk Yiu after beating Victor Lai, while Satwiksairaj Rankireddy and Chirag Shetty take on Denmark's Astrup-Rasmussen.",
-      "date": "September 4, 2026",
+      "title": "China Masters Semi-Finals Underway",
+      "excerpt": "The Super 750 in Shenzhen enters the final four — An Se-young faces Akane Yamaguchi, Malaysia has two men's doubles pairs in the semis, and Goh Soon Huat-Shevon Lai challenge world No. 1 Feng Yanzhe-Huang Dongping.",
+      "date": "September 5, 2026",
       "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/badminton/china-masters-2026-quarterfinals-schedule-indians-in-action-kidambi-srikanth-satwik-chirag-timing/article71425734.ece"
+      "link": "https://sportstar.thehindu.com/badminton/china-masters-2026-semifinal-lineup-women-singles-an-se-young-yamaguchi-wang-zhiyi-miyazaki/article71427325.ece"
     },
     {
-      "title": "Veolia Nationals Reach Quarter-Finals",
-      "excerpt": "The PPA Major in Cary moves into quarter-final Friday with 2,000 ranking points on the line — over 1,400 players in the draw as the new World Pickleball Rankings debut at the season opener.",
-      "date": "September 4, 2026",
+      "title": "Veolia Nationals Reach Semi-Finals",
+      "excerpt": "The PPA Major in Cary moves into semi-final Saturday with singles and mixed doubles from 9am ET — PickleballTV and Tennis Channel carry live coverage ahead of Championship Sunday.",
+      "date": "September 5, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
+    },
+    {
+      "title": "Champions League Stage 2 Draw Set",
+      "excerpt": "The 2026/27 HYLO ETTU Champions League Men Round of 16 is set after Stage 1 in Lille — 1. FC Saarbrücken face Lille Metropole among eight ties, as Europe Cup group-stage draws were also completed.",
+      "date": "September 5, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.ettu.org/stage-2-draw-sets-up-next-battles-in-hylo-ettu-champions-league-men/"
     }
   ]
 }
