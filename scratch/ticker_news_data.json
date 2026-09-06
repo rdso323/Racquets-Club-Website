@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] US Open third round wraps Saturday — Alcaraz beat Wu 6-3, 6-4, 6-1 and Medvedev rolled through on Friday; Sabalenka, Pegula and Navarro advance as round-of-16 play begins Sunday • [SQUASH] London Classic semi-finals at Alexandra Palace — Paul Coll faces Eain Yow Ng, Marwan ElShorbagy meets Victor Crouin; Hania El Hammamy vs Georgina Kennedy and Sivasangari Subramaniam vs Amina Orfi • [BADMINTON] China Masters semi-finals in Shenzhen — An Se-young faces Akane Yamaguchi; Satwik-Chirag meet Azriyn-Wee Kiong; Goh-Shevon challenge world No. 1 Feng-Huang • [PICKLEBALL] Veolia Nationals semi-finals in Cary — singles and mixed doubles from 9am ET on PickleballTV and Tennis Channel; Championship Sunday tomorrow • [TABLE TENNIS] HYLO Champions League Stage 2 Round of 16 draw set — Saarbrücken vs Lille Metropole among eight ties; Europe Cup men and women group-stage draws completed",
+  "tickerText": "[TENNIS] US Open Round of 16 begins Sunday — Zheng rallied past Keys, Cerundolo stunned Fritz, Gauff and Andreeva advance; Sabalenka vs Townsend and Paul vs Alcaraz headline Ashe • [SQUASH] London Classic finals at Alexandra Palace — Georgina Kennedy faces defending champion Amina Orfi, Paul Coll meets Victor Crouin after Saturday's semi-finals • [BADMINTON] China Masters finals day in Shenzhen — An Se-young vs Tomoka Miyazaki in women's singles; historic all-Hong Kong men's final between Lee Cheuk Yiu and Jason Gunawan • [PICKLEBALL] Veolia Nationals Championship Sunday in Cary — pro gold and bronze medal matches from 10am ET on PickleballTV and Tennis Channel • [TABLE TENNIS] HYLO ETTU Champions League Stage 2 Round of 16 set — Saarbrücken vs Lille Metropole among eight home-and-away ties after Lille group stage",
   "newsItems": [
     {
-      "title": "London Classic Semi-Finals Day",
-      "excerpt": "The PSA Gold London Squash Classic reaches the semi-final stage at Alexandra Palace — Paul Coll faces Eain Yow Ng and Marwan ElShorbagy meets Victor Crouin, while Hania El Hammamy takes on Georgina Kennedy.",
-      "date": "September 5, 2026",
+      "title": "US Open Round of 16 Begins",
+      "excerpt": "Flushing Meadows enters the second week — Qinwen Zheng rallied from a set down to beat Madison Keys, Francisco Cerundolo stunned Taylor Fritz, and Coco Gauff advanced as Sabalenka vs Townsend and Paul vs Alcaraz headline Sunday.",
+      "date": "September 6, 2026",
+      "category": "Tennis",
+      "link": "https://www.espn.com/tennis/story/_/id/49837907/qinwen-potapova-spring-upsets-advance-us-open-round-16"
+    },
+    {
+      "title": "London Classic Finals Day",
+      "excerpt": "The PSA Gold event crowns champions at Alexandra Palace — Georgina Kennedy faces defending champion Amina Orfi after upsetting world No. 1 Hania El Hammamy, while Paul Coll meets Victor Crouin in the men's final.",
+      "date": "September 6, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournament/london-classic-2026/"
+      "link": "https://londonsquashclassic.com/2026-semis-roundup"
     },
     {
-      "title": "China Masters Semi-Finals Underway",
-      "excerpt": "The Super 750 in Shenzhen enters the final four — An Se-young faces Akane Yamaguchi, Malaysia has two men's doubles pairs in the semis, and Goh Soon Huat-Shevon Lai challenge world No. 1 Feng Yanzhe-Huang Dongping.",
-      "date": "September 5, 2026",
-      "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/badminton/china-masters-2026-semifinal-lineup-women-singles-an-se-young-yamaguchi-wang-zhiyi-miyazaki/article71427325.ece"
-    },
-    {
-      "title": "Veolia Nationals Reach Semi-Finals",
-      "excerpt": "The PPA Major in Cary moves into semi-final Saturday with singles and mixed doubles from 9am ET — PickleballTV and Tennis Channel carry live coverage ahead of Championship Sunday.",
-      "date": "September 5, 2026",
+      "title": "Veolia Nationals Championship Sunday",
+      "excerpt": "The PPA Slam in Cary decides pro gold and bronze medals today — Championship Sunday runs from 10am ET on PickleballTV and Tennis Channel to open the 2026-27 tour season.",
+      "date": "September 6, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
     },
     {
       "title": "Champions League Stage 2 Draw Set",
-      "excerpt": "The 2026/27 HYLO ETTU Champions League Men Round of 16 is set after Stage 1 in Lille — 1. FC Saarbrücken face Lille Metropole among eight ties, as Europe Cup group-stage draws were also completed.",
-      "date": "September 5, 2026",
+      "excerpt": "The HYLO ETTU Champions League Men Round of 16 is set after Stage 1 in Lille — 1. FC Saarbrücken face Lille Metropole among eight home-and-away ties as Europe's top clubs chase the Final Four.",
+      "date": "September 6, 2026",
       "category": "Table Tennis",
       "link": "https://www.ettu.org/stage-2-draw-sets-up-next-battles-in-hylo-ettu-champions-league-men/"
     }
