@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open Round of 16 begins Sunday — Zheng rallied past Keys, Cerundolo stunned Fritz, Gauff and Andreeva advance; Sabalenka vs Townsend and Paul vs Alcaraz headline Ashe • [SQUASH] London Classic finals at Alexandra Palace — Georgina Kennedy faces defending champion Amina Orfi, Paul Coll meets Victor Crouin after Saturday's semi-finals • [BADMINTON] China Masters finals day in Shenzhen — An Se-young vs Tomoka Miyazaki in women's singles; historic all-Hong Kong men's final between Lee Cheuk Yiu and Jason Gunawan • [PICKLEBALL] Veolia Nationals Championship Sunday in Cary — pro gold and bronze medal matches from 10am ET on PickleballTV and Tennis Channel • [TABLE TENNIS] HYLO ETTU Champions League Stage 2 Round of 16 set — Saarbrücken vs Lille Metropole among eight home-and-away ties after Lille group stage",
+  "tickerText": "[TENNIS] US Open quarter-finals set — Alcaraz beat Paul and faces Shelton, Tiafoe topped Medvedev to meet Michelsen in an all-American clash, while Sabalenka and Noskova advance to a women's quarter-final showdown • [SQUASH] London Classic crowns champions at Ally Pally — Paul Coll swept Victor Crouin for a third straight title and 34th PSA crown, while Amina Orfi retained the women's trophy with a 3-0 win over Georgina Kennedy • [BADMINTON] China Masters wraps in Shenzhen — An Se-young claimed her seventh title of 2026, Jason Gunawan made Hong Kong history in men's singles, and Satwik-Chirag won men's doubles ahead of the Asian Games • [PICKLEBALL] Heineken Pickleball World Cup ends in Da Nang — the USA swept Vietnam 4-0 for Open team gold as Ly Hoang Nam won men's singles on home soil • [TABLE TENNIS] WTT Contender Almaty concludes — Shunsuke Togami and Miu Hirano took singles titles as the WTT Champions Macao draw is set for play starting Tuesday",
   "newsItems": [
     {
-      "title": "US Open Round of 16 Begins",
-      "excerpt": "Flushing Meadows enters the second week — Qinwen Zheng rallied from a set down to beat Madison Keys, Francisco Cerundolo stunned Taylor Fritz, and Coco Gauff advanced as Sabalenka vs Townsend and Paul vs Alcaraz headline Sunday.",
-      "date": "September 6, 2026",
+      "title": "US Open Quarter-Finals Set",
+      "excerpt": "Carlos Alcaraz beat Tommy Paul and will face Ben Shelton after the American ousted Stefanos Tsitsipas, while Frances Tiafoe topped Daniil Medvedev to set up an all-American quarter-final against Alex Michelsen.",
+      "date": "September 7, 2026",
       "category": "Tennis",
-      "link": "https://www.espn.com/tennis/story/_/id/49837907/qinwen-potapova-spring-upsets-advance-us-open-round-16"
+      "link": "https://www.thenationalnews.com/sport/tennis/2026/09/07/its-going-to-be-fireworks-carlos-alcaraz-to-face-ben-shelton-in-us-open-quarter-finals/"
     },
     {
-      "title": "London Classic Finals Day",
-      "excerpt": "The PSA Gold event crowns champions at Alexandra Palace — Georgina Kennedy faces defending champion Amina Orfi after upsetting world No. 1 Hania El Hammamy, while Paul Coll meets Victor Crouin in the men's final.",
-      "date": "September 6, 2026",
+      "title": "Coll and Orfi Crowned at London Classic",
+      "excerpt": "Paul Coll swept Victor Crouin for his third straight London Classic title and 34th PSA crown, while defending champion Amina Orfi retained the women's trophy with a dominant 3-0 win over Georgina Kennedy.",
+      "date": "September 7, 2026",
       "category": "Squash",
-      "link": "https://londonsquashclassic.com/2026-semis-roundup"
+      "link": "https://www.thepress.co.nz/sport/361075728/new-zealands-paul-coll-wins-34th-career-title-london-squash-classic"
     },
     {
-      "title": "Veolia Nationals Championship Sunday",
-      "excerpt": "The PPA Slam in Cary decides pro gold and bronze medals today — Championship Sunday runs from 10am ET on PickleballTV and Tennis Channel to open the 2026-27 tour season.",
-      "date": "September 6, 2026",
+      "title": "An Se-young Retains China Masters",
+      "excerpt": "World No. 1 An Se-young beat Tomoka Miyazaki for her seventh title of 2026, Jason Gunawan won Hong Kong's first Super 750 men's singles crown, and Satwik-Chirag finally captured the men's doubles trophy in Shenzhen.",
+      "date": "September 7, 2026",
+      "category": "Badminton",
+      "link": "https://www.straitstimes.com/sport/an-se-young-retains-china-masters-badminton-crown-for-seventh-title-of-2026"
+    },
+    {
+      "title": "USA Wins Pickleball World Cup",
+      "excerpt": "The United States swept Vietnam 4-0 in the Heineken Pickleball World Cup Open team final in Da Nang, with Ly Hoang Nam winning men's singles gold as the host nation finished runners-up on home soil.",
+      "date": "September 7, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/veolia-pickleball-national-championships/"
-    },
-    {
-      "title": "Champions League Stage 2 Draw Set",
-      "excerpt": "The HYLO ETTU Champions League Men Round of 16 is set after Stage 1 in Lille — 1. FC Saarbrücken face Lille Metropole among eight home-and-away ties as Europe's top clubs chase the Final Four.",
-      "date": "September 6, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.ettu.org/stage-2-draw-sets-up-next-battles-in-hylo-ettu-champions-league-men/"
+      "link": "https://www.vietnam.vn/en/doi-tuyen-viet-nam-gianh-ngoi-a-quan-heineken-pickleball-world-cup-2026"
     }
   ]
 }
