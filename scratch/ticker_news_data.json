@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open quarter-finals set — Alcaraz beat Paul and faces Shelton, Tiafoe topped Medvedev to meet Michelsen in an all-American clash, while Sabalenka and Noskova advance to a women's quarter-final showdown • [SQUASH] London Classic crowns champions at Ally Pally — Paul Coll swept Victor Crouin for a third straight title and 34th PSA crown, while Amina Orfi retained the women's trophy with a 3-0 win over Georgina Kennedy • [BADMINTON] China Masters wraps in Shenzhen — An Se-young claimed her seventh title of 2026, Jason Gunawan made Hong Kong history in men's singles, and Satwik-Chirag won men's doubles ahead of the Asian Games • [PICKLEBALL] Heineken Pickleball World Cup ends in Da Nang — the USA swept Vietnam 4-0 for Open team gold as Ly Hoang Nam won men's singles on home soil • [TABLE TENNIS] WTT Contender Almaty concludes — Shunsuke Togami and Miu Hirano took singles titles as the WTT Champions Macao draw is set for play starting Tuesday",
+  "tickerText": "[TENNIS] US Open quarter-finals begin Tuesday — Alcaraz faces Shelton, Sabalenka meets Noskova, and two all-American clashes pit Tiafoe vs Michelsen and Pegula vs Navarro at Flushing Meadows • [SQUASH] Paul Coll defends London Classic with a third straight title and 34th PSA crown, while the Platinum Qatar Classic in Doha opens September 12 • [BADMINTON] An Se-young wins a third straight China Masters for her seventh title of 2026, Satwik-Chirag finally take men's doubles gold, and the Asian Games loom September 19 • [PICKLEBALL] Team USA sweeps Vietnam 4-0 for Heineken Pickleball World Cup Open gold in Da Nang as Ly Hoang Nam wins men's singles after four finals in one day • [TABLE TENNIS] WTT Champions Macao 2026 kicks off at the East Asian Games Dome — defending champion Wang Chuqin withdraws injured as the world's top 32 open Round of 32 play",
   "newsItems": [
     {
-      "title": "US Open Quarter-Finals Set",
-      "excerpt": "Carlos Alcaraz beat Tommy Paul and will face Ben Shelton after the American ousted Stefanos Tsitsipas, while Frances Tiafoe topped Daniil Medvedev to set up an all-American quarter-final against Alex Michelsen.",
-      "date": "September 7, 2026",
+      "title": "US Open Quarter-Finals Begin",
+      "excerpt": "Tuesday's line-up features Carlos Alcaraz against Ben Shelton and Aryna Sabalenka versus Linda Noskova, with Frances Tiafoe meeting Alex Michelsen and Jessica Pegula facing Emma Navarro in two all-American quarter-finals.",
+      "date": "September 8, 2026",
       "category": "Tennis",
-      "link": "https://www.thenationalnews.com/sport/tennis/2026/09/07/its-going-to-be-fireworks-carlos-alcaraz-to-face-ben-shelton-in-us-open-quarter-finals/"
+      "link": "https://www.straitstimes.com/sport/tennis/shelton-next-up-as-alcaraz-tackles-all-american-gauntlet-in-path-to-us-open-final"
     },
     {
-      "title": "Coll and Orfi Crowned at London Classic",
-      "excerpt": "Paul Coll swept Victor Crouin for his third straight London Classic title and 34th PSA crown, while defending champion Amina Orfi retained the women's trophy with a dominant 3-0 win over Georgina Kennedy.",
-      "date": "September 7, 2026",
-      "category": "Squash",
-      "link": "https://www.thepress.co.nz/sport/361075728/new-zealands-paul-coll-wins-34th-career-title-london-squash-classic"
-    },
-    {
-      "title": "An Se-young Retains China Masters",
-      "excerpt": "World No. 1 An Se-young beat Tomoka Miyazaki for her seventh title of 2026, Jason Gunawan won Hong Kong's first Super 750 men's singles crown, and Satwik-Chirag finally captured the men's doubles trophy in Shenzhen.",
+      "title": "An Se-young Claims Seventh Title of 2026",
+      "excerpt": "The world No. 1 beat Tomoka Miyazaki 21-17, 21-6 to win a third straight China Masters crown, while Satwik-Chirag ended years of heartbreak with their first men's doubles title in Shenzhen.",
       "date": "September 7, 2026",
       "category": "Badminton",
       "link": "https://www.straitstimes.com/sport/an-se-young-retains-china-masters-badminton-crown-for-seventh-title-of-2026"
     },
     {
-      "title": "USA Wins Pickleball World Cup",
-      "excerpt": "The United States swept Vietnam 4-0 in the Heineken Pickleball World Cup Open team final in Da Nang, with Ly Hoang Nam winning men's singles gold as the host nation finished runners-up on home soil.",
+      "title": "USA Crowned Pickleball World Cup Champions",
+      "excerpt": "Team USA swept host Vietnam 4-0 in the Open team final in Da Nang, though Ly Hoang Nam claimed men's singles gold after playing four finals in a single day.",
       "date": "September 7, 2026",
       "category": "Pickleball",
-      "link": "https://www.vietnam.vn/en/doi-tuyen-viet-nam-gianh-ngoi-a-quan-heineken-pickleball-world-cup-2026"
+      "link": "https://www.timesnownews.com/sports/pickleball/team-usa-beat-unbeaten-vietnam-to-win-pickleball-world-cup-open-championship-article-156104511"
+    },
+    {
+      "title": "WTT Champions Macao Gets Underway",
+      "excerpt": "The $800,000 Champions event opened Tuesday at the Macao East Asian Games Dome with Round of 32 singles play, as defending men's champion Wang Chuqin withdrew injured ahead of the draw.",
+      "date": "September 8, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.globalgameguide.com/article/wtt-macao-champions-2026-guide"
     }
   ]
 }
