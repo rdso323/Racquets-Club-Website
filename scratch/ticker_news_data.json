@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open quarter-finals begin Tuesday — Alcaraz faces Shelton, Sabalenka meets Noskova, and two all-American clashes pit Tiafoe vs Michelsen and Pegula vs Navarro at Flushing Meadows • [SQUASH] Paul Coll defends London Classic with a third straight title and 34th PSA crown, while the Platinum Qatar Classic in Doha opens September 12 • [BADMINTON] An Se-young wins a third straight China Masters for her seventh title of 2026, Satwik-Chirag finally take men's doubles gold, and the Asian Games loom September 19 • [PICKLEBALL] Team USA sweeps Vietnam 4-0 for Heineken Pickleball World Cup Open gold in Da Nang as Ly Hoang Nam wins men's singles after four finals in one day • [TABLE TENNIS] WTT Champions Macao 2026 kicks off at the East Asian Games Dome — defending champion Wang Chuqin withdraws injured as the world's top 32 open Round of 32 play",
+  "tickerText": "[TENNIS] US Open quarter-finals wrap Tuesday with Aryna Sabalenka surviving a thriller against Linda Noskova and Frances Tiafoe rallying from two sets down to beat Alex Michelsen — both advance to the semis as Alcaraz faces Shelton Wednesday • [SQUASH] Qatar Classic Platinum tournament opens September 12 in Doha with world No. 1 Mostafa Asal chasing his first title and Nouran Gohar making her return after maternity leave • [BADMINTON] Asian Games countdown begins as world No. 1 An Se-young departs for Japan after her historic third straight China Masters crown and seventh title of 2026 • [PICKLEBALL] PPA Asia 1000 Leapmotor Kuala Lumpur Cup kicks off today at The Hood with up to $300,000 in prize money and five days of pro action across Malaysia • [TABLE TENNIS] WTT Champions Macao 2026 continues Day 2 with more Round of 32 singles play — Huang Youzheng faces Kanak Jha and Wang Yidi meets Dina Meshref at the East Asian Games Dome",
   "newsItems": [
     {
-      "title": "US Open Quarter-Finals Begin",
-      "excerpt": "Tuesday's line-up features Carlos Alcaraz against Ben Shelton and Aryna Sabalenka versus Linda Noskova, with Frances Tiafoe meeting Alex Michelsen and Jessica Pegula facing Emma Navarro in two all-American quarter-finals.",
+      "title": "Qatar Classic Set for Star-Studded Return",
+      "excerpt": "The Qatar Classic Platinum event returns to Doha September 12–18, headlined by world No. 1 Mostafa Asal seeking his first title and Nouran Gohar making her PSA comeback after maternity leave.",
       "date": "September 8, 2026",
-      "category": "Tennis",
-      "link": "https://www.straitstimes.com/sport/tennis/shelton-next-up-as-alcaraz-tackles-all-american-gauntlet-in-path-to-us-open-final"
+      "category": "Squash",
+      "link": "https://thepeninsulaqatar.com/article/08/09/2026/qatar-classic-set-for-star-studded-return"
     },
     {
-      "title": "An Se-young Claims Seventh Title of 2026",
-      "excerpt": "The world No. 1 beat Tomoka Miyazaki 21-17, 21-6 to win a third straight China Masters crown, while Satwik-Chirag ended years of heartbreak with their first men's doubles title in Shenzhen.",
-      "date": "September 7, 2026",
+      "title": "Asian Games on the Horizon",
+      "excerpt": "World No. 1 An Se-young heads to Japan after securing a third straight China Masters crown — her seventh title of 2026 — as badminton's Asian Games begin September 19 in Aichi-Nagoya.",
+      "date": "September 8, 2026",
       "category": "Badminton",
-      "link": "https://www.straitstimes.com/sport/an-se-young-retains-china-masters-badminton-crown-for-seventh-title-of-2026"
+      "link": "https://www.koreaherald.com/article/10863989"
     },
     {
-      "title": "USA Crowned Pickleball World Cup Champions",
-      "excerpt": "Team USA swept host Vietnam 4-0 in the Open team final in Da Nang, though Ly Hoang Nam claimed men's singles gold after playing four finals in a single day.",
-      "date": "September 7, 2026",
+      "title": "Kuala Lumpur Cup Kicks Off",
+      "excerpt": "The PPA Asia 1000 Leapmotor Kuala Lumpur Cup opens today at The Hood for five days of world-class pickleball, with up to $300,000 in prize money and the Pickletown fan festival running alongside.",
+      "date": "September 9, 2026",
       "category": "Pickleball",
-      "link": "https://www.timesnownews.com/sports/pickleball/team-usa-beat-unbeaten-vietnam-to-win-pickleball-world-cup-open-championship-article-156104511"
+      "link": "https://www.ppatour.com/events/2026/ppa-asia-1000-leapmotor-kuala-lumpur-cup-2026/"
     },
     {
-      "title": "WTT Champions Macao Gets Underway",
-      "excerpt": "The $800,000 Champions event opened Tuesday at the Macao East Asian Games Dome with Round of 32 singles play, as defending men's champion Wang Chuqin withdrew injured ahead of the draw.",
-      "date": "September 8, 2026",
+      "title": "Macao Champions Day Two",
+      "excerpt": "WTT Champions Macao continues Wednesday with more Round of 32 singles — China's Huang Youzheng faces USA's Kanak Jha and Wang Yidi takes on Egypt's Dina Meshref at the Macao East Asian Games Dome.",
+      "date": "September 9, 2026",
       "category": "Table Tennis",
-      "link": "https://www.globalgameguide.com/article/wtt-macao-champions-2026-guide"
+      "link": "https://www.gcs.gov.mo/news/detail/en/N26IHcWtcq"
     }
   ]
 }
