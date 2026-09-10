@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open quarter-finals wrap Tuesday with Aryna Sabalenka surviving a thriller against Linda Noskova and Frances Tiafoe rallying from two sets down to beat Alex Michelsen — both advance to the semis as Alcaraz faces Shelton Wednesday • [SQUASH] Qatar Classic Platinum tournament opens September 12 in Doha with world No. 1 Mostafa Asal chasing his first title and Nouran Gohar making her return after maternity leave • [BADMINTON] Asian Games countdown begins as world No. 1 An Se-young departs for Japan after her historic third straight China Masters crown and seventh title of 2026 • [PICKLEBALL] PPA Asia 1000 Leapmotor Kuala Lumpur Cup kicks off today at The Hood with up to $300,000 in prize money and five days of pro action across Malaysia • [TABLE TENNIS] WTT Champions Macao 2026 continues Day 2 with more Round of 32 singles play — Huang Youzheng faces Kanak Jha and Wang Yidi meets Dina Meshref at the East Asian Games Dome",
+  "tickerText": "[TENNIS] US Open women's semifinals hit Arthur Ashe tonight — Coco Gauff faces newly crowned world No. 1 Elena Rybakina and Aryna Sabalenka meets Jessica Pegula, after Ben Shelton ended Carlos Alcaraz's title defense in a 3:33 a.m. five-set epic • [SQUASH] QTerminals Qatar Classic Platinum opens Friday in Doha with world No. 1 Mostafa Asal chasing his first title and Nouran Gohar making her PSA comeback after maternity leave • [BADMINTON] Goh Sze Fei and Nur Izzuddin say they won't settle for less than gold at the Aichi-Nagoya Asian Games starting September 19 as Malaysia eyes its first men's doubles title in 20 years • [PICKLEBALL] PPA Asia 1000 Leapmotor Kuala Lumpur Cup Day 2 at The Hood features senior open brackets and pro main-draw qualifying ahead of quarterfinals Friday • [TABLE TENNIS] WTT Champions Macao wraps the round of 32 Thursday and opens the round of 16 — Truls Moregard rallied past Patrick Franziska while Kuai Man and Wang Yidi bowed out on Day 2",
   "newsItems": [
     {
-      "title": "Qatar Classic Set for Star-Studded Return",
-      "excerpt": "The Qatar Classic Platinum event returns to Doha September 12–18, headlined by world No. 1 Mostafa Asal seeking his first title and Nouran Gohar making her PSA comeback after maternity leave.",
-      "date": "September 8, 2026",
+      "title": "US Open Women's Semifinals Tonight",
+      "excerpt": "Arthur Ashe hosts two blockbuster semifinals Thursday — Coco Gauff faces newly crowned world No. 1 Elena Rybakina and Aryna Sabalenka meets Jessica Pegula after Rybakina clinched the top ranking.",
+      "date": "September 10, 2026",
+      "category": "Tennis",
+      "link": "https://www.espn.com.au/tennis/story/_/id/49882460/elena-rybakina-reaches-us-open-semis-claims-no-1-ranking"
+    },
+    {
+      "title": "Qatar Classic Returns to Doha",
+      "excerpt": "The QTerminals Qatar Classic Platinum opens September 12–18 at the Khalifa International Tennis and Squash Complex, headlined by Mostafa Asal seeking his first title and Nouran Gohar's PSA return.",
+      "date": "September 10, 2026",
       "category": "Squash",
       "link": "https://thepeninsulaqatar.com/article/08/09/2026/qatar-classic-set-for-star-studded-return"
     },
     {
-      "title": "Asian Games on the Horizon",
-      "excerpt": "World No. 1 An Se-young heads to Japan after securing a third straight China Masters crown — her seventh title of 2026 — as badminton's Asian Games begin September 19 in Aichi-Nagoya.",
-      "date": "September 8, 2026",
-      "category": "Badminton",
-      "link": "https://www.koreaherald.com/article/10863989"
-    },
-    {
-      "title": "Kuala Lumpur Cup Kicks Off",
-      "excerpt": "The PPA Asia 1000 Leapmotor Kuala Lumpur Cup opens today at The Hood for five days of world-class pickleball, with up to $300,000 in prize money and the Pickletown fan festival running alongside.",
-      "date": "September 9, 2026",
+      "title": "KL Cup Day Two Underway",
+      "excerpt": "The PPA Asia 1000 Leapmotor Kuala Lumpur Cup continues at The Hood with senior open play and pro main-draw qualifying, building toward quarterfinals on Friday across five days of action.",
+      "date": "September 10, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/ppa-asia-1000-leapmotor-kuala-lumpur-cup-2026/"
     },
     {
-      "title": "Macao Champions Day Two",
-      "excerpt": "WTT Champions Macao continues Wednesday with more Round of 32 singles — China's Huang Youzheng faces USA's Kanak Jha and Wang Yidi takes on Egypt's Dina Meshref at the Macao East Asian Games Dome.",
-      "date": "September 9, 2026",
+      "title": "Macao Champions Enter Round of 16",
+      "excerpt": "WTT Champions Macao concludes the round of 32 Thursday and opens the round of 16 — Hugo Calderano faces Tomislav Pucar and Tomokazu Harimoto meets Anders Lind at the East Asian Games Dome.",
+      "date": "September 10, 2026",
       "category": "Table Tennis",
-      "link": "https://www.gcs.gov.mo/news/detail/en/N26IHcWtcq"
+      "link": "https://www.gcs.gov.mo/news/detail/en/N26IIp2sbM"
     }
   ]
 }
