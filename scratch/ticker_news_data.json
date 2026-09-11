@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] US Open women's semifinals hit Arthur Ashe tonight — Coco Gauff faces newly crowned world No. 1 Elena Rybakina and Aryna Sabalenka meets Jessica Pegula, after Ben Shelton ended Carlos Alcaraz's title defense in a 3:33 a.m. five-set epic • [SQUASH] QTerminals Qatar Classic Platinum opens Friday in Doha with world No. 1 Mostafa Asal chasing his first title and Nouran Gohar making her PSA comeback after maternity leave • [BADMINTON] Goh Sze Fei and Nur Izzuddin say they won't settle for less than gold at the Aichi-Nagoya Asian Games starting September 19 as Malaysia eyes its first men's doubles title in 20 years • [PICKLEBALL] PPA Asia 1000 Leapmotor Kuala Lumpur Cup Day 2 at The Hood features senior open brackets and pro main-draw qualifying ahead of quarterfinals Friday • [TABLE TENNIS] WTT Champions Macao wraps the round of 32 Thursday and opens the round of 16 — Truls Moregard rallied past Patrick Franziska while Kuai Man and Wang Yidi bowed out on Day 2",
+  "tickerText": "[TENNIS] Elena Rybakina rallies past Coco Gauff 3-6, 6-4, 6-4 to reach the US Open final against defending champion Aryna Sabalenka — men's semis today pit Ben Shelton vs Frances Tiafoe and Alexander Zverev vs Karen Khachanov • [SQUASH] QTerminals Qatar Classic opens Friday in Doha with world No. 1 Mostafa Asal chasing his first title and Nouran Gohar making her PSA comeback after maternity leave • [BADMINTON] Lee Chong Wei renews BAM's offer of structured support to Lee Zii Jia after another Vietnam Open early exit, while Goh Jin Wei's ranking slide continues with a second-round loss • [PICKLEBALL] Gabriel Tardio and Noe Khlif rally from 3-11 to beat Pengsu Yong and Syed Uzair Sufi at the KL Cup as pro quarterfinals hit The Hood on Friday • [TABLE TENNIS] Wang Chuqin, Lin Yun-Ju and Macao's Zhu Yuling advance to WTT Champions Macao quarterfinals — Wang Yidi falls to Adriana Díaz in a five-set thriller",
   "newsItems": [
     {
-      "title": "US Open Women's Semifinals Tonight",
-      "excerpt": "Arthur Ashe hosts two blockbuster semifinals Thursday — Coco Gauff faces newly crowned world No. 1 Elena Rybakina and Aryna Sabalenka meets Jessica Pegula after Rybakina clinched the top ranking.",
-      "date": "September 10, 2026",
+      "title": "Rybakina Reaches US Open Final",
+      "excerpt": "World No. 1 Elena Rybakina rallied from a set down to beat Coco Gauff 3-6, 6-4, 6-4 and will face defending champion Aryna Sabalenka in Saturday's US Open women's final.",
+      "date": "September 11, 2026",
       "category": "Tennis",
-      "link": "https://www.espn.com.au/tennis/story/_/id/49882460/elena-rybakina-reaches-us-open-semis-claims-no-1-ranking"
+      "link": "https://www.wtatennis.com/news/4574995/rybakina-rallies-past-gauff-sets-up-sabalenka-showdown-in-final"
     },
     {
-      "title": "Qatar Classic Returns to Doha",
-      "excerpt": "The QTerminals Qatar Classic Platinum opens September 12–18 at the Khalifa International Tennis and Squash Complex, headlined by Mostafa Asal seeking his first title and Nouran Gohar's PSA return.",
-      "date": "September 10, 2026",
+      "title": "Qatar Classic Opens in Doha",
+      "excerpt": "The QTerminals Qatar Classic Platinum begins September 12–18 at the Khalifa International Tennis and Squash Complex, headlined by Mostafa Asal seeking his first title and Nouran Gohar's PSA return.",
+      "date": "September 11, 2026",
       "category": "Squash",
-      "link": "https://thepeninsulaqatar.com/article/08/09/2026/qatar-classic-set-for-star-studded-return"
+      "link": "https://www.psasquashtour.com/featured-news/gohars-return-takes-centre-stage-as-asal-hunts-elusive-qatar-classic-title/"
     },
     {
-      "title": "KL Cup Day Two Underway",
-      "excerpt": "The PPA Asia 1000 Leapmotor Kuala Lumpur Cup continues at The Hood with senior open play and pro main-draw qualifying, building toward quarterfinals on Friday across five days of action.",
-      "date": "September 10, 2026",
+      "title": "Tardio and Khlif Survive KL Scare",
+      "excerpt": "Top seeds Gabriel Tardio and Noe Khlif dropped the opener 3-11 but stormed back 11-5, 11-1 to advance at the PPA Asia 1000 Leapmotor Kuala Lumpur Cup as quarterfinals begin Friday.",
+      "date": "September 11, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/ppa-asia-1000-leapmotor-kuala-lumpur-cup-2026/"
+      "link": "https://www.ppatour-asia.com/in-a-pickle-no-more-tardio-and-khlif-survive-kl-scare/"
     },
     {
-      "title": "Macao Champions Enter Round of 16",
-      "excerpt": "WTT Champions Macao concludes the round of 32 Thursday and opens the round of 16 — Hugo Calderano faces Tomislav Pucar and Tomokazu Harimoto meets Anders Lind at the East Asian Games Dome.",
-      "date": "September 10, 2026",
+      "title": "Macao Quarterfinals Set",
+      "excerpt": "Wang Chuqin, Lin Yun-Ju and Macao's Zhu Yuling reached the WTT Champions Macao quarterfinals while Wang Yidi was upset by Adriana Díaz in a five-set round-of-16 thriller.",
+      "date": "September 11, 2026",
       "category": "Table Tennis",
-      "link": "https://www.gcs.gov.mo/news/detail/en/N26IIp2sbM"
+      "link": "https://wttmacao.sport.gov.mo/en/sites/wtt_sp/2026/id/944/nid/5542"
     }
   ]
 }
