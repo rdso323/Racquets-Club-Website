@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Elena Rybakina rallies past Coco Gauff 3-6, 6-4, 6-4 to reach the US Open final against defending champion Aryna Sabalenka — men's semis today pit Ben Shelton vs Frances Tiafoe and Alexander Zverev vs Karen Khachanov • [SQUASH] QTerminals Qatar Classic opens Friday in Doha with world No. 1 Mostafa Asal chasing his first title and Nouran Gohar making her PSA comeback after maternity leave • [BADMINTON] Lee Chong Wei renews BAM's offer of structured support to Lee Zii Jia after another Vietnam Open early exit, while Goh Jin Wei's ranking slide continues with a second-round loss • [PICKLEBALL] Gabriel Tardio and Noe Khlif rally from 3-11 to beat Pengsu Yong and Syed Uzair Sufi at the KL Cup as pro quarterfinals hit The Hood on Friday • [TABLE TENNIS] Wang Chuqin, Lin Yun-Ju and Macao's Zhu Yuling advance to WTT Champions Macao quarterfinals — Wang Yidi falls to Adriana Díaz in a five-set thriller",
+  "tickerText": "[TENNIS] Ben Shelton rallied past Frances Tiafoe 4-6, 6-3, 6-3, 7-5 to reach his first Grand Slam final, where he faces Alexander Zverev after the German beat Karen Khachanov — Aryna Sabalenka and Elena Rybakina meet in the women's final with the No. 1 ranking on the line • [SQUASH] The QTerminals Qatar Classic Platinum opens first-round play in Doha as world No. 1 Mostafa Asal hunts his first title and Nouran Gohar makes her PSA return after maternity leave • [BADMINTON] Asian Games badminton looms Sept 19–29 as An Se-young's unbeaten China Masters run and Satwik-Chirag's first China Masters crown fuel medal hopes in Japan • [PICKLEBALL] Tardio and Khlif reach the KL Cup men's doubles semis Saturday at The Hood after storming back from a 3-11 opener as the PPA Asia 1000 heads to Sunday's medal matches • [TABLE TENNIS] WTT Champions Macao quarterfinals day pits Zhou Qihao against Tomokazu Harimoto and Chen Xingtong against Dina Meshref before Sunday's semis and finals at the East Asian Games Dome",
   "newsItems": [
     {
-      "title": "Rybakina Reaches US Open Final",
-      "excerpt": "World No. 1 Elena Rybakina rallied from a set down to beat Coco Gauff 3-6, 6-4, 6-4 and will face defending champion Aryna Sabalenka in Saturday's US Open women's final.",
-      "date": "September 11, 2026",
+      "title": "Shelton Books US Open Final",
+      "excerpt": "Ben Shelton came from a set down to beat Frances Tiafoe 4-6, 6-3, 6-3, 7-5 and will face Alexander Zverev on Sunday for a chance to become the first American man to win the US Open since 2003.",
+      "date": "September 12, 2026",
       "category": "Tennis",
-      "link": "https://www.wtatennis.com/news/4574995/rybakina-rallies-past-gauff-sets-up-sabalenka-showdown-in-final"
+      "link": "https://www.nine.com.au/sport/tennis/us-open-semi-final-news-frances-tiafoe-ben-shelton-result-chair-umpire-spray-20260912-p60wrn.html"
     },
     {
-      "title": "Qatar Classic Opens in Doha",
-      "excerpt": "The QTerminals Qatar Classic Platinum begins September 12–18 at the Khalifa International Tennis and Squash Complex, headlined by Mostafa Asal seeking his first title and Nouran Gohar's PSA return.",
-      "date": "September 11, 2026",
+      "title": "Qatar Classic Begins in Doha",
+      "excerpt": "The QTerminals Qatar Classic Platinum is underway at the Khalifa International Tennis and Squash Complex, headlined by Mostafa Asal's title chase and Nouran Gohar's comeback after a year away from the PSA Tour.",
+      "date": "September 12, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/featured-news/gohars-return-takes-centre-stage-as-asal-hunts-elusive-qatar-classic-title/"
+      "link": "https://www.psasquashtour.com/tournament/qatar-classic-2026/"
     },
     {
-      "title": "Tardio and Khlif Survive KL Scare",
-      "excerpt": "Top seeds Gabriel Tardio and Noe Khlif dropped the opener 3-11 but stormed back 11-5, 11-1 to advance at the PPA Asia 1000 Leapmotor Kuala Lumpur Cup as quarterfinals begin Friday.",
-      "date": "September 11, 2026",
-      "category": "Pickleball",
-      "link": "https://www.ppatour-asia.com/in-a-pickle-no-more-tardio-and-khlif-survive-kl-scare/"
+      "title": "Stars Gear Up for Asian Games",
+      "excerpt": "An Se-young's seventh title of 2026 at the China Masters and Satwiksairaj Rankireddy and Chirag Shetty's maiden Super 750 win set the stage as badminton's Asian Games open in Aichi-Nagoya on September 19.",
+      "date": "September 12, 2026",
+      "category": "Badminton",
+      "link": "https://www.straitstimes.com/sport/an-se-young-retains-china-masters-badminton-crown-for-seventh-title-of-2026"
     },
     {
-      "title": "Macao Quarterfinals Set",
-      "excerpt": "Wang Chuqin, Lin Yun-Ju and Macao's Zhu Yuling reached the WTT Champions Macao quarterfinals while Wang Yidi was upset by Adriana Díaz in a five-set round-of-16 thriller.",
-      "date": "September 11, 2026",
+      "title": "Macao Quarterfinals Underway",
+      "excerpt": "Quarterfinal day at WTT Champions Macao features Zhou Qihao versus Tomokazu Harimoto and Chen Xingtong against Dina Meshref, with semifinals and finals scheduled for Sunday at the East Asian Games Dome.",
+      "date": "September 12, 2026",
       "category": "Table Tennis",
-      "link": "https://wttmacao.sport.gov.mo/en/sites/wtt_sp/2026/id/944/nid/5542"
+      "link": "https://www.einpresswire.com/article/941584645/wtt-champions-macao-2026-presented-by-galaxy-entertainment-group-quarterfinal-places-decided"
     }
   ]
 }
