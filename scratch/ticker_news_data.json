@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alexander Zverev beat Ben Shelton 6-3, 7-6(2), 5-7, 6-2 to win the US Open for his second major of 2026 after Elena Rybakina took the women's title and world No. 1 • [SQUASH] Sivasangari Subramaniam reached the Qatar Classic quarter-finals in 26 minutes as world No. 1 Mostafa Asal and top seeds advance in Doha • [BADMINTON] Malaysia's Aidil Sholeh upset Jason Teh to win the Vietnam Open men's singles; Tanvi Patri lifts the Asian U17 girls' crown in Chengdu • [PICKLEBALL] The Veolia Arizona Open opens Monday in Mesa with 1,000 ranking points and $1M+ in payouts as Anna Leigh Waters and Ben Johns lead the pro draws • [TABLE TENNIS] Truls Moregard and Miwa Harimoto crowned WTT Champions Macao singles winners — Moregard beat Calderano 4-1 and Harimoto edged Chen Yi 4-3 in seven games",
+  "tickerText": "[TENNIS] Ben Shelton heads to Davis Cup in Prague days after his US Open final loss, while new world No. 1 Elena Rybakina becomes the first player to qualify for the 2026 WTA Finals in Indian Wells • [SQUASH] Paul Coll and Amina Orfi reach the Qatar Classic quarter-finals in Doha as Nouran Gohar faces defending champion Hania El Hammamy for a 34th career meeting • [BADMINTON] Malaysia's Aidil Sholeh stuns top seed Jason Teh to win the Vietnam Open men's singles as shuttlers turn toward the Asian Games in Japan • [PICKLEBALL] Pro qualifying and Senior Open play headline day two of the Veolia Arizona Open in Mesa with 1,000 ranking points and $1M+ on the line • [TABLE TENNIS] Truls Moregard and Miwa Harimoto take WTT Champions Macao singles titles after Moregard beat Calderano 4-1 and Harimoto rallied past Chen Yi in seven games",
   "newsItems": [
     {
-      "title": "Zverev Claims US Open Crown",
-      "excerpt": "Top seed Alexander Zverev defeated Ben Shelton 6-3, 7-6(2), 5-7, 6-2 in New York to land his first US Open title and second Grand Slam of 2026, ending the American's bid to break a 23-year men's drought.",
-      "date": "September 14, 2026",
-      "category": "Tennis",
-      "link": "https://www.bbc.com/sport/tennis/articles/c1wx9qpxjg3o"
-    },
-    {
-      "title": "Sivasangari Rolls in Doha",
-      "excerpt": "World No. 5 Sivasangari Subramaniam swept into the Qatar Classic quarter-finals with a 26-minute win over Salma Hany as PSA Platinum action continues at the Khalifa International Squash Complex.",
-      "date": "September 14, 2026",
+      "title": "Coll and Orfi Into Qatar QFs",
+      "excerpt": "Defending champion Paul Coll swept into the Qatar Classic quarter-finals with an 11-2, 11-4, 11-3 win over Dimitri Steinmann, while Amina Orfi also advanced as Rachel Arnold upset Nour El Sherbini in Doha.",
+      "date": "September 15, 2026",
       "category": "Squash",
-      "link": "https://www.thestar.com.my/sport/squash/2026/09/14/sivasangari-cruises-on-as-qatar-classic-quarters-come-into-view"
+      "link": "https://staddoha.com/en/squash/coll-orfi-reach-qatar-classic-quarter-finals-as-el-sherbini-exits/"
     },
     {
-      "title": "Aidil Ends Vietnam Open Wait",
-      "excerpt": "Malaysia's Aidil Sholeh Ali Sadikin beat top seed Jason Teh 21-16, 21-14 in Ho Chi Minh City to claim his first BWF World Tour men's singles title since 2024 and Malaysia's first in the discipline in over a year.",
+      "title": "Aidil Claims Vietnam Open",
+      "excerpt": "World No. 91 Aidil Sholeh Ali Sadikin beat top seed Jason Teh 21-16, 21-14 in Ho Chi Minh City for his first BWF World Tour men's singles title since 2024.",
       "date": "September 14, 2026",
       "category": "Badminton",
       "link": "https://www.thestar.com.my/sport/badminton/2026/09/14/malaysian--stuns-top--seed-jason-to-claim--vietnam-open"
     },
     {
+      "title": "Arizona Open Qualifying Begins",
+      "excerpt": "The Veolia Arizona Open moves into Senior Open and pro qualifying in Mesa as the PPA Tour's first 1,000-point open of 2026 heads toward main-draw action later this week.",
+      "date": "September 15, 2026",
+      "category": "Pickleball",
+      "link": "https://www.ppatour.com/events/2026/veolia-arizona-open/"
+    },
+    {
       "title": "Macao Champions Crowned",
-      "excerpt": "Sweden's Truls Moregard defeated Hugo Calderano 4-1 and Japan's Miwa Harimoto outlasted Chen Yi 4-3 to win the men's and women's singles titles at WTT Champions Macao on Sunday night.",
-      "date": "September 14, 2026",
+      "excerpt": "Sweden's Truls Moregard defeated Hugo Calderano 4-1 and Japan's Miwa Harimoto outlasted Chen Yi 4-3 to win the men's and women's singles at WTT Champions Macao on Sunday.",
+      "date": "September 13, 2026",
       "category": "Table Tennis",
-      "link": "https://www.macaupostdaily.com/news/29369"
+      "link": "https://english.news.cn/20260913/aef29a055f634b35a186a47c7cc50519/c.html"
     }
   ]
 }
