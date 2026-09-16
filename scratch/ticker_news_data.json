@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Ben Shelton heads to Davis Cup in Prague days after his US Open final loss, while new world No. 1 Elena Rybakina becomes the first player to qualify for the 2026 WTA Finals in Indian Wells • [SQUASH] Paul Coll and Amina Orfi reach the Qatar Classic quarter-finals in Doha as Nouran Gohar faces defending champion Hania El Hammamy for a 34th career meeting • [BADMINTON] Malaysia's Aidil Sholeh stuns top seed Jason Teh to win the Vietnam Open men's singles as shuttlers turn toward the Asian Games in Japan • [PICKLEBALL] Pro qualifying and Senior Open play headline day two of the Veolia Arizona Open in Mesa with 1,000 ranking points and $1M+ on the line • [TABLE TENNIS] Truls Moregard and Miwa Harimoto take WTT Champions Macao singles titles after Moregard beat Calderano 4-1 and Harimoto rallied past Chen Yi in seven games",
+  "tickerText": "[TENNIS] US Open champion Alexander Zverev leads Germany into Davis Cup qualifying against Croatia while Ben Shelton heads a reshuffled U.S. team in Prague after Taylor Fritz and Tommy Paul withdrew • [SQUASH] World No. 1 Mostafa Asal reaches the Qatar Classic semi-finals in Doha and will face Marwan ElShorbagy as Hania El Hammamy and Sivasangari Subramaniam advance via walkovers • [BADMINTON] Shutters turn toward the Sept 19 Asian Games in Japan after Aidil Sholeh's Vietnam Open upset and An Se-young's seventh title of 2026 at the China Masters • [PICKLEBALL] The Veolia Arizona Open moves into pro round of 32 day in Mesa with 1,000 ranking points on the line and evening sessions built for desert heat • [TABLE TENNIS] Truls Moregard and Miwa Harimoto lifted the WTT Champions Macao singles trophies after Moregard beat Hugo Calderano 4-1 and Harimoto edged Chen Yi in seven games",
   "newsItems": [
     {
-      "title": "Coll and Orfi Into Qatar QFs",
-      "excerpt": "Defending champion Paul Coll swept into the Qatar Classic quarter-finals with an 11-2, 11-4, 11-3 win over Dimitri Steinmann, while Amina Orfi also advanced as Rachel Arnold upset Nour El Sherbini in Doha.",
-      "date": "September 15, 2026",
-      "category": "Squash",
-      "link": "https://staddoha.com/en/squash/coll-orfi-reach-qatar-classic-quarter-finals-as-el-sherbini-exits/"
+      "title": "Davis Cup Week After US Open",
+      "excerpt": "Alexander Zverev returns for Germany's qualifier against Croatia days after beating Ben Shelton in the US Open final, while Shelton leads a depleted U.S. side against the Czech Republic in Prague.",
+      "date": "September 16, 2026",
+      "category": "Tennis",
+      "link": "https://www.philstar.com/sports/2026/09/16/2556678/zverev-shelton-back-court-davis-cup-qualifiers"
     },
     {
-      "title": "Aidil Claims Vietnam Open",
-      "excerpt": "World No. 91 Aidil Sholeh Ali Sadikin beat top seed Jason Teh 21-16, 21-14 in Ho Chi Minh City for his first BWF World Tour men's singles title since 2024.",
+      "title": "Asal Into Qatar Semis",
+      "excerpt": "Mostafa Asal beat Aly Abou Eleinen in four games to reach the Qatar Classic semi-finals, where he will meet Marwan ElShorbagy after injury walkovers sent Hania El Hammamy and Sivasangari Subramaniam through on the women's side.",
+      "date": "September 16, 2026",
+      "category": "Squash",
+      "link": "https://staddoha.com/en/squash/asal-reaches-qatar-classic-semi-finals-as-el-hammamy-advances-by-walkover/"
+    },
+    {
+      "title": "Aidil Wins Vietnam Open",
+      "excerpt": "Malaysia's Aidil Sholeh Ali Sadikin upset top seed Jason Teh 21-16, 21-14 in Ho Chi Minh City for his first BWF World Tour men's singles title since 2024 as the tour shifts focus to the Asian Games.",
       "date": "September 14, 2026",
       "category": "Badminton",
       "link": "https://www.thestar.com.my/sport/badminton/2026/09/14/malaysian--stuns-top--seed-jason-to-claim--vietnam-open"
     },
     {
-      "title": "Arizona Open Qualifying Begins",
-      "excerpt": "The Veolia Arizona Open moves into Senior Open and pro qualifying in Mesa as the PPA Tour's first 1,000-point open of 2026 heads toward main-draw action later this week.",
-      "date": "September 15, 2026",
+      "title": "Arizona Open Hits Round of 32",
+      "excerpt": "The PPA Tour's first 1,000-point open of 2026 enters pro round of 32 play in Mesa with top-four World Pickleball Ranking seeds byed to the round of 16 and late sessions scheduled for triple-digit heat.",
+      "date": "September 16, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-arizona-open/"
-    },
-    {
-      "title": "Macao Champions Crowned",
-      "excerpt": "Sweden's Truls Moregard defeated Hugo Calderano 4-1 and Japan's Miwa Harimoto outlasted Chen Yi 4-3 to win the men's and women's singles at WTT Champions Macao on Sunday.",
-      "date": "September 13, 2026",
-      "category": "Table Tennis",
-      "link": "https://english.news.cn/20260913/aef29a055f634b35a186a47c7cc50519/c.html"
     }
   ]
 }
