@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] US Open champion Alexander Zverev leads Germany into Davis Cup qualifying against Croatia while Ben Shelton heads a reshuffled U.S. team in Prague after Taylor Fritz and Tommy Paul withdrew • [SQUASH] World No. 1 Mostafa Asal reaches the Qatar Classic semi-finals in Doha and will face Marwan ElShorbagy as Hania El Hammamy and Sivasangari Subramaniam advance via walkovers • [BADMINTON] Shutters turn toward the Sept 19 Asian Games in Japan after Aidil Sholeh's Vietnam Open upset and An Se-young's seventh title of 2026 at the China Masters • [PICKLEBALL] The Veolia Arizona Open moves into pro round of 32 day in Mesa with 1,000 ranking points on the line and evening sessions built for desert heat • [TABLE TENNIS] Truls Moregard and Miwa Harimoto lifted the WTT Champions Macao singles trophies after Moregard beat Hugo Calderano 4-1 and Harimoto edged Chen Yi in seven games",
+  "tickerText": "[TENNIS] Davis Cup Qualifier second-round ties open Sept. 18 as India visits Korea, the U.S. meets Czechia in Prague and Canada hosts France in Quebec City while Marta Kostyuk reaches Guadalajara's quarters by walkover • [SQUASH] Qatar Classic semi-finals loom Thursday with Mostafa Asal facing Marwan ElShorbagy and Hania El Hammamy set to meet Sivasangari Subramaniam after injury walkovers • [BADMINTON] An Se-young passes 101 consecutive weeks at world No. 1 as Asian Games squads finalize ahead of the Sept. 19 opener in Aichi-Nagoya • [PICKLEBALL] Veolia Arizona Open pro round of 16 day begins in Mesa with 1,000 PPA points, WPR byes and evening sessions for desert heat • [TABLE TENNIS] WTT Star Contender Astana runs through Sept. 20 in Kazakhstan with 160 players in five disciplines while Moregard and Harimoto carry Macao singles titles into the swing",
   "newsItems": [
     {
-      "title": "Davis Cup Week After US Open",
-      "excerpt": "Alexander Zverev returns for Germany's qualifier against Croatia days after beating Ben Shelton in the US Open final, while Shelton leads a depleted U.S. side against the Czech Republic in Prague.",
-      "date": "September 16, 2026",
+      "title": "Davis Cup Draws Set",
+      "excerpt": "Second-round Qualifier ties start Sept. 18 as India visits Korea for a Finals berth, the U.S. sends Shelton, Fritz and Paul to Prague against Czechia, and Canada hosts France in Quebec City.",
+      "date": "September 17, 2026",
       "category": "Tennis",
-      "link": "https://www.philstar.com/sports/2026/09/16/2556678/zverev-shelton-back-court-davis-cup-qualifiers"
+      "link": "https://sportstar.thehindu.com/tennis/india-vs-south-korea-davis-cup-preview-fixture-qualifiers-round-2/article71473842.ece"
     },
     {
-      "title": "Asal Into Qatar Semis",
-      "excerpt": "Mostafa Asal beat Aly Abou Eleinen in four games to reach the Qatar Classic semi-finals, where he will meet Marwan ElShorbagy after injury walkovers sent Hania El Hammamy and Sivasangari Subramaniam through on the women's side.",
-      "date": "September 16, 2026",
+      "title": "Qatar Classic Semis Set",
+      "excerpt": "Mostafa Asal meets Marwan ElShorbagy in Thursday's semi-finals after a four-game win over Aly Abou Eleinen, while Hania El Hammamy and Sivasangari Subramaniam both advanced via walkovers.",
+      "date": "September 17, 2026",
       "category": "Squash",
-      "link": "https://staddoha.com/en/squash/asal-reaches-qatar-classic-semi-finals-as-el-hammamy-advances-by-walkover/"
+      "link": "https://thepeninsulaqatar.com/article/16/09/2026/asal-downs-eleinen-in-thriller-elshorbagy-reaches-maiden-qatar-classic-semi-final"
     },
     {
-      "title": "Aidil Wins Vietnam Open",
-      "excerpt": "Malaysia's Aidil Sholeh Ali Sadikin upset top seed Jason Teh 21-16, 21-14 in Ho Chi Minh City for his first BWF World Tour men's singles title since 2024 as the tour shifts focus to the Asian Games.",
-      "date": "September 14, 2026",
+      "title": "An Se-young at 101 Weeks No. 1",
+      "excerpt": "The Korea star passes 100 consecutive weeks atop the women's rankings after her China Masters title and heads to Aichi-Nagoya aiming to defend Asian Games gold when play opens Sept. 19.",
+      "date": "September 17, 2026",
       "category": "Badminton",
-      "link": "https://www.thestar.com.my/sport/badminton/2026/09/14/malaysian--stuns-top--seed-jason-to-claim--vietnam-open"
+      "link": "https://www.badmintonplanet.com/badminton-news/an-se-young-100-weeks-world-no-1-record.html"
     },
     {
-      "title": "Arizona Open Hits Round of 32",
-      "excerpt": "The PPA Tour's first 1,000-point open of 2026 enters pro round of 32 play in Mesa with top-four World Pickleball Ranking seeds byed to the round of 16 and late sessions scheduled for triple-digit heat.",
-      "date": "September 16, 2026",
+      "title": "Arizona Open Hits Round of 16",
+      "excerpt": "The Veolia Arizona Open enters pro round of 16 day in Mesa with 1,000 ranking points on the line, World Pickleball Ranking byes reshaping draws and late sessions scheduled for triple-digit heat.",
+      "date": "September 17, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-arizona-open/"
     }
