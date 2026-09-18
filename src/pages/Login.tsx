@@ -145,7 +145,16 @@ const Login = () => {
                                         <p className="mt-1">
                                             We sent a sign-in link to{' '}
                                             <strong className="font-semibold">{email.trim() || 'your email'}</strong>.
-                                            Open it on this device. Check junk/spam if it is not in your inbox.
+                                            Open it on this device.
+                                        </p>
+                                        <p className="mt-2.5 rounded-lg border border-amber-300/70 bg-amber-50 px-3 py-2 text-amber-950 dark:border-amber-700/50 dark:bg-amber-950/40 dark:text-amber-100">
+                                            <strong className="font-bold uppercase tracking-wide">
+                                                Check Junk/Spam
+                                            </strong>
+                                            <span className="mt-0.5 block text-[13px] leading-snug">
+                                                It can take a minute or two to arrive — Duke often filters these emails.
+                                                Wait a bit before tapping Resend.
+                                            </span>
                                         </p>
                                     </div>
                                 </div>

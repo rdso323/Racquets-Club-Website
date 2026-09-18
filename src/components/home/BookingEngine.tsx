@@ -3,7 +3,7 @@ import { collection, onSnapshot, doc, query, where } from 'firebase/firestore';
 import { useLenis } from 'lenis/react';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Rocket, PartyPopper, X } from 'lucide-react';
+import { Rocket, PartyPopper, Plus, X } from 'lucide-react';
 import HorizontalScrollRail from '../system/HorizontalScrollRail';
 import BookingCardGrid from './booking/BookingCardGrid';
 import { type Sport, SPORTS, getSportTheme, type AdminRecurringSchedule, type OpenPlayDayConfig } from '../../lib/sports';
@@ -27,6 +27,7 @@ import { sectionHud } from '../../lib/siteNav';
 import SessionOpsModal from './SessionOpsModal';
 import EditSessionModal from '../admin/modals/EditSessionModal';
 import CapacityReductionModal from '../admin/modals/CapacityReductionModal';
+import CreateSessionModal from '../admin/modals/CreateSessionModal';
 import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 import { useBookingSessions } from '../../hooks/useBookingSessions';
 import { useSessionMaintenanceResets } from '../../hooks/useSessionMaintenanceResets';
@@ -140,6 +141,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
         Array<{ id: string } & WaitlistPromotionNotification>
     >([]);
     const [opsSession, setOpsSession] = useState<Session | null>(null);
+    const [createOpen, setCreateOpen] = useState(false);
 
     const { sessions, loading, error } = useBookingSessions({
         recurringSchedules,
@@ -377,7 +379,21 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                         {subheading ?? `Browse open play and clinic sessions across all ${SPORTS.length} club sports.`}
                     </p>
                 </div>
-                <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
+                <div className="flex flex-wrap items-center gap-3">
+                    {isAdmin && (
+                        <button
+                            type="button"
+                            onClick={() => setCreateOpen(true)}
+                            data-cursor
+                            className="inline-flex min-h-10 touch-manipulation items-center gap-1.5 rounded-full border border-court-accent/40 bg-court-accent/10 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-emerald-800 transition-colors hover:bg-court-accent/20 dark:text-court-accent"
+                            aria-label="Schedule a new session"
+                        >
+                            <Plus className="h-4 w-4" aria-hidden="true" />
+                            Add session
+                        </button>
+                    )}
+                    <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
+                </div>
             </div>
 
             {!loading && promotionAlerts.length > 0 && (
@@ -553,6 +569,13 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                 recurringSchedules={recurringSchedules}
                 disabledBuiltinSchedules={disabledBuiltinSchedules}
                 onClose={() => setOpsSession(null)}
+            />
+        )}
+
+        {createOpen && isAdmin && (
+            <CreateSessionModal
+                initialSport={activeSport}
+                onClose={() => setCreateOpen(false)}
             />
         )}
     </>
