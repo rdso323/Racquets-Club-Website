@@ -9,6 +9,7 @@ import TopBar from './components/system/TopBar';
 import MenuOverlay from './components/system/MenuOverlay';
 import FeedbackModal from './components/layout/FeedbackModal';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import { usePurgeDemoContent } from './hooks/usePurgeDemoContent';
 import { useSessionsPrefetchReady } from './hooks/useSessionsPrefetchReady';
 import { isHomeSectionHash } from './hooks/useHomeSectionNavigation';
 import { COURTS_PATH } from './lib/siteNav';
@@ -105,10 +106,12 @@ const AppRoutes = () => {
 
 const Shell = () => {
     const { pathname } = useLocation();
+    const { isAllowlistedAdmin } = useAuth();
     const startsOnLogin = pathname === '/login';
     const [revealed, setRevealed] = useState(startsOnLogin);
     const [preloaderDone, setPreloaderDone] = useState(startsOnLogin);
     const sessionsReady = useSessionsPrefetchReady();
+    usePurgeDemoContent(isAllowlistedAdmin);
 
     return (
         <UIProvider>
