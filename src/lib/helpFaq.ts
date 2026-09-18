@@ -7,7 +7,11 @@ export interface FaqItem {
 export const MEMBER_HELP_FAQ: FaqItem[] = [
     {
         question: 'Who can sign in and book courts?',
-        answer: 'Booking is for Duke members. Open Sign in, enter your firstname.lastname@duke.edu address (not your NetID alias), and use the one-time link we email you — no password. The home page shows availability, but you must be signed in to join a session or court. You stay signed in on that browser until you sign out.',
+        answer: 'Booking is for Duke members. Open Sign in, enter your firstname.lastname@duke.edu address (not your NetID alias), and use the one-time link we email you — no password. The booking page shows the schedule to everyone, but you must be signed in to join a session or court. You stay signed in on that browser until you sign out.',
+    },
+    {
+        question: 'Is there a direct link just for booking?',
+        answer: 'Yes. fuquaracquetsclub.com/courts is a dedicated booking page with only the sport tabs and session cards — no news or events. Bookmark it or share it in group chats. Add a sport to jump straight to that tab, for example /courts/pickleball or /courts/table-tennis. If you sign in from that page, you are returned there afterwards.',
     },
     {
         question: 'Which email should I use to sign in?',
@@ -23,7 +27,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do I reserve a spot on a court?',
-        answer: 'Open Book a Court from the menu (or scroll to the booking section), choose your sport tab, and pick an open play or clinic session. When a session uses court diagrams, tap + on an open spot or use Join to take the first available spot on that court. You can only hold one court per session at a time. Some clinics use a simple roster list instead of diagrams when capacity does not split evenly into 2 or 4 players per court.',
+        answer: 'Open Book a Court from the menu (or go to /courts), choose your sport tab, and pick an open play or clinic session. When a session uses court diagrams, tap + on an open spot or use Join to take the first available spot on that court. You can only hold one court per session at a time. Some clinics use a simple roster list instead of diagrams when capacity does not split evenly into 2 or 4 players per court.',
     },
     {
         question: 'What is weekly open play vs a one-time session?',
@@ -55,7 +59,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'Where are club events and news?',
-        answer: 'Scroll past the booking section or use the menu: Events (03) shows upcoming socials and mixers only — past events disappear after their date. News (04) shows up to four headline articles. The Club Wire ticker above booking carries live sports updates. From the Help page footer, Book a Court, Events, and News take you back to the home page and scroll to the right section.',
+        answer: 'Scroll past the booking section or use the menu: Events (03) shows upcoming socials and mixers only — past events disappear after their date. News (04) shows up to four headline articles. The Club Wire ticker above booking carries live sports updates. From any page footer, Book a Court opens the dedicated booking page, while Events and News take you back to the home page and scroll to the right section.',
     },
     {
         question: 'How do I find answers on the Help page?',

@@ -12,8 +12,7 @@ import {
     type ResolvedCabinet,
 } from '../lib/cabinet';
 import { db } from '../lib/firebase';
-import { sectionHud } from '../lib/siteNav';
-import { useHomeSectionNavigation } from '../hooks/useHomeSectionNavigation';
+import { COURTS_PATH, sectionHud } from '../lib/siteNav';
 
 const HeroCourtArt = () => (
     <svg
@@ -36,7 +35,6 @@ const HeroCourtArt = () => (
 
 const Cabinet = () => {
     const prefersReducedMotion = useReducedMotion();
-    const { scrollToHomeSection } = useHomeSectionNavigation();
     const [roster, setRoster] = useState<ResolvedCabinet>(() => resolveCabinetDisplay(null));
 
     useEffect(() => {
@@ -159,15 +157,14 @@ const Cabinet = () => {
                         </p>
                     </div>
                     <div className="flex flex-col gap-3 sm:flex-row">
-                        <button
-                            type="button"
-                            onClick={() => scrollToHomeSection('booking-section')}
+                        <Link
+                            to={COURTS_PATH}
                             data-cursor="hover"
                             className="clay-gradient inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-transform hover:scale-[1.02]"
                         >
                             Book a Court
                             <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                        </button>
+                        </Link>
                         <Link
                             to="/help"
                             data-cursor="hover"

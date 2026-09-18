@@ -121,12 +121,20 @@ const createICSFile = (session: Session, courtName?: string) => {
     document.body.removeChild(link);
 };
 
-const BookingEngine = () => {
+interface BookingEngineProps {
+    /** Sport tab to open with (e.g. from a `/courts/:sport` deep link). Falls back to Tennis. */
+    initialSport?: Sport | null;
+    /** Section heading; the home page and the dedicated courts page word this differently. */
+    heading?: string;
+    subheading?: string;
+}
+
+const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps = {}) => {
     const { user, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
     const lenis = useLenis();
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
-    const [activeSport, setActiveSport] = useState<Sport>('Tennis');
+    const [activeSport, setActiveSport] = useState<Sport>(initialSport ?? 'Tennis');
     const [bookingBusy, setBookingBusy] = useState<string | null>(null);
     const [promotionAlerts, setPromotionAlerts] = useState<
         Array<{ id: string } & WaitlistPromotionNotification>
@@ -171,6 +179,10 @@ const BookingEngine = () => {
 
         return () => unsub();
     }, [user]);
+
+    useEffect(() => {
+        if (initialSport) setActiveSport(initialSport);
+    }, [initialSport]);
 
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
@@ -359,10 +371,10 @@ const BookingEngine = () => {
                 <div>
                     <p className="hud-label mb-3 text-court-accent">{sectionHud('booking')}</p>
                     <h2 className="font-display text-2xl text-gray-900 dark:text-chalk md:text-3xl lg:text-4xl">
-                        Reserve your court
+                        {heading ?? 'Reserve your court'}
                     </h2>
                     <p className="mt-2 max-w-xl text-sm text-gray-500 dark:text-chalk/50">
-                        Browse open play and clinic sessions across all {SPORTS.length} club sports.
+                        {subheading ?? `Browse open play and clinic sessions across all ${SPORTS.length} club sports.`}
                     </p>
                 </div>
                 <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>

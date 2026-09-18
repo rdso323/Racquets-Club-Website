@@ -6,6 +6,7 @@ import { useUI } from './UIProvider';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 import { formatMemberFirstName } from '../../lib/memberNames';
 import { headerSurfaceClasses, useHeaderScrolled } from '../../lib/navChrome';
+import { useGoToLogin } from '../../hooks/useGoToLogin';
 import { Menu, Moon, Sun, LogIn, X, ChevronDown, LogOut, Shield } from 'lucide-react';
 
 const TopBar = () => {
@@ -17,6 +18,7 @@ const TopBar = () => {
     const [time, setTime] = useState('');
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
+    const goToLogin = useGoToLogin();
 
     useEffect(() => {
         const tick = () => {
@@ -106,7 +108,7 @@ const TopBar = () => {
 
                 {!user && (
                     <button
-                        onClick={() => navigate('/login')}
+                        onClick={goToLogin}
                         data-cursor
                         className="hidden hud-label items-center gap-1.5 rounded-full border border-gray-300 px-4 py-2 text-wimbledon-navy transition-colors hover:bg-gray-50 dark:border-chalk/20 dark:text-chalk dark:hover:bg-chalk/5 sm:inline-flex"
                     >

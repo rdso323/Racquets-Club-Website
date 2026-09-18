@@ -4,7 +4,7 @@ import { useLenis } from 'lenis/react';
 import { ChevronDown, MessageCircle, Search, Shield, X } from 'lucide-react';
 import Footer from '../components/home/Footer';
 import { ADMIN_HELP_FAQ, MEMBER_HELP_FAQ, type FaqItem } from '../lib/helpFaq';
-import { sectionHud } from '../lib/siteNav';
+import { COURTS_PATH, sectionHud } from '../lib/siteNav';
 import { useUI } from '../components/system/UIProvider';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -285,7 +285,7 @@ const Help = () => {
                 <div className="mt-12 rounded-xl border border-gray-200 bg-gray-50/80 p-6 dark:border-chalk/10 dark:bg-court-900/40">
                     <p className="font-display text-xl text-gray-900 dark:text-chalk">Still stuck?</p>
                     <p className="mt-2 text-sm text-gray-600 dark:text-chalk/60">
-                        Send feedback and we will get back to you, or head to the booking section to try again.
+                        Send feedback and we will get back to you, or head to the booking page to try again.
                     </p>
                     <div className="mt-4 flex flex-wrap gap-3">
                         <button
@@ -297,7 +297,7 @@ const Help = () => {
                             Send feedback
                         </button>
                         <Link
-                            to="/#booking-section"
+                            to={COURTS_PATH}
                             className="inline-flex min-h-11 touch-manipulation items-center rounded-full border border-gray-300 px-5 py-2.5 text-sm font-semibold text-wimbledon-navy transition-colors hover:bg-white dark:border-chalk/20 dark:text-chalk dark:hover:bg-chalk/5"
                         >
                             Go to booking

@@ -3,6 +3,16 @@ export type Sport = (typeof SPORTS)[number];
 
 export const SPORT_FILTER_TABS = [...SPORTS] as const;
 
+/** URL slug for a sport, e.g. `Table Tennis` → `table-tennis`. */
+export const sportToSlug = (sport: Sport): string => sport.toLowerCase().replace(/\s+/g, '-');
+
+/** Inverse of `sportToSlug`; returns null for unknown or missing slugs. */
+export const parseSportSlug = (slug: string | undefined): Sport | null => {
+    if (!slug) return null;
+    const normalized = slug.trim().toLowerCase();
+    return SPORTS.find((sport) => sportToSlug(sport) === normalized) ?? null;
+};
+
 export const DEFAULT_OPEN_PLAY_CAPACITY = 8;
 export const SLOTS_PER_COURT = 4;
 /** Default waitlist slots per court when session has no explicit maxWaitlistSize */

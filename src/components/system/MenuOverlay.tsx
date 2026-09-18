@@ -4,8 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
-import { SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
+import { COURTS_PATH, SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
 import { useHomeSectionNavigation } from '../../hooks/useHomeSectionNavigation';
+import { useGoToLogin } from '../../hooks/useGoToLogin';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { menuPanelSurfaceClasses, useIsMobile } from '../../lib/navChrome';
 
@@ -140,6 +141,7 @@ const MenuOverlay = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { scrollToHomeSection } = useHomeSectionNavigation();
+    const goToLogin = useGoToLogin();
     const prefersReducedMotion = usePrefersReducedMotion();
     const isMobile = useIsMobile();
     const animateEntries = !prefersReducedMotion;
@@ -172,7 +174,7 @@ const MenuOverlay = () => {
         window.setTimeout(action, isMobile ? 100 : 160);
     };
 
-    const scrollToId = (id: 'booking-section' | 'events-section' | 'news-section') => {
+    const scrollToId = (id: 'events-section' | 'news-section') => {
         closeAnd(() => scrollToHomeSection(id));
     };
 
@@ -191,7 +193,7 @@ const MenuOverlay = () => {
             id === 'home'
                 ? () => goTo('/')
                 : id === 'booking'
-                  ? () => scrollToId('booking-section')
+                  ? () => goTo(COURTS_PATH)
                   : id === 'events'
                     ? () => scrollToId('events-section')
                     : () => scrollToId('news-section'),
@@ -231,8 +233,8 @@ const MenuOverlay = () => {
                   label: 'Sign In',
                   sub: 'Duke.edu accounts',
                   index: isAdmin ? '09' : '08',
-                  action: () => goTo('/login'),
-              },
+                  action                  : () => closeAnd(goToLogin),
+          },
     );
 
     // Club group reveals just after the primary explore group finishes staggering in.
