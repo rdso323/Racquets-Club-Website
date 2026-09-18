@@ -15,6 +15,8 @@ const STATUS_LINES = [
 const MIN_REVEAL_MS = 800;
 const MAX_REVEAL_MS = 2500;
 const EXIT_DELAY_MS = 150;
+/** Minimum re-check interval when a timer fires just shy of its deadline. */
+const RETRY_MS = 16;
 
 interface PreloaderProps {
     onReveal: () => void;
@@ -77,16 +79,20 @@ const Preloader = ({ onReveal, onDone, sessionsReady = false }: PreloaderProps) 
             return false;
         };
 
-        if (tryReveal()) return;
+        let timer: number | undefined;
 
-        const elapsed = performance.now() - startRef.current;
-        const waitMs = sessionsReady
-            ? Math.max(0, MIN_REVEAL_MS - elapsed)
-            : Math.max(0, MAX_REVEAL_MS - elapsed);
+        // setTimeout can fire a fraction of a millisecond before performance.now()
+        // crosses the deadline; keep re-checking until the reveal succeeds instead
+        // of giving up after a single attempt (which left the preloader stuck).
+        const schedule = () => {
+            if (tryReveal()) return;
 
-        const timer = window.setTimeout(() => {
-            tryReveal();
-        }, waitMs);
+            const elapsed = performance.now() - startRef.current;
+            const remaining = sessionsReady ? MIN_REVEAL_MS - elapsed : MAX_REVEAL_MS - elapsed;
+            timer = window.setTimeout(schedule, Math.max(RETRY_MS, remaining));
+        };
+
+        schedule();
 
         return () => window.clearTimeout(timer);
     }, [reduced, sessionsReady, onReveal]);
