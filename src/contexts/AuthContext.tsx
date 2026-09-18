@@ -84,14 +84,19 @@ const readLegacyTabPreferences = (): TabPreference[] | null => {
 
 const PRODUCTION_SITE_ORIGIN = 'https://www.fuquaracquetsclub.com';
 
-/** Continue URL for email sign-in links — localhost for local testing, production otherwise. */
+/**
+ * Continue URL for email sign-in links.
+ * Local: always `http://localhost:<port>/login` (Firebase allowlists `localhost`, not `127.0.0.1`).
+ * Otherwise: production origin.
+ */
 const getSignInContinueUrl = (): string => {
     if (typeof window === 'undefined') {
         return `${PRODUCTION_SITE_ORIGIN}/login`;
     }
-    const { hostname, origin } = window.location;
+    const { hostname, port, protocol } = window.location;
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return `${origin}/login`;
+        const portSuffix = port && port !== '80' && port !== '443' ? `:${port}` : '';
+        return `${protocol}//localhost${portSuffix}/login`;
     }
     return `${PRODUCTION_SITE_ORIGIN}/login`;
 };

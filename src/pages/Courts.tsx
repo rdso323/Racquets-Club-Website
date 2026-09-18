@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowRight, CalendarPlus, LayoutGrid, LogIn, MousePointerClick } from 'lucide-react';
+import { ArrowRight, CalendarPlus, ChevronDown, ChevronUp, LayoutGrid, LogIn, MousePointerClick } from 'lucide-react';
 import BookingEngine from '../components/home/BookingEngine';
 import Footer from '../components/home/Footer';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,6 +9,8 @@ import { useGoToLogin } from '../hooks/useGoToLogin';
 import { formatMemberFirstName } from '../lib/memberNames';
 import { COURTS_PATH } from '../lib/siteNav';
 import { SPORTS, parseSportSlug } from '../lib/sports';
+
+const HOW_IT_WORKS_HIDDEN_KEY = 'courts_how_it_works_hidden';
 
 const STEPS = [
     {
@@ -32,11 +35,34 @@ const STEPS = [
     },
 ] as const;
 
+const readHowItWorksHidden = (): boolean => {
+    try {
+        return window.localStorage.getItem(HOW_IT_WORKS_HIDDEN_KEY) === '1';
+    } catch {
+        return false;
+    }
+};
+
 const Courts = () => {
     const { sport: sportSlug } = useParams<{ sport?: string }>();
     const { user } = useAuth();
     const goToLogin = useGoToLogin();
     const prefersReducedMotion = useReducedMotion();
+    const [howItWorksHidden, setHowItWorksHidden] = useState(false);
+
+    useEffect(() => {
+        setHowItWorksHidden(readHowItWorksHidden());
+    }, []);
+
+    const setHowItWorksPreference = (hidden: boolean) => {
+        setHowItWorksHidden(hidden);
+        try {
+            if (hidden) window.localStorage.setItem(HOW_IT_WORKS_HIDDEN_KEY, '1');
+            else window.localStorage.removeItem(HOW_IT_WORKS_HIDDEN_KEY);
+        } catch {
+            /* storage unavailable */
+        }
+    };
 
     const initialSport = parseSportSlug(sportSlug);
     if (sportSlug && !initialSport) {
@@ -107,7 +133,7 @@ const Courts = () => {
                                         Sign in to book
                                     </button>
                                     <p className="text-sm text-gray-500 dark:text-chalk/50">
-                                        Duke members only. You can browse the schedule without signing in.
+                                        Fuqua members only. You can browse the schedule without signing in.
                                     </p>
                                 </>
                             )}
@@ -120,41 +146,69 @@ const Courts = () => {
                 />
             </section>
 
-            {/* How it works */}
+            {/* How it works — collapsible; preference remembered in localStorage */}
             <section aria-labelledby="courts-how-it-works" className="mx-auto max-w-7xl px-5 pt-10 md:px-10 md:pt-12">
-                <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <h2 id="courts-how-it-works" className="hud-label text-gray-400 dark:text-chalk/40">
                         How it works
                     </h2>
-                    <Link
-                        to="/help"
-                        data-cursor
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-clay-600 transition-colors hover:text-clay-500 dark:text-clay-300 dark:hover:text-clay-200"
-                    >
-                        Full FAQ
-                        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </Link>
-                </div>
-                <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    {STEPS.map(({ Icon, title, body }, i) => (
-                        <motion.li
-                            key={title}
-                            {...rise(0.3 + i * 0.06)}
-                            className="glass-deep flex gap-4 p-4 dark:border-chalk/10 dark:bg-court-900/60"
+                    <div className="flex flex-wrap items-center gap-3">
+                        <Link
+                            to="/help"
+                            data-cursor
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-clay-600 transition-colors hover:text-clay-500 dark:text-clay-300 dark:hover:text-clay-200"
                         >
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-court-accent/10 dark:text-court-accent">
-                                <Icon className="h-5 w-5" aria-hidden="true" />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="hud-label text-[10px] text-gray-400 dark:text-chalk/35">
-                                    {String(i + 1).padStart(2, '0')}
-                                </p>
-                                <p className="mt-0.5 text-sm font-semibold text-gray-900 dark:text-chalk">{title}</p>
-                                <p className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-chalk/55">{body}</p>
-                            </div>
-                        </motion.li>
-                    ))}
-                </ol>
+                            Full FAQ
+                            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => setHowItWorksPreference(!howItWorksHidden)}
+                            data-cursor
+                            aria-expanded={!howItWorksHidden}
+                            aria-controls="courts-how-it-works-panel"
+                            className="inline-flex min-h-9 touch-manipulation items-center gap-1 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition-colors hover:border-court-accent/40 hover:text-wimbledon-navy dark:border-chalk/15 dark:text-chalk/60 dark:hover:border-court-accent/50 dark:hover:text-chalk"
+                        >
+                            {howItWorksHidden ? (
+                                <>
+                                    Show guide
+                                    <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                                </>
+                            ) : (
+                                <>
+                                    Hide guide
+                                    <ChevronUp className="h-3.5 w-3.5" aria-hidden="true" />
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+
+                {!howItWorksHidden && (
+                    <ol
+                        id="courts-how-it-works-panel"
+                        className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+                    >
+                        {STEPS.map(({ Icon, title, body }, i) => (
+                            <motion.li
+                                key={title}
+                                {...rise(0.06 + i * 0.05)}
+                                className="glass-deep flex gap-4 p-4 dark:border-chalk/10 dark:bg-court-900/60"
+                            >
+                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700 dark:bg-court-accent/10 dark:text-court-accent">
+                                    <Icon className="h-5 w-5" aria-hidden="true" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="hud-label text-[10px] text-gray-400 dark:text-chalk/35">
+                                        {String(i + 1).padStart(2, '0')}
+                                    </p>
+                                    <p className="mt-0.5 text-sm font-semibold text-gray-900 dark:text-chalk">{title}</p>
+                                    <p className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-chalk/55">{body}</p>
+                                </div>
+                            </motion.li>
+                        ))}
+                    </ol>
+                )}
             </section>
 
             {/* Booking engine — same max width as the hero so the columns line up */}
