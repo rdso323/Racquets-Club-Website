@@ -6,7 +6,7 @@ import Footer from '../components/home/Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { useGoToLogin } from '../hooks/useGoToLogin';
 import { formatMemberFirstName } from '../lib/memberNames';
-import { COURTS_PATH, sectionHud } from '../lib/siteNav';
+import { COURTS_PATH } from '../lib/siteNav';
 import { SPORTS, parseSportSlug } from '../lib/sports';
 
 const STEPS = [
@@ -68,8 +68,6 @@ const Courts = () => {
                                 Fuqua Racquets Club · Court Bookings
                             </span>
                         </motion.div>
-
-                        <p className="hud-label mb-3 text-court-accent">{sectionHud('booking')}</p>
 
                         <motion.h1
                             {...rise(0.08)}
@@ -159,8 +157,8 @@ const Courts = () => {
                 </ol>
             </section>
 
-            {/* Booking engine */}
-            <div className="px-5 pt-12 pb-10 md:px-10 md:pt-14 md:pb-12">
+            {/* Booking engine — same max width as the hero so the columns line up */}
+            <div className="mx-auto max-w-7xl px-5 pt-12 pb-10 md:px-10 md:pt-14 md:pb-12">
                 <BookingEngine
                     initialSport={initialSport}
                     heading="Pick a session"
