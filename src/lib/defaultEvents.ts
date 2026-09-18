@@ -50,18 +50,6 @@ export const DEFAULT_CLUB_EVENTS: ClubEvent[] = [
         image: '/events/us-open-watch-party.jpg',
         link: 'https://fuquaconnect.duke.edu/events',
     },
-    {
-        id: 'fall-doubles-mixer',
-        title: 'Fall Doubles Mixer',
-        date: 'Saturday, Oct 18',
-        dateISO: '2026-10-18',
-        time: '10:00 AM – 1:00 PM',
-        startTime: '10:00',
-        endTime: '13:00',
-        location: 'Center Courts · Card Gym',
-        image: '/events/fall-doubles-mixer.jpg',
-        link: 'https://fuquaconnect.duke.edu/events',
-    },
 ];
 
 /** Prefer upcoming Firestore events; otherwise show code defaults. */

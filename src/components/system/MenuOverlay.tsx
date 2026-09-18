@@ -136,7 +136,7 @@ const MenuNavGroup = ({
 );
 
 const MenuOverlay = () => {
-    const { user, signOut, isAdmin } = useAuth();
+    const { user, signOut, isAllowlistedAdmin, viewAsMember, setViewAsMember } = useAuth();
     const { menuOpen, setMenuOpen, openFeedback } = useUI();
     const location = useLocation();
     const navigate = useNavigate();
@@ -212,12 +212,27 @@ const MenuOverlay = () => {
                   : () => closeAnd(openFeedback),
     }));
 
-    if (isAdmin) {
+    if (isAllowlistedAdmin) {
+        clubItems.push({
+            label: viewAsMember ? 'Exit member view' : 'View as member',
+            sub: viewAsMember ? 'Restore admin tools' : 'Preview the site as a member',
+            index: '08',
+            action: () =>
+                closeAnd(() => {
+                    const next = !viewAsMember;
+                    setViewAsMember(next);
+                    if (next && onAdminPage) navigate('/');
+                }),
+        });
         clubItems.push({
             label: onAdminPage ? 'Home' : 'Admin',
             sub: onAdminPage ? 'Return to site' : 'Operations Deck',
-            index: '08',
-            action: () => goTo(onAdminPage ? '/' : '/admin'),
+            index: '09',
+            action: () =>
+                closeAnd(() => {
+                    if (viewAsMember) setViewAsMember(false);
+                    navigate(onAdminPage ? '/' : '/admin');
+                }),
         });
     }
 
@@ -226,15 +241,15 @@ const MenuOverlay = () => {
             ? {
                   label: 'Sign Out',
                   sub: 'End session',
-                  index: isAdmin ? '09' : '08',
+                  index: isAllowlistedAdmin ? '10' : '08',
                   action: () => closeAnd(() => signOut()),
               }
             : {
                   label: 'Sign In',
                   sub: 'Duke.edu accounts',
-                  index: isAdmin ? '09' : '08',
-                  action                  : () => closeAnd(goToLogin),
-          },
+                  index: isAllowlistedAdmin ? '10' : '08',
+                  action: () => closeAnd(goToLogin),
+              },
     );
 
     // Club group reveals just after the primary explore group finishes staggering in.

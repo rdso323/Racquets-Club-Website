@@ -31,7 +31,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'What is weekly open play vs a one-time session?',
-        answer: 'Weekly sessions run on a fixed day every week (for example Tennis Open Play Tuesday and Thursday, or a Friday coaching clinic). One-time sessions are custom events admins create for a specific date. Cards show tags for type (Open Play or Clinic) and schedule (Recurring or One-time), plus the weekday when applicable (e.g. “Every Tuesday”). After a session ends, its roster and waitlist reset for the next week.',
+        answer: 'Weekly sessions run on a fixed day every week (for example an Open Play Tuesday, or a Friday coaching clinic) once an admin has scheduled them. One-time sessions are custom events admins create for a specific date. Cards show tags for type (Open Play or Clinic) and schedule (Recurring or One-time), plus the weekday when applicable (e.g. “Every Tuesday”). After a session ends, its roster and waitlist reset for the next week.',
     },
     {
         question: 'When can I book next week’s sessions?',

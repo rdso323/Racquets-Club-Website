@@ -141,7 +141,13 @@ interface AuthContextType {
     clearAuthMessage: () => void;
     clearAuthError: () => void;
     signOut: () => Promise<void>;
+    /** Effective admin for UI/ops — false when an allowlisted admin is previewing as a member. */
     isAdmin: boolean;
+    /** True if the signed-in email is on the admin allowlist (ignores view toggle). */
+    isAllowlistedAdmin: boolean;
+    /** When true, allowlisted admins see the site as a regular member. */
+    viewAsMember: boolean;
+    setViewAsMember: (asMember: boolean) => void;
     tabPreferences: TabPreference[];
     updateTabPreferences: (newTabs: TabPreference[]) => Promise<void>;
 }
@@ -159,6 +165,7 @@ const DEFAULT_ADMIN_EMAILS = [
     'laura.wang@duke.edu',
     'maddie.latimore@duke.edu',
     'naitik.reshamwala@duke.edu',
+    'rohan.dsouza@duke.edu',
     CLUB_ADMIN_EMAIL,
 ];
 
@@ -175,6 +182,16 @@ const ADMIN_EMAILS = getAdminEmails();
 const isAdminEmail = (email: string | null | undefined) =>
     !!email && ADMIN_EMAILS.includes(email.toLowerCase());
 
+const ADMIN_VIEW_AS_MEMBER_KEY = 'admin_view_as_member';
+
+const readViewAsMember = (): boolean => {
+    try {
+        return window.localStorage.getItem(ADMIN_VIEW_AS_MEMBER_KEY) === '1';
+    } catch {
+        return false;
+    }
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
@@ -182,8 +199,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [linkSentPending, setLinkSentPending] = useState(false);
     const [emailLinkNeedsEmail, setEmailLinkNeedsEmail] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
+    const [viewAsMember, setViewAsMemberState] = useState(false);
     const migrationAttemptedRef = useRef<string | null>(null);
     const completingEmailLinkRef = useRef(false);
+
+    useEffect(() => {
+        setViewAsMemberState(readViewAsMember());
+    }, []);
+
+    const setViewAsMember = (asMember: boolean) => {
+        setViewAsMemberState(asMember);
+        try {
+            if (asMember) window.localStorage.setItem(ADMIN_VIEW_AS_MEMBER_KEY, '1');
+            else window.localStorage.removeItem(ADMIN_VIEW_AS_MEMBER_KEY);
+        } catch {
+            /* storage unavailable */
+        }
+    };
 
     const acceptAuthenticatedUser = async (currentUser: User) => {
         if (!currentUser.email?.endsWith('@duke.edu')) {
@@ -424,7 +456,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAdmin = user ? isAdminEmail(user.email) : false;
+    const isAllowlistedAdmin = user ? isAdminEmail(user.email) : false;
+    const isAdmin = isAllowlistedAdmin && !viewAsMember;
 
     return (
         <AuthContext.Provider
@@ -440,6 +473,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 clearAuthError,
                 signOut,
                 isAdmin,
+                isAllowlistedAdmin,
+                viewAsMember,
+                setViewAsMember,
                 tabPreferences,
                 updateTabPreferences,
             }}
