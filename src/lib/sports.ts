@@ -3,6 +3,16 @@ export type Sport = (typeof SPORTS)[number];
 
 export const SPORT_FILTER_TABS = [...SPORTS] as const;
 
+/** URL slug for a sport, e.g. `Table Tennis` → `table-tennis`. */
+export const sportToSlug = (sport: Sport): string => sport.toLowerCase().replace(/\s+/g, '-');
+
+/** Inverse of `sportToSlug`; returns null for unknown or missing slugs. */
+export const parseSportSlug = (slug: string | undefined): Sport | null => {
+    if (!slug) return null;
+    const normalized = slug.trim().toLowerCase();
+    return SPORTS.find((sport) => sportToSlug(sport) === normalized) ?? null;
+};
+
 export const DEFAULT_OPEN_PLAY_CAPACITY = 8;
 export const SLOTS_PER_COURT = 4;
 /** Default waitlist slots per court when session has no explicit maxWaitlistSize */
@@ -91,74 +101,16 @@ export interface AdminRecurringSchedule {
 }
 
 export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
-    Tennis: [
-        {
-            day: 'tuesday',
-            title: 'Open Play Tuesday',
-            courts: ['Court 2', 'Court 4'],
-            maxPerCourt: SLOTS_PER_COURT,
-            time: '9:00 PM - 11:00 PM',
-        },
-        {
-            day: 'thursday',
-            title: 'Open Play Thursday',
-            courts: ['Court 3', 'Court 5'],
-            maxPerCourt: SLOTS_PER_COURT,
-            time: '9:00 PM - 11:00 PM',
-        },
-    ],
-    Badminton: [
-        {
-            day: 'wednesday',
-            title: 'Open Play Wednesday',
-            courts: ['Court 1', 'Court 2'],
-            maxPerCourt: SLOTS_PER_COURT,
-            time: '3:00 PM - 4:00 PM',
-        },
-    ],
-    Squash: [
-        {
-            day: 'monday',
-            title: 'Open Play Monday',
-            courts: ['Court 1', 'Court 2'],
-            maxPerCourt: SLOTS_PER_COURT,
-            time: '6:00 PM - 8:00 PM',
-        },
-    ],
-    Pickleball: [
-        {
-            day: 'tuesday',
-            title: 'Open Play Tuesday',
-            courts: ['Court 1', 'Court 2'],
-            maxPerCourt: SLOTS_PER_COURT,
-            time: '5:00 PM - 7:00 PM',
-        },
-    ],
-    'Table Tennis': [
-        {
-            day: 'thursday',
-            title: 'Open Play Thursday',
-            courts: ['Court 1'],
-            maxPerCourt: SLOTS_PER_COURT,
-            time: '5:00 PM - 7:00 PM',
-        },
-    ],
+    Tennis: [],
+    Badminton: [],
+    Squash: [],
+    Pickleball: [],
+    'Table Tennis': [],
 };
 
-/** Built-in weekly coaching clinic templates (currently Tennis only). */
+/** Built-in weekly coaching clinic templates — empty until admins schedule live clinics. */
 export const CLINIC_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
-    Tennis: [
-        {
-            day: 'friday',
-            title: 'Coaching Clinic',
-            sessionType: 'coaching',
-            courts: ['Court 1'],
-            maxPerCourt: SLOTS_PER_COURT,
-            maxAttendees: SLOTS_PER_COURT,
-            coach: 'TBD',
-            time: '3:00 PM - 4:00 PM',
-        },
-    ],
+    Tennis: [],
     Badminton: [],
     Squash: [],
     Pickleball: [],

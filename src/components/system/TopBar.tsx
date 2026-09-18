@@ -6,10 +6,11 @@ import { useUI } from './UIProvider';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 import { formatMemberFirstName } from '../../lib/memberNames';
 import { headerSurfaceClasses, useHeaderScrolled } from '../../lib/navChrome';
-import { Menu, Moon, Sun, LogIn, X, ChevronDown, LogOut, Shield } from 'lucide-react';
+import { useGoToLogin } from '../../hooks/useGoToLogin';
+import { Menu, Moon, Sun, LogIn, X, ChevronDown, LogOut, Shield, Eye, EyeOff } from 'lucide-react';
 
 const TopBar = () => {
-    const { user, signOut, isAdmin } = useAuth();
+    const { user, signOut, isAllowlistedAdmin, viewAsMember, setViewAsMember } = useAuth();
     const { menuOpen, setMenuOpen } = useUI();
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
@@ -17,6 +18,7 @@ const TopBar = () => {
     const [time, setTime] = useState('');
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
+    const goToLogin = useGoToLogin();
 
     useEffect(() => {
         const tick = () => {
@@ -66,7 +68,15 @@ const TopBar = () => {
 
     const goToAdmin = () => {
         setUserMenuOpen(false);
+        if (viewAsMember) setViewAsMember(false);
         navigate(onAdminPage ? '/' : '/admin');
+    };
+
+    const toggleMemberPreview = () => {
+        const next = !viewAsMember;
+        setViewAsMember(next);
+        setUserMenuOpen(false);
+        if (next && onAdminPage) navigate('/');
     };
 
     return (
@@ -106,7 +116,7 @@ const TopBar = () => {
 
                 {!user && (
                     <button
-                        onClick={() => navigate('/login')}
+                        onClick={goToLogin}
                         data-cursor
                         className="hidden hud-label items-center gap-1.5 rounded-full border border-gray-300 px-4 py-2 text-wimbledon-navy transition-colors hover:bg-gray-50 dark:border-chalk/20 dark:text-chalk dark:hover:bg-chalk/5 sm:inline-flex"
                     >
@@ -137,9 +147,24 @@ const TopBar = () => {
                             <div
                                 role="menu"
                                 aria-label="Account menu"
-                                className="absolute right-0 top-[calc(100%+0.5rem)] z-[160] min-w-[11rem] overflow-hidden rounded-xl border border-gray-200/90 bg-white py-1 shadow-lg dark:border-chalk/15 dark:bg-court-950"
+                                className="absolute right-0 top-[calc(100%+0.5rem)] z-[160] min-w-[13rem] overflow-hidden rounded-xl border border-gray-200/90 bg-white py-1 shadow-lg dark:border-chalk/15 dark:bg-court-950"
                             >
-                                {isAdmin && (
+                                {isAllowlistedAdmin && (
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        onClick={toggleMemberPreview}
+                                        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-wimbledon-navy transition-colors hover:bg-gray-50 dark:text-chalk dark:hover:bg-chalk/5"
+                                    >
+                                        {viewAsMember ? (
+                                            <Eye className="h-4 w-4 shrink-0 text-gray-400 dark:text-chalk/45" />
+                                        ) : (
+                                            <EyeOff className="h-4 w-4 shrink-0 text-gray-400 dark:text-chalk/45" />
+                                        )}
+                                        {viewAsMember ? 'Exit member view' : 'View as member'}
+                                    </button>
+                                )}
+                                {isAllowlistedAdmin && (
                                     <button
                                         type="button"
                                         role="menuitem"

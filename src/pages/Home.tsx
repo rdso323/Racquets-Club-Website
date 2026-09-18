@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLenis } from 'lenis/react';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import BookingEngine from '../components/home/BookingEngine';
@@ -8,6 +8,7 @@ import Transmissions from '../components/home/Transmissions';
 import Footer from '../components/home/Footer';
 import LiveWire from '../components/system/LiveWire';
 import { SPORTS } from '../lib/sports';
+import { COURTS_PATH } from '../lib/siteNav';
 import { isHomeSectionHash } from '../hooks/useHomeSectionNavigation';
 
 const HeroCourtArt = () => (
@@ -32,6 +33,7 @@ const HeroCourtArt = () => (
 const Home = () => {
     const prefersReducedMotion = useReducedMotion();
     const location = useLocation();
+    const navigate = useNavigate();
     const lenis = useLenis();
     const { scrollY } = useScroll();
     const heroOpacity = useTransform(scrollY, [140, 780], [1, 0]);
@@ -128,11 +130,11 @@ const Home = () => {
 
                             <motion.div {...rise(0.34)} className="flex flex-col items-center gap-4 pt-9 sm:flex-row md:items-start">
                                 <button
-                                    onClick={() => scrollToSection('booking-section')}
+                                    onClick={() => navigate(COURTS_PATH)}
                                     data-cursor="hover"
                                     className="clay-gradient flex cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 text-base font-bold text-white shadow-[0_18px_44px_-12px_rgba(199,93,61,0.55)] transition-all hover:scale-[1.02] sm:text-lg"
                                 >
-                                    Join Session
+                                    Book a Court
                                     <ChevronRight className="h-5 w-5" />
                                 </button>
                                 <button

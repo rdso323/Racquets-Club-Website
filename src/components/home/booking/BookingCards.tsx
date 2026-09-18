@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import type { User } from 'firebase/auth';
-import { Users, Rocket, AlertTriangle, Lock, RotateCcw } from 'lucide-react';
+import { Users, Rocket, AlertTriangle, Lock, LogIn, RotateCcw } from 'lucide-react';
+import { useGoToLogin } from '../../../hooks/useGoToLogin';
 import type { AdminRecurringSchedule, OpenPlayDayConfig, Sport } from '../../../lib/sports';
 import { CourtBookingView } from './CourtBookingView';
 import WaitlistPanel from '../WaitlistPanel';
@@ -46,6 +47,28 @@ export interface BookingCardHandlers {
     onLeaveWaitlist: (session: Session) => void;
     onCoachAction: (session: Session) => void;
 }
+
+const MembersOnlyOverlay = () => {
+    const goToLogin = useGoToLogin();
+    return (
+        <div className="absolute inset-0 z-20 flex items-center justify-center rounded-b-2xl bg-white/60 backdrop-blur-[2px] dark:bg-court-950/60">
+            <div className="mb-8 flex max-w-[80%] flex-col items-center rounded-xl border border-gray-100 bg-white p-5 text-center shadow-lg dark:border-chalk/10 dark:bg-carbon">
+                <Users className="mb-2 h-8 w-8 text-wimbledon-navy opacity-80 dark:text-chalk" />
+                <h4 className="mb-1 text-sm font-bold text-gray-900 dark:text-chalk">Members Only</h4>
+                <p className="text-xs font-medium text-gray-500 dark:text-chalk/50">Sign in to view availability and book.</p>
+                <button
+                    type="button"
+                    onClick={goToLogin}
+                    data-cursor
+                    className="clay-gradient mt-3 inline-flex min-h-10 touch-manipulation items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold text-white transition-transform hover:scale-[1.02]"
+                >
+                    <LogIn className="h-3.5 w-3.5" aria-hidden="true" />
+                    Sign in
+                </button>
+            </div>
+        </div>
+    );
+};
 
 const SessionLockOverlay = () => (
     <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/55 dark:bg-court-950/50">
@@ -277,15 +300,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
             </div>
 
             <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
-                {!user && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-b-2xl bg-white/60 backdrop-blur-[2px] dark:bg-court-950/60">
-                        <div className="mb-8 flex max-w-[80%] flex-col items-center rounded-xl border border-gray-100 bg-white p-5 text-center shadow-lg dark:border-chalk/10 dark:bg-carbon">
-                            <Users className="mb-2 h-8 w-8 text-wimbledon-navy opacity-80 dark:text-chalk" />
-                            <h4 className="mb-1 text-sm font-bold text-gray-900 dark:text-chalk">Members Only</h4>
-                            <p className="text-xs font-medium text-gray-500 dark:text-chalk/50">Sign in to view availability and book.</p>
-                        </div>
-                    </div>
-                )}
+                {!user && <MembersOnlyOverlay />}
 
                 <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                     <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
@@ -551,15 +566,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
             </div>
 
             <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
-                {!user && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center rounded-b-2xl bg-white/60 backdrop-blur-[2px] dark:bg-court-950/60">
-                        <div className="mb-8 flex max-w-[80%] flex-col items-center rounded-xl border border-gray-100 bg-white p-5 text-center shadow-lg dark:border-chalk/10 dark:bg-carbon">
-                            <Users className="mb-2 h-8 w-8 text-wimbledon-navy opacity-80 dark:text-chalk" />
-                            <h4 className="mb-1 text-sm font-bold text-gray-900 dark:text-chalk">Members Only</h4>
-                            <p className="text-xs font-medium text-gray-500 dark:text-chalk/50">Sign in to view availability and book.</p>
-                        </div>
-                    </div>
-                )}
+                {!user && <MembersOnlyOverlay />}
 
                 <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                     <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>

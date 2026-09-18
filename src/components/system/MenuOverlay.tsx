@@ -4,8 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useUI } from './UIProvider';
-import { SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
+import { COURTS_PATH, SITE_NAV_SECTIONS, type SiteSectionId } from '../../lib/siteNav';
 import { useHomeSectionNavigation } from '../../hooks/useHomeSectionNavigation';
+import { useGoToLogin } from '../../hooks/useGoToLogin';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { menuPanelSurfaceClasses, useIsMobile } from '../../lib/navChrome';
 
@@ -135,11 +136,12 @@ const MenuNavGroup = ({
 );
 
 const MenuOverlay = () => {
-    const { user, signOut, isAdmin } = useAuth();
+    const { user, signOut, isAllowlistedAdmin, viewAsMember, setViewAsMember } = useAuth();
     const { menuOpen, setMenuOpen, openFeedback } = useUI();
     const location = useLocation();
     const navigate = useNavigate();
     const { scrollToHomeSection } = useHomeSectionNavigation();
+    const goToLogin = useGoToLogin();
     const prefersReducedMotion = usePrefersReducedMotion();
     const isMobile = useIsMobile();
     const animateEntries = !prefersReducedMotion;
@@ -172,7 +174,7 @@ const MenuOverlay = () => {
         window.setTimeout(action, isMobile ? 100 : 160);
     };
 
-    const scrollToId = (id: 'booking-section' | 'events-section' | 'news-section') => {
+    const scrollToId = (id: 'events-section' | 'news-section') => {
         closeAnd(() => scrollToHomeSection(id));
     };
 
@@ -191,7 +193,7 @@ const MenuOverlay = () => {
             id === 'home'
                 ? () => goTo('/')
                 : id === 'booking'
-                  ? () => scrollToId('booking-section')
+                  ? () => goTo(COURTS_PATH)
                   : id === 'events'
                     ? () => scrollToId('events-section')
                     : () => scrollToId('news-section'),
@@ -210,12 +212,27 @@ const MenuOverlay = () => {
                   : () => closeAnd(openFeedback),
     }));
 
-    if (isAdmin) {
+    if (isAllowlistedAdmin) {
+        clubItems.push({
+            label: viewAsMember ? 'Exit member view' : 'View as member',
+            sub: viewAsMember ? 'Restore admin tools' : 'Preview the site as a member',
+            index: '08',
+            action: () =>
+                closeAnd(() => {
+                    const next = !viewAsMember;
+                    setViewAsMember(next);
+                    if (next && onAdminPage) navigate('/');
+                }),
+        });
         clubItems.push({
             label: onAdminPage ? 'Home' : 'Admin',
             sub: onAdminPage ? 'Return to site' : 'Operations Deck',
-            index: '08',
-            action: () => goTo(onAdminPage ? '/' : '/admin'),
+            index: '09',
+            action: () =>
+                closeAnd(() => {
+                    if (viewAsMember) setViewAsMember(false);
+                    navigate(onAdminPage ? '/' : '/admin');
+                }),
         });
     }
 
@@ -224,14 +241,14 @@ const MenuOverlay = () => {
             ? {
                   label: 'Sign Out',
                   sub: 'End session',
-                  index: isAdmin ? '09' : '08',
+                  index: isAllowlistedAdmin ? '10' : '08',
                   action: () => closeAnd(() => signOut()),
               }
             : {
                   label: 'Sign In',
                   sub: 'Duke.edu accounts',
-                  index: isAdmin ? '09' : '08',
-                  action: () => goTo('/login'),
+                  index: isAllowlistedAdmin ? '10' : '08',
+                  action: () => closeAnd(goToLogin),
               },
     );
 
