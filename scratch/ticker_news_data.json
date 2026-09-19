@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Davis Cup Qualifier second-round play begins Sept. 18 as Learner Tien opens USA–Czechia in Prague against Jakub Mensik before Ben Shelton faces Jiri Lehecka, while Canada hosts France in Quebec City with Felix Auger-Aliassime on double duty • [SQUASH] QTerminals Qatar Classic crowns champions Friday in Doha after Victor Crouin ended Paul Coll's title run and Mostafa Asal meets Marwan ElShorbagy in the men's final path • [BADMINTON] Asian Games open in Aichi-Nagoya Sept. 19 with badminton at Ichinomiya starting Sept. 20 as Olympic champion An Se-young and India's 20-player squad head into team week • [PICKLEBALL] Veolia Arizona Open quarterfinals day in Mesa follows Tyson McGuffin's round-of-32 exit as Christopher Haworth and upset pairs chase 1,000 PPA points on PickleballTV and FS2 • [TABLE TENNIS] WTT Star Contender Astana hits Sept. 18 with mixed and doubles quarterfinals plus singles round of 32 before evening doubles semis at Martial Arts Palace in Kazakhstan",
+  "tickerText": "[TENNIS] Davis Cup Qualifier ties roll on Sept. 19 as Ben Shelton falls 6-4, 6-4 to Jiri Lehecka to leave USA–Czechia 1-1 after Learner Tien's debut win, South Korea leads India 2-0, and Great Britain opens against Ecuador at London's Copper Box • [SQUASH] QTerminals Qatar Classic wraps in Doha with Mostafa Asal sweeping Victor Crouin 11-5, 11-6, 11-2 for his first Doha title and Amina Orfi edging Hania El Hammamy in five to claim women's gold and the world No. 1 spot • [BADMINTON] Aichi-Nagoya Asian Games open Sept. 19 as team draws set India women versus Kazakhstan on Sunday and men versus Bangladesh Monday ahead of Ichinomiya play Sept. 20–29 • [PICKLEBALL] Veolia Arizona Open semifinal Saturday in Mesa after a wild week that sent Tyson McGuffin home early and pits Ben Johns against Federico Staksrud with 1,000 PPA points live on PickleballTV and FS2 • [TABLE TENNIS] WTT Star Contender Astana hits Sept. 19 with women's and men's singles round of 16, mixed doubles semis at 11:00 and evening singles quarterfinals plus doubles finals at Martial Arts Palace",
   "newsItems": [
     {
-      "title": "Davis Cup Day One Begins",
-      "excerpt": "Second-round Qualifier ties open Sept. 18 as Learner Tien leads the U.S. against Jakub Mensik in Prague, Ben Shelton faces Jiri Lehecka, and Felix Auger-Aliassime anchors Canada versus France in Quebec City.",
-      "date": "September 18, 2026",
-      "category": "Tennis",
-      "link": "https://tennisnow.com/tien-opens-u-s-davis-cup-tie-with-mensik-rematch/"
-    },
-    {
-      "title": "Qatar Classic Finals Day",
-      "excerpt": "The Platinum event in Doha concludes Sept. 18 after Victor Crouin toppled defending champion Paul Coll and Mostafa Asal advanced to face Marwan ElShorbagy on the men's side.",
-      "date": "September 18, 2026",
+      "title": "Asal and Orfi Crowned in Doha",
+      "excerpt": "Egypt swept both Qatar Classic finals Sept. 18 as world No. 1 Mostafa Asal beat Victor Crouin in straight games and Amina Orfi outlasted Hania El Hammamy in five to take her first Doha title and the women's top ranking.",
+      "date": "September 19, 2026",
       "category": "Squash",
-      "link": "https://thepeninsulaqatar.com/article/17/09/2026/gawad-crouin-book-qatar-classic-semi-final"
+      "link": "https://qna.org.qa/en/news/news-details?date=19%2F09%2F2026&id=egypts-asal-and-orfi-win-qterminals-qatar-classic-titles"
     },
     {
-      "title": "Asian Games Badminton Looms",
-      "excerpt": "Shuttle competition at Ichinomiya runs Sept. 20–29 after the Aichi-Nagoya Games open Sept. 19, with team events first and An Se-young among the stars set for singles defense.",
-      "date": "September 18, 2026",
+      "title": "Asian Games Team Draws Set",
+      "excerpt": "Badminton team brackets for Aichi-Nagoya were revealed Sept. 19, sending India's women into a Sunday round-of-16 tie with Kazakhstan and the men against Bangladesh on Monday before singles and doubles week in Ichinomiya.",
+      "date": "September 19, 2026",
       "category": "Badminton",
-      "link": "https://www.olympics.com/en/news/asian-games-2026-competition-schedule-released"
+      "link": "https://sportstar.thehindu.com/asian-games/news/asian-games-2026-badminton-team-draw-india-men-women-schedule/article71483558.ece"
     },
     {
-      "title": "Arizona Open Quarterfinals",
-      "excerpt": "Friday's Veolia Arizona Open pro quarterfinals in Mesa follow a shaken draw that saw Tyson McGuffin fall in the round of 32 while top seed Christopher Haworth and several upset pairs push for 1,000 PPA points.",
-      "date": "September 18, 2026",
+      "title": "Arizona Open Semifinal Saturday",
+      "excerpt": "The Veolia Arizona Open reaches pro semifinals Sept. 19 in Mesa after upsets shook the draws, including a Johns–Staksrud singles quarterfinal clash, with championship Sunday and 1,000 ranking points on the line.",
+      "date": "September 19, 2026",
       "category": "Pickleball",
-      "link": "https://worldpickleballmagazine.com/ppa-arizona-open-round-32-results-round-16-preview-2026/"
+      "link": "https://www.ppatour.com/events/2026/veolia-arizona-open/"
+    },
+    {
+      "title": "Astana Singles R16 Day",
+      "excerpt": "WTT Star Contender Astana's Saturday slate features women's and men's singles round of 16 and mixed doubles semifinals before evening quarterfinals and doubles finals cap play at the Martial Arts Palace in Kazakhstan.",
+      "date": "September 19, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.koobit.com/wtt-star-contender-astana-presidents-cup-e186357"
     }
   ]
 }
