@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Davis Cup Qualifier ties roll on Sept. 19 as Ben Shelton falls 6-4, 6-4 to Jiri Lehecka to leave USA–Czechia 1-1 after Learner Tien's debut win, South Korea leads India 2-0, and Great Britain opens against Ecuador at London's Copper Box • [SQUASH] QTerminals Qatar Classic wraps in Doha with Mostafa Asal sweeping Victor Crouin 11-5, 11-6, 11-2 for his first Doha title and Amina Orfi edging Hania El Hammamy in five to claim women's gold and the world No. 1 spot • [BADMINTON] Aichi-Nagoya Asian Games open Sept. 19 as team draws set India women versus Kazakhstan on Sunday and men versus Bangladesh Monday ahead of Ichinomiya play Sept. 20–29 • [PICKLEBALL] Veolia Arizona Open semifinal Saturday in Mesa after a wild week that sent Tyson McGuffin home early and pits Ben Johns against Federico Staksrud with 1,000 PPA points live on PickleballTV and FS2 • [TABLE TENNIS] WTT Star Contender Astana hits Sept. 19 with women's and men's singles round of 16, mixed doubles semis at 11:00 and evening singles quarterfinals plus doubles finals at Martial Arts Palace",
+  "tickerText": "[TENNIS] Iva Jovic defends the Guadalajara Open with a 6-4, 6-2 win over Peyton Stearns while Davis Cup qualifying sends Czechia past the United States as Jakub Mensik beats Ben Shelton and Jiri Lehecka tops Learner Tien, South Korea becomes the first Asian nation in the Final 8, and Great Britain leads Ecuador 2-0 in London • [SQUASH] Mostafa Asal's 11-5, 11-6, 11-2 Qatar Classic final over Victor Crouin is his 30th PSA title and completes the set of current majors as Amina Orfi's five-set win over Hania El Hammamy lifts her to world No. 1 in Doha • [BADMINTON] Aichi-Nagoya Asian Games team badminton opens Sept. 20 at Ichinomiya with knockout ties including India's women versus Kazakhstan at 11:30 a.m. IST and the men facing Bangladesh on Monday ahead of singles week • [PICKLEBALL] Veolia Arizona Open Championship Sunday in Mesa caps a $1.06M PPA week that saw Tyson McGuffin bounced in the Round of 32 while pro finals stream on PickleballTV and FS1 with 1,000 ranking points in play • [TABLE TENNIS] India opens Asian Games women's team play with a 3-0 sweep of Indonesia—Akula, Chitale and Ghorpade winning singles—before a Sunday Singapore tie while WTT Star Contender Astana closes its Kazakhstan slate with singles finals at the Martial Arts Palace",
   "newsItems": [
     {
-      "title": "Asal and Orfi Crowned in Doha",
-      "excerpt": "Egypt swept both Qatar Classic finals Sept. 18 as world No. 1 Mostafa Asal beat Victor Crouin in straight games and Amina Orfi outlasted Hania El Hammamy in five to take her first Doha title and the women's top ranking.",
-      "date": "September 19, 2026",
+      "title": "Czechia Knocks Out USA",
+      "excerpt": "Jakub Mensik beat Ben Shelton 5-7, 6-4, 6-3 and Jiri Lehecka edged Learner Tien 6-3, 7-5 on Sept. 20 to send Czechia into the Davis Cup Final 8, with Shelton losing both singles rubbers in Prague.",
+      "date": "September 20, 2026",
+      "category": "Tennis",
+      "link": "https://sportstar.thehindu.com/tennis/davis-cup-2026-usa-vs-czechia-shelton-mensik-austria-britain-results-latest/article71487009.ece"
+    },
+    {
+      "title": "Asal Completes Major Set",
+      "excerpt": "Mostafa Asal swept Victor Crouin for his first Qatar Classic crown and 30th PSA title, while Amina Orfi outlasted Hania El Hammamy in five games to take the women's trophy and the world No. 1 ranking in Doha.",
+      "date": "September 20, 2026",
       "category": "Squash",
-      "link": "https://qna.org.qa/en/news/news-details?date=19%2F09%2F2026&id=egypts-asal-and-orfi-win-qterminals-qatar-classic-titles"
+      "link": "https://www.squashinfo.com/latest-news/8602-orfi-asal-capture-qatar-classic-crowns"
     },
     {
-      "title": "Asian Games Team Draws Set",
-      "excerpt": "Badminton team brackets for Aichi-Nagoya were revealed Sept. 19, sending India's women into a Sunday round-of-16 tie with Kazakhstan and the men against Bangladesh on Monday before singles and doubles week in Ichinomiya.",
-      "date": "September 19, 2026",
+      "title": "Asian Games Badminton Begins",
+      "excerpt": "Team knockout play at Ichinomiya opened on Sept. 20 as India's women faced Kazakhstan in the round of 16, with the men's tie against Bangladesh set for Monday before quarterfinals later in the week.",
+      "date": "September 20, 2026",
       "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/asian-games/news/asian-games-2026-badminton-team-draw-india-men-women-schedule/article71483558.ece"
+      "link": "https://sportstar.thehindu.com/asian-games/news/asian-games-2026-live-updates-september-20-events-news-highlights/article71486924.ece"
     },
     {
-      "title": "Arizona Open Semifinal Saturday",
-      "excerpt": "The Veolia Arizona Open reaches pro semifinals Sept. 19 in Mesa after upsets shook the draws, including a Johns–Staksrud singles quarterfinal clash, with championship Sunday and 1,000 ranking points on the line.",
-      "date": "September 19, 2026",
-      "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/veolia-arizona-open/"
-    },
-    {
-      "title": "Astana Singles R16 Day",
-      "excerpt": "WTT Star Contender Astana's Saturday slate features women's and men's singles round of 16 and mixed doubles semifinals before evening quarterfinals and doubles finals cap play at the Martial Arts Palace in Kazakhstan.",
-      "date": "September 19, 2026",
+      "title": "India Sweeps Indonesia 3-0",
+      "excerpt": "Sreeja Akula, Diya Chitale and Yashaswini Ghorpade won their singles rubbers on Sept. 20 as India's women's table tennis team blanked Indonesia in Asian Games Group F before facing Singapore later Sunday.",
+      "date": "September 20, 2026",
       "category": "Table Tennis",
-      "link": "https://www.koobit.com/wtt-star-contender-astana-presidents-cup-e186357"
+      "link": "https://www.mykhel.com/more-sports/asian-games-2026-india-beat-indonesia-3-0-in-womens-table-tennis-face-singapore-next-453723.html"
     }
   ]
 }
