@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Iva Jovic defends the Guadalajara Open with a 6-4, 6-2 win over Peyton Stearns while Davis Cup qualifying sends Czechia past the United States as Jakub Mensik beats Ben Shelton and Jiri Lehecka tops Learner Tien, South Korea becomes the first Asian nation in the Final 8, and Great Britain leads Ecuador 2-0 in London • [SQUASH] Mostafa Asal's 11-5, 11-6, 11-2 Qatar Classic final over Victor Crouin is his 30th PSA title and completes the set of current majors as Amina Orfi's five-set win over Hania El Hammamy lifts her to world No. 1 in Doha • [BADMINTON] Aichi-Nagoya Asian Games team badminton opens Sept. 20 at Ichinomiya with knockout ties including India's women versus Kazakhstan at 11:30 a.m. IST and the men facing Bangladesh on Monday ahead of singles week • [PICKLEBALL] Veolia Arizona Open Championship Sunday in Mesa caps a $1.06M PPA week that saw Tyson McGuffin bounced in the Round of 32 while pro finals stream on PickleballTV and FS1 with 1,000 ranking points in play • [TABLE TENNIS] India opens Asian Games women's team play with a 3-0 sweep of Indonesia—Akula, Chitale and Ghorpade winning singles—before a Sunday Singapore tie while WTT Star Contender Astana closes its Kazakhstan slate with singles finals at the Martial Arts Palace",
+  "tickerText": "[TENNIS] Davis Cup qualifying closes with Spain, Great Britain and Alexander Zverev's Germany joining Czechia, South Korea, Austria and Canada in November's Final 8 in Bologna while the United States misses the knockout stage for a second straight year • [SQUASH] Monday's PSA rankings confirm Amina Orfi as the youngest women's world No. 1 after her Qatar Classic five-set win over Hania El Hammamy, with Mostafa Asal's sweep of Victor Crouin giving him every current major title • [BADMINTON] India's women are into the Asian Games quarterfinals after PV Sindhu, Unnati Hooda and Tanvi Sharma blanked Kazakhstan 3-0 as the men's team opens round-of-16 play versus Bangladesh on Monday in Ichinomiya • [PICKLEBALL] Championship Sunday at the Veolia Arizona Open crowns Anna Leigh Waters over Kate Fahey, Chris Haworth over Hunter Johnson, and doubles titles for Waters/Johns, Rohrabacher/Todd and Staksrud/Johns in Mesa • [TABLE TENNIS] Dang Qiu rallies past Alexis Lebrun 4-2 to win the WTT Star Contender Astana while India's women stay unbeaten at the Asian Games but the men fall 3-1 to Iran before Monday group finales versus Pakistan",
   "newsItems": [
     {
-      "title": "Czechia Knocks Out USA",
-      "excerpt": "Jakub Mensik beat Ben Shelton 5-7, 6-4, 6-3 and Jiri Lehecka edged Learner Tien 6-3, 7-5 on Sept. 20 to send Czechia into the Davis Cup Final 8, with Shelton losing both singles rubbers in Prague.",
-      "date": "September 20, 2026",
+      "title": "Final Eight Field Complete",
+      "excerpt": "Spain, Great Britain and Germany wrapped Davis Cup qualifying on Sept. 20 with 3-0 wins over Chile, Ecuador and Croatia as Alexander Zverev sealed Germany's spot and the November Final 8 lineup in Bologna is set.",
+      "date": "September 21, 2026",
       "category": "Tennis",
-      "link": "https://sportstar.thehindu.com/tennis/davis-cup-2026-usa-vs-czechia-shelton-mensik-austria-britain-results-latest/article71487009.ece"
+      "link": "https://www.reuters.com/sports/tennis/zverev-leads-germany-into-davis-cup-final-8-spain-also-through-2026-09-20/"
     },
     {
-      "title": "Asal Completes Major Set",
-      "excerpt": "Mostafa Asal swept Victor Crouin for his first Qatar Classic crown and 30th PSA title, while Amina Orfi outlasted Hania El Hammamy in five games to take the women's trophy and the world No. 1 ranking in Doha.",
-      "date": "September 20, 2026",
-      "category": "Squash",
-      "link": "https://www.squashinfo.com/latest-news/8602-orfi-asal-capture-qatar-classic-crowns"
-    },
-    {
-      "title": "Asian Games Badminton Begins",
-      "excerpt": "Team knockout play at Ichinomiya opened on Sept. 20 as India's women faced Kazakhstan in the round of 16, with the men's tie against Bangladesh set for Monday before quarterfinals later in the week.",
-      "date": "September 20, 2026",
+      "title": "India Women Into QFs",
+      "excerpt": "PV Sindhu, Unnati Hooda and Tanvi Sharma swept Kazakhstan 3-0 on Sept. 20 to send India's women's badminton team into an Asian Games quarterfinal against Japan on Tuesday in Ichinomiya.",
+      "date": "September 21, 2026",
       "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/asian-games/news/asian-games-2026-live-updates-september-20-events-news-highlights/article71486924.ece"
+      "link": "https://sportstar.thehindu.com/asian-games/news/india-beats-kazakhstan-badminton-women-team-round-of-16-asian-games-scores-results/article71487332.ece"
     },
     {
-      "title": "India Sweeps Indonesia 3-0",
-      "excerpt": "Sreeja Akula, Diya Chitale and Yashaswini Ghorpade won their singles rubbers on Sept. 20 as India's women's table tennis team blanked Indonesia in Asian Games Group F before facing Singapore later Sunday.",
-      "date": "September 20, 2026",
+      "title": "Arizona Open Crowns Set",
+      "excerpt": "Anna Leigh Waters and Chris Haworth took singles titles at the Veolia Arizona Open on Sept. 20 in Mesa, with Waters/Johns, Rohrabacher/Todd and Staksrud/Johns winning doubles on the $1.06M PPA Championship Sunday.",
+      "date": "September 21, 2026",
+      "category": "Pickleball",
+      "link": "https://www.thedinkpickleball.com/the-veolia-arizona-open-tournament-preview/"
+    },
+    {
+      "title": "Qiu Wins Astana; Iran Stuns India",
+      "excerpt": "Dang Qiu beat Alexis Lebrun 4-2 on Sept. 20 to win the WTT Star Contender Astana, while India's women's table tennis team stayed perfect in Asian Games group play and the men were upset 3-1 by Iran.",
+      "date": "September 21, 2026",
       "category": "Table Tennis",
-      "link": "https://www.mykhel.com/more-sports/asian-games-2026-india-beat-indonesia-3-0-in-womens-table-tennis-face-singapore-next-453723.html"
+      "link": "https://sportstar.thehindu.com/asian-games/news/asian-games-2026-table-tennis-results-mens-womens-teams-india-vs-iran-singapore-indonesia/article71487653.ece"
     }
   ]
 }
