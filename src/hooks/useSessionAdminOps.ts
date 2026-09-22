@@ -24,13 +24,13 @@ import {
     isRecurringSession,
     parseWaitlistEntry,
 } from '../lib/sessions';
-import { assignCoachName, removeAttendeeWithPromotion, removeWaitlistEntry } from '../lib/bookingActions';
+import { assignCoachName, formatMemberName, removeAttendeeWithPromotion, removeWaitlistEntry } from '../lib/bookingActions';
 import { buildTimeFields, resolveSessionTimes } from '../lib/dates';
 import { notifyWaitlistPromotion } from '../lib/waitlistNotifications';
 import { useAuth } from '../contexts/AuthContext';
 import { useMemberDirectory } from './useMemberDirectory';
 import type { MemberDraft } from '../components/admin/MemberLookupInput';
-import type { EditCourtFields } from '../components/admin/modals/EditSessionModal';
+import type { EditCourtFields, RecurringScheduleMeta } from '../components/admin/modals/EditSessionModal';
 import {
     disableBuiltinSchedule,
     removeRecurringSchedule,
@@ -77,6 +77,10 @@ export function useSessionAdminOps({
     const members = useMemberDirectory(sessionsList, enabled);
 
     const [editingSession, setEditingSession] = useState<Session | null>(null);
+    const [editingScheduleMeta, setEditingScheduleMeta] = useState<RecurringScheduleMeta>({
+        endsOn: '',
+        autoEnrollCreator: false,
+    });
     const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({
         courtCount: 2,
         courtStartNumber: 1,
@@ -106,8 +110,13 @@ export function useSessionAdminOps({
         const latest = sessionsList.find((item) => item.id === session.id) ?? session;
         const templateCourts = getCourtsForSession(latest, recurringSchedules, disabledBuiltinSchedules);
         const courts = latest.courts?.length ? latest.courts : templateCourts;
+        const config = getRecurringConfigForSession(latest, recurringSchedules, disabledBuiltinSchedules);
         setEditingSession(latest);
         setEditCourtFields(courtFieldsFromSession(courts.length ? courts : latest.courts));
+        setEditingScheduleMeta({
+            endsOn: config?.endsOn ?? '',
+            autoEnrollCreator: Boolean(config?.autoEnrollCreator),
+        });
     };
 
     const applySessionSave = async (
@@ -132,6 +141,24 @@ export function useSessionAdminOps({
                 return;
             }
 
+            const enrollSelf = editingScheduleMeta.autoEnrollCreator;
+            const creatorFields = enrollSelf
+                ? config.creatorUid
+                    ? {
+                          autoEnrollCreator: true,
+                          creatorUid: config.creatorUid,
+                          creatorName: config.creatorName,
+                          creatorEmail: config.creatorEmail,
+                      }
+                    : user
+                      ? {
+                            autoEnrollCreator: true,
+                            creatorUid: user.uid,
+                            creatorName: formatMemberName(user),
+                            creatorEmail: user.email || '',
+                        }
+                      : { autoEnrollCreator: false }
+                : { autoEnrollCreator: false as const };
             const scheduleFields: Omit<AdminRecurringSchedule, 'id' | 'sport' | 'day'> = {
                 title: sessionToSave.title,
                 sessionType: sessionToSave.type,
@@ -140,6 +167,8 @@ export function useSessionAdminOps({
                 maxPerCourt: slotsPerCourt,
                 maxAttendees: clampAdminMaxAttendees(Number(updateData.maxAttendees ?? sessionToSave.maxAttendees)),
                 maxWaitlistSize: clampAdminMaxWaitlist(Number(updateData.maxWaitlistSize ?? sessionToSave.maxWaitlistSize ?? 0)),
+                endsOn: editingScheduleMeta.endsOn,
+                ...creatorFields,
                 ...(sessionToSave.type === 'coaching'
                     ? { coach: sessionToSave.coach || 'TBD' }
                     : {}),
@@ -541,8 +570,10 @@ export function useSessionAdminOps({
         members,
         editingSession,
         editCourtFields,
+        editingScheduleMeta,
         setEditingSession,
         setEditCourtFields,
+        setEditingScheduleMeta,
         memberDrafts,
         coachDraft,
         savingCoach,

@@ -547,6 +547,8 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                           )
                         : null
                 }
+                scheduleMeta={adminOps.editingScheduleMeta}
+                onScheduleMetaChange={adminOps.setEditingScheduleMeta}
                 onSessionChange={adminOps.setEditingSession}
                 onEditCourtFieldsChange={adminOps.setEditCourtFields}
                 onClose={() => adminOps.setEditingSession(null)}

@@ -31,8 +31,10 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
             members,
             editingSession,
             editCourtFields,
+            editingScheduleMeta,
             setEditingSession,
             setEditCourtFields,
+            setEditingScheduleMeta,
             memberDrafts,
             coachDraft,
             savingCoach,
@@ -179,6 +181,8 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                                   )
                                 : null
                         }
+                        scheduleMeta={editingScheduleMeta}
+                        onScheduleMetaChange={setEditingScheduleMeta}
                         onSessionChange={setEditingSession}
                         onEditCourtFieldsChange={setEditCourtFields}
                         onClose={() => setEditingSession(null)}

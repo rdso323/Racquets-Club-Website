@@ -51,6 +51,10 @@ export interface Session {
     recurring?: boolean;
     /** When true, this week's recurring instance is cancelled (auto clears next week) */
     cancelledThisWeek?: boolean;
+    /** Creator auto-enroll already applied (or skipped) for this week. */
+    autoEnrollSeeded?: boolean;
+    /** Uids who left this week and should not be auto-added again. */
+    skippedAutoEnrollUids?: string[];
 }
 
 export interface ParsedAttendee {
@@ -420,6 +424,7 @@ export const getExpectedRecurringSessionIds = (
             for (const config of configs) {
                 const playDate = getPlayDate(baseStartOfWeek, weekOffset === 7, config.day);
                 if (!isWithinBookingHorizon(playDate)) continue;
+                if (isAfterRecurringEnd(playDate, config.endsOn)) continue;
 
                 const sessionType = config.sessionType ?? 'court';
                 ids.add(getRecurringSessionId(sessionType, sport, config.day, playDate, config.scheduleId));
@@ -428,6 +433,20 @@ export const getExpectedRecurringSessionIds = (
     }
 
     return [...ids];
+};
+
+/** Local calendar date as YYYY-MM-DD. */
+export const formatISODate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+/** True when this play date is after the template's inclusive end date. */
+export const isAfterRecurringEnd = (playDate: Date, endsOn?: string): boolean => {
+    if (!endsOn) return false;
+    return formatISODate(playDate) > endsOn;
 };
 
 export const isWithinBookingHorizon = (date: Date): boolean => {
@@ -597,6 +616,7 @@ export const getOpenPlayInstancesWithinHorizon = (
         for (const config of configs) {
             const playDate = getPlayDate(baseStartOfWeek, isNextWeek, config.day);
             if (!isWithinBookingHorizon(playDate)) continue;
+            if (isAfterRecurringEnd(playDate, config.endsOn)) continue;
 
             const session = resolveRecurringSession(sessions, sport, config, weekOffset);
             instances.push({ session, config, playDate, isNextWeek });

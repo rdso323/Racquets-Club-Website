@@ -12,6 +12,7 @@ import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
 import AdminModalShell from '../AdminModalShell';
+import { formatDisplayDate } from '../../../lib/dates';
 import { formatRecurringDayLabel } from '../../../lib/recurringSchedules';
 import {
     type Session,
@@ -28,10 +29,17 @@ export interface EditCourtFields {
     customCourtLabels: string;
 }
 
+export interface RecurringScheduleMeta {
+    endsOn: string;
+    autoEnrollCreator: boolean;
+}
+
 interface EditSessionModalProps {
     session: Session;
     editCourtFields: EditCourtFields;
     recurringConfig?: OpenPlayDayConfig | null;
+    scheduleMeta?: RecurringScheduleMeta;
+    onScheduleMetaChange?: (meta: RecurringScheduleMeta) => void;
     onSessionChange: (session: Session) => void;
     onEditCourtFieldsChange: (fields: EditCourtFields) => void;
     onClose: () => void;
@@ -42,6 +50,8 @@ const EditSessionModal = ({
     session,
     editCourtFields,
     recurringConfig = null,
+    scheduleMeta = { endsOn: '', autoEnrollCreator: false },
+    onScheduleMetaChange,
     onSessionChange,
     onEditCourtFieldsChange,
     onClose,
@@ -129,9 +139,33 @@ const EditSessionModal = ({
                             Every {formatRecurringDayLabel(recurringConfig.day)}
                         </p>
                         <p className="mt-1 text-xs text-violet-700/80 dark:text-violet-300/80">
-                            Date shifts each week automatically. Edit the weekly time and courts below.
+                            Date shifts each week automatically.
+                            {scheduleMeta.endsOn
+                                ? ` Last session ${formatDisplayDate(scheduleMeta.endsOn)}.`
+                                : ' Runs until you remove the schedule.'}
                         </p>
                     </div>
+                    <DatePickerField
+                        label="Ends on (optional)"
+                        value={scheduleMeta.endsOn}
+                        onChange={(endsOn) => onScheduleMetaChange?.({ ...scheduleMeta, endsOn })}
+                    />
+                    <label className="flex items-start gap-3 rounded-xl border border-violet-200 bg-violet-50/70 p-3 text-sm text-violet-950 dark:border-violet-900/40 dark:bg-violet-950/20 dark:text-violet-100">
+                        <input
+                            type="checkbox"
+                            className="mt-0.5"
+                            checked={scheduleMeta.autoEnrollCreator}
+                            onChange={(e) =>
+                                onScheduleMetaChange?.({ ...scheduleMeta, autoEnrollCreator: e.target.checked })
+                            }
+                        />
+                        <span>
+                            <span className="font-semibold">Add me to each week</span>
+                            <span className="mt-1 block text-xs text-violet-800/80 dark:text-violet-200/80">
+                                Future weeks add you to the roster. Drop a single week to sit that one out.
+                            </span>
+                        </span>
+                    </label>
                     <TimeRangePicker
                         startTime={session.startTime}
                         endTime={session.endTime}

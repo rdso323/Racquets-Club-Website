@@ -48,7 +48,32 @@ export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayD
     maxWaitlistSize: schedule.maxWaitlistSize,
     scheduleId: schedule.id,
     isCustom: true,
+    endsOn: schedule.endsOn,
+    autoEnrollCreator: schedule.autoEnrollCreator,
+    creatorUid: schedule.creatorUid,
+    creatorName: schedule.creatorName,
+    creatorEmail: schedule.creatorEmail,
 });
+
+/** Drop empty optional fields so Firestore never receives `undefined`. */
+export const sanitizeRecurringSchedule = (schedule: AdminRecurringSchedule): AdminRecurringSchedule => {
+    const next: AdminRecurringSchedule = {
+        ...schedule,
+        sessionType: schedule.sessionType ?? 'court',
+    };
+    if (!next.endsOn) delete next.endsOn;
+    if (!next.creatorUid) {
+        delete next.creatorUid;
+        delete next.creatorName;
+        delete next.creatorEmail;
+    }
+    if (next.sessionType === 'court') delete next.coach;
+    if (!next.autoEnrollCreator) next.autoEnrollCreator = false;
+    for (const key of Object.keys(next) as (keyof AdminRecurringSchedule)[]) {
+        if (next[key] === undefined) delete next[key];
+    }
+    return next;
+};
 
 export const getMergedOpenPlaySchedulesForSport = (
     sport: Sport,
@@ -145,11 +170,11 @@ export const addRecurringSchedule = async (
     input: Omit<AdminRecurringSchedule, 'id'>,
 ): Promise<AdminRecurringSchedule> => {
     const current = await fetchRecurringSettings();
-    const created: AdminRecurringSchedule = {
+    const created: AdminRecurringSchedule = sanitizeRecurringSchedule({
         ...input,
         sessionType: input.sessionType ?? 'court',
         id: crypto.randomUUID().replace(/-/g, '').slice(0, 12),
-    };
+    });
     await saveRecurringSettings({
         ...current,
         schedules: [...current.schedules, created],
@@ -174,14 +199,12 @@ export const updateRecurringSchedule = async (
         ...current,
         schedules: current.schedules.map((schedule) => {
             if (schedule.id !== id) return schedule;
-            const next: AdminRecurringSchedule = {
+            const next: AdminRecurringSchedule = sanitizeRecurringSchedule({
                 ...schedule,
                 ...patch,
                 sessionType: patch.sessionType ?? schedule.sessionType ?? 'court',
-            };
-            if (next.sessionType === 'court') {
-                delete next.coach;
-            }
+            });
+            if ('endsOn' in patch && !patch.endsOn) delete next.endsOn;
             return next;
         }),
     });

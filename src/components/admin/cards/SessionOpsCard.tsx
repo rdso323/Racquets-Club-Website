@@ -11,6 +11,7 @@ import {
     getRecurringConfigForSession,
 } from '../../../lib/sessions';
 import type { AdminRecurringSchedule } from '../../../lib/sports';
+import { formatDisplayDate } from '../../../lib/dates';
 import { formatRecurringDayLabel } from '../../../lib/recurringSchedules';
 import SessionTags from '../../SessionTags';
 import MemberLookupInput, { type MemberDraft } from '../MemberLookupInput';
@@ -355,6 +356,9 @@ const SessionOpsCard = memo(({
                         {isRecurring && recurringConfig && (
                             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-gray-400">
                                 Every {formatRecurringDayLabel(recurringConfig.day)} · {session.time}
+                                {recurringConfig.endsOn
+                                    ? ` · through ${formatDisplayDate(recurringConfig.endsOn)}`
+                                    : ''}
                             </p>
                         )}
                     </div>

@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
 import { Plus } from 'lucide-react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { formatMemberName } from '../../../lib/bookingActions';
 import { db } from '../../../lib/firebase';
 import {
     ADMIN_MAX_ATTENDEES,
@@ -59,6 +61,8 @@ const defaultDraft = (sport: string) => ({
     courtStartNumber: 1,
     customCourtLabels: '',
     recurringDay: 'tuesday' as DayName,
+    endsOn: '',
+    autoEnrollCreator: true,
 });
 
 /**
@@ -73,6 +77,7 @@ const ScheduleSessionForm = ({
     formId = 'schedule-session-form',
     onSavingChange,
 }: ScheduleSessionFormProps) => {
+    const { user } = useAuth();
     const [scheduleMode, setScheduleMode] = useState<ScheduleMode>('one-time');
     const [newSession, setNewSession] = useState(() => defaultDraft(initialSport));
     const [sessionDateInput, setSessionDateInput] = useState('');
@@ -124,6 +129,7 @@ const ScheduleSessionForm = ({
                     return;
                 }
 
+                const enrollSelf = Boolean(user && newSession.autoEnrollCreator);
                 await addRecurringSchedule({
                     sport: newSession.sport as AdminRecurringSchedule['sport'],
                     day: newSession.recurringDay,
@@ -135,6 +141,15 @@ const ScheduleSessionForm = ({
                     maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                     coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
                     maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
+                    ...(newSession.endsOn ? { endsOn: newSession.endsOn } : {}),
+                    autoEnrollCreator: enrollSelf,
+                    ...(enrollSelf && user
+                        ? {
+                              creatorUid: user.uid,
+                              creatorName: formatMemberName(user),
+                              creatorEmail: user.email || '',
+                          }
+                        : {}),
                 });
                 setMessage(
                     newSession.type === 'coaching'
@@ -361,17 +376,11 @@ const ScheduleSessionForm = ({
                                 ))}
                             </select>
                         </div>
-                        <div>
-                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                                Schedule note
-                            </label>
-                            <input
-                                type="text"
-                                readOnly
-                                value={`Runs every week on ${DAY_OPTIONS.find((d) => d.value === newSession.recurringDay)?.label ?? 'weekday'}`}
-                                className="w-full cursor-default rounded-lg border border-violet-200 bg-violet-50 p-2.5 text-sm text-violet-800 outline-none dark:border-violet-900/30 dark:bg-violet-950/20 dark:text-violet-200"
-                            />
-                        </div>
+                        <DatePickerField
+                            label="Ends on (optional)"
+                            value={newSession.endsOn}
+                            onChange={(endsOn) => setNewSession((prev) => ({ ...prev, endsOn }))}
+                        />
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -399,6 +408,28 @@ const ScheduleSessionForm = ({
                                 })
                             }
                         />
+                    </div>
+                )}
+
+                {scheduleMode === 'recurring' && (
+                    <div className="rounded-xl border border-violet-200 bg-violet-50/70 p-3 dark:border-violet-900/40 dark:bg-violet-950/20">
+                        <label className="flex items-start gap-3 text-sm text-violet-950 dark:text-violet-100">
+                            <input
+                                type="checkbox"
+                                className="mt-0.5"
+                                checked={Boolean(user) && newSession.autoEnrollCreator}
+                                disabled={!user}
+                                onChange={(e) =>
+                                    setNewSession((prev) => ({ ...prev, autoEnrollCreator: e.target.checked }))
+                                }
+                            />
+                            <span>
+                                <span className="font-semibold">Add me to each week</span>
+                                <span className="mt-1 block text-xs text-violet-800/80 dark:text-violet-200/80">
+                                    You are placed on the roster when each new week opens. Drop yourself on a single week if you are sitting out. Cancel this week still cancels that session for everyone.
+                                </span>
+                            </span>
+                        </label>
                     </div>
                 )}
 

@@ -80,6 +80,13 @@ export interface OpenPlayDayConfig {
     scheduleId?: string;
     /** True when created via admin rather than hardcoded defaults */
     isCustom?: boolean;
+    /** Inclusive last play date (YYYY-MM-DD). Omit to run until the schedule is removed. */
+    endsOn?: string;
+    /** When true, creator is placed on each new week's roster. */
+    autoEnrollCreator?: boolean;
+    creatorUid?: string;
+    creatorName?: string;
+    creatorEmail?: string;
 }
 
 /** @deprecated alias — recurring templates use OpenPlayDayConfig for both court and coaching */
@@ -98,6 +105,13 @@ export interface AdminRecurringSchedule {
     maxAttendees?: number;
     coach?: string;
     maxWaitlistSize?: number;
+    /** Inclusive last play date (YYYY-MM-DD). Omit to run until the schedule is removed. */
+    endsOn?: string;
+    /** When true, creator is placed on each new week's roster. */
+    autoEnrollCreator?: boolean;
+    creatorUid?: string;
+    creatorName?: string;
+    creatorEmail?: string;
 }
 
 export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {

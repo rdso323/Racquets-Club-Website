@@ -11,6 +11,7 @@ import FeedbackModule from '../components/admin/modules/FeedbackModule';
 import type { AdminTab } from '../components/admin/types';
 import { filterUpcomingEvents, partitionEventsByPast } from '../lib/events';
 import { partitionSessionsByPast } from '../lib/archive';
+import { useSessionMaintenanceResets } from '../hooks/useSessionMaintenanceResets';
 import { buildAdminDisplaySessions } from '../lib/sessions';
 
 const AdminDashboard = () => {
@@ -31,6 +32,12 @@ const AdminDashboard = () => {
         cabinetMembers,
         cabinetLoaded,
     } = useAdminData(isAdmin);
+
+    useSessionMaintenanceResets({
+        sessions: sessionsList,
+        recurringSchedules,
+        disabledBuiltinSchedules,
+    });
 
     const upcomingSessions = useMemo(
         () =>
