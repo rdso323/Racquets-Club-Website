@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Davis Cup qualifying closes with Spain, Great Britain and Alexander Zverev's Germany joining Czechia, South Korea, Austria and Canada in November's Final 8 in Bologna while the United States misses the knockout stage for a second straight year • [SQUASH] Monday's PSA rankings confirm Amina Orfi as the youngest women's world No. 1 after her Qatar Classic five-set win over Hania El Hammamy, with Mostafa Asal's sweep of Victor Crouin giving him every current major title • [BADMINTON] India's women are into the Asian Games quarterfinals after PV Sindhu, Unnati Hooda and Tanvi Sharma blanked Kazakhstan 3-0 as the men's team opens round-of-16 play versus Bangladesh on Monday in Ichinomiya • [PICKLEBALL] Championship Sunday at the Veolia Arizona Open crowns Anna Leigh Waters over Kate Fahey, Chris Haworth over Hunter Johnson, and doubles titles for Waters/Johns, Rohrabacher/Todd and Staksrud/Johns in Mesa • [TABLE TENNIS] Dang Qiu rallies past Alexis Lebrun 4-2 to win the WTT Star Contender Astana while India's women stay unbeaten at the Asian Games but the men fall 3-1 to Iran before Monday group finales versus Pakistan",
+  "tickerText": "[TENNIS] Iva Jovic defends the Guadalajara Open with a 6-4, 6-2 win over Peyton Stearns on Sept. 21, going through the week without dropping a set for her second WTA 500 title • [SQUASH] Monday's PSA rankings make 19-year-old Amina Orfi the youngest women's world No. 1 after her Qatar Classic five-set final over Hania El Hammamy, while Mostafa Asal swept Victor Crouin for his 30th tour title • [BADMINTON] Asian Games Day 4 in Aichi-Nagoya pits India's women's and men's teams against Japan in team quarterfinals on Sept. 22, with PV Sindhu opening against Akane Yamaguchi and a medal guaranteed for the winner • [PICKLEBALL] Championship Sunday at the Veolia Arizona Open leaves Christopher Haworth and Anna Leigh Waters with singles gold while Alshon/Daescu and Rohrabacher/Todd take doubles; the PPA Tour heads to Las Vegas Sept. 28 • [TABLE TENNIS] Asian Games team play continues Sept. 22 with India's women facing Thailand in the round of 16 and the men in knockout action after sweeping Pakistan, plus mixed doubles and evening quarterfinals in Nagoya",
   "newsItems": [
     {
-      "title": "Final Eight Field Complete",
-      "excerpt": "Spain, Great Britain and Germany wrapped Davis Cup qualifying on Sept. 20 with 3-0 wins over Chile, Ecuador and Croatia as Alexander Zverev sealed Germany's spot and the November Final 8 lineup in Bologna is set.",
-      "date": "September 21, 2026",
+      "title": "Jovic Defends Guadalajara",
+      "excerpt": "Iva Jovic beat Peyton Stearns 6-4, 6-2 on Sept. 21 to successfully defend her Guadalajara Open title without dropping a set, becoming the first back-to-back singles champion at the WTA 500 event.",
+      "date": "September 22, 2026",
       "category": "Tennis",
-      "link": "https://www.reuters.com/sports/tennis/zverev-leads-germany-into-davis-cup-final-8-spain-also-through-2026-09-20/"
+      "link": "https://thetennissite.com/iva-jovic-defends-guadalajara-crown-as-remarkable-rise-continues/"
     },
     {
-      "title": "India Women Into QFs",
-      "excerpt": "PV Sindhu, Unnati Hooda and Tanvi Sharma swept Kazakhstan 3-0 on Sept. 20 to send India's women's badminton team into an Asian Games quarterfinal against Japan on Tuesday in Ichinomiya.",
-      "date": "September 21, 2026",
+      "title": "Orfi Hits World No. 1",
+      "excerpt": "Amina Orfi becomes the youngest women's world No. 1 in Monday's PSA rankings after winning the Qatar Classic, while Mostafa Asal's straight-games final over Victor Crouin completes his sweep of every current major title.",
+      "date": "September 22, 2026",
+      "category": "Squash",
+      "link": "https://www.squashinfo.com/latest-news/8602-orfi-asal-capture-qatar-classic-crowns"
+    },
+    {
+      "title": "India Faces Japan in QFs",
+      "excerpt": "Both Indian badminton teams meet hosts Japan in Asian Games quarterfinals on Sept. 22 in Aichi-Nagoya, with Sindhu versus Yamaguchi headlining the women's tie and Lakshya Sen's squad following in the afternoon.",
+      "date": "September 22, 2026",
       "category": "Badminton",
-      "link": "https://sportstar.thehindu.com/asian-games/news/india-beats-kazakhstan-badminton-women-team-round-of-16-asian-games-scores-results/article71487332.ece"
+      "link": "https://sportstar.thehindu.com/asian-games/asian-games-2026-day-4-live-updates-september-22-events-news-highlights/article71493732.ece"
     },
     {
       "title": "Arizona Open Crowns Set",
-      "excerpt": "Anna Leigh Waters and Chris Haworth took singles titles at the Veolia Arizona Open on Sept. 20 in Mesa, with Waters/Johns, Rohrabacher/Todd and Staksrud/Johns winning doubles on the $1.06M PPA Championship Sunday.",
-      "date": "September 21, 2026",
+      "excerpt": "Christopher Haworth and Anna Leigh Waters won singles at the Veolia Arizona Open on Sept. 20 in Mesa, with Alshon/Daescu and Rohrabacher/Todd taking doubles gold on a $1.06M PPA Championship Sunday.",
+      "date": "September 22, 2026",
       "category": "Pickleball",
-      "link": "https://www.thedinkpickleball.com/the-veolia-arizona-open-tournament-preview/"
-    },
-    {
-      "title": "Qiu Wins Astana; Iran Stuns India",
-      "excerpt": "Dang Qiu beat Alexis Lebrun 4-2 on Sept. 20 to win the WTT Star Contender Astana, while India's women's table tennis team stayed perfect in Asian Games group play and the men were upset 3-1 by Iran.",
-      "date": "September 21, 2026",
-      "category": "Table Tennis",
-      "link": "https://sportstar.thehindu.com/asian-games/news/asian-games-2026-table-tennis-results-mens-womens-teams-india-vs-iran-singapore-indonesia/article71487653.ece"
+      "link": "https://worldpickleballmagazine.com/ppa-arizona-open-2026-finals-haworth-alshon-waters/"
     }
   ]
 }
