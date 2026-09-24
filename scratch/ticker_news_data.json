@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Linda Noskova fires 15 aces in a 6-2, 7-6(3) win over Katie Boulter on Sept. 22 to clinch the Czech Republic's 2-0 Billie Jean King Cup quarterfinal sweep in Shenzhen, while the ATP Chengdu and Hangzhou Opens open first-round play on Sept. 23 • [SQUASH] Amina Orfi holds the PSA women's world No. 1 spot after her Qatar Classic five-set final over Hania El Hammamy, with Mostafa Asal's straight-games title over Victor Crouin giving him every current major crown and his 30th tour win • [BADMINTON] Lakshya Sen saves eight match points, rallying from 13-19 in the decider to beat Kodai Naraoka 11-21, 21-5, 21-19 as India sweeps Japan 3-0 into men's team semis; An Se-young opens Korea's women's semi with a 2-1 win over Akane Yamaguchi • [PICKLEBALL] The Carvana PPA Tour rolls into the Rate Las Vegas Open on Sept. 28 with $1,063,327 in payouts and 1,000 ranking points per division, one week after Haworth, Waters, and Alshon/Daescu took Arizona Open gold • [TABLE TENNIS] Asian Games action on Sept. 23 features mixed doubles round of 16 plus men's and women's team semis in Nagoya; Manush Shah-Diya Chitale and Harmeet Desai-Yashaswini Ghorpade won mixed doubles Round 2 ties while India's men fell 0-3 to South Korea in the round of 16",
+  "tickerText": "[TENNIS] Mirra Andreeva beat Aliaksandra Sasnovich 6-2, 6-2 on Sept. 23 to reach the Singapore Open quarterfinals against Leylah Fernandez, while Alex Eala opens her WTA 500 campaign vs Tatiana Prozorova on Sept. 24 and the ATP-WTA Asian Swing fills four cities from Chengdu to Seoul • [SQUASH] Top seed Eain Yow opened his Asian Games title defense with an 11-2, 11-1, 11-2 win over Reymark Begornia in 19 minutes on Sept. 23, as Nagoya singles play doubles as Olympic LA28 qualifiers with Tanvi Khanna facing Au Yeong Wai Yhann in the women's round of 16 • [BADMINTON] China and Indonesia meet in the men's team final on Sept. 24 at Ichinomiya after 3-1 semifinal wins over India and Thailand, while China's women face host Japan for gold following a 3-0 rout of Indonesia and Japan's 3-1 win over South Korea • [PICKLEBALL] The Carvana PPA Tour unveiled the Junior PPA Select Team pathway on Sept. 22, with 18u and 14u squads chosen after the Nov. 5-8 Junior World Championships and training launching Jan. 1, 2027, as the tour eyes the Sept. 28 Rate Las Vegas Open • [TABLE TENNIS] China and Japan clash in both men's and women's team finals on Sept. 24 in Nagoya after semifinal sweeps, while India's Sreeja Akula-Syndrela Das and Yashaswini Ghorpade-Diya Chitale reached women's doubles pre-quarters with 3-0 wins",
   "newsItems": [
     {
-      "title": "Sen's Epic Comeback",
-      "excerpt": "Lakshya Sen rallied from 13-19 in the third to beat Kodai Naraoka 11-21, 21-5, 21-19 on Sept. 23, sealing India's 3-0 men's team win over Japan and a semifinal date with China at the Asian Games.",
-      "date": "September 23, 2026",
-      "category": "Badminton",
-      "link": "https://timesofindia.indiatimes.com/sports/asian-games-2026/lakshya-sens-eight-point-comeback-powers-india-into-asian-games-badminton-semis/articleshow/134424151.cms"
-    },
-    {
-      "title": "Noskova Clinches BJK Tie",
-      "excerpt": "Linda Noskova beat Katie Boulter 6-2, 7-6(3) on Sept. 22 with 15 aces and no break points faced, wrapping a 2-0 Czech Republic win over Great Britain and a Billie Jean King Cup semifinal berth in Shenzhen.",
-      "date": "September 23, 2026",
-      "category": "Tennis",
-      "link": "https://news.rthk.hk/rthk/en/component/k2/1871166-20260923.htm"
-    },
-    {
-      "title": "India TT Pairs Advance",
-      "excerpt": "Manush Shah and Diya Chitale beat Sri Lanka 11-8, 12-10, 11-4, and Harmeet Desai with Yashaswini Ghorpade also won mixed doubles Round 2 on Sept. 23 as knockout singles and team semis continue in Nagoya.",
-      "date": "September 23, 2026",
+      "title": "China-Japan TT Finals",
+      "excerpt": "China's men's and women's teams face host Japan in both Asian Games team finals on Sept. 24 in Nagoya after sweeping their semifinals on Sept. 23, with Harimoto, Matsushima and Togami powering Japan's men past South Korea.",
+      "date": "September 24, 2026",
       "category": "Table Tennis",
-      "link": "https://www.tribuneindia.com/news/sports/asian-games-manush-diya-harmeet-yashaswini-advance-in-table-tennis-mixed-doubles-indian-canoeists-reach-semifinals/"
+      "link": "https://www.bignewsnetwork.com/news/279326411/asian-games-china-advances-to-both-table-tennis-team-finals-at-asian-games"
     },
     {
-      "title": "Vegas Open Next Stop",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open runs Sept. 28-Oct. 4 at Darling Tennis Center with $1,063,327 in prize money, following Championship Sunday crowns for Christopher Haworth and Anna Leigh Waters in Mesa.",
-      "date": "September 23, 2026",
+      "title": "Andreeva Meets Fernandez",
+      "excerpt": "Top seed Mirra Andreeva reached the Singapore Open quarterfinals with a 6-2, 6-2 win over Aliaksandra Sasnovich on Sept. 23, setting up a rubber-match showdown with Leylah Fernandez as both chase WTA Finals points.",
+      "date": "September 24, 2026",
+      "category": "Tennis",
+      "link": "https://sportsbytes.com.ph/2026/09/24/mirra-andreeva-leylah-fernandez-singapore-quarterfinal/"
+    },
+    {
+      "title": "Eain Yow Cruises in Nagoya",
+      "excerpt": "Malaysia's Eain Yow began defending his Asian Games squash title on Sept. 23 with an 11-2, 11-1, 11-2 rout of the Philippines' Reymark Begornia in 19 minutes, as singles gold medalists earn direct LA28 Olympic berths.",
+      "date": "September 24, 2026",
+      "category": "Squash",
+      "link": "https://www.thestar.com.my/sport/squash/2026/09/24/eain-yow-shrugs-off-cold-court-to-launch-title-defence"
+    },
+    {
+      "title": "Junior PPA Select Team",
+      "excerpt": "The Carvana Junior PPA Tour announced the Junior PPA Select Team on Sept. 22, naming 18u and 14u players after the Opendoor Junior World Championships in Dallas and launching elite coaching and tour exposure on Jan. 1, 2027.",
+      "date": "September 24, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
+      "link": "https://www.ppatour.com/junior-ppa-tour-announces-the-junior-ppa-select-team/"
     }
   ]
 }
