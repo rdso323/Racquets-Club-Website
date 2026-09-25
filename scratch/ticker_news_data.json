@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Mirra Andreeva beat Aliaksandra Sasnovich 6-2, 6-2 on Sept. 23 to reach the Singapore Open quarterfinals against Leylah Fernandez, while Alex Eala opens her WTA 500 campaign vs Tatiana Prozorova on Sept. 24 and the ATP-WTA Asian Swing fills four cities from Chengdu to Seoul • [SQUASH] Top seed Eain Yow opened his Asian Games title defense with an 11-2, 11-1, 11-2 win over Reymark Begornia in 19 minutes on Sept. 23, as Nagoya singles play doubles as Olympic LA28 qualifiers with Tanvi Khanna facing Au Yeong Wai Yhann in the women's round of 16 • [BADMINTON] China and Indonesia meet in the men's team final on Sept. 24 at Ichinomiya after 3-1 semifinal wins over India and Thailand, while China's women face host Japan for gold following a 3-0 rout of Indonesia and Japan's 3-1 win over South Korea • [PICKLEBALL] The Carvana PPA Tour unveiled the Junior PPA Select Team pathway on Sept. 22, with 18u and 14u squads chosen after the Nov. 5-8 Junior World Championships and training launching Jan. 1, 2027, as the tour eyes the Sept. 28 Rate Las Vegas Open • [TABLE TENNIS] China and Japan clash in both men's and women's team finals on Sept. 24 in Nagoya after semifinal sweeps, while India's Sreeja Akula-Syndrela Das and Yashaswini Ghorpade-Diya Chitale reached women's doubles pre-quarters with 3-0 wins",
+  "tickerText": "[TENNIS] Maria Sakkari beat Nao Hibino 7-5, 6-1 on Sept. 24 to reach the Singapore Open quarterfinals against Talia Gibson, Tatiana Prozorova upset Alexandra Eala 4-6, 7-5, 6-3 in a three-hour marathon, and the Laver Cup opens Sept. 25 at London's O2 with Zverev, Alcaraz and Agassi • [SQUASH] Joshna Chinappa and Velavan Senthilkumar beat the Philippines 11-3, 11-5 on Sept. 25 to reach mixed doubles semifinals and assure India bronze, while Anahat Singh and Tanvi Khanna set up an all-Indian women's singles quarterfinal in Nagoya • [BADMINTON] Indonesia rallied from 0-2 down to beat defending champion China 3-2 in the men's team final on Sept. 24, as Mohammad Zaki Ubaidillah won the decider 23-21, 21-13 for Indonesia's first men's team gold since 1998 • [PICKLEBALL] Christopher Haworth won men's singles at the Veolia Arizona Open on Sept. 20 and Anna Leigh Waters swept her draws as the Carvana PPA Tour turns to the Sept. 28-Oct. 4 Rate Las Vegas Open • [TABLE TENNIS] Japan ended China's 32-year men's team reign on Sept. 24 as Sora Matsushima beat Wen Ruibo in the decider for a 3-2 win, China took women's team gold 3-0, and Manush Shah-Diya Chitale assured India mixed doubles bronze on Sept. 25",
   "newsItems": [
     {
-      "title": "China-Japan TT Finals",
-      "excerpt": "China's men's and women's teams face host Japan in both Asian Games team finals on Sept. 24 in Nagoya after sweeping their semifinals on Sept. 23, with Harimoto, Matsushima and Togami powering Japan's men past South Korea.",
-      "date": "September 24, 2026",
+      "title": "Indonesia Ends 28-Year Wait",
+      "excerpt": "Indonesia rallied from 0-2 down to beat defending champion China 3-2 in the Asian Games men's team final on Sept. 24, as Mohammad Zaki Ubaidillah clinched gold 23-21, 21-13 in the decider for the country's first title since 1998.",
+      "date": "September 25, 2026",
+      "category": "Badminton",
+      "link": "https://www.thestar.com.my/sport/badminton/2026/09/25/zaki-the-hero-as-indonesia-edge-china-to-end-28-year-wait-for-team-gold"
+    },
+    {
+      "title": "Japan Dethrones China",
+      "excerpt": "Tomokazu Harimoto and Japan beat China 3-2 in the Asian Games men's team final on Sept. 24, ending China's 32-year gold streak, while China swept Japan 3-0 in the women's team final in Nagoya.",
+      "date": "September 25, 2026",
       "category": "Table Tennis",
-      "link": "https://www.bignewsnetwork.com/news/279326411/asian-games-china-advances-to-both-table-tennis-team-finals-at-asian-games"
+      "link": "https://www.france24.com/en/live-news/20260925-harimoto-hails-new-era-as-japan-dethrone-table-tennis-kings-china"
     },
     {
-      "title": "Andreeva Meets Fernandez",
-      "excerpt": "Top seed Mirra Andreeva reached the Singapore Open quarterfinals with a 6-2, 6-2 win over Aliaksandra Sasnovich on Sept. 23, setting up a rubber-match showdown with Leylah Fernandez as both chase WTA Finals points.",
-      "date": "September 24, 2026",
+      "title": "Sakkari Into Singapore QF",
+      "excerpt": "Maria Sakkari beat Nao Hibino 7-5, 6-1 on Sept. 24 to reach the Singapore Open quarterfinals, where she faces Australia's Talia Gibson after Tatiana Prozorova's three-set upset of Alexandra Eala.",
+      "date": "September 25, 2026",
       "category": "Tennis",
-      "link": "https://sportsbytes.com.ph/2026/09/24/mirra-andreeva-leylah-fernandez-singapore-quarterfinal/"
+      "link": "https://greekherald.com.au/sports/maria-sakkari-reaches-singapore-open-quarter-finals/"
     },
     {
-      "title": "Eain Yow Cruises in Nagoya",
-      "excerpt": "Malaysia's Eain Yow began defending his Asian Games squash title on Sept. 23 with an 11-2, 11-1, 11-2 rout of the Philippines' Reymark Begornia in 19 minutes, as singles gold medalists earn direct LA28 Olympic berths.",
-      "date": "September 24, 2026",
-      "category": "Squash",
-      "link": "https://www.thestar.com.my/sport/squash/2026/09/24/eain-yow-shrugs-off-cold-court-to-launch-title-defence"
-    },
-    {
-      "title": "Junior PPA Select Team",
-      "excerpt": "The Carvana Junior PPA Tour announced the Junior PPA Select Team on Sept. 22, naming 18u and 14u players after the Opendoor Junior World Championships in Dallas and launching elite coaching and tour exposure on Jan. 1, 2027.",
-      "date": "September 24, 2026",
+      "title": "PPA Heads to Vegas",
+      "excerpt": "After Christopher Haworth and Anna Leigh Waters won at the Veolia Arizona Open, the Carvana PPA Tour's 1,000-point Rate Las Vegas Open runs Sept. 28-Oct. 4 as the next stop on the 2026-27 season.",
+      "date": "September 25, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/junior-ppa-tour-announces-the-junior-ppa-select-team/"
+      "link": "https://www.ppatour.com/"
     }
   ]
 }
