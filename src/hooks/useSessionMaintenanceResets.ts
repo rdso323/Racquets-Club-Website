@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
+import { seedAutoEnrollCreator } from '../lib/bookingActions';
 import { db } from '../lib/firebase';
 import type { AdminRecurringSchedule } from '../lib/sports';
 import { SPORTS } from '../lib/sports';
@@ -16,6 +17,7 @@ import {
 /** Prevents duplicate maintenance writes when snapshots re-fire. */
 const pendingClinicResets = new Set<string>();
 const pendingOpenPlayResets = new Set<string>();
+const pendingAutoEnrollSeeds = new Set<string>();
 
 interface UseSessionMaintenanceResetsOptions {
     sessions: Session[];
@@ -101,6 +103,36 @@ export function useSessionMaintenanceResets({
                         pendingOpenPlayResets.delete(resetKey);
                         console.error(`Failed to reset ended open play session ${session.id}:`, e);
                     }
+                });
+            }
+        }, 500);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [sessions, recurringSchedules, disabledBuiltinSchedules]);
+
+    useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            for (const sport of SPORTS) {
+                const instances = getOpenPlayInstancesWithinHorizon(
+                    sessions,
+                    sport,
+                    recurringSchedules,
+                    disabledBuiltinSchedules,
+                );
+                instances.forEach(({ session, config }) => {
+                    if (!config.autoEnrollCreator || !config.creatorUid) return;
+                    if (session.cancelledThisWeek || session.autoEnrollSeeded) return;
+                    if (session.skippedAutoEnrollUids?.includes(config.creatorUid)) return;
+                    const seedKey = `${session.id}:${config.creatorUid}`;
+                    if (pendingAutoEnrollSeeds.has(seedKey)) return;
+                    pendingAutoEnrollSeeds.add(seedKey);
+                    void seedAutoEnrollCreator(session, config)
+                        .catch((err) => {
+                            console.warn(`Could not auto-enroll creator on ${session.id}:`, err);
+                        })
+                        .finally(() => {
+                            pendingAutoEnrollSeeds.delete(seedKey);
+                        });
                 });
             }
         }, 500);

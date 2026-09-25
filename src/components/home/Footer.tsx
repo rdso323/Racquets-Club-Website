@@ -6,6 +6,8 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useUI } from '../system/UIProvider';
 import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 import { useHomeSectionNavigation } from '../../hooks/useHomeSectionNavigation';
+import { useGoToLogin } from '../../hooks/useGoToLogin';
+import { COURTS_PATH, isCourtsPath } from '../../lib/siteNav';
 
 const Footer = () => {
     const { user } = useAuth();
@@ -15,9 +17,16 @@ const Footer = () => {
     const location = useLocation();
     const lenis = useLenis();
     const { scrollToHomeSection } = useHomeSectionNavigation();
+    const goToLogin = useGoToLogin();
 
     const links: Array<{ label: string; action: () => void }> = [
-        { label: 'Book a Court', action: () => scrollToHomeSection('booking-section') },
+        {
+            label: 'Book a Court',
+            action: () => {
+                if (!isCourtsPath(location.pathname)) navigate(COURTS_PATH);
+                else lenis?.scrollTo(0, { duration: 1.2 });
+            },
+        },
         { label: 'Events', action: () => scrollToHomeSection('events-section') },
         { label: 'News', action: () => scrollToHomeSection('news-section') },
         {
@@ -37,7 +46,7 @@ const Footer = () => {
         { label: 'Feedback', action: openFeedback },
         user
             ? { label: 'Back to Top', action: () => lenis?.scrollTo(0, { duration: 1.5 }) }
-            : { label: 'Member Sign In', action: () => navigate('/login') },
+            : { label: 'Member Sign In', action: goToLogin },
     ];
 
     return (

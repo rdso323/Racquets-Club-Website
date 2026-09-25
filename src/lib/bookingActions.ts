@@ -1,4 +1,4 @@
-import { doc, runTransaction, setDoc } from 'firebase/firestore';
+import { arrayUnion, doc, runTransaction, setDoc } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { db } from './firebase';
 import type { OpenPlayDayConfig } from './sports';
@@ -12,6 +12,7 @@ import {
     firstOpenCourtSlot,
     getCourtsForSession,
     getDiagramSlotsPerCourt,
+    getSessionEnrollmentCap,
     getSlotsPerCourt,
     isAttendeeOnCourt,
     isCourtSlotTaken,
@@ -159,7 +160,12 @@ export const joinSessionCourt = async (
 
             tx.set(
                 sessionRef,
-                { ...sessionSeedFields(data, activeSport), attendees: nextAttendees, waitlist: nextWaitlist },
+                {
+                    ...sessionSeedFields(data, activeSport),
+                    attendees: nextAttendees,
+                    waitlist: nextWaitlist,
+                    skippedAutoEnrollUids: arrayUnion(profile.uid),
+                },
                 { merge: true },
             );
             return promotion ? { action: 'left' as const, promotion } : { action: 'left' as const };
@@ -322,7 +328,16 @@ export const removeAttendeeWithPromotion = async (
             }
         }
 
-        tx.set(sessionRef, { attendees, waitlist }, { merge: true });
+        const removedUid = parseAttendee(attendeeStr).uid;
+        tx.set(
+            sessionRef,
+            {
+                attendees,
+                waitlist,
+                ...(removedUid ? { skippedAutoEnrollUids: arrayUnion(removedUid) } : {}),
+            },
+            { merge: true },
+        );
         return promoted;
     });
 };
@@ -335,6 +350,91 @@ export const removeWaitlistEntry = async (sessionId: string, waitlistEntry: stri
         const waitlist = [...((docSnap.data().waitlist as string[]) || [])];
         if (!waitlist.includes(waitlistEntry)) return;
         tx.update(sessionRef, { waitlist: waitlist.filter((w) => w !== waitlistEntry) });
+    });
+};
+
+const creatorRosterEntry = (
+    attendees: string[],
+    courts: string[],
+    maxPerCourt: number,
+    config: OpenPlayDayConfig,
+): string | null => {
+    const uid = config.creatorUid;
+    if (!uid) return null;
+    const name = config.creatorName || 'Host';
+    const email = config.creatorEmail || '';
+    if (courts.length === 0) return formatAttendee(uid, name, email);
+    for (const court of courts) {
+        const slot = firstOpenCourtSlot(filterAttendeesByCourt(attendees, court), maxPerCourt);
+        if (slot != null) return formatAttendee(uid, name, email, court, slot);
+    }
+    return null;
+};
+
+/**
+ * Place the recurring-schedule creator on this week's roster once.
+ * A later Drop records their uid in `skippedAutoEnrollUids` so this week is not refilled.
+ */
+export const seedAutoEnrollCreator = async (
+    session: Session,
+    config: OpenPlayDayConfig,
+): Promise<void> => {
+    if (!config.autoEnrollCreator || !config.creatorUid || session.cancelledThisWeek || session.autoEnrollSeeded) {
+        return;
+    }
+    if (session.skippedAutoEnrollUids?.includes(config.creatorUid)) return;
+
+    const sessionRef = doc(db, 'sessions', session.id);
+    await runTransaction(db, async (tx) => {
+        const docSnap = await tx.get(sessionRef);
+        const data = readSessionData(session, docSnap.data());
+        const uid = config.creatorUid as string;
+        const skipped = (docSnap.data()?.skippedAutoEnrollUids as string[] | undefined) ?? data.skippedAutoEnrollUids ?? [];
+        if (data.cancelledThisWeek || data.autoEnrollSeeded || skipped.includes(uid)) {
+            if (docSnap.exists() && !data.autoEnrollSeeded) {
+                tx.set(sessionRef, { autoEnrollSeeded: true }, { merge: true });
+            }
+            return;
+        }
+        if (findUserAttendeeEntry(data.attendees, uid) || findUserWaitlistEntry(data.waitlist, uid)) {
+            tx.set(
+                sessionRef,
+                {
+                    ...sessionSeedFields(data, session.sport),
+                    attendees: data.attendees || [],
+                    waitlist: data.waitlist || [],
+                    autoEnrollSeeded: true,
+                    autoEnrollUid: uid,
+                },
+                { merge: true },
+            );
+            return;
+        }
+
+        const courts = data.courts?.length ? data.courts : config.courts;
+        const maxPerCourt = data.slotsPerCourt || config.maxPerCourt || getSlotsPerCourt(data);
+        const attendees = [...(data.attendees || [])];
+        const cap = getSessionEnrollmentCap(
+            { ...data, courts, maxAttendees: data.maxAttendees },
+            courts,
+            maxPerCourt,
+        );
+        if (attendees.length >= cap) return;
+
+        const entry = creatorRosterEntry(attendees, courts, maxPerCourt, config);
+        if (!entry) return;
+        attendees.push(entry);
+        tx.set(
+            sessionRef,
+            {
+                ...sessionSeedFields({ ...data, courts, slotsPerCourt: maxPerCourt }, session.sport),
+                attendees,
+                waitlist: data.waitlist || [],
+                autoEnrollSeeded: true,
+                autoEnrollUid: uid,
+            },
+            { merge: true },
+        );
     });
 };
 

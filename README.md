@@ -9,6 +9,7 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 ### Members (public home + booking)
 
 - **Booking engine** — Open play and coaching clinics across **Tennis, Badminton, Squash, Pickleball, and Table Tennis**
+- **Dedicated booking page** — `/courts` is a shareable, booking-only route (same engine, no events/news). `/courts/:sport` (e.g. `/courts/pickleball`, `/courts/table-tennis`) preselects a sport tab. Menu, footer, and CTAs across the site point here, and signing in from `/courts` returns you there
 - **Court diagrams** — Join specific spots when a session uses 2 or 4 players per court; switch courts within a session
 - **Clinic layouts** — Coaching sessions use court diagrams when total capacity divides evenly into 2 or 4 per court; otherwise a roster list with Join Session
 - **Session waitlist** — Shared queue per session with auto-promotion; **visible roster** (position, name, email) on each booking card when anyone is queued
@@ -36,7 +37,7 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 ### Auth
 
 - **Duke-only passwordless** — Members sign in with a one-time email link to `firstname.lastname@duke.edu` (NetID-only aliases not supported). No passwords. Session stays on that browser until Sign out.
-- **Public pages** — Home, Cabinet, and Help stay browseable without signing in; booking actions require sign-in.
+- **Public pages** — Home, Courts, Cabinet, and Help stay browseable without signing in; booking actions require sign-in.
 - **Court display names** — Members show as **First L.** on court diagrams (parsed from email)
 - **Admin access** — Email allowlist in [`AuthContext.tsx`](src/contexts/AuthContext.tsx) plus optional `VITE_ADMIN_EMAILS` env override
 
@@ -113,7 +114,7 @@ src/
 ├── contexts/           # AuthContext, ThemeContext
 ├── hooks/              # useAdminData, useSessionAdminOps, useHomeSectionNavigation, useTickerText
 ├── lib/                # sessions, bookingActions, dates, archive, helpFaq, sports, recurringSchedules
-└── pages/              # Home, Help (searchable FAQ), Login, AdminDashboard
+└── pages/              # Home, Courts (booking-only), Cabinet, Help (searchable FAQ), Login, AdminDashboard
 ```
 
 Key Firestore collections: `sessions`, `events`, `news`, `feedback`, `users` (including `users/{uid}/notifications` for waitlist alerts), `settings` (ticker, recurringSchedules).

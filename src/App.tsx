@@ -9,11 +9,15 @@ import TopBar from './components/system/TopBar';
 import MenuOverlay from './components/system/MenuOverlay';
 import FeedbackModal from './components/layout/FeedbackModal';
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion';
+import { usePurgeDemoContent } from './hooks/usePurgeDemoContent';
 import { useSessionsPrefetchReady } from './hooks/useSessionsPrefetchReady';
 import { isHomeSectionHash } from './hooks/useHomeSectionNavigation';
+import { COURTS_PATH } from './lib/siteNav';
+import { consumeLoginReturnPath } from './lib/loginReturn';
 import Home from './pages/Home';
 import Help from './pages/Help';
 import Cabinet from './pages/Cabinet';
+import Courts from './pages/Courts';
 import Login from './pages/Login';
 
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -36,6 +40,12 @@ const ProtectedRoute = ({
     if (!user) return <Navigate to="/login" replace />;
     if (requireAdmin && !isAdmin) return <Navigate to="/" replace />;
     return <>{children}</>;
+};
+
+/** Signed-in visitors landing on /login go back to where they started (e.g. /courts). */
+const PostLoginRedirect = () => {
+    const [target] = useState(consumeLoginReturnPath);
+    return <Navigate to={target} replace />;
 };
 
 const ScrollLock = () => {
@@ -69,9 +79,11 @@ const AppRoutes = () => {
             <Routes>
                 <Route
                     path="/login"
-                    element={!user ? <Login /> : <Navigate to="/" replace />}
+                    element={!user ? <Login /> : <PostLoginRedirect />}
                 />
                 <Route path="/" element={<Home />} />
+                <Route path={COURTS_PATH} element={<Courts />} />
+                <Route path={`${COURTS_PATH}/:sport`} element={<Courts />} />
                 <Route path="/cabinet" element={<Cabinet />} />
                 <Route path="/help" element={<Help />} />
                 <Route
@@ -94,10 +106,12 @@ const AppRoutes = () => {
 
 const Shell = () => {
     const { pathname } = useLocation();
+    const { isAllowlistedAdmin } = useAuth();
     const startsOnLogin = pathname === '/login';
     const [revealed, setRevealed] = useState(startsOnLogin);
     const [preloaderDone, setPreloaderDone] = useState(startsOnLogin);
     const sessionsReady = useSessionsPrefetchReady();
+    usePurgeDemoContent(isAllowlistedAdmin);
 
     return (
         <UIProvider>

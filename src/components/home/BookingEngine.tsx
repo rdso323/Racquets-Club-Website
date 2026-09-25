@@ -3,7 +3,7 @@ import { collection, onSnapshot, doc, query, where } from 'firebase/firestore';
 import { useLenis } from 'lenis/react';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { Rocket, PartyPopper, X } from 'lucide-react';
+import { Rocket, PartyPopper, Plus, X } from 'lucide-react';
 import HorizontalScrollRail from '../system/HorizontalScrollRail';
 import BookingCardGrid from './booking/BookingCardGrid';
 import { type Sport, SPORTS, getSportTheme, type AdminRecurringSchedule, type OpenPlayDayConfig } from '../../lib/sports';
@@ -27,6 +27,7 @@ import { sectionHud } from '../../lib/siteNav';
 import SessionOpsModal from './SessionOpsModal';
 import EditSessionModal from '../admin/modals/EditSessionModal';
 import CapacityReductionModal from '../admin/modals/CapacityReductionModal';
+import CreateSessionModal from '../admin/modals/CreateSessionModal';
 import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 import { useBookingSessions } from '../../hooks/useBookingSessions';
 import { useSessionMaintenanceResets } from '../../hooks/useSessionMaintenanceResets';
@@ -121,17 +122,26 @@ const createICSFile = (session: Session, courtName?: string) => {
     document.body.removeChild(link);
 };
 
-const BookingEngine = () => {
+interface BookingEngineProps {
+    /** Sport tab to open with (e.g. from a `/courts/:sport` deep link). Falls back to Tennis. */
+    initialSport?: Sport | null;
+    /** Section heading; the home page and the dedicated courts page word this differently. */
+    heading?: string;
+    subheading?: string;
+}
+
+const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps = {}) => {
     const { user, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
     const lenis = useLenis();
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
-    const [activeSport, setActiveSport] = useState<Sport>('Tennis');
+    const [activeSport, setActiveSport] = useState<Sport>(initialSport ?? 'Tennis');
     const [bookingBusy, setBookingBusy] = useState<string | null>(null);
     const [promotionAlerts, setPromotionAlerts] = useState<
         Array<{ id: string } & WaitlistPromotionNotification>
     >([]);
     const [opsSession, setOpsSession] = useState<Session | null>(null);
+    const [createOpen, setCreateOpen] = useState(false);
 
     const { sessions, loading, error } = useBookingSessions({
         recurringSchedules,
@@ -171,6 +181,10 @@ const BookingEngine = () => {
 
         return () => unsub();
     }, [user]);
+
+    useEffect(() => {
+        if (initialSport) setActiveSport(initialSport);
+    }, [initialSport]);
 
     useEffect(() => {
         const visibleTabs = tabPreferences.filter(t => t.visible).map(t => t.id);
@@ -359,13 +373,27 @@ const BookingEngine = () => {
                 <div>
                     <p className="hud-label mb-3 text-court-accent">{sectionHud('booking')}</p>
                     <h2 className="font-display text-2xl text-gray-900 dark:text-chalk md:text-3xl lg:text-4xl">
-                        Reserve your court
+                        {heading ?? 'Reserve your court'}
                     </h2>
                     <p className="mt-2 max-w-xl text-sm text-gray-500 dark:text-chalk/50">
-                        Browse open play and clinic sessions across all {SPORTS.length} club sports.
+                        {subheading ?? `Browse open play and clinic sessions across all ${SPORTS.length} club sports.`}
                     </p>
                 </div>
-                <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
+                <div className="flex flex-wrap items-center gap-3">
+                    {isAdmin && (
+                        <button
+                            type="button"
+                            onClick={() => setCreateOpen(true)}
+                            data-cursor
+                            className="inline-flex min-h-10 touch-manipulation items-center gap-1.5 rounded-full border border-court-accent/40 bg-court-accent/10 px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-emerald-800 transition-colors hover:bg-court-accent/20 dark:text-court-accent"
+                            aria-label="Schedule a new session"
+                        >
+                            <Plus className="h-4 w-4" aria-hidden="true" />
+                            Add session
+                        </button>
+                    )}
+                    <p className="hud-label text-gray-400 dark:text-chalk/40">{theme.code} · {activeSport.toUpperCase()}</p>
+                </div>
             </div>
 
             {!loading && promotionAlerts.length > 0 && (
@@ -519,6 +547,8 @@ const BookingEngine = () => {
                           )
                         : null
                 }
+                scheduleMeta={adminOps.editingScheduleMeta}
+                onScheduleMetaChange={adminOps.setEditingScheduleMeta}
                 onSessionChange={adminOps.setEditingSession}
                 onEditCourtFieldsChange={adminOps.setEditCourtFields}
                 onClose={() => adminOps.setEditingSession(null)}
@@ -541,6 +571,13 @@ const BookingEngine = () => {
                 recurringSchedules={recurringSchedules}
                 disabledBuiltinSchedules={disabledBuiltinSchedules}
                 onClose={() => setOpsSession(null)}
+            />
+        )}
+
+        {createOpen && isAdmin && (
+            <CreateSessionModal
+                initialSport={activeSport}
+                onClose={() => setCreateOpen(false)}
             />
         )}
     </>

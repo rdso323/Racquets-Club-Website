@@ -1,5 +1,16 @@
+import { sportToSlug, type Sport } from './sports';
+
 /** Shared section index + labels — keep menu and on-page HUD numbers aligned. */
 export type SiteSectionId = 'home' | 'booking' | 'events' | 'news' | 'cabinet' | 'help' | 'feedback';
+
+/** Dedicated, shareable booking page. */
+export const COURTS_PATH = '/courts';
+
+/** Deep link that opens the booking page with a sport tab preselected. */
+export const courtsPathForSport = (sport: Sport): string => `${COURTS_PATH}/${sportToSlug(sport)}`;
+
+export const isCourtsPath = (pathname: string): boolean =>
+    pathname === COURTS_PATH || pathname.startsWith(`${COURTS_PATH}/`);
 
 /** Home page anchor sections linked from footer, menu, and cross-page CTAs. */
 export const HOME_SECTION_IDS = [
@@ -25,7 +36,7 @@ export const SITE_NAV_SECTIONS: Record<
     booking: {
         index: '02',
         menuLabel: 'Book a Court',
-        menuSub: 'Session availability',
+        menuSub: 'Open play & clinics',
         hudLabel: 'Matchmaker',
     },
     events: {
