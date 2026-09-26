@@ -13,6 +13,7 @@ const SUPPORT_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
 const Login = () => {
     const {
         sendSignInLink,
+        signInWithGoogle,
         completeEmailLinkSignIn,
         error,
         linkSentPending,
@@ -26,6 +27,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [sending, setSending] = useState(false);
     const [completing, setCompleting] = useState(false);
+    const [googleBusy, setGoogleBusy] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
 
     const logoSrc = logoSrcForTheme(theme);
@@ -66,6 +68,17 @@ const Login = () => {
         }
     };
 
+    const handleGoogleSignIn = async () => {
+        clearAuthError();
+        setLocalError(null);
+        setGoogleBusy(true);
+        try {
+            await signInWithGoogle();
+        } finally {
+            setGoogleBusy(false);
+        }
+    };
+
     const handleCompleteLink = async (event: React.FormEvent) => {
         event.preventDefault();
         clearAuthError();
@@ -78,7 +91,7 @@ const Login = () => {
         }
     };
 
-    const busy = sending || completing || loading;
+    const busy = sending || completing || googleBusy || loading;
 
     return (
         <main className="grain flex min-h-[100dvh] items-start justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 pb-4 pt-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:px-6 sm:pb-6 sm:pt-24">
@@ -109,7 +122,7 @@ const Login = () => {
                         </p>
 
                         <h1 className="font-display text-2xl tracking-tight text-wimbledon-navy dark:text-chalk sm:text-3xl">
-                            {emailLinkNeedsEmail ? 'Confirm your email' : 'Sign in with Duke email'}
+                            {emailLinkNeedsEmail ? 'Confirm your email' : 'Sign in'}
                         </h1>
                         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500 dark:text-chalk/55">
                             {emailLinkNeedsEmail ? (
@@ -122,14 +135,31 @@ const Login = () => {
                                 </>
                             ) : (
                                 <>
-                                    No password. We&apos;ll email a one-time link to your{' '}
+                                    Use the Google account for your{' '}
                                     <span className="font-medium text-gray-700 dark:text-chalk/75">
-                                        firstname.lastname@duke.edu
+                                        @duke.edu
                                     </span>{' '}
-                                    inbox. You stay signed in on this browser until you sign out.
+                                    email. You stay signed in on this browser until you sign out.
                                 </>
                             )}
                         </p>
+
+                        {!emailLinkNeedsEmail && (
+                            <div className="mt-5">
+                                <button
+                                    type="button"
+                                    onClick={() => void handleGoogleSignIn()}
+                                    disabled={busy}
+                                    data-cursor
+                                    className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 text-center font-semibold leading-snug text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
+                                >
+                                    {googleBusy ? 'Opening Google…' : 'Sign in with Google using your Duke account'}
+                                </button>
+                                <p className="mt-2 text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
+                                    Use the Google account for your @duke.edu email.
+                                </p>
+                            </div>
+                        )}
 
                         {linkSentPending && !emailLinkNeedsEmail && (
                             <div
@@ -171,11 +201,29 @@ const Login = () => {
                             </div>
                         )}
 
+                        {!emailLinkNeedsEmail && (
+                            <div className="mt-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400 dark:text-chalk/40">
+                                <span className="h-px flex-1 bg-gray-200 dark:bg-chalk/10" />
+                                Email link instead
+                                <span className="h-px flex-1 bg-gray-200 dark:bg-chalk/10" />
+                            </div>
+                        )}
+
+                        {!emailLinkNeedsEmail && (
+                            <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
+                                No password. We email a one-time link to your{' '}
+                                <span className="font-medium text-gray-700 dark:text-chalk/75">
+                                    firstname.lastname@duke.edu
+                                </span>{' '}
+                                inbox.
+                            </p>
+                        )}
+
                         <motion.form
                             layout={!prefersReducedMotion}
                             transition={layoutTransition}
                             onSubmit={emailLinkNeedsEmail ? handleCompleteLink : handleSendLink}
-                            className="mt-5 space-y-3"
+                            className="mt-3 space-y-3"
                         >
                             <input
                                 type="email"
@@ -190,7 +238,11 @@ const Login = () => {
                                 type="submit"
                                 disabled={busy}
                                 data-cursor
-                                className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
+                                className={
+                                    emailLinkNeedsEmail
+                                        ? 'clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50'
+                                        : 'flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-chalk/15 dark:bg-court-950/60 dark:text-chalk dark:hover:bg-court-900'
+                                }
                             >
                                 <Mail className="mr-2 h-5 w-5" />
                                 {emailLinkNeedsEmail
