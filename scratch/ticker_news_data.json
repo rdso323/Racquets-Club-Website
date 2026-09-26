@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Maria Sakkari beat Nao Hibino 7-5, 6-1 on Sept. 24 to reach the Singapore Open quarterfinals against Talia Gibson, Tatiana Prozorova upset Alexandra Eala 4-6, 7-5, 6-3 in a three-hour marathon, and the Laver Cup opens Sept. 25 at London's O2 with Zverev, Alcaraz and Agassi • [SQUASH] Joshna Chinappa and Velavan Senthilkumar beat the Philippines 11-3, 11-5 on Sept. 25 to reach mixed doubles semifinals and assure India bronze, while Anahat Singh and Tanvi Khanna set up an all-Indian women's singles quarterfinal in Nagoya • [BADMINTON] Indonesia rallied from 0-2 down to beat defending champion China 3-2 in the men's team final on Sept. 24, as Mohammad Zaki Ubaidillah won the decider 23-21, 21-13 for Indonesia's first men's team gold since 1998 • [PICKLEBALL] Christopher Haworth won men's singles at the Veolia Arizona Open on Sept. 20 and Anna Leigh Waters swept her draws as the Carvana PPA Tour turns to the Sept. 28-Oct. 4 Rate Las Vegas Open • [TABLE TENNIS] Japan ended China's 32-year men's team reign on Sept. 24 as Sora Matsushima beat Wen Ruibo in the decider for a 3-2 win, China took women's team gold 3-0, and Manush Shah-Diya Chitale assured India mixed doubles bronze on Sept. 25",
+  "tickerText": "[TENNIS] Team Europe leads Team World 3-1 after Friday's Laver Cup openers at London's O2 as Ruud, Jódar and Alcaraz/Menšík won, Talia Gibson reached the Singapore Open final by walkover after Tatiana Prozorova withdrew under concussion protocol • [SQUASH] Anahat Singh beat Tanvi Khanna 11-2, 11-5, 11-3 in 19 minutes on Sept. 26 to reach the Asian Games women's semifinals, while Pakistan's Noor Zaman and Mohammad Ashab Irfan both advanced to the men's last four in Nagoya • [BADMINTON] Loh Kean Yew beat Lakshya Sen 21-12, 15-21, 21-14 on Sept. 26 to reach the Asian Games men's singles round of 16, and world No. 1 An Se-young opened with a 21-5, 21-5 win in 20 minutes • [PICKLEBALL] The Carvana PPA Tour's Rate Las Vegas Open runs Sept. 28-Oct. 4 with Sharp's \"In the Kitchen\" fan activation Oct. 1, after Haworth and Waters won at the Veolia Arizona Open • [TABLE TENNIS] Manush Shah and Diya Chitale assured India mixed doubles bronze at the Asian Games, while Yashaswini Ghorpade fell 1-4 to Japan's Miwa Harimoto in the women's singles third round on Sept. 26",
   "newsItems": [
     {
-      "title": "Indonesia Ends 28-Year Wait",
-      "excerpt": "Indonesia rallied from 0-2 down to beat defending champion China 3-2 in the Asian Games men's team final on Sept. 24, as Mohammad Zaki Ubaidillah clinched gold 23-21, 21-13 in the decider for the country's first title since 1998.",
-      "date": "September 25, 2026",
-      "category": "Badminton",
-      "link": "https://www.thestar.com.my/sport/badminton/2026/09/25/zaki-the-hero-as-indonesia-edge-china-to-end-28-year-wait-for-team-gold"
-    },
-    {
-      "title": "Japan Dethrones China",
-      "excerpt": "Tomokazu Harimoto and Japan beat China 3-2 in the Asian Games men's team final on Sept. 24, ending China's 32-year gold streak, while China swept Japan 3-0 in the women's team final in Nagoya.",
-      "date": "September 25, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.france24.com/en/live-news/20260925-harimoto-hails-new-era-as-japan-dethrone-table-tennis-kings-china"
-    },
-    {
-      "title": "Sakkari Into Singapore QF",
-      "excerpt": "Maria Sakkari beat Nao Hibino 7-5, 6-1 on Sept. 24 to reach the Singapore Open quarterfinals, where she faces Australia's Talia Gibson after Tatiana Prozorova's three-set upset of Alexandra Eala.",
-      "date": "September 25, 2026",
+      "title": "Gibson Into Singapore Final",
+      "excerpt": "Talia Gibson advanced to her first WTA singles final at the Singapore Open on Sept. 26 by walkover after Tatiana Prozorova withdrew following a concussion protocol dispute after being hit by a smash in doubles.",
+      "date": "September 26, 2026",
       "category": "Tennis",
-      "link": "https://greekherald.com.au/sports/maria-sakkari-reaches-singapore-open-quarter-finals/"
+      "link": "https://www.abc.net.au/news/2026-09-26/talia-gibson-tatiana-prozorova-singapore-open-final/107198928"
+    },
+    {
+      "title": "Loh Beats Sen at Asiad",
+      "excerpt": "Former world champion Loh Kean Yew beat India's Lakshya Sen 21-12, 15-21, 21-14 on Sept. 26 in Nagoya to reach the Asian Games men's singles round of 16 as he chases Singapore's first badminton medal since 2006.",
+      "date": "September 26, 2026",
+      "category": "Badminton",
+      "link": "https://www.straitstimes.com/sport/loh-kean-yew-notches-opening-match-win-at-asian-games-against-indias-lakshya-sen"
+    },
+    {
+      "title": "India's Mixed Doubles Bronze",
+      "excerpt": "Manush Shah and Diya Chitale upset Hong Kong's Wong Chun Ting and Doo Hoi Kem to reach the Asian Games mixed doubles semifinals, delivering only India's fourth table tennis medal in Asian Games history.",
+      "date": "September 26, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.hindustantimes.com/sports/others/two-indian-paddlers-one-rare-tt-medal-a-half-miracle-101790361079787.html"
     },
     {
       "title": "PPA Heads to Vegas",
-      "excerpt": "After Christopher Haworth and Anna Leigh Waters won at the Veolia Arizona Open, the Carvana PPA Tour's 1,000-point Rate Las Vegas Open runs Sept. 28-Oct. 4 as the next stop on the 2026-27 season.",
-      "date": "September 25, 2026",
+      "excerpt": "The Carvana PPA Tour's 1,000-point Rate Las Vegas Open opens Sept. 28 with Sharp debuting its \"In the Kitchen\" fan zone Oct. 1, following Championship Sunday wins for Christopher Haworth and Anna Leigh Waters in Arizona.",
+      "date": "September 26, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/"
+      "link": "https://www.twice.com/product/appliances/kitchen/sharp-brings-kitchen-activation-to-ppa-tour"
     }
   ]
 }
