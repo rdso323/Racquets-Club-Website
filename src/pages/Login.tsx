@@ -9,11 +9,30 @@ import { DUKE_EMAIL_FORMAT_MESSAGE, isAllowedDukeEmail } from '../lib/memberName
 
 const MOTION_EASE = [0.16, 1, 0.3, 1] as const;
 const SUPPORT_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
+const RESEND_WAIT_MS = 5 * 60 * 1000;
+const RESEND_LOCK_KEY = 'signinLinkSentAt';
+
+const readSignInLinkSentAt = (): number | null => {
+    try {
+        const sentAt = Number(window.sessionStorage.getItem(RESEND_LOCK_KEY));
+        if (!Number.isFinite(sentAt)) return null;
+        if (Date.now() - sentAt >= RESEND_WAIT_MS) return null;
+        return sentAt;
+    } catch {
+        return null;
+    }
+};
+
+const formatWait = (ms: number): string => {
+    const totalSeconds = Math.ceil(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
 
 const Login = () => {
     const {
         sendSignInLink,
-        signInWithGoogle,
         completeEmailLinkSignIn,
         error,
         linkSentPending,
@@ -27,8 +46,9 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [sending, setSending] = useState(false);
     const [completing, setCompleting] = useState(false);
-    const [googleBusy, setGoogleBusy] = useState(false);
     const [localError, setLocalError] = useState<string | null>(null);
+    const [sentAt, setSentAt] = useState<number | null>(() => readSignInLinkSentAt());
+    const [now, setNow] = useState(() => Date.now());
 
     const logoSrc = logoSrcForTheme(theme);
     const displayError = localError || error;
@@ -41,17 +61,41 @@ const Login = () => {
         : { layout: { duration: 0.24, ease: MOTION_EASE } };
 
     useEffect(() => {
-        if (!emailLinkNeedsEmail) return;
+        if (!emailLinkNeedsEmail && !linkSentPending && !sentAt) return;
         try {
             const stored = window.localStorage.getItem('emailForSignIn');
-            if (stored) setEmail(stored);
+            if (stored) setEmail((current) => current || stored);
         } catch {
             /* ignore */
         }
-    }, [emailLinkNeedsEmail]);
+    }, [emailLinkNeedsEmail, linkSentPending, sentAt]);
+
+    useEffect(() => {
+        if (!linkSentPending) return;
+        const existing = readSignInLinkSentAt();
+        const next = existing ?? Date.now();
+        if (!existing) {
+            try {
+                window.sessionStorage.setItem(RESEND_LOCK_KEY, String(next));
+            } catch {
+                /* storage unavailable */
+            }
+        }
+        setSentAt(next);
+    }, [linkSentPending]);
+
+    const resendWaitMs = sentAt ? Math.max(0, sentAt + RESEND_WAIT_MS - now) : 0;
+    const resendLocked = resendWaitMs > 0;
+
+    useEffect(() => {
+        if (!resendLocked) return;
+        const id = window.setInterval(() => setNow(Date.now()), 1000);
+        return () => window.clearInterval(id);
+    }, [resendLocked]);
 
     const handleSendLink = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (resendLocked) return;
         clearAuthError();
         setLocalError(null);
 
@@ -68,17 +112,6 @@ const Login = () => {
         }
     };
 
-    const handleGoogleSignIn = async () => {
-        clearAuthError();
-        setLocalError(null);
-        setGoogleBusy(true);
-        try {
-            await signInWithGoogle();
-        } finally {
-            setGoogleBusy(false);
-        }
-    };
-
     const handleCompleteLink = async (event: React.FormEvent) => {
         event.preventDefault();
         clearAuthError();
@@ -91,7 +124,8 @@ const Login = () => {
         }
     };
 
-    const busy = sending || completing || googleBusy || loading;
+    const busy = sending || completing || loading;
+    const showSentNotice = Boolean(sentAt || linkSentPending) && !emailLinkNeedsEmail;
 
     return (
         <main className="grain flex min-h-[100dvh] items-start justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 pb-4 pt-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:px-6 sm:pb-6 sm:pt-24">
@@ -122,7 +156,7 @@ const Login = () => {
                         </p>
 
                         <h1 className="font-display text-2xl tracking-tight text-wimbledon-navy dark:text-chalk sm:text-3xl">
-                            {emailLinkNeedsEmail ? 'Confirm your email' : 'Sign in'}
+                            {emailLinkNeedsEmail ? 'Confirm your email' : 'Sign in with Duke email'}
                         </h1>
                         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500 dark:text-chalk/55">
                             {emailLinkNeedsEmail ? (
@@ -135,33 +169,21 @@ const Login = () => {
                                 </>
                             ) : (
                                 <>
-                                    Use the Google account for your{' '}
+                                    No password. We&apos;ll email a one-time link to your{' '}
                                     <span className="font-medium text-gray-700 dark:text-chalk/75">
-                                        @duke.edu
+                                        firstname.lastname@duke.edu
                                     </span>{' '}
-                                    email. You stay signed in on this browser until you sign out.
+                                    inbox. You stay signed in on this browser until you sign out.
                                 </>
                             )}
                         </p>
-
                         {!emailLinkNeedsEmail && (
-                            <div className="mt-5">
-                                <button
-                                    type="button"
-                                    onClick={() => void handleGoogleSignIn()}
-                                    disabled={busy}
-                                    data-cursor
-                                    className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 text-center font-semibold leading-snug text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
-                                >
-                                    {googleBusy ? 'Opening Google…' : 'Sign in with Google using your Duke account'}
-                                </button>
-                                <p className="mt-2 text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
-                                    Use the Google account for your @duke.edu email.
-                                </p>
-                            </div>
+                            <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
+                                The link can take up to 5 minutes and often lands in Junk/Spam. One request is enough.
+                            </p>
                         )}
 
-                        {linkSentPending && !emailLinkNeedsEmail && (
+                        {showSentNotice && (
                             <div
                                 aria-live="polite"
                                 className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-left dark:border-emerald-900/40 dark:bg-emerald-950/20"
@@ -182,8 +204,8 @@ const Login = () => {
                                                 Check Junk/Spam
                                             </strong>
                                             <span className="mt-0.5 block text-[13px] leading-snug">
-                                                It can take a minute or two to arrive — Duke often filters these emails.
-                                                Wait a bit before tapping Resend.
+                                                This can take up to 5 minutes. Wait before requesting another link.
+                                                Sending again does not make it arrive faster.
                                             </span>
                                         </p>
                                     </div>
@@ -201,29 +223,11 @@ const Login = () => {
                             </div>
                         )}
 
-                        {!emailLinkNeedsEmail && (
-                            <div className="mt-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-400 dark:text-chalk/40">
-                                <span className="h-px flex-1 bg-gray-200 dark:bg-chalk/10" />
-                                Email link instead
-                                <span className="h-px flex-1 bg-gray-200 dark:bg-chalk/10" />
-                            </div>
-                        )}
-
-                        {!emailLinkNeedsEmail && (
-                            <p className="mt-3 text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
-                                No password. We email a one-time link to your{' '}
-                                <span className="font-medium text-gray-700 dark:text-chalk/75">
-                                    firstname.lastname@duke.edu
-                                </span>{' '}
-                                inbox.
-                            </p>
-                        )}
-
                         <motion.form
                             layout={!prefersReducedMotion}
                             transition={layoutTransition}
                             onSubmit={emailLinkNeedsEmail ? handleCompleteLink : handleSendLink}
-                            className="mt-3 space-y-3"
+                            className="mt-5 space-y-3"
                         >
                             <input
                                 type="email"
@@ -236,13 +240,9 @@ const Login = () => {
                             />
                             <button
                                 type="submit"
-                                disabled={busy}
+                                disabled={busy || (!emailLinkNeedsEmail && resendLocked)}
                                 data-cursor
-                                className={
-                                    emailLinkNeedsEmail
-                                        ? 'clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50'
-                                        : 'flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-chalk/15 dark:bg-court-950/60 dark:text-chalk dark:hover:bg-court-900'
-                                }
+                                className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
                             >
                                 <Mail className="mr-2 h-5 w-5" />
                                 {emailLinkNeedsEmail
@@ -251,9 +251,11 @@ const Login = () => {
                                         : 'Finish sign-in'
                                     : sending
                                       ? 'Sending link…'
-                                      : linkSentPending
-                                        ? 'Resend sign-in link'
-                                        : 'Email me a sign-in link'}
+                                      : resendLocked
+                                        ? `Resend available in ${formatWait(resendWaitMs)}`
+                                        : showSentNotice
+                                          ? 'Resend sign-in link'
+                                          : 'Email me a sign-in link'}
                             </button>
                         </motion.form>
 

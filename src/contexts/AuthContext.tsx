@@ -1,11 +1,9 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
-    GoogleAuthProvider,
     isSignInWithEmailLink,
     onAuthStateChanged,
     sendSignInLinkToEmail,
     signInWithEmailLink,
-    signInWithPopup,
     signOut as firebaseSignOut,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
@@ -139,7 +137,6 @@ interface AuthContextType {
     /** True when the URL is an email sign-in link but we still need the user to confirm their email. */
     emailLinkNeedsEmail: boolean;
     sendSignInLink: (email: string) => Promise<void>;
-    signInWithGoogle: () => Promise<void>;
     completeEmailLinkSignIn: (email: string) => Promise<void>;
     clearAuthMessage: () => void;
     clearAuthError: () => void;
@@ -187,12 +184,6 @@ const isAdminEmail = (email: string | null | undefined) =>
 
 const ADMIN_VIEW_AS_MEMBER_KEY = 'admin_view_as_member';
 
-const GOOGLE_NON_DUKE_MESSAGE =
-    'You must sign in with a @duke.edu email. A personal Gmail account will not work.';
-
-const signedInWithGoogle = (currentUser: User): boolean =>
-    currentUser.providerData.some((provider) => provider.providerId === 'google.com');
-
 const readViewAsMember = (): boolean => {
     try {
         return window.localStorage.getItem(ADMIN_VIEW_AS_MEMBER_KEY) === '1';
@@ -211,7 +202,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [viewAsMember, setViewAsMemberState] = useState(false);
     const migrationAttemptedRef = useRef<string | null>(null);
     const completingEmailLinkRef = useRef(false);
-    const signingInWithGoogleRef = useRef(false);
 
     useEffect(() => {
         setViewAsMemberState(readViewAsMember());
@@ -228,19 +218,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const acceptAuthenticatedUser = async (currentUser: User) => {
-        const googleAccount = signedInWithGoogle(currentUser);
-        const email = currentUser.email?.trim().toLowerCase() ?? '';
-
-        if (!email.endsWith('@duke.edu')) {
+        if (!currentUser.email?.endsWith('@duke.edu')) {
             await firebaseSignOut(auth);
             setUser(null);
-            setError(googleAccount ? GOOGLE_NON_DUKE_MESSAGE : 'Only @duke.edu email addresses are allowed.');
+            setError('Only @duke.edu email addresses are allowed.');
             return;
         }
 
-        // Duke Google accounts are already verified. Email-link sign-in always verifies;
-        // reject leftover unverified password accounts instead of treating them as Google.
-        if (!googleAccount && !currentUser.emailVerified) {
+        // Email-link sign-in always verifies; reject leftover unverified password accounts.
+        if (!currentUser.emailVerified) {
             await firebaseSignOut(auth);
             setUser(null);
             setError('Please sign in with the email link sent to your Duke inbox.');
@@ -325,7 +311,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            if (completingEmailLinkRef.current || signingInWithGoogleRef.current) {
+            if (completingEmailLinkRef.current) {
                 return;
             }
 
@@ -451,37 +437,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const signInWithGoogle = async () => {
-        setError(null);
-        setLinkSentPending(false);
-
-        const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({ hd: 'duke.edu' });
-
-        signingInWithGoogleRef.current = true;
-        try {
-            const result = await signInWithPopup(auth, provider);
-            await acceptAuthenticatedUser(result.user);
-        } catch (err: unknown) {
-            const code = (err as { code?: string })?.code;
-            if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
-                return;
-            }
-            console.error(err);
-            if (code === 'auth/popup-blocked') {
-                setError('Your browser blocked the Google sign-in window. Allow popups for this site and try again.');
-                return;
-            }
-            if (code === 'auth/operation-not-allowed') {
-                setError('Google sign-in is not enabled yet. Ask an admin to enable the Google provider in Firebase Authentication.');
-                return;
-            }
-            setError('Google sign-in failed. Try again, or use the email link below.');
-        } finally {
-            signingInWithGoogleRef.current = false;
-        }
-    };
-
     const signOut = async () => {
         await firebaseSignOut(auth);
     };
@@ -513,7 +468,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 linkSentPending,
                 emailLinkNeedsEmail,
                 sendSignInLink,
-                signInWithGoogle,
                 completeEmailLinkSignIn,
                 clearAuthMessage,
                 clearAuthError,
