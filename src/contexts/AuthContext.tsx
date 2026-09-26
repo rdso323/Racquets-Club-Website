@@ -463,11 +463,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const result = await signInWithPopup(auth, provider);
             await acceptAuthenticatedUser(result.user);
         } catch (err: unknown) {
-            console.error(err);
             const code = (err as { code?: string })?.code;
             if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
                 return;
             }
+            console.error(err);
             if (code === 'auth/popup-blocked') {
                 setError('Your browser blocked the Google sign-in window. Allow popups for this site and try again.');
                 return;
