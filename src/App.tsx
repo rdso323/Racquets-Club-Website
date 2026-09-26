@@ -71,24 +71,28 @@ const ScrollReset = () => {
 };
 
 const AppRoutes = () => {
-    const { user } = useAuth();
+    const { user, needsProfile, profileReady } = useAuth();
     const { feedbackOpen, closeFeedback } = useUI();
+    const holdForProfile = Boolean(user && (!profileReady || needsProfile));
 
     return (
         <>
             <Routes>
                 <Route
                     path="/login"
-                    element={!user ? <Login /> : <PostLoginRedirect />}
+                    element={!user || holdForProfile ? <Login /> : <PostLoginRedirect />}
                 />
-                <Route path="/" element={<Home />} />
-                <Route path={COURTS_PATH} element={<Courts />} />
-                <Route path={`${COURTS_PATH}/:sport`} element={<Courts />} />
-                <Route path="/cabinet" element={<Cabinet />} />
-                <Route path="/help" element={<Help />} />
+                <Route path="/" element={holdForProfile ? <Navigate to="/login" replace /> : <Home />} />
+                <Route path={COURTS_PATH} element={holdForProfile ? <Navigate to="/login" replace /> : <Courts />} />
+                <Route path={`${COURTS_PATH}/:sport`} element={holdForProfile ? <Navigate to="/login" replace /> : <Courts />} />
+                <Route path="/cabinet" element={holdForProfile ? <Navigate to="/login" replace /> : <Cabinet />} />
+                <Route path="/help" element={holdForProfile ? <Navigate to="/login" replace /> : <Help />} />
                 <Route
                     path="/admin"
                     element={
+                        holdForProfile ? (
+                            <Navigate to="/login" replace />
+                        ) : (
                         <Suspense fallback={<RouteLoader />}>
                             <ProtectedRoute requireAdmin>
                                 <div className="px-5 py-24 md:px-10" data-lenis-prevent>
@@ -96,6 +100,7 @@ const AppRoutes = () => {
                                 </div>
                             </ProtectedRoute>
                         </Suspense>
+                        )
                     }
                 />
             </Routes>

@@ -70,20 +70,6 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
 
         return (
             <div className="animate-fadeIn space-y-8">
-                {showCreateForm && (
-                    <>
-                        <div
-                            ref={ref}
-                            className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gray-55/20 p-6 dark:border-gray-800 dark:bg-court-950/20"
-                        >
-                            <div className="absolute left-0 top-0 h-full w-1.5 bg-court-accent" />
-                            <ScheduleSessionForm initialSport={sessionsSportFilter} />
-                        </div>
-
-                        <hr className="border-gray-150 dark:border-gray-800" />
-                    </>
-                )}
-
                 <div>
                     <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-gray-100 pb-4 dark:border-gray-800 sm:flex-row sm:items-center">
                         <div>
@@ -167,6 +153,19 @@ const SessionsModule = forwardRef<HTMLDivElement, SessionsModuleProps>(
                         </div>
                     )}
                 </div>
+
+                {showCreateForm && (
+                    <>
+                        <hr className="border-gray-150 dark:border-gray-800" />
+                        <div
+                            ref={ref}
+                            className="relative overflow-hidden rounded-2xl border border-gray-200 bg-gray-55/20 p-6 dark:border-gray-800 dark:bg-court-950/20"
+                        >
+                            <div className="absolute left-0 top-0 h-full w-1.5 bg-court-accent" />
+                            <ScheduleSessionForm initialSport={sessionsSportFilter} />
+                        </div>
+                    </>
+                )}
 
                 {editingSession && (
                     <EditSessionModal

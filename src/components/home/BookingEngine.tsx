@@ -39,88 +39,7 @@ import {
 } from './booking/BookingCards';
 import SportTabBar from './SportTabBar';
 import BookingCardSkeleton from './booking/BookingCardSkeleton';
-
-const createICSFile = (session: Session, courtName?: string) => {
-    let startDate = new Date();
-    let endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
-
-    const formatICSDate = (date: Date) => {
-        const pad = (n: number) => n < 10 ? '0' + n : n;
-        return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
-    };
-
-    const days = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays',
-        'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-    let targetDate = new Date();
-    for (let i = 0; i < days.length; i++) {
-        if (session.date.includes(days[i])) {
-            const targetDay = i % 7;
-            const currentDay = targetDate.getDay();
-            let distance = targetDay - currentDay;
-            if (distance < 0) distance += 7;
-            targetDate.setDate(targetDate.getDate() + distance);
-            break;
-        }
-    }
-
-    const timeRegex = /(\d{1,2}):(\d{2})\s*(AM|PM)/i;
-    const match = session.time?.match(timeRegex);
-    if (match) {
-        let hours = parseInt(match[1]);
-        const mins = parseInt(match[2]);
-        const ampm = match[3].toUpperCase();
-        if (ampm === 'PM' && hours < 12) hours += 12;
-        if (ampm === 'AM' && hours === 12) hours = 0;
-        targetDate.setHours(hours, mins, 0, 0);
-
-        if (targetDate.getTime() < new Date().getTime() - 60 * 60 * 1000) {
-            targetDate.setDate(targetDate.getDate() + 7);
-        }
-        startDate = new Date(targetDate);
-
-        const remainingStr = session.time?.substring(match.index! + match[0].length);
-        const endMatch = remainingStr?.match(timeRegex);
-        if (endMatch) {
-            let eHours = parseInt(endMatch[1]);
-            const eMins = parseInt(endMatch[2]);
-            const eAmpm = endMatch[3].toUpperCase();
-            if (eAmpm === 'PM' && eHours < 12) eHours += 12;
-            if (eAmpm === 'AM' && eHours === 12) eHours = 0;
-            endDate = new Date(targetDate);
-            endDate.setHours(eHours, eMins, 0, 0);
-            if (endDate < startDate) endDate.setDate(endDate.getDate() + 1);
-        }
-    }
-
-    const title = courtName ? `${session.title} - ${courtName}` : session.title;
-    const description = `Racquets Club Session\\nTitle: ${session.title}\\nDate: ${session.date}\\nTime: ${session.time}${courtName ? `\\nCourt: ${courtName}` : ''}`;
-
-    const icsContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Racquets Club//Booking Engine//EN',
-        'CALSCALE:GREGORIAN',
-        'METHOD:PUBLISH',
-        'BEGIN:VEVENT',
-        `UID:${Date.now()}-${Math.random().toString(36).substring(2)}@racquetsclub`,
-        `DTSTAMP:${(() => { const d = new Date(); const p = (n: number) => n < 10 ? '0' + n : n; return `${d.getUTCFullYear()}${p(d.getUTCMonth() + 1)}${p(d.getUTCDate())}T${p(d.getUTCHours())}${p(d.getUTCMinutes())}00Z`; })()}`,
-        `DTSTART:${formatICSDate(startDate)}`,
-        `DTEND:${formatICSDate(endDate)}`,
-        `SUMMARY:${title}`,
-        `DESCRIPTION:${description}`,
-        'END:VEVENT',
-        'END:VCALENDAR'
-    ].join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', `${title.replace(/[^a-zA-Z0-9]+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '')}.ics`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
+import { downloadSessionCalendarInvite } from '../../lib/calendar';
 
 interface BookingEngineProps {
     /** Sport tab to open with (e.g. from a `/courts/:sport` deep link). Falls back to Tennis. */
@@ -225,9 +144,9 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
             const result = await joinSessionCourt(sessionToJoin, profile, courtName, activeSport, slotIndex);
 
             if (result.action === 'joined' && window.confirm('Successfully joined! Would you like to download a calendar invite?')) {
-                createICSFile(sessionToJoin, courtName);
+                downloadSessionCalendarInvite(sessionToJoin, courtName);
             } else if (result.action === 'switched' && window.confirm('Successfully switched courts! Would you like to download a calendar invite?')) {
-                createICSFile(sessionToJoin, courtName);
+                downloadSessionCalendarInvite(sessionToJoin, courtName);
             } else if (result.action === 'left' && result.promotion?.promoted && result.promotion.promotedUid) {
                 try {
                     await notifyWaitlistPromotion({
@@ -295,7 +214,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                         ...session,
                         title: `Coaching: ${session.title}`,
                     };
-                    createICSFile(coachSession);
+                    downloadSessionCalendarInvite(coachSession);
                 }
             }
         } catch (error) {

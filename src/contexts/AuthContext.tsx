@@ -1,21 +1,24 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import {
+    GoogleAuthProvider,
     isSignInWithEmailLink,
     onAuthStateChanged,
     sendSignInLinkToEmail,
     signInWithEmailLink,
+    signInWithPopup,
     signOut as firebaseSignOut,
+    updateProfile,
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { SPORTS } from '../lib/sports';
 import {
-    formatMemberNameFromEmail,
     isAllowedDukeEmail,
     isDukeEmail,
     DUKE_EMAIL_FORMAT_MESSAGE,
     DUKE_SIGNIN_EMAIL_MESSAGE,
+    normalizePersonName,
 } from '../lib/memberNames';
 
 export interface TabPreference {
@@ -137,7 +140,13 @@ interface AuthContextType {
     /** True when the URL is an email sign-in link but we still need the user to confirm their email. */
     emailLinkNeedsEmail: boolean;
     sendSignInLink: (email: string) => Promise<void>;
+    signInWithGoogle: () => Promise<void>;
     completeEmailLinkSignIn: (email: string) => Promise<void>;
+    /** True once we know whether a Google account still needs a first and last name. */
+    profileReady: boolean;
+    /** Google accounts must save a first and last name before using the site. */
+    needsProfile: boolean;
+    saveMemberName: (firstName: string, lastName: string) => Promise<void>;
     clearAuthMessage: () => void;
     clearAuthError: () => void;
     signOut: () => Promise<void>;
@@ -184,6 +193,15 @@ const isAdminEmail = (email: string | null | undefined) =>
 
 const ADMIN_VIEW_AS_MEMBER_KEY = 'admin_view_as_member';
 
+const isGoogleAccount = (currentUser: User | null | undefined): boolean =>
+    !!currentUser?.providerData.some((provider) => provider.providerId === 'google.com');
+
+const savedMemberName = (data: Record<string, unknown> | null | undefined): boolean => {
+    const first = typeof data?.firstName === 'string' ? data.firstName.trim() : '';
+    const last = typeof data?.lastName === 'string' ? data.lastName.trim() : '';
+    return Boolean(first && last);
+};
+
 const readViewAsMember = (): boolean => {
     try {
         return window.localStorage.getItem(ADMIN_VIEW_AS_MEMBER_KEY) === '1';
@@ -200,8 +218,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [emailLinkNeedsEmail, setEmailLinkNeedsEmail] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const [viewAsMember, setViewAsMemberState] = useState(false);
+    const [profileReady, setProfileReady] = useState(true);
+    const [hasSavedName, setHasSavedName] = useState(false);
     const migrationAttemptedRef = useRef<string | null>(null);
     const completingEmailLinkRef = useRef(false);
+    const signingInWithGoogleRef = useRef(false);
+    const acceptedUidRef = useRef<string | null>(null);
 
     useEffect(() => {
         setViewAsMemberState(readViewAsMember());
@@ -218,19 +240,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const acceptAuthenticatedUser = async (currentUser: User) => {
-        if (!currentUser.email?.endsWith('@duke.edu')) {
+        const googleAccount = isGoogleAccount(currentUser);
+        const email = currentUser.email?.trim().toLowerCase() ?? '';
+
+        if (!email) {
             await firebaseSignOut(auth);
             setUser(null);
-            setError('Only @duke.edu email addresses are allowed.');
+            setError('That Google account has no email address. Choose an account with an email, or use Alternative methods.');
             return;
         }
 
-        // Email-link sign-in always verifies; reject leftover unverified password accounts.
-        if (!currentUser.emailVerified) {
+        if (!googleAccount && !email.endsWith('@duke.edu')) {
+            await firebaseSignOut(auth);
+            setUser(null);
+            setError('Only @duke.edu email addresses are allowed for the email link.');
+            return;
+        }
+
+        // Email-link sign-in always verifies. Google accounts are already verified.
+        if (!googleAccount && !currentUser.emailVerified) {
             await firebaseSignOut(auth);
             setUser(null);
             setError('Please sign in with the email link sent to your Duke inbox.');
             return;
+        }
+
+        if (googleAccount) {
+            setProfileReady(false);
+            setHasSavedName(false);
+        } else {
+            setProfileReady(true);
+            setHasSavedName(true);
         }
 
         setUser(currentUser);
@@ -240,10 +280,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         setDoc(
             doc(db, 'users', currentUser.uid),
-            {
-                email: currentUser.email || '',
-                displayName: currentUser.displayName || formatMemberNameFromEmail(currentUser.email),
-            },
+            { email: currentUser.email || '' },
             { merge: true },
         ).catch((err) => console.error('Error syncing user profile:', err));
 
@@ -311,11 +348,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            if (completingEmailLinkRef.current) {
+            if (completingEmailLinkRef.current || signingInWithGoogleRef.current) {
                 return;
             }
 
             if (currentUser) {
+                // updateProfile (saving a name) fires this again. Re-running acceptance
+                // cleared the saved name and bounced the member back to the name form.
+                if (acceptedUidRef.current === currentUser.uid) {
+                    setUser(currentUser);
+                    setLoading(false);
+                    return;
+                }
+
                 try {
                     await currentUser.getIdToken(true);
                     await currentUser.reload();
@@ -324,9 +369,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 }
 
                 await acceptAuthenticatedUser(currentUser);
+                acceptedUidRef.current = currentUser.uid;
             } else {
+                acceptedUidRef.current = null;
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
+                setProfileReady(true);
+                setHasSavedName(false);
                 migrationAttemptedRef.current = null;
             }
             setLoading(false);
@@ -344,6 +393,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             userRef,
             async (snapshot) => {
                 const data = snapshot.exists() ? snapshot.data() : null;
+                if (isGoogleAccount(user)) {
+                    const saved = savedMemberName(data);
+                    // A restarted listener can emit a stale cache snapshot after the write.
+                    // Once this session has seen a saved name, don't send them back to the form.
+                    setHasSavedName((current) => current || saved);
+                    setProfileReady(true);
+                }
 
                 const onAllowlist = isAdminEmail(user.email);
 
@@ -402,6 +458,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
             (err) => {
                 console.error('Error listening to user settings:', err);
+                if (isGoogleAccount(user)) setProfileReady(true);
             },
         );
 
@@ -437,6 +494,62 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const signInWithGoogle = async () => {
+        setError(null);
+        setLinkSentPending(false);
+
+        const provider = new GoogleAuthProvider();
+        signingInWithGoogleRef.current = true;
+        try {
+            const result = await signInWithPopup(auth, provider);
+            await acceptAuthenticatedUser(result.user);
+        } catch (err: unknown) {
+            const code = (err as { code?: string })?.code;
+            if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+                return;
+            }
+            console.error(err);
+            if (code === 'auth/popup-blocked') {
+                setError('Your browser blocked the Google sign-in window. Allow popups for this site and try again.');
+                return;
+            }
+            if (code === 'auth/operation-not-allowed') {
+                setError('Google sign-in is not enabled yet. Ask an admin to enable the Google provider in Firebase Authentication.');
+                return;
+            }
+            if (code === 'auth/unauthorized-domain') {
+                setError('This site address is not allowed for Google sign-in. Open the site on localhost or fuquaracquetsclub.com.');
+                return;
+            }
+            setError('Google sign-in failed. Try again, or use Alternative methods.');
+        } finally {
+            signingInWithGoogleRef.current = false;
+        }
+    };
+
+    const saveMemberName = async (firstName: string, lastName: string) => {
+        if (!user) return;
+        const first = normalizePersonName(firstName);
+        const last = normalizePersonName(lastName);
+        if (!first || !last) {
+            throw new Error('Enter a first and last name.');
+        }
+        const displayName = `${first} ${last}`;
+        await updateProfile(user, { displayName });
+        await setDoc(
+            doc(db, 'users', user.uid),
+            {
+                email: user.email || '',
+                firstName: first,
+                lastName: last,
+                displayName,
+            },
+            { merge: true },
+        );
+        setHasSavedName(true);
+        setProfileReady(true);
+    };
+
     const signOut = async () => {
         await firebaseSignOut(auth);
     };
@@ -458,6 +571,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const isAllowlistedAdmin = user ? isAdminEmail(user.email) : false;
     const isAdmin = isAllowlistedAdmin && !viewAsMember;
+    const needsProfile = Boolean(user && isGoogleAccount(user) && profileReady && !hasSavedName);
 
     return (
         <AuthContext.Provider
@@ -468,7 +582,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 linkSentPending,
                 emailLinkNeedsEmail,
                 sendSignInLink,
+                signInWithGoogle,
                 completeEmailLinkSignIn,
+                profileReady,
+                needsProfile,
+                saveMemberName,
                 clearAuthMessage,
                 clearAuthError,
                 signOut,

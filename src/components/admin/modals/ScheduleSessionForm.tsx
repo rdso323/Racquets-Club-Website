@@ -26,6 +26,7 @@ import {
 } from '../../../lib/sessions';
 import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
 import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
+import { downloadWeeklySeriesCalendar } from '../../../lib/calendar';
 import DatePickerField from '../fields/DatePickerField';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
@@ -130,10 +131,16 @@ const ScheduleSessionForm = ({
                 }
 
                 const enrollSelf = Boolean(user && newSession.autoEnrollCreator);
+                const seriesTitle = newSession.title;
+                const seriesDay = newSession.recurringDay;
+                const seriesStart = newSession.startTime;
+                const seriesEnd = newSession.endTime;
+                const seriesEndsOn = newSession.endsOn;
+
                 await addRecurringSchedule({
                     sport: newSession.sport as AdminRecurringSchedule['sport'],
-                    day: newSession.recurringDay,
-                    title: newSession.title,
+                    day: seriesDay,
+                    title: seriesTitle,
                     time: newSession.time,
                     sessionType: newSession.type,
                     courts,
@@ -141,7 +148,7 @@ const ScheduleSessionForm = ({
                     maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                     coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
                     maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
-                    ...(newSession.endsOn ? { endsOn: newSession.endsOn } : {}),
+                    ...(seriesEndsOn ? { endsOn: seriesEndsOn } : {}),
                     autoEnrollCreator: enrollSelf,
                     ...(enrollSelf && user
                         ? {
@@ -151,6 +158,22 @@ const ScheduleSessionForm = ({
                           }
                         : {}),
                 });
+
+                if (
+                    enrollSelf &&
+                    window.confirm(
+                        'You are on each week. Download one weekly calendar invite? If you set Ends on, the repeat stops that day. Dropping a single week on the site will not change this calendar event.',
+                    )
+                ) {
+                    downloadWeeklySeriesCalendar({
+                        title: seriesTitle,
+                        day: seriesDay,
+                        startTime: seriesStart,
+                        endTime: seriesEnd || undefined,
+                        endsOn: seriesEndsOn || undefined,
+                    });
+                }
+
                 setMessage(
                     newSession.type === 'coaching'
                         ? 'Weekly recurring clinic schedule created!'
