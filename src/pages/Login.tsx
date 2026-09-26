@@ -33,12 +33,17 @@ const formatWait = (ms: number): string => {
 const Login = () => {
     const {
         sendSignInLink,
+        signInWithGoogle,
         completeEmailLinkSignIn,
         error,
         linkSentPending,
         emailLinkNeedsEmail,
         clearAuthError,
         loading,
+        user,
+        needsProfile,
+        profileReady,
+        saveMemberName,
     } = useAuth();
     const { theme } = useTheme();
     const prefersReducedMotion = usePrefersReducedMotion();
@@ -49,6 +54,11 @@ const Login = () => {
     const [localError, setLocalError] = useState<string | null>(null);
     const [sentAt, setSentAt] = useState<number | null>(() => readSignInLinkSentAt());
     const [now, setNow] = useState(() => Date.now());
+    const [googleBusy, setGoogleBusy] = useState(false);
+    const [showAlternative, setShowAlternative] = useState(false);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [savingName, setSavingName] = useState(false);
 
     const logoSrc = logoSrcForTheme(theme);
     const displayError = localError || error;
@@ -84,6 +94,10 @@ const Login = () => {
         setSentAt(next);
     }, [linkSentPending]);
 
+    useEffect(() => {
+        if (emailLinkNeedsEmail || linkSentPending || sentAt) setShowAlternative(true);
+    }, [emailLinkNeedsEmail, linkSentPending, sentAt]);
+
     const resendWaitMs = sentAt ? Math.max(0, sentAt + RESEND_WAIT_MS - now) : 0;
     const resendLocked = resendWaitMs > 0;
 
@@ -112,6 +126,31 @@ const Login = () => {
         }
     };
 
+    const handleGoogleSignIn = async () => {
+        clearAuthError();
+        setLocalError(null);
+        setGoogleBusy(true);
+        try {
+            await signInWithGoogle();
+        } finally {
+            setGoogleBusy(false);
+        }
+    };
+
+    const handleSaveName = async (event: React.FormEvent) => {
+        event.preventDefault();
+        clearAuthError();
+        setLocalError(null);
+        setSavingName(true);
+        try {
+            await saveMemberName(firstName, lastName);
+        } catch (err) {
+            setLocalError(err instanceof Error ? err.message : 'Enter a first and last name.');
+        } finally {
+            setSavingName(false);
+        }
+    };
+
     const handleCompleteLink = async (event: React.FormEvent) => {
         event.preventDefault();
         clearAuthError();
@@ -124,8 +163,9 @@ const Login = () => {
         }
     };
 
-    const busy = sending || completing || loading;
+    const busy = sending || completing || googleBusy || savingName || loading;
     const showSentNotice = Boolean(sentAt || linkSentPending) && !emailLinkNeedsEmail;
+    const waitingForProfile = Boolean(user && !profileReady);
 
     return (
         <main className="grain flex min-h-[100dvh] items-start justify-center bg-gradient-to-br from-emerald-50/70 via-[#F3F0E8] to-orange-50/40 px-4 pb-4 pt-20 text-center transition-colors duration-300 dark:from-court-900 dark:via-court-950 dark:to-court-950 sm:px-6 sm:pb-6 sm:pt-24">
@@ -156,10 +196,19 @@ const Login = () => {
                         </p>
 
                         <h1 className="font-display text-2xl tracking-tight text-wimbledon-navy dark:text-chalk sm:text-3xl">
-                            {emailLinkNeedsEmail ? 'Confirm your email' : 'Sign in with Duke email'}
+                            {needsProfile
+                                ? 'Your name'
+                                : emailLinkNeedsEmail
+                                  ? 'Confirm your email'
+                                  : 'Sign in'}
                         </h1>
                         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500 dark:text-chalk/55">
-                            {emailLinkNeedsEmail ? (
+                            {needsProfile ? (
+                                <>
+                                    Add your first and last name once. Court bookings show it as{' '}
+                                    <span className="font-medium text-gray-700 dark:text-chalk/75">First L.</span>
+                                </>
+                            ) : emailLinkNeedsEmail ? (
                                 <>
                                     Opened a sign-in link on a new device? Enter the same{' '}
                                     <span className="font-medium text-gray-700 dark:text-chalk/75">
@@ -169,21 +218,61 @@ const Login = () => {
                                 </>
                             ) : (
                                 <>
-                                    No password. We&apos;ll email a one-time link to your{' '}
-                                    <span className="font-medium text-gray-700 dark:text-chalk/75">
-                                        firstname.lastname@duke.edu
-                                    </span>{' '}
-                                    inbox. You stay signed in on this browser until you sign out.
+                                    Use whichever Google account you want. You stay signed in on this browser until you sign out.
                                 </>
                             )}
                         </p>
-                        {!emailLinkNeedsEmail && (
-                            <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
-                                The link can take up to 5 minutes and often lands in Junk/Spam. One request is enough.
-                            </p>
+
+                        {!needsProfile && !emailLinkNeedsEmail && !waitingForProfile && (
+                            <div className="mt-5">
+                                <button
+                                    type="button"
+                                    onClick={() => void handleGoogleSignIn()}
+                                    disabled={busy}
+                                    data-cursor
+                                    className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 text-center font-semibold leading-snug text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
+                                >
+                                    {googleBusy ? 'Opening Google…' : 'Sign in with Google'}
+                                </button>
+                            </div>
                         )}
 
-                        {showSentNotice && (
+                        {waitingForProfile && (
+                            <p className="mt-5 text-sm text-gray-500 dark:text-chalk/55">Signing in…</p>
+                        )}
+
+                        {needsProfile && (
+                            <form onSubmit={(event) => void handleSaveName(event)} className="mt-5 space-y-3 text-left">
+                                <input
+                                    type="text"
+                                    required
+                                    value={firstName}
+                                    onChange={(event) => setFirstName(event.target.value)}
+                                    placeholder="First name"
+                                    autoComplete="given-name"
+                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                />
+                                <input
+                                    type="text"
+                                    required
+                                    value={lastName}
+                                    onChange={(event) => setLastName(event.target.value)}
+                                    placeholder="Last name"
+                                    autoComplete="family-name"
+                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 transition-all focus:border-transparent focus:outline-none focus:ring-2 focus:ring-court-accent dark:border-chalk/10 dark:bg-court-950/60 dark:text-chalk dark:placeholder-chalk/40"
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={busy}
+                                    data-cursor
+                                    className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
+                                >
+                                    {savingName ? 'Saving…' : 'Continue'}
+                                </button>
+                            </form>
+                        )}
+
+                        {showSentNotice && showAlternative && (
                             <div
                                 aria-live="polite"
                                 className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-left dark:border-emerald-900/40 dark:bg-emerald-950/20"
@@ -223,6 +312,30 @@ const Login = () => {
                             </div>
                         )}
 
+                        {!needsProfile && !waitingForProfile && (
+                            <div className="mt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAlternative((open) => !open)}
+                                    className="text-xs font-medium text-gray-400 underline-offset-2 hover:text-gray-600 hover:underline dark:text-chalk/40 dark:hover:text-chalk/70"
+                                >
+                                    Alternative methods
+                                </button>
+                            </div>
+                        )}
+
+                        {!needsProfile && showAlternative && (
+                            <>
+                                {!emailLinkNeedsEmail && (
+                                    <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed text-gray-500 dark:text-chalk/55">
+                                        No Google account? We can email a one-time link to{' '}
+                                        <span className="font-medium text-gray-700 dark:text-chalk/75">
+                                            firstname.lastname@duke.edu
+                                        </span>
+                                        . It can take up to 5 minutes and often lands in Junk/Spam. One request is enough.
+                                    </p>
+                                )}
+
                         <motion.form
                             layout={!prefersReducedMotion}
                             transition={layoutTransition}
@@ -242,7 +355,11 @@ const Login = () => {
                                 type="submit"
                                 disabled={busy || (!emailLinkNeedsEmail && resendLocked)}
                                 data-cursor
-                                className="clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50"
+                                className={
+                                    emailLinkNeedsEmail
+                                        ? 'clay-gradient flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl px-4 py-3 font-semibold text-white shadow-lg transition-transform duration-200 hover:scale-[1.01] disabled:opacity-50'
+                                        : 'flex min-h-11 w-full touch-manipulation items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 font-semibold text-gray-800 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-chalk/15 dark:bg-court-950/60 dark:text-chalk dark:hover:bg-court-900'
+                                }
                             >
                                 <Mail className="mr-2 h-5 w-5" />
                                 {emailLinkNeedsEmail
@@ -258,6 +375,8 @@ const Login = () => {
                                           : 'Email me a sign-in link'}
                             </button>
                         </motion.form>
+                            </>
+                        )}
 
                         <div className="mt-4 border-t border-gray-100 pt-4 text-xs text-gray-400 dark:border-gray-800">
                             Trouble signing in?{' '}

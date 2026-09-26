@@ -16,7 +16,7 @@ const STEPS = [
     {
         Icon: LogIn,
         title: 'Sign in',
-        body: 'One-time email link to your firstname.lastname@duke.edu inbox. No password.',
+        body: 'Sign in with Google. The first time, add your first and last name. No Google account? Use Alternative methods for a Duke email link.',
     },
     {
         Icon: LayoutGrid,
