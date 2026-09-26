@@ -223,6 +223,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const migrationAttemptedRef = useRef<string | null>(null);
     const completingEmailLinkRef = useRef(false);
     const signingInWithGoogleRef = useRef(false);
+    const acceptedUidRef = useRef<string | null>(null);
 
     useEffect(() => {
         setViewAsMemberState(readViewAsMember());
@@ -352,6 +353,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             if (currentUser) {
+                // updateProfile (saving a name) fires this again. Re-running acceptance
+                // cleared the saved name and bounced the member back to the name form.
+                if (acceptedUidRef.current === currentUser.uid) {
+                    setUser(currentUser);
+                    setLoading(false);
+                    return;
+                }
+
                 try {
                     await currentUser.getIdToken(true);
                     await currentUser.reload();
@@ -360,7 +369,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 }
 
                 await acceptAuthenticatedUser(currentUser);
+                acceptedUidRef.current = currentUser.uid;
             } else {
+                acceptedUidRef.current = null;
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
                 setProfileReady(true);
@@ -383,7 +394,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             async (snapshot) => {
                 const data = snapshot.exists() ? snapshot.data() : null;
                 if (isGoogleAccount(user)) {
-                    setHasSavedName(savedMemberName(data));
+                    const saved = savedMemberName(data);
+                    // A restarted listener can emit a stale cache snapshot after the write.
+                    // Once this session has seen a saved name, don't send them back to the form.
+                    setHasSavedName((current) => current || saved);
                     setProfileReady(true);
                 }
 
