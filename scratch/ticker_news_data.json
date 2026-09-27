@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Team Europe leads Team World 3-1 after Friday's Laver Cup openers at London's O2 as Ruud, Jódar and Alcaraz/Menšík won, Talia Gibson reached the Singapore Open final by walkover after Tatiana Prozorova withdrew under concussion protocol • [SQUASH] Anahat Singh beat Tanvi Khanna 11-2, 11-5, 11-3 in 19 minutes on Sept. 26 to reach the Asian Games women's semifinals, while Pakistan's Noor Zaman and Mohammad Ashab Irfan both advanced to the men's last four in Nagoya • [BADMINTON] Loh Kean Yew beat Lakshya Sen 21-12, 15-21, 21-14 on Sept. 26 to reach the Asian Games men's singles round of 16, and world No. 1 An Se-young opened with a 21-5, 21-5 win in 20 minutes • [PICKLEBALL] The Carvana PPA Tour's Rate Las Vegas Open runs Sept. 28-Oct. 4 with Sharp's \"In the Kitchen\" fan activation Oct. 1, after Haworth and Waters won at the Veolia Arizona Open • [TABLE TENNIS] Manush Shah and Diya Chitale assured India mixed doubles bronze at the Asian Games, while Yashaswini Ghorpade fell 1-4 to Japan's Miwa Harimoto in the women's singles third round on Sept. 26",
+  "tickerText": "[TENNIS] Team Europe leads Team World 7-5 after Laver Cup Day 2 at London's O2 as Carlos Alcaraz saved two match points to beat Taylor Fritz 6-3, 4-6, 13-11, while Alex de Minaur stunned Alexander Zverev 2-6, 7-6(5), 11-9 and Learner Tien beat Flavio Cobolli — Sunday's matches are worth three points each in the race to 13 • [SQUASH] India's Anahat Singh and Abhay Singh play for Asian Games gold on Sept. 27 in Nagoya against Malaysia's Sivasangari Subramaniam and Ng Eain Yow, with singles titles also carrying LA28 Olympic qualification • [BADMINTON] Five Indonesian quarterfinalists headline Sept. 27 action in Ichinomiya as Pearly Tan and Thinaah Muralitharan beat Treesa Jolly and Gayatri Gopichand 21-18, 21-9 to reach the women's doubles semis and clinch Malaysia's first women's doubles medal since 2014 • [PICKLEBALL] The Carvana PPA Tour's 1,000-point Rate Las Vegas Open opens Sept. 28 at the Darling Tennis Center with Anna Leigh Waters two titles shy of 200 after Mesa and pro TV coverage from Oct. 1 • [TABLE TENNIS] Men's doubles semifinals and women's singles semifinals run Sept. 27 at Sky Hall Toyota while India's campaign closed with one mixed doubles bronze after Manush Shah and Yashaswini Ghorpade exited in singles pre-quarters",
   "newsItems": [
     {
-      "title": "Gibson Into Singapore Final",
-      "excerpt": "Talia Gibson advanced to her first WTA singles final at the Singapore Open on Sept. 26 by walkover after Tatiana Prozorova withdrew following a concussion protocol dispute after being hit by a smash in doubles.",
-      "date": "September 26, 2026",
+      "title": "Europe Leads at Laver Cup",
+      "excerpt": "Carlos Alcaraz edged Taylor Fritz 6-3, 4-6, 13-11 after saving two match points on Sept. 26, and Team Europe finished Laver Cup Day 2 with a 7-5 lead over Team World heading into Sunday's triple-point matches in London.",
+      "date": "September 27, 2026",
       "category": "Tennis",
-      "link": "https://www.abc.net.au/news/2026-09-26/talia-gibson-tatiana-prozorova-singapore-open-final/107198928"
+      "link": "https://www.skysports.com/tennis/news/13592278/laver-cup-carlos-alcaraz-beats-taylor-fritz-in-thrilling-final-set-tiebreak-as-team-europe-edge-in-front-of-team-world"
     },
     {
-      "title": "Loh Beats Sen at Asiad",
-      "excerpt": "Former world champion Loh Kean Yew beat India's Lakshya Sen 21-12, 15-21, 21-14 on Sept. 26 in Nagoya to reach the Asian Games men's singles round of 16 as he chases Singapore's first badminton medal since 2006.",
-      "date": "September 26, 2026",
-      "category": "Badminton",
-      "link": "https://www.straitstimes.com/sport/loh-kean-yew-notches-opening-match-win-at-asian-games-against-indias-lakshya-sen"
+      "title": "India's Squash Gold Day",
+      "excerpt": "Anahat Singh and Abhay Singh both reached Asian Games singles finals on Sept. 27 in Nagoya, each one win from India's first individual squash gold and a direct LA28 Olympic berth as squash debuts in Los Angeles.",
+      "date": "September 27, 2026",
+      "category": "Squash",
+      "link": "https://thenewsmill.com/2026/09/anahat-and-abhay-contend-for-historic-asian-games-squash-gold-and-la-2028-spot/"
     },
     {
-      "title": "India's Mixed Doubles Bronze",
-      "excerpt": "Manush Shah and Diya Chitale upset Hong Kong's Wong Chun Ting and Doo Hoi Kem to reach the Asian Games mixed doubles semifinals, delivering only India's fourth table tennis medal in Asian Games history.",
-      "date": "September 26, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.hindustantimes.com/sports/others/two-indian-paddlers-one-rare-tt-medal-a-half-miracle-101790361079787.html"
-    },
-    {
-      "title": "PPA Heads to Vegas",
-      "excerpt": "The Carvana PPA Tour's 1,000-point Rate Las Vegas Open opens Sept. 28 with Sharp debuting its \"In the Kitchen\" fan zone Oct. 1, following Championship Sunday wins for Christopher Haworth and Anna Leigh Waters in Arizona.",
-      "date": "September 26, 2026",
+      "title": "Waters Eyes 200 in Vegas",
+      "excerpt": "Anna Leigh Waters arrives at the Rate Las Vegas Open on 198 career PPA Tour titles after winning singles and mixed doubles in Mesa, with the 1,000-point event running Sept. 28–Oct. 4 at the Darling Tennis Center.",
+      "date": "September 27, 2026",
       "category": "Pickleball",
-      "link": "https://www.twice.com/product/appliances/kitchen/sharp-brings-kitchen-activation-to-ppa-tour"
+      "link": "https://worldpickleballmagazine.com/las-vegas-open-2026-draws-waters-200-titles/"
+    },
+    {
+      "title": "India's TT Ends at Asiad",
+      "excerpt": "Manush Shah and Yashaswini Ghorpade lost in singles pre-quarterfinals on Sept. 26, leaving India with one Asian Games table tennis medal — bronze for Shah and Diya Chitale in mixed doubles — as semifinals continue Sept. 27.",
+      "date": "September 27, 2026",
+      "category": "Table Tennis",
+      "link": "https://timesofindia.indiatimes.com/sports/more-sports/others/one-bronze-and-plenty-of-questions-indias-troubled-table-tennis-campaign-ends-in-disappointment/articleshow/134513595.cms"
     }
   ]
 }
