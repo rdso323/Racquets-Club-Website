@@ -90,7 +90,7 @@ const Footer = () => {
 
                 <div className="mt-14 flex flex-col gap-2 border-t border-gray-200 pt-6 text-gray-400 dark:border-chalk/10 dark:text-chalk/40 md:flex-row md:items-center md:justify-between">
                     <span className="text-xs">
-                        © {new Date().getFullYear()} Fuqua Racquets Club. All rights reserved.
+                        © {new Date().getFullYear()} Fuqua Racquets Club. All rights reserved. · Site by Rohan D’Souza
                     </span>
                     <span className="text-xs">Fuqua School of Business · Duke University · Durham, NC</span>
                 </div>
