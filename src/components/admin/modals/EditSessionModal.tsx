@@ -1,5 +1,6 @@
 import {
     SPORTS,
+    type DayName,
     getSlotsPerCourtForSport,
     DEFAULT_WAITLIST_PER_COURT,
     ADMIN_MAX_ATTENDEES,
@@ -9,6 +10,7 @@ import {
 } from '../../../lib/sports';
 import { buildDateFieldsFromIso, resolveSessionDateISO } from '../../../lib/dates';
 import DatePickerField from '../fields/DatePickerField';
+import BookingLockFields from '../fields/BookingLockFields';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
 import AdminModalShell from '../AdminModalShell';
@@ -34,6 +36,9 @@ export interface EditCourtFields {
 export interface RecurringScheduleMeta {
     endsOn: string;
     skipDates: string[];
+    bookingLockEnabled: boolean;
+    bookingLockDay: DayName;
+    bookingLockTime: string;
     autoEnrollCreator: boolean;
 }
 
@@ -53,7 +58,14 @@ const EditSessionModal = ({
     session,
     editCourtFields,
     recurringConfig = null,
-    scheduleMeta = { endsOn: '', skipDates: [], autoEnrollCreator: false },
+    scheduleMeta = {
+        endsOn: '',
+        skipDates: [],
+        bookingLockEnabled: true,
+        bookingLockDay: 'sunday',
+        bookingLockTime: '17:00',
+        autoEnrollCreator: false,
+    },
     onScheduleMetaChange,
     onSessionChange,
     onEditCourtFieldsChange,
@@ -185,6 +197,14 @@ const EditSessionModal = ({
                             </span>
                         </span>
                     </label>
+                    <BookingLockFields
+                        value={{
+                            bookingLockEnabled: scheduleMeta.bookingLockEnabled,
+                            bookingLockDay: scheduleMeta.bookingLockDay,
+                            bookingLockTime: scheduleMeta.bookingLockTime,
+                        }}
+                        onChange={(lock) => onScheduleMetaChange?.({ ...scheduleMeta, ...lock })}
+                    />
                     <TimeRangePicker
                         startTime={session.startTime}
                         endTime={session.endTime}

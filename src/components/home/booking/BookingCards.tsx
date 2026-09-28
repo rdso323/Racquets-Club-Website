@@ -12,6 +12,7 @@ import { formatCourtDisplayName } from '../../../lib/memberNames';
 import {
     type Session,
     getBaseWeekStart,
+    bookingLockMessage,
     isWeekLocked,
     getWeekDateRangeDisplay,
     parseSessionDateString,
@@ -30,7 +31,6 @@ import {
     isSessionEnrollmentFull,
     getAttendeesNotOnConfiguredCourts,
     parseAttendee,
-    NEXT_WEEK_BOOKING_LOCK_MESSAGE,
 } from '../../../lib/sessions';
 
 export interface BookingAdminActions {
@@ -70,13 +70,13 @@ const MembersOnlyOverlay = () => {
     );
 };
 
-const SessionLockOverlay = () => (
+const SessionLockOverlay = ({ message }: { message: string }) => (
     <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center rounded-b-2xl bg-amber-50/55 dark:bg-court-950/50">
         <div className="flex max-w-[85%] flex-col items-center rounded-xl border border-amber-300/80 bg-white px-5 py-4 text-center shadow-lg dark:border-amber-800/80 dark:bg-carbon">
             <Lock className="mb-2 h-7 w-7 text-amber-600 dark:text-amber-400" />
             <p className="text-sm font-bold text-amber-900 dark:text-amber-100">Booking not open yet</p>
             <p className="mt-1.5 text-xs font-medium leading-relaxed text-amber-800/90 dark:text-amber-300/90">
-                {NEXT_WEEK_BOOKING_LOCK_MESSAGE}
+                {message}
             </p>
         </div>
     </div>
@@ -223,9 +223,13 @@ export const BookingRegularCard = memo(function BookingRegularCard({
     const userOnWaitlist = user ? !!findUserWaitlistEntry(session.waitlist, user.uid) : false;
     const isJoining = !!userEntry;
     const baseStartOfWeek = getBaseWeekStart(activeSport);
+    const lockRule = recurringWeek
+        ? getRecurringConfigForSession(session, recurringSchedules, disabledBuiltinSchedules)
+        : null;
     const isLocked = recurringWeek
-        ? isWeekLocked(baseStartOfWeek, recurringWeek.isNextWeek)
+        ? isWeekLocked(baseStartOfWeek, recurringWeek.isNextWeek, lockRule)
         : false;
+    const lockMessage = bookingLockMessage(lockRule);
     const sessionDisabled = isPast || isCancelled || isLocked || !user;
     const isRecurringClinic = isRecurringCoachingSession(session);
     const recurringClinicConfig = isRecurringClinic
@@ -446,7 +450,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                             </button>
                         )}
                     </div>
-                    {isLocked && !isCancelled && user && <SessionLockOverlay />}
+                    {isLocked && !isCancelled && user && <SessionLockOverlay message={lockMessage} />}
                 </div>
             </div>
         </div>
@@ -485,7 +489,8 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
     const isCancelled = session.cancelledThisWeek === true;
 
     const baseStartOfWeek = getBaseWeekStart(activeSport);
-    const isLocked = isWeekLocked(baseStartOfWeek, isNextWeek);
+    const isLocked = isWeekLocked(baseStartOfWeek, isNextWeek, config);
+    const lockMessage = bookingLockMessage(config);
     const dateRangeDisplay = getWeekDateRangeDisplay(baseStartOfWeek, isNextWeek);
 
     const courtsForDay = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
@@ -706,7 +711,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                             onLeaveWaitlist={() => handlers.onLeaveWaitlist(session)}
                         />
                     </div>
-                    {isLocked && !isCancelled && user && <SessionLockOverlay />}
+                    {isLocked && !isCancelled && user && <SessionLockOverlay message={lockMessage} />}
                 </div>
             </div>
         </div>

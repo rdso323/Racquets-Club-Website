@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
+import { storedBookingLockFields } from './bookingLock';
 import {
     CLINIC_SCHEDULE,
     OPEN_PLAY_SCHEDULE,
@@ -50,6 +51,9 @@ export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayD
     isCustom: true,
     endsOn: schedule.endsOn,
     skipDates: schedule.skipDates,
+    bookingLockEnabled: schedule.bookingLockEnabled,
+    bookingLockDay: schedule.bookingLockDay,
+    bookingLockTime: schedule.bookingLockTime,
     autoEnrollCreator: schedule.autoEnrollCreator,
     creatorUid: schedule.creatorUid,
     creatorName: schedule.creatorName,
@@ -66,6 +70,11 @@ export const sanitizeRecurringSchedule = (schedule: AdminRecurringSchedule): Adm
     const skipDates = (next.skipDates ?? []).filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date));
     if (skipDates.length > 0) next.skipDates = [...new Set(skipDates)].sort();
     else delete next.skipDates;
+    const lock = storedBookingLockFields(next);
+    delete next.bookingLockEnabled;
+    delete next.bookingLockDay;
+    delete next.bookingLockTime;
+    Object.assign(next, lock);
     if (!next.creatorUid) {
         delete next.creatorUid;
         delete next.creatorName;

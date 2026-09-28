@@ -29,6 +29,7 @@ import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
 import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
 import { downloadWeeklySeriesCalendar } from '../../../lib/calendar';
 import DatePickerField from '../fields/DatePickerField';
+import BookingLockFields from '../fields/BookingLockFields';
 import SkipWeekToggles from '../fields/SkipWeekToggles';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
@@ -66,6 +67,9 @@ const defaultDraft = (sport: string) => ({
     recurringDay: 'tuesday' as DayName,
     endsOn: '',
     skipDates: [] as string[],
+    bookingLockEnabled: true,
+    bookingLockDay: 'sunday' as DayName,
+    bookingLockTime: '17:00',
     autoEnrollCreator: true,
 });
 
@@ -158,6 +162,9 @@ const ScheduleSessionForm = ({
                     maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
                     ...(seriesEndsOn ? { endsOn: seriesEndsOn } : {}),
                     ...(seriesSkipDates.length > 0 ? { skipDates: seriesSkipDates } : {}),
+                    bookingLockEnabled: newSession.bookingLockEnabled,
+                    bookingLockDay: newSession.bookingLockDay,
+                    bookingLockTime: newSession.bookingLockTime,
                     autoEnrollCreator: enrollSelf,
                     ...(enrollSelf && user
                         ? {
@@ -488,6 +495,17 @@ const ScheduleSessionForm = ({
                             </span>
                         </label>
                     </div>
+                )}
+
+                {scheduleMode === 'recurring' && (
+                    <BookingLockFields
+                        value={{
+                            bookingLockEnabled: newSession.bookingLockEnabled,
+                            bookingLockDay: newSession.bookingLockDay,
+                            bookingLockTime: newSession.bookingLockTime,
+                        }}
+                        onChange={(lock) => setNewSession((prev) => ({ ...prev, ...lock }))}
+                    />
                 )}
 
                 {scheduleMode === 'recurring' && (

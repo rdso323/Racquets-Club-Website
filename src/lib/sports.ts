@@ -84,6 +84,12 @@ export interface OpenPlayDayConfig {
     endsOn?: string;
     /** Play dates (YYYY-MM-DD) that should not appear, chosen in advance. */
     skipDates?: string[];
+    /** False means the later week can be booked as soon as its card is visible. Omitted means locked. */
+    bookingLockEnabled?: boolean;
+    /** Weekday the later week opens. Omitted means Sunday. */
+    bookingLockDay?: DayName;
+    /** 24-hour HH:mm in Eastern time. Omitted means 17:00. */
+    bookingLockTime?: string;
     /** When true, creator is placed on each new week's roster. */
     autoEnrollCreator?: boolean;
     creatorUid?: string;
@@ -111,6 +117,12 @@ export interface AdminRecurringSchedule {
     endsOn?: string;
     /** Play dates (YYYY-MM-DD) that should not appear, chosen in advance. */
     skipDates?: string[];
+    /** False means the later week can be booked as soon as its card is visible. Omitted means locked. */
+    bookingLockEnabled?: boolean;
+    /** Weekday the later week opens. Omitted means Sunday. */
+    bookingLockDay?: DayName;
+    /** 24-hour HH:mm in Eastern time. Omitted means 17:00. */
+    bookingLockTime?: string;
     /** When true, creator is placed on each new week's roster. */
     autoEnrollCreator?: boolean;
     creatorUid?: string;
