@@ -18,6 +18,7 @@ import {
     getCourtsForSession,
     getMaxWaitlistSize,
     getRecurringConfigForSession,
+    keepVisibleSkipDates,
     getSessionEnrollmentCap,
     getSlotsPerCourt,
     inferSport,
@@ -79,6 +80,7 @@ export function useSessionAdminOps({
     const [editingSession, setEditingSession] = useState<Session | null>(null);
     const [editingScheduleMeta, setEditingScheduleMeta] = useState<RecurringScheduleMeta>({
         endsOn: '',
+        skipDates: [],
         autoEnrollCreator: false,
     });
     const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({
@@ -115,6 +117,7 @@ export function useSessionAdminOps({
         setEditCourtFields(courtFieldsFromSession(courts.length ? courts : latest.courts));
         setEditingScheduleMeta({
             endsOn: config?.endsOn ?? '',
+            skipDates: config?.skipDates ?? [],
             autoEnrollCreator: Boolean(config?.autoEnrollCreator),
         });
     };
@@ -168,6 +171,11 @@ export function useSessionAdminOps({
                 maxAttendees: clampAdminMaxAttendees(Number(updateData.maxAttendees ?? sessionToSave.maxAttendees)),
                 maxWaitlistSize: clampAdminMaxWaitlist(Number(updateData.maxWaitlistSize ?? sessionToSave.maxWaitlistSize ?? 0)),
                 endsOn: editingScheduleMeta.endsOn,
+                skipDates: keepVisibleSkipDates(
+                    config.day,
+                    editingScheduleMeta.endsOn || undefined,
+                    editingScheduleMeta.skipDates,
+                ),
                 ...creatorFields,
                 ...(sessionToSave.type === 'coaching'
                     ? { coach: sessionToSave.coach || 'TBD' }

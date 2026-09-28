@@ -9,6 +9,7 @@ import {
     getBaseWeekStart,
     getOpenPlayInstancesWithinHorizon,
     inferSport,
+    isSkippedPlayDate,
     isOpenPlaySession,
     isOpenPlaySessionEnded,
     isRecurringCoachingSession,
@@ -119,8 +120,9 @@ export function useSessionMaintenanceResets({
                     recurringSchedules,
                     disabledBuiltinSchedules,
                 );
-                instances.forEach(({ session, config }) => {
+                instances.forEach(({ session, config, playDate }) => {
                     if (!config.autoEnrollCreator || !config.creatorUid) return;
+                    if (isSkippedPlayDate(playDate, config.skipDates)) return;
                     if (session.cancelledThisWeek || session.autoEnrollSeeded) return;
                     if (session.skippedAutoEnrollUids?.includes(config.creatorUid)) return;
                     const seedKey = `${session.id}:${config.creatorUid}`;

@@ -11,7 +11,8 @@ import {
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { builtinAdminEmails, resolveAdminEmails, ADMINS_SETTINGS_COLLECTION, ADMINS_SETTINGS_DOC_ID } from '../lib/adminAllowlist';
 import { SPORTS } from '../lib/sports';
 import {
     isAllowedDukeEmail,
@@ -19,6 +20,10 @@ import {
     DUKE_EMAIL_FORMAT_MESSAGE,
     DUKE_SIGNIN_EMAIL_MESSAGE,
     normalizePersonName,
+    memberNameFromParts,
+    memberNameFromUserDoc,
+    formatStoredDisplayName,
+    type MemberName,
 } from '../lib/memberNames';
 
 export interface TabPreference {
@@ -146,6 +151,8 @@ interface AuthContextType {
     profileReady: boolean;
     /** Google accounts must save a first and last name before using the site. */
     needsProfile: boolean;
+    /** Saved first and last name, when this browser or Firestore already has one. */
+    memberName: MemberName | null;
     saveMemberName: (firstName: string, lastName: string) => Promise<void>;
     clearAuthMessage: () => void;
     clearAuthError: () => void;
@@ -154,6 +161,8 @@ interface AuthContextType {
     isAdmin: boolean;
     /** True if the signed-in email is on the admin allowlist (ignores view toggle). */
     isAllowlistedAdmin: boolean;
+    /** Live admin allowlist. Falls back to the built-in list when none is saved. */
+    adminEmails: string[];
     /** When true, allowlisted admins see the site as a regular member. */
     viewAsMember: boolean;
     setViewAsMember: (asMember: boolean) => void;
@@ -163,44 +172,30 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const CLUB_ADMIN_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
-
-const DEFAULT_ADMIN_EMAILS = [
-    'altamash.memon@duke.edu',
-    'armin.thomas@duke.edu',
-    'hirsh.sinaihede@duke.edu',
-    'joe.chantajunlasin@duke.edu',
-    'kathryne.piazza@duke.edu',
-    'laura.wang@duke.edu',
-    'maddie.latimore@duke.edu',
-    'naitik.reshamwala@duke.edu',
-    'rohan.dsouza@duke.edu',
-    'rohand97@gmail.com',
-    CLUB_ADMIN_EMAIL,
-];
-
-const getAdminEmails = (): string[] => {
-    const fromEnv = import.meta.env.VITE_ADMIN_EMAILS as string | undefined;
-    const extras = fromEnv
-        ? fromEnv.split(',').map((email) => email.trim().toLowerCase()).filter(Boolean)
-        : [];
-    return [...new Set([...DEFAULT_ADMIN_EMAILS.map((email) => email.toLowerCase()), ...extras])];
-};
-
-const ADMIN_EMAILS = getAdminEmails();
-
-const isAdminEmail = (email: string | null | undefined) =>
-    !!email && ADMIN_EMAILS.includes(email.toLowerCase());
-
 const ADMIN_VIEW_AS_MEMBER_KEY = 'admin_view_as_member';
 
 const isGoogleAccount = (currentUser: User | null | undefined): boolean =>
     !!currentUser?.providerData.some((provider) => provider.providerId === 'google.com');
 
-const savedMemberName = (data: Record<string, unknown> | null | undefined): boolean => {
-    const first = typeof data?.firstName === 'string' ? data.firstName.trim() : '';
-    const last = typeof data?.lastName === 'string' ? data.lastName.trim() : '';
-    return Boolean(first && last);
+const memberNameCacheKey = (uid: string) => `member_name_${uid}`;
+
+const readCachedMemberName = (uid: string): MemberName | null => {
+    try {
+        const raw = localStorage.getItem(memberNameCacheKey(uid));
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as { firstName?: unknown; lastName?: unknown };
+        return memberNameFromParts(parsed.firstName, parsed.lastName);
+    } catch {
+        return null;
+    }
+};
+
+const writeCachedMemberName = (uid: string, name: MemberName) => {
+    try {
+        localStorage.setItem(memberNameCacheKey(uid), JSON.stringify(name));
+    } catch (err) {
+        console.error('Error caching member name:', err);
+    }
 };
 
 const readViewAsMember = (): boolean => {
@@ -219,12 +214,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [emailLinkNeedsEmail, setEmailLinkNeedsEmail] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const [viewAsMember, setViewAsMemberState] = useState(false);
+    const [adminEmails, setAdminEmails] = useState<string[]>(() => builtinAdminEmails());
     const [profileReady, setProfileReady] = useState(true);
-    const [hasSavedName, setHasSavedName] = useState(false);
+    const [memberName, setMemberName] = useState<MemberName | null>(null);
     const migrationAttemptedRef = useRef<string | null>(null);
     const completingEmailLinkRef = useRef(false);
     const signingInWithGoogleRef = useRef(false);
     const acceptedUidRef = useRef<string | null>(null);
+    const nameBackfillUidRef = useRef<string | null>(null);
+    const displaySyncRef = useRef<string | null>(null);
 
     useEffect(() => {
         setViewAsMemberState(readViewAsMember());
@@ -266,12 +264,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
+        // Mark this uid before any profile write. updateProfile re-fires auth state,
+        // and running acceptance again cleared the saved name.
+        acceptedUidRef.current = currentUser.uid;
+
         if (googleAccount) {
-            setProfileReady(false);
-            setHasSavedName(false);
+            const cached = readCachedMemberName(currentUser.uid);
+            setMemberName(cached);
+            // A cached name means we already asked. Otherwise wait for Firestore
+            // instead of treating an empty local cache snapshot as "no name".
+            setProfileReady(Boolean(cached));
         } else {
             setProfileReady(true);
-            setHasSavedName(true);
+            setMemberName(null);
         }
 
         setUser(currentUser);
@@ -376,14 +381,57 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
                 setProfileReady(true);
-                setHasSavedName(false);
+                setMemberName(null);
                 migrationAttemptedRef.current = null;
+                nameBackfillUidRef.current = null;
+                displaySyncRef.current = null;
             }
             setLoading(false);
         });
 
         return unsubscribe;
     }, []);
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(
+            doc(db, ADMINS_SETTINGS_COLLECTION, ADMINS_SETTINGS_DOC_ID),
+            (snapshot) => {
+                setAdminEmails(resolveAdminEmails(snapshot.exists() ? snapshot.data() : null));
+            },
+            (err) => {
+                console.error('Error listening to admin list:', err);
+                setAdminEmails(builtinAdminEmails());
+            },
+        );
+        return unsubscribe;
+    }, []);
+
+    useEffect(() => {
+        if (!user) return;
+        let cancelled = false;
+
+        const syncAdminFlag = async () => {
+            const userRef = doc(db, 'users', user.uid);
+            const allowed = !!user.email && adminEmails.includes(user.email.toLowerCase());
+            try {
+                const snap = await getDoc(userRef);
+                if (cancelled) return;
+                const current = snap.exists() && snap.data()?.isAdmin === true;
+                if (allowed && !current) {
+                    await setDoc(userRef, { isAdmin: true }, { merge: true });
+                } else if (!allowed && current) {
+                    await setDoc(userRef, { isAdmin: false }, { merge: true });
+                }
+            } catch (err) {
+                console.error('Error syncing admin flag:', err);
+            }
+        };
+
+        void syncAdminFlag();
+        return () => {
+            cancelled = true;
+        };
+    }, [user, adminEmails]);
 
     useEffect(() => {
         if (!user) return;
@@ -395,28 +443,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             async (snapshot) => {
                 const data = snapshot.exists() ? snapshot.data() : null;
                 if (isGoogleAccount(user)) {
-                    const saved = savedMemberName(data);
-                    // A restarted listener can emit a stale cache snapshot after the write.
-                    // Once this session has seen a saved name, don't send them back to the form.
-                    setHasSavedName((current) => current || saved);
-                    setProfileReady(true);
-                }
+                    const fromDoc = memberNameFromUserDoc(data);
+                    const cached = readCachedMemberName(user.uid);
+                    const resolved = fromDoc ?? cached;
 
-                const onAllowlist = isAdminEmail(user.email);
+                    if (fromDoc) writeCachedMemberName(user.uid, fromDoc);
 
-                if (onAllowlist) {
-                    if (data?.isAdmin !== true) {
-                        try {
-                            await setDoc(userRef, { isAdmin: true }, { merge: true });
-                        } catch (err) {
-                            console.error('Error bootstrapping admin flag:', err);
+                    // The first event is often an empty in-memory cache, before the server
+                    // returns the saved name. Asking on that event shows the form every visit.
+                    if (!fromDoc && snapshot.metadata.fromCache && !cached) {
+                        /* wait for the server snapshot */
+                    } else if (resolved) {
+                        setMemberName(resolved);
+                        setProfileReady(true);
+                        const displayName = formatStoredDisplayName(resolved);
+                        const syncKey = `${user.uid}:${displayName}`;
+                        if (user.displayName !== displayName && displaySyncRef.current !== syncKey) {
+                            displaySyncRef.current = syncKey;
+                            void updateProfile(user, { displayName }).catch((err) =>
+                                console.error('Error syncing display name:', err),
+                            );
                         }
-                    }
-                } else if (data?.isAdmin === true) {
-                    try {
-                        await setDoc(userRef, { isAdmin: false }, { merge: true });
-                    } catch (err) {
-                        console.error('Error revoking admin flag:', err);
+                        if (
+                            !fromDoc &&
+                            !snapshot.metadata.fromCache &&
+                            cached &&
+                            nameBackfillUidRef.current !== user.uid
+                        ) {
+                            nameBackfillUidRef.current = user.uid;
+                            void setDoc(
+                                userRef,
+                                {
+                                    email: user.email || '',
+                                    firstName: cached.firstName,
+                                    lastName: cached.lastName,
+                                    displayName,
+                                },
+                                { merge: true },
+                            ).catch((err) => console.error('Error restoring saved name:', err));
+                        }
+                    } else if (!snapshot.metadata.fromCache) {
+                        setProfileReady(true);
                     }
                 }
 
@@ -459,12 +526,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
             (err) => {
                 console.error('Error listening to user settings:', err);
-                if (isGoogleAccount(user)) setProfileReady(true);
+                if (!isGoogleAccount(user)) return;
+                const cached = readCachedMemberName(user.uid);
+                if (cached) {
+                    setMemberName((current) => current ?? cached);
+                    setProfileReady(true);
+                    return;
+                }
+                const code = (err as { code?: string }).code;
+                if (code === 'unavailable' || code === 'deadline-exceeded') return;
+                setProfileReady(true);
             },
         );
 
         return unsubscribe;
     }, [user]);
+
+    useEffect(() => {
+        if (!user || !isGoogleAccount(user) || profileReady) return;
+        const timer = window.setTimeout(() => setProfileReady(true), 8000);
+        return () => window.clearTimeout(timer);
+    }, [user, profileReady]);
 
     const clearAuthMessage = () => {
         setError(null);
@@ -535,7 +617,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (!first || !last) {
             throw new Error('Enter a first and last name.');
         }
-        const displayName = `${first} ${last}`;
+        const saved = { firstName: first, lastName: last };
+        const displayName = formatStoredDisplayName(saved);
+        displaySyncRef.current = `${user.uid}:${displayName}`;
         await updateProfile(user, { displayName });
         await setDoc(
             doc(db, 'users', user.uid),
@@ -547,7 +631,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
             { merge: true },
         );
-        setHasSavedName(true);
+        writeCachedMemberName(user.uid, saved);
+        setMemberName(saved);
         setProfileReady(true);
     };
 
@@ -570,9 +655,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAllowlistedAdmin = user ? isAdminEmail(user.email) : false;
+    const isAllowlistedAdmin = !!user?.email && adminEmails.includes(user.email.toLowerCase());
     const isAdmin = isAllowlistedAdmin && !viewAsMember;
-    const needsProfile = Boolean(user && isGoogleAccount(user) && profileReady && !hasSavedName);
+    const needsProfile = Boolean(user && isGoogleAccount(user) && profileReady && !memberName);
 
     return (
         <AuthContext.Provider
@@ -587,12 +672,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 completeEmailLinkSignIn,
                 profileReady,
                 needsProfile,
+                memberName,
                 saveMemberName,
                 clearAuthMessage,
                 clearAuthError,
                 signOut,
                 isAdmin,
                 isAllowlistedAdmin,
+                adminEmails,
                 viewAsMember,
                 setViewAsMember,
                 tabPreferences,

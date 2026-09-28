@@ -7,7 +7,8 @@ import { LOGO_CLASS, logoSrcForTheme } from '../../lib/branding';
 import { formatMemberFirstName } from '../../lib/memberNames';
 import { headerSurfaceClasses, useHeaderScrolled } from '../../lib/navChrome';
 import { useGoToLogin } from '../../hooks/useGoToLogin';
-import { Menu, Moon, Sun, LogIn, X, ChevronDown, LogOut, Shield, Eye, EyeOff } from 'lucide-react';
+import { Menu, Moon, Sun, LogIn, X, ChevronDown, LogOut, Shield, Eye, EyeOff, Pencil } from 'lucide-react';
+import EditMemberNameForm from './EditMemberNameForm';
 
 const TopBar = () => {
     const { user, signOut, isAllowlistedAdmin, viewAsMember, setViewAsMember } = useAuth();
@@ -17,6 +18,7 @@ const TopBar = () => {
     const navigate = useNavigate();
     const [time, setTime] = useState('');
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [editingName, setEditingName] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
     const goToLogin = useGoToLogin();
 
@@ -40,11 +42,15 @@ const TopBar = () => {
 
         const handlePointerDown = (event: MouseEvent) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setEditingName(false);
                 setUserMenuOpen(false);
             }
         };
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') setUserMenuOpen(false);
+            if (event.key === 'Escape') {
+                setEditingName(false);
+                setUserMenuOpen(false);
+            }
         };
 
         document.addEventListener('mousedown', handlePointerDown);
@@ -129,7 +135,12 @@ const TopBar = () => {
                     <div ref={userMenuRef} className="relative">
                         <button
                             type="button"
-                            onClick={() => setUserMenuOpen((open) => !open)}
+                            onClick={() =>
+                                setUserMenuOpen((open) => {
+                                    if (open) setEditingName(false);
+                                    return !open;
+                                })
+                            }
                             data-cursor
                             aria-expanded={userMenuOpen}
                             aria-haspopup="menu"
@@ -145,10 +156,20 @@ const TopBar = () => {
 
                         {userMenuOpen && (
                             <div
-                                role="menu"
-                                aria-label="Account menu"
-                                className="absolute right-0 top-[calc(100%+0.5rem)] z-[160] min-w-[13rem] overflow-hidden rounded-xl border border-gray-200/90 bg-white py-1 shadow-lg dark:border-chalk/15 dark:bg-court-950"
+                                role={editingName ? 'dialog' : 'menu'}
+                                aria-label={editingName ? 'Edit name' : 'Account menu'}
+                                className={`absolute right-0 top-[calc(100%+0.5rem)] z-[160] overflow-hidden rounded-xl border border-gray-200/90 bg-white py-1 shadow-lg dark:border-chalk/15 dark:bg-court-950 ${editingName ? 'w-72' : 'min-w-[13rem]'}`}
                             >
+                                {editingName ? (
+                                    <EditMemberNameForm
+                                        onCancel={() => setEditingName(false)}
+                                        onSaved={() => {
+                                            setEditingName(false);
+                                            setUserMenuOpen(false);
+                                        }}
+                                    />
+                                ) : (
+                                    <>
                                 {isAllowlistedAdmin && (
                                     <button
                                         type="button"
@@ -178,12 +199,23 @@ const TopBar = () => {
                                 <button
                                     type="button"
                                     role="menuitem"
+                                    onClick={() => setEditingName(true)}
+                                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-wimbledon-navy transition-colors hover:bg-gray-50 dark:text-chalk dark:hover:bg-chalk/5"
+                                >
+                                    <Pencil className="h-4 w-4 shrink-0 text-gray-400 dark:text-chalk/45" />
+                                    Edit name
+                                </button>
+                                <button
+                                    type="button"
+                                    role="menuitem"
                                     onClick={handleSignOut}
                                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
                                 >
                                     <LogOut className="h-4 w-4 shrink-0" />
                                     Sign Out
                                 </button>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>

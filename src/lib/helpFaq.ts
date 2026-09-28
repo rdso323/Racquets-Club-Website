@@ -7,7 +7,7 @@ export interface FaqItem {
 export const MEMBER_HELP_FAQ: FaqItem[] = [
     {
         question: 'Who can sign in and book courts?',
-        answer: 'Sign in with any Google account. The first time, enter your first and last name — court bookings then show as First L. (for example Rohan D.). The schedule is visible to everyone, but you must be signed in to join a session. You stay signed in on that browser until you sign out. If you do not have a Google account, open Alternative methods on the sign-in page and use a one-time link to firstname.lastname@duke.edu.',
+        answer: 'Sign in with any Google account. The first time, enter your first and last name — court bookings then show as First L. (for example Rohan D.). That name is remembered, and you can change it anytime from the account menu next to your name. The schedule is visible to everyone, but you must be signed in to join a session. You stay signed in on that browser until you sign out. If you do not have a Google account, open Alternative methods on the sign-in page and use a one-time link to firstname.lastname@duke.edu.',
     },
     {
         question: 'Is there a direct link just for booking?',
@@ -15,11 +15,11 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'Which account should I use to sign in?',
-        answer: 'Use Sign in with Google and whichever Google account you already have. The first visit asks for your first and last name, and that name is what appears on courts. Alternative methods is only for someone without a Google account: use firstname.lastname@duke.edu, not a NetID-only alias like rjd51@duke.edu.',
+        answer: 'Use Sign in with Google and whichever Google account you already have. The first visit asks for your first and last name, and that name is what appears on courts. Change it later from the account menu next to your name. Alternative methods is only for someone without a Google account: use firstname.lastname@duke.edu, not a NetID-only alias like rjd51@duke.edu.',
     },
     {
         question: 'I did not receive my sign-in link — what should I do?',
-        answer: 'This is only for the Duke email alternative. Check junk/spam first — Duke often filters these messages, and delivery can take up to 5 minutes. Confirm you used firstname.lastname@duke.edu (not a NetID-only alias). Wait the full 5 minutes before tapping Resend. Sending again does not make it arrive faster. Links expire after about an hour. If it still does not arrive, use Sign in with Google or contact an admin.',
+        answer: 'This is only for the Duke email alternative. Check junk/spam first — Duke often filters these messages, and delivery can take up to 5 minutes. Confirm you used firstname.lastname@duke.edu (not a NetID-only alias). Wait the full 5 minutes before tapping Resend. Sending again does not make it arrive faster. Links expire after about an hour. If it still does not arrive, use Sign in with Google or contact rohan.dsouza@duke.edu.',
     },
     {
         question: 'Which sports can I book?',
@@ -115,7 +115,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do co-officers get admin access?',
-        answer: 'Add their email to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign in at /login with the Google account for that exact email (or Alternative methods if they have no Google account). The Admin link appears automatically. Other personal Gmail addresses are not admins.',
+        answer: 'Open Admin, then Settings, and add their email. They sign in with the Google account for that exact email (or Alternative methods for a @duke.edu address). The Admin link appears automatically. Other personal Gmail addresses are not admins until they are added there.',
     },
     {
         question: 'How are waitlists managed?',
