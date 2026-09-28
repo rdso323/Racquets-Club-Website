@@ -19,7 +19,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'I did not receive my sign-in link — what should I do?',
-        answer: 'This is only for the Duke email alternative. Check junk/spam first — Duke often filters these messages, and delivery can take up to 5 minutes. Confirm you used firstname.lastname@duke.edu (not a NetID-only alias). Wait the full 5 minutes before tapping Resend. Sending again does not make it arrive faster. Links expire after about an hour. If it still does not arrive, use Sign in with Google or contact an admin.',
+        answer: 'This is only for the Duke email alternative. Check junk/spam first — Duke often filters these messages, and delivery can take up to 5 minutes. Confirm you used firstname.lastname@duke.edu (not a NetID-only alias). Wait the full 5 minutes before tapping Resend. Sending again does not make it arrive faster. Links expire after about an hour. If it still does not arrive, use Sign in with Google or contact rohan.dsouza@duke.edu.',
     },
     {
         question: 'Which sports can I book?',

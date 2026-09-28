@@ -8,7 +8,7 @@ import { LOGO_CLASS, logoSrcForTheme } from '../lib/branding';
 import { DUKE_EMAIL_FORMAT_MESSAGE, isAllowedDukeEmail } from '../lib/memberNames';
 
 const MOTION_EASE = [0.16, 1, 0.3, 1] as const;
-const SUPPORT_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
+const SUPPORT_EMAIL = 'rohan.dsouza@duke.edu';
 const RESEND_WAIT_MS = 5 * 60 * 1000;
 const RESEND_LOCK_KEY = 'signinLinkSentAt';
 
