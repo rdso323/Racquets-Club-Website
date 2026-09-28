@@ -19,6 +19,10 @@ import {
     DUKE_EMAIL_FORMAT_MESSAGE,
     DUKE_SIGNIN_EMAIL_MESSAGE,
     normalizePersonName,
+    memberNameFromParts,
+    memberNameFromUserDoc,
+    formatStoredDisplayName,
+    type MemberName,
 } from '../lib/memberNames';
 
 export interface TabPreference {
@@ -146,6 +150,8 @@ interface AuthContextType {
     profileReady: boolean;
     /** Google accounts must save a first and last name before using the site. */
     needsProfile: boolean;
+    /** Saved first and last name, when this browser or Firestore already has one. */
+    memberName: MemberName | null;
     saveMemberName: (firstName: string, lastName: string) => Promise<void>;
     clearAuthMessage: () => void;
     clearAuthError: () => void;
@@ -196,10 +202,25 @@ const ADMIN_VIEW_AS_MEMBER_KEY = 'admin_view_as_member';
 const isGoogleAccount = (currentUser: User | null | undefined): boolean =>
     !!currentUser?.providerData.some((provider) => provider.providerId === 'google.com');
 
-const savedMemberName = (data: Record<string, unknown> | null | undefined): boolean => {
-    const first = typeof data?.firstName === 'string' ? data.firstName.trim() : '';
-    const last = typeof data?.lastName === 'string' ? data.lastName.trim() : '';
-    return Boolean(first && last);
+const memberNameCacheKey = (uid: string) => `member_name_${uid}`;
+
+const readCachedMemberName = (uid: string): MemberName | null => {
+    try {
+        const raw = localStorage.getItem(memberNameCacheKey(uid));
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as { firstName?: unknown; lastName?: unknown };
+        return memberNameFromParts(parsed.firstName, parsed.lastName);
+    } catch {
+        return null;
+    }
+};
+
+const writeCachedMemberName = (uid: string, name: MemberName) => {
+    try {
+        localStorage.setItem(memberNameCacheKey(uid), JSON.stringify(name));
+    } catch (err) {
+        console.error('Error caching member name:', err);
+    }
 };
 
 const readViewAsMember = (): boolean => {
@@ -219,11 +240,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const [viewAsMember, setViewAsMemberState] = useState(false);
     const [profileReady, setProfileReady] = useState(true);
-    const [hasSavedName, setHasSavedName] = useState(false);
+    const [memberName, setMemberName] = useState<MemberName | null>(null);
     const migrationAttemptedRef = useRef<string | null>(null);
     const completingEmailLinkRef = useRef(false);
     const signingInWithGoogleRef = useRef(false);
     const acceptedUidRef = useRef<string | null>(null);
+    const nameBackfillUidRef = useRef<string | null>(null);
+    const displaySyncRef = useRef<string | null>(null);
 
     useEffect(() => {
         setViewAsMemberState(readViewAsMember());
@@ -265,12 +288,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return;
         }
 
+        // Mark this uid before any profile write. updateProfile re-fires auth state,
+        // and running acceptance again cleared the saved name.
+        acceptedUidRef.current = currentUser.uid;
+
         if (googleAccount) {
-            setProfileReady(false);
-            setHasSavedName(false);
+            const cached = readCachedMemberName(currentUser.uid);
+            setMemberName(cached);
+            // A cached name means we already asked. Otherwise wait for Firestore
+            // instead of treating an empty local cache snapshot as "no name".
+            setProfileReady(Boolean(cached));
         } else {
             setProfileReady(true);
-            setHasSavedName(true);
+            setMemberName(null);
         }
 
         setUser(currentUser);
@@ -375,8 +405,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setUser(null);
                 setTabPreferences(DEFAULT_TABS);
                 setProfileReady(true);
-                setHasSavedName(false);
+                setMemberName(null);
                 migrationAttemptedRef.current = null;
+                nameBackfillUidRef.current = null;
+                displaySyncRef.current = null;
             }
             setLoading(false);
         });
@@ -394,11 +426,48 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             async (snapshot) => {
                 const data = snapshot.exists() ? snapshot.data() : null;
                 if (isGoogleAccount(user)) {
-                    const saved = savedMemberName(data);
-                    // A restarted listener can emit a stale cache snapshot after the write.
-                    // Once this session has seen a saved name, don't send them back to the form.
-                    setHasSavedName((current) => current || saved);
-                    setProfileReady(true);
+                    const fromDoc = memberNameFromUserDoc(data);
+                    const cached = readCachedMemberName(user.uid);
+                    const resolved = fromDoc ?? cached;
+
+                    if (fromDoc) writeCachedMemberName(user.uid, fromDoc);
+
+                    // The first event is often an empty in-memory cache, before the server
+                    // returns the saved name. Asking on that event shows the form every visit.
+                    if (!fromDoc && snapshot.metadata.fromCache && !cached) {
+                        /* wait for the server snapshot */
+                    } else if (resolved) {
+                        setMemberName(resolved);
+                        setProfileReady(true);
+                        const displayName = formatStoredDisplayName(resolved);
+                        const syncKey = `${user.uid}:${displayName}`;
+                        if (user.displayName !== displayName && displaySyncRef.current !== syncKey) {
+                            displaySyncRef.current = syncKey;
+                            void updateProfile(user, { displayName }).catch((err) =>
+                                console.error('Error syncing display name:', err),
+                            );
+                        }
+                        if (
+                            !fromDoc &&
+                            !snapshot.metadata.fromCache &&
+                            cached &&
+                            nameBackfillUidRef.current !== user.uid
+                        ) {
+                            nameBackfillUidRef.current = user.uid;
+                            void setDoc(
+                                userRef,
+                                {
+                                    email: user.email || '',
+                                    firstName: cached.firstName,
+                                    lastName: cached.lastName,
+                                    displayName,
+                                },
+                                { merge: true },
+                            ).catch((err) => console.error('Error restoring saved name:', err));
+                        }
+                    } else if (!snapshot.metadata.fromCache) {
+                        setProfileReady(true);
+                    }
                 }
 
                 const onAllowlist = isAdminEmail(user.email);
@@ -458,12 +527,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
             (err) => {
                 console.error('Error listening to user settings:', err);
-                if (isGoogleAccount(user)) setProfileReady(true);
+                if (!isGoogleAccount(user)) return;
+                const cached = readCachedMemberName(user.uid);
+                if (cached) {
+                    setMemberName((current) => current ?? cached);
+                    setProfileReady(true);
+                    return;
+                }
+                const code = (err as { code?: string }).code;
+                if (code === 'unavailable' || code === 'deadline-exceeded') return;
+                setProfileReady(true);
             },
         );
 
         return unsubscribe;
     }, [user]);
+
+    useEffect(() => {
+        if (!user || !isGoogleAccount(user) || profileReady) return;
+        const timer = window.setTimeout(() => setProfileReady(true), 8000);
+        return () => window.clearTimeout(timer);
+    }, [user, profileReady]);
 
     const clearAuthMessage = () => {
         setError(null);
@@ -534,7 +618,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (!first || !last) {
             throw new Error('Enter a first and last name.');
         }
-        const displayName = `${first} ${last}`;
+        const saved = { firstName: first, lastName: last };
+        const displayName = formatStoredDisplayName(saved);
+        displaySyncRef.current = `${user.uid}:${displayName}`;
         await updateProfile(user, { displayName });
         await setDoc(
             doc(db, 'users', user.uid),
@@ -546,7 +632,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             },
             { merge: true },
         );
-        setHasSavedName(true);
+        writeCachedMemberName(user.uid, saved);
+        setMemberName(saved);
         setProfileReady(true);
     };
 
@@ -571,7 +658,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const isAllowlistedAdmin = user ? isAdminEmail(user.email) : false;
     const isAdmin = isAllowlistedAdmin && !viewAsMember;
-    const needsProfile = Boolean(user && isGoogleAccount(user) && profileReady && !hasSavedName);
+    const needsProfile = Boolean(user && isGoogleAccount(user) && profileReady && !memberName);
 
     return (
         <AuthContext.Provider
@@ -586,6 +673,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 completeEmailLinkSignIn,
                 profileReady,
                 needsProfile,
+                memberName,
                 saveMemberName,
                 clearAuthMessage,
                 clearAuthError,

@@ -139,3 +139,64 @@ export const formatMemberFirstName = (
 
     return 'Member';
 };
+
+export interface MemberName {
+    firstName: string;
+    lastName: string;
+}
+
+/** A stored first and last name, already normalized. Invalid parts return null. */
+export const memberNameFromParts = (firstName: unknown, lastName: unknown): MemberName | null => {
+    if (typeof firstName !== 'string' || typeof lastName !== 'string') return null;
+    const first = normalizePersonName(firstName);
+    const last = normalizePersonName(lastName);
+    if (!first || !last) return null;
+    return { firstName: first, lastName: last };
+};
+
+/**
+ * Full "First Last" display names only. A court label like "Rohan D." is not a last name.
+ */
+export const memberNameFromDisplayName = (displayName: unknown): MemberName | null => {
+    if (typeof displayName !== 'string') return null;
+    const parts = displayName.trim().split(/\s+/).filter(Boolean);
+    if (parts.length < 2) return null;
+    const lastToken = parts[parts.length - 1].replace(/\.$/, '');
+    if (lastToken.length < 2) return null;
+    return memberNameFromParts(parts[0], lastToken);
+};
+
+/** Prefer explicit first/last fields, then a full display name on the user document. */
+export const memberNameFromUserDoc = (
+    data: Record<string, unknown> | null | undefined,
+): MemberName | null => {
+    if (!data) return null;
+    return memberNameFromParts(data.firstName, data.lastName) ?? memberNameFromDisplayName(data.displayName);
+};
+
+export const formatStoredDisplayName = (name: MemberName): string =>
+    `${name.firstName} ${name.lastName}`;
+
+/** Prefill for the name editor: saved profile, then Auth display name, then a Duke address. */
+export const suggestedMemberName = (
+    email: string | null | undefined,
+    displayName: string | null | undefined,
+    saved: MemberName | null,
+): MemberName => {
+    if (saved) return saved;
+    const fromDisplay = memberNameFromDisplayName(displayName);
+    if (fromDisplay) return fromDisplay;
+
+    if (email) {
+        const lower = email.trim().toLowerCase();
+        if (lower.endsWith('@duke.edu')) {
+            const parts = lower.split('@')[0].split('.').filter(Boolean);
+            if (parts.length >= 2) {
+                const parsed = memberNameFromParts(parts[0], parts[parts.length - 1]);
+                if (parsed) return parsed;
+            }
+        }
+    }
+
+    return { firstName: '', lastName: '' };
+};

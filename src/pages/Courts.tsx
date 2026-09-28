@@ -16,7 +16,7 @@ const STEPS = [
     {
         Icon: LogIn,
         title: 'Sign in',
-        body: 'Sign in with Google. The first time, add your first and last name. No Google account? Use Alternative methods for a Duke email link.',
+        body: 'Sign in with Google. The first time, add your first and last name — it is remembered, and you can change it from the account menu. No Google account? Use Alternative methods for a Duke email link.',
     },
     {
         Icon: LayoutGrid,
