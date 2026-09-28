@@ -115,7 +115,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do co-officers get admin access?',
-        answer: 'Add their email to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign in at /login with the Google account for that exact email (or Alternative methods if they have no Google account). The Admin link appears automatically. Other personal Gmail addresses are not admins.',
+        answer: 'Open Admin, then Settings, and add their email. They sign in with the Google account for that exact email (or Alternative methods for a @duke.edu address). The Admin link appears automatically. Other personal Gmail addresses are not admins until they are added there.',
     },
     {
         question: 'How are waitlists managed?',

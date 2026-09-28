@@ -11,7 +11,8 @@ import {
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { builtinAdminEmails, resolveAdminEmails, ADMINS_SETTINGS_COLLECTION, ADMINS_SETTINGS_DOC_ID } from '../lib/adminAllowlist';
 import { SPORTS } from '../lib/sports';
 import {
     isAllowedDukeEmail,
@@ -160,6 +161,8 @@ interface AuthContextType {
     isAdmin: boolean;
     /** True if the signed-in email is on the admin allowlist (ignores view toggle). */
     isAllowlistedAdmin: boolean;
+    /** Live admin allowlist. Falls back to the built-in list when none is saved. */
+    adminEmails: string[];
     /** When true, allowlisted admins see the site as a regular member. */
     viewAsMember: boolean;
     setViewAsMember: (asMember: boolean) => void;
@@ -168,35 +171,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
-
-const CLUB_ADMIN_EMAIL = `${['fuqua', 'racquets'].join('-')}@duke.edu`;
-
-const DEFAULT_ADMIN_EMAILS = [
-    'altamash.memon@duke.edu',
-    'armin.thomas@duke.edu',
-    'hirsh.sinaihede@duke.edu',
-    'joe.chantajunlasin@duke.edu',
-    'kathryne.piazza@duke.edu',
-    'laura.wang@duke.edu',
-    'maddie.latimore@duke.edu',
-    'naitik.reshamwala@duke.edu',
-    'rohan.dsouza@duke.edu',
-    'rohand97@gmail.com',
-    CLUB_ADMIN_EMAIL,
-];
-
-const getAdminEmails = (): string[] => {
-    const fromEnv = import.meta.env.VITE_ADMIN_EMAILS as string | undefined;
-    const extras = fromEnv
-        ? fromEnv.split(',').map((email) => email.trim().toLowerCase()).filter(Boolean)
-        : [];
-    return [...new Set([...DEFAULT_ADMIN_EMAILS.map((email) => email.toLowerCase()), ...extras])];
-};
-
-const ADMIN_EMAILS = getAdminEmails();
-
-const isAdminEmail = (email: string | null | undefined) =>
-    !!email && ADMIN_EMAILS.includes(email.toLowerCase());
 
 const ADMIN_VIEW_AS_MEMBER_KEY = 'admin_view_as_member';
 
@@ -240,6 +214,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [emailLinkNeedsEmail, setEmailLinkNeedsEmail] = useState(false);
     const [tabPreferences, setTabPreferences] = useState<TabPreference[]>(DEFAULT_TABS);
     const [viewAsMember, setViewAsMemberState] = useState(false);
+    const [adminEmails, setAdminEmails] = useState<string[]>(() => builtinAdminEmails());
     const [profileReady, setProfileReady] = useState(true);
     const [memberName, setMemberName] = useState<MemberName | null>(null);
     const migrationAttemptedRef = useRef<string | null>(null);
@@ -418,6 +393,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     useEffect(() => {
+        const unsubscribe = onSnapshot(
+            doc(db, ADMINS_SETTINGS_COLLECTION, ADMINS_SETTINGS_DOC_ID),
+            (snapshot) => {
+                setAdminEmails(resolveAdminEmails(snapshot.exists() ? snapshot.data() : null));
+            },
+            (err) => {
+                console.error('Error listening to admin list:', err);
+                setAdminEmails(builtinAdminEmails());
+            },
+        );
+        return unsubscribe;
+    }, []);
+
+    useEffect(() => {
+        if (!user) return;
+        let cancelled = false;
+
+        const syncAdminFlag = async () => {
+            const userRef = doc(db, 'users', user.uid);
+            const allowed = !!user.email && adminEmails.includes(user.email.toLowerCase());
+            try {
+                const snap = await getDoc(userRef);
+                if (cancelled) return;
+                const current = snap.exists() && snap.data()?.isAdmin === true;
+                if (allowed && !current) {
+                    await setDoc(userRef, { isAdmin: true }, { merge: true });
+                } else if (!allowed && current) {
+                    await setDoc(userRef, { isAdmin: false }, { merge: true });
+                }
+            } catch (err) {
+                console.error('Error syncing admin flag:', err);
+            }
+        };
+
+        void syncAdminFlag();
+        return () => {
+            cancelled = true;
+        };
+    }, [user, adminEmails]);
+
+    useEffect(() => {
         if (!user) return;
 
         const userRef = doc(db, 'users', user.uid);
@@ -468,24 +484,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         }
                     } else if (!snapshot.metadata.fromCache) {
                         setProfileReady(true);
-                    }
-                }
-
-                const onAllowlist = isAdminEmail(user.email);
-
-                if (onAllowlist) {
-                    if (data?.isAdmin !== true) {
-                        try {
-                            await setDoc(userRef, { isAdmin: true }, { merge: true });
-                        } catch (err) {
-                            console.error('Error bootstrapping admin flag:', err);
-                        }
-                    }
-                } else if (data?.isAdmin === true) {
-                    try {
-                        await setDoc(userRef, { isAdmin: false }, { merge: true });
-                    } catch (err) {
-                        console.error('Error revoking admin flag:', err);
                     }
                 }
 
@@ -657,7 +655,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAllowlistedAdmin = user ? isAdminEmail(user.email) : false;
+    const isAllowlistedAdmin = !!user?.email && adminEmails.includes(user.email.toLowerCase());
     const isAdmin = isAllowlistedAdmin && !viewAsMember;
     const needsProfile = Boolean(user && isGoogleAccount(user) && profileReady && !memberName);
 
@@ -681,6 +679,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 signOut,
                 isAdmin,
                 isAllowlistedAdmin,
+                adminEmails,
                 viewAsMember,
                 setViewAsMember,
                 tabPreferences,
