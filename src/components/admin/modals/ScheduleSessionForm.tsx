@@ -21,6 +21,7 @@ import {
     applySessionTypeChange,
     buildCourtLabels,
     getDefaultMaxAttendees,
+    keepVisibleSkipDates,
     suggestedCapacityForCourts,
     type SessionType,
 } from '../../../lib/sessions';
@@ -28,6 +29,7 @@ import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
 import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
 import { downloadWeeklySeriesCalendar } from '../../../lib/calendar';
 import DatePickerField from '../fields/DatePickerField';
+import SkipWeekToggles from '../fields/SkipWeekToggles';
 import TimeRangePicker from '../fields/TimeRangePicker';
 import AdminNumericField from '../fields/AdminNumericField';
 
@@ -63,6 +65,7 @@ const defaultDraft = (sport: string) => ({
     customCourtLabels: '',
     recurringDay: 'tuesday' as DayName,
     endsOn: '',
+    skipDates: [] as string[],
     autoEnrollCreator: true,
 });
 
@@ -136,6 +139,11 @@ const ScheduleSessionForm = ({
                 const seriesStart = newSession.startTime;
                 const seriesEnd = newSession.endTime;
                 const seriesEndsOn = newSession.endsOn;
+                const seriesSkipDates = keepVisibleSkipDates(
+                    seriesDay,
+                    seriesEndsOn || undefined,
+                    newSession.skipDates,
+                );
 
                 await addRecurringSchedule({
                     sport: newSession.sport as AdminRecurringSchedule['sport'],
@@ -149,6 +157,7 @@ const ScheduleSessionForm = ({
                     coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
                     maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
                     ...(seriesEndsOn ? { endsOn: seriesEndsOn } : {}),
+                    ...(seriesSkipDates.length > 0 ? { skipDates: seriesSkipDates } : {}),
                     autoEnrollCreator: enrollSelf,
                     ...(enrollSelf && user
                         ? {
@@ -162,7 +171,7 @@ const ScheduleSessionForm = ({
                 if (
                     enrollSelf &&
                     window.confirm(
-                        'You are on each week. Download one weekly calendar invite? If you set Ends on, the repeat stops that day. Dropping a single week on the site will not change this calendar event.',
+                        'You are on each week. Download one weekly calendar invite? If you set Ends on, the repeat stops that day. Dates you turned off are left out of this file. Dropping a single week later on the site will not change this calendar event.',
                     )
                 ) {
                     downloadWeeklySeriesCalendar({
@@ -171,6 +180,7 @@ const ScheduleSessionForm = ({
                         startTime: seriesStart,
                         endTime: seriesEnd || undefined,
                         endsOn: seriesEndsOn || undefined,
+                        skipDates: seriesSkipDates,
                     });
                 }
 
@@ -388,6 +398,11 @@ const ScheduleSessionForm = ({
                                         ...prev,
                                         recurringDay,
                                         title: defaultRecurringTitle(recurringDay, prev.type),
+                                        skipDates: keepVisibleSkipDates(
+                                            recurringDay,
+                                            prev.endsOn || undefined,
+                                            prev.skipDates,
+                                        ),
                                     }));
                                 }}
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
@@ -402,7 +417,17 @@ const ScheduleSessionForm = ({
                         <DatePickerField
                             label="Ends on (optional)"
                             value={newSession.endsOn}
-                            onChange={(endsOn) => setNewSession((prev) => ({ ...prev, endsOn }))}
+                            onChange={(endsOn) =>
+                                setNewSession((prev) => ({
+                                    ...prev,
+                                    endsOn,
+                                    skipDates: keepVisibleSkipDates(
+                                        prev.recurringDay,
+                                        endsOn || undefined,
+                                        prev.skipDates,
+                                    ),
+                                }))
+                            }
                         />
                     </div>
                 ) : (
@@ -432,6 +457,15 @@ const ScheduleSessionForm = ({
                             }
                         />
                     </div>
+                )}
+
+                {scheduleMode === 'recurring' && (
+                    <SkipWeekToggles
+                        day={newSession.recurringDay}
+                        endsOn={newSession.endsOn}
+                        skipDates={newSession.skipDates}
+                        onChange={(skipDates) => setNewSession((prev) => ({ ...prev, skipDates }))}
+                    />
                 )}
 
                 {scheduleMode === 'recurring' && (

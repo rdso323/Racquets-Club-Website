@@ -77,6 +77,7 @@ const eventLines = (input: {
     start: Date;
     end: Date;
     rrule?: string;
+    exdates?: string[];
 }): string[] => [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -89,6 +90,7 @@ const eventLines = (input: {
     `DTSTART:${formatIcsLocal(input.start)}`,
     `DTEND:${formatIcsLocal(input.end)}`,
     ...(input.rrule ? [`RRULE:${input.rrule}`] : []),
+    ...(input.exdates?.length ? [`EXDATE:${input.exdates.join(',')}`] : []),
     `SUMMARY:${escapeIcs(input.title)}`,
     `DESCRIPTION:${escapeIcs(input.description)}`,
     'END:VEVENT',
@@ -163,6 +165,8 @@ export interface WeeklySeriesCalendarInput {
     endTime?: string;
     /** Inclusive last play date, YYYY-MM-DD. Omit for an open-ended weekly repeat. */
     endsOn?: string;
+    /** YYYY-MM-DD play dates omitted from the repeating event. */
+    skipDates?: string[];
 }
 
 /** RRULE for a weekly series. UNTIL is the end of `endsOn` in local floating time when set. */
@@ -173,18 +177,34 @@ export const weeklySeriesRrule = (endsOn?: string): string => {
     return `FREQ=WEEKLY;UNTIL=${formatIcsLocal(until)}`;
 };
 
+/** Floating local EXDATE values matching DTSTART's clock time. */
+export const weeklySeriesExdates = (startTime: string, skipDates: string[] = []): string[] => {
+    return skipDates
+        .filter((iso) => /^\d{4}-\d{2}-\d{2}$/.test(iso))
+        .map((iso) => {
+            const [year, month, day] = iso.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            applyClock(date, startTime);
+            return formatIcsLocal(date);
+        });
+};
+
 /** ICS lines for one weekly series. Court is omitted because the spot can change. */
 export const buildWeeklySeriesLines = (input: WeeklySeriesCalendarInput, now = new Date()): string[] => {
     const { start, end } = nextWeeklyOccurrence(input.day, input.startTime, input.endTime, now);
+    const skipped = input.skipDates?.length
+        ? ' Dates turned off when this file was created are omitted.'
+        : '';
     const description = input.endsOn
-        ? `Weekly Fuqua Racquets Club session through ${input.endsOn}. Dropping one week on the site does not remove that date from this calendar event.`
-        : 'Weekly Fuqua Racquets Club session. Dropping one week on the site does not remove that date from this calendar event.';
+        ? `Weekly Fuqua Racquets Club session through ${input.endsOn}.${skipped} Dropping one week on the site does not remove that date from this calendar event.`
+        : `Weekly Fuqua Racquets Club session.${skipped} Dropping one week on the site does not remove that date from this calendar event.`;
     return eventLines({
         title: input.title,
         description,
         start,
         end,
         rrule: weeklySeriesRrule(input.endsOn),
+        exdates: weeklySeriesExdates(input.startTime, input.skipDates),
     });
 };
 

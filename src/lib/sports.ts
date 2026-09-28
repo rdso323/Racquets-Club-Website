@@ -82,6 +82,8 @@ export interface OpenPlayDayConfig {
     isCustom?: boolean;
     /** Inclusive last play date (YYYY-MM-DD). Omit to run until the schedule is removed. */
     endsOn?: string;
+    /** Play dates (YYYY-MM-DD) that should not appear, chosen in advance. */
+    skipDates?: string[];
     /** When true, creator is placed on each new week's roster. */
     autoEnrollCreator?: boolean;
     creatorUid?: string;
@@ -107,6 +109,8 @@ export interface AdminRecurringSchedule {
     maxWaitlistSize?: number;
     /** Inclusive last play date (YYYY-MM-DD). Omit to run until the schedule is removed. */
     endsOn?: string;
+    /** Play dates (YYYY-MM-DD) that should not appear, chosen in advance. */
+    skipDates?: string[];
     /** When true, creator is placed on each new week's roster. */
     autoEnrollCreator?: boolean;
     creatorUid?: string;

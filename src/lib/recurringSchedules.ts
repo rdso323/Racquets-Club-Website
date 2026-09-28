@@ -49,6 +49,7 @@ export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayD
     scheduleId: schedule.id,
     isCustom: true,
     endsOn: schedule.endsOn,
+    skipDates: schedule.skipDates,
     autoEnrollCreator: schedule.autoEnrollCreator,
     creatorUid: schedule.creatorUid,
     creatorName: schedule.creatorName,
@@ -62,6 +63,9 @@ export const sanitizeRecurringSchedule = (schedule: AdminRecurringSchedule): Adm
         sessionType: schedule.sessionType ?? 'court',
     };
     if (!next.endsOn) delete next.endsOn;
+    const skipDates = (next.skipDates ?? []).filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date));
+    if (skipDates.length > 0) next.skipDates = [...new Set(skipDates)].sort();
+    else delete next.skipDates;
     if (!next.creatorUid) {
         delete next.creatorUid;
         delete next.creatorName;
@@ -205,6 +209,7 @@ export const updateRecurringSchedule = async (
                 sessionType: patch.sessionType ?? schedule.sessionType ?? 'court',
             });
             if ('endsOn' in patch && !patch.endsOn) delete next.endsOn;
+            if ('skipDates' in patch && (!patch.skipDates || patch.skipDates.length === 0)) delete next.skipDates;
             return next;
         }),
     });

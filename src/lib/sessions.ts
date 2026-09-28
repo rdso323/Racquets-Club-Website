@@ -23,6 +23,8 @@ const WEEKDAY_ID_PATTERN =
     'monday|tuesday|wednesday|thursday|friday|saturday|sunday';
 
 export const BOOKING_HORIZON_DAYS = 14;
+/** How many weekly dates to offer when a recurring session has no end date. */
+export const SKIP_WEEK_LOOKAHEAD = 16;
 export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = 'Opens Sunday 5pm Eastern';
 
 export type { SessionType } from './sports';
@@ -425,6 +427,7 @@ export const getExpectedRecurringSessionIds = (
                 const playDate = getPlayDate(baseStartOfWeek, weekOffset === 7, config.day);
                 if (!isWithinBookingHorizon(playDate)) continue;
                 if (isAfterRecurringEnd(playDate, config.endsOn)) continue;
+                // Skipped dates stay in this set so a week that already has players can still load.
 
                 const sessionType = config.sessionType ?? 'court';
                 ids.add(getRecurringSessionId(sessionType, sport, config.day, playDate, config.scheduleId));
@@ -448,6 +451,55 @@ export const isAfterRecurringEnd = (playDate: Date, endsOn?: string): boolean =>
     if (!endsOn) return false;
     return formatISODate(playDate) > endsOn;
 };
+
+const WEEKDAY_INDEX: Record<DayName, number> = {
+    sunday: 0,
+    monday: 1,
+    tuesday: 2,
+    wednesday: 3,
+    thursday: 4,
+    friday: 5,
+    saturday: 6,
+};
+
+/** Dates of one weekday from the next occurrence through endsOn, or the next 16 weeks. */
+export const listWeekdayPlayDates = (day: DayName, endsOn?: string, now = new Date()): string[] => {
+    const cursor = new Date(now);
+    cursor.setHours(0, 0, 0, 0);
+    let distance = WEEKDAY_INDEX[day] - cursor.getDay();
+    if (distance < 0) distance += 7;
+    cursor.setDate(cursor.getDate() + distance);
+
+    const bounded = !!endsOn && /^\d{4}-\d{2}-\d{2}$/.test(endsOn);
+    const dates: string[] = [];
+    const limit = bounded ? 80 : SKIP_WEEK_LOOKAHEAD;
+    for (let i = 0; i < limit; i++) {
+        const iso = formatISODate(cursor);
+        if (bounded && iso > endsOn) break;
+        dates.push(iso);
+        cursor.setDate(cursor.getDate() + 7);
+    }
+    return dates;
+};
+
+/** Keep only skip dates that are still on the weekday list the officer can see. */
+export const keepVisibleSkipDates = (
+    day: DayName,
+    endsOn: string | undefined,
+    skipDates: string[],
+    now = new Date(),
+): string[] => {
+    const visible = new Set(listWeekdayPlayDates(day, endsOn, now));
+    return skipDates.filter((date) => visible.has(date));
+};
+
+export const isSkippedPlayDate = (playDate: Date, skipDates?: string[]): boolean => {
+    if (!skipDates?.length) return false;
+    return skipDates.includes(formatISODate(playDate));
+};
+
+const recurringWeekHasPlayers = (session: Session): boolean =>
+    (session.attendees?.length ?? 0) > 0 || (session.waitlist?.length ?? 0) > 0;
 
 export const isWithinBookingHorizon = (date: Date): boolean => {
     const today = new Date();
@@ -619,6 +671,16 @@ export const getOpenPlayInstancesWithinHorizon = (
             if (isAfterRecurringEnd(playDate, config.endsOn)) continue;
 
             const session = resolveRecurringSession(sessions, sport, config, weekOffset);
+            if (isSkippedPlayDate(playDate, config.skipDates)) {
+                if (!recurringWeekHasPlayers(session)) continue;
+                instances.push({
+                    session: { ...session, cancelledThisWeek: true },
+                    config,
+                    playDate,
+                    isNextWeek,
+                });
+                continue;
+            }
             instances.push({ session, config, playDate, isNextWeek });
         }
     }

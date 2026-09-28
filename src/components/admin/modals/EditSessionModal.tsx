@@ -21,7 +21,9 @@ import {
     buildCourtLabels,
     suggestedCapacityForCourts,
     isRecurringSession,
+    keepVisibleSkipDates,
 } from '../../../lib/sessions';
+import SkipWeekToggles from '../fields/SkipWeekToggles';
 
 export interface EditCourtFields {
     courtCount: number;
@@ -31,6 +33,7 @@ export interface EditCourtFields {
 
 export interface RecurringScheduleMeta {
     endsOn: string;
+    skipDates: string[];
     autoEnrollCreator: boolean;
 }
 
@@ -50,7 +53,7 @@ const EditSessionModal = ({
     session,
     editCourtFields,
     recurringConfig = null,
-    scheduleMeta = { endsOn: '', autoEnrollCreator: false },
+    scheduleMeta = { endsOn: '', skipDates: [], autoEnrollCreator: false },
     onScheduleMetaChange,
     onSessionChange,
     onEditCourtFieldsChange,
@@ -148,7 +151,23 @@ const EditSessionModal = ({
                     <DatePickerField
                         label="Ends on (optional)"
                         value={scheduleMeta.endsOn}
-                        onChange={(endsOn) => onScheduleMetaChange?.({ ...scheduleMeta, endsOn })}
+                        onChange={(endsOn) =>
+                            onScheduleMetaChange?.({
+                                ...scheduleMeta,
+                                endsOn,
+                                skipDates: keepVisibleSkipDates(
+                                    recurringConfig.day,
+                                    endsOn || undefined,
+                                    scheduleMeta.skipDates,
+                                ),
+                            })
+                        }
+                    />
+                    <SkipWeekToggles
+                        day={recurringConfig.day}
+                        endsOn={scheduleMeta.endsOn}
+                        skipDates={scheduleMeta.skipDates}
+                        onChange={(skipDates) => onScheduleMetaChange?.({ ...scheduleMeta, skipDates })}
                     />
                     <label className="flex items-start gap-3 rounded-xl border border-violet-200 bg-violet-50/70 p-3 text-sm text-violet-950 dark:border-violet-900/40 dark:bg-violet-950/20 dark:text-violet-100">
                         <input
