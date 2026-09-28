@@ -71,7 +71,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'I am a club officer — where is the admin guide?',
-        answer: 'Sign in with an approved @duke.edu account and scroll to the Operations guide at the bottom of this page (visible to admins only). You can also open Admin in the top bar for the full Operations Deck, or use the gear icon on any booking card on the home page for quick session edits.',
+        answer: 'Sign in with an allowlisted account and scroll to the Operations guide at the bottom of this page (visible to admins only). You can also open Admin in the top bar for the full Operations Deck, or use the gear icon on any booking card on the home page for quick session edits.',
     },
 ];
 
@@ -79,7 +79,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
 export const ADMIN_HELP_FAQ: FaqItem[] = [
     {
         question: 'What is the Operations Deck?',
-        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Cabinet, Archive, and Feedback Inbox. Only allowlisted @duke.edu emails see the Admin link and can access this area. You can also manage many session tasks directly from the home page booking cards (see below).',
+        answer: 'The admin dashboard at /admin has tabs for Ticker & Settings, Courts & Sessions, Events Manager, Cabinet, Archive, and Feedback Inbox. Only allowlisted emails see the Admin link and can access this area. You can also manage many session tasks directly from the home page booking cards (see below).',
     },
     {
         question: 'How do I manage sessions from the home page?',
@@ -115,7 +115,7 @@ export const ADMIN_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'How do co-officers get admin access?',
-        answer: 'Add their firstname.lastname@duke.edu to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign in at /login with the Google account for that exact email (or Alternative methods if they have no Google account). The Admin link appears automatically. A personal Gmail address is not an admin.',
+        answer: 'Add their email to the admin allowlist in code (or VITE_ADMIN_EMAILS), then have them sign in at /login with the Google account for that exact email (or Alternative methods if they have no Google account). The Admin link appears automatically. Other personal Gmail addresses are not admins.',
     },
     {
         question: 'How are waitlists managed?',
