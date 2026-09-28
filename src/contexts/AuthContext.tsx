@@ -175,6 +175,7 @@ const DEFAULT_ADMIN_EMAILS = [
     'maddie.latimore@duke.edu',
     'naitik.reshamwala@duke.edu',
     'rohan.dsouza@duke.edu',
+    'rohand97@gmail.com',
     CLUB_ADMIN_EMAIL,
 ];
 
