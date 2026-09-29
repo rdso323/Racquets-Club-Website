@@ -81,6 +81,9 @@ export function useSessionAdminOps({
     const [editingScheduleMeta, setEditingScheduleMeta] = useState<RecurringScheduleMeta>({
         endsOn: '',
         skipDates: [],
+        bookingLockEnabled: true,
+        bookingLockDay: 'sunday',
+        bookingLockTime: '17:00',
         autoEnrollCreator: false,
     });
     const [editCourtFields, setEditCourtFields] = useState<EditCourtFields>({
@@ -118,6 +121,9 @@ export function useSessionAdminOps({
         setEditingScheduleMeta({
             endsOn: config?.endsOn ?? '',
             skipDates: config?.skipDates ?? [],
+            bookingLockEnabled: config?.bookingLockEnabled !== false,
+            bookingLockDay: config?.bookingLockDay ?? 'sunday',
+            bookingLockTime: config?.bookingLockTime ?? '17:00',
             autoEnrollCreator: Boolean(config?.autoEnrollCreator),
         });
     };
@@ -176,6 +182,9 @@ export function useSessionAdminOps({
                     editingScheduleMeta.endsOn || undefined,
                     editingScheduleMeta.skipDates,
                 ),
+                bookingLockEnabled: editingScheduleMeta.bookingLockEnabled,
+                bookingLockDay: editingScheduleMeta.bookingLockDay,
+                bookingLockTime: editingScheduleMeta.bookingLockTime,
                 ...creatorFields,
                 ...(sessionToSave.type === 'coaching'
                     ? { coach: sessionToSave.coach || 'TBD' }

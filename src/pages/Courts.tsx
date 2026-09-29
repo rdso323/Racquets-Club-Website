@@ -31,7 +31,7 @@ const STEPS = [
     {
         Icon: CalendarPlus,
         title: 'Add it to your calendar',
-        body: 'Download the invite after booking. Next week opens Sunday at 5:00 PM ET.',
+        body: 'Download the invite after booking. A later week may stay locked until the time set for that session.',
     },
 ] as const;
 
@@ -216,7 +216,7 @@ const Courts = () => {
                 <BookingEngine
                     initialSport={initialSport}
                     heading="Pick a session"
-                    subheading="Choose a sport tab, then tap an open spot on a court."
+                    subheading="The next 14 days. Choose a sport tab, then tap an open spot on a court."
                 />
             </div>
 

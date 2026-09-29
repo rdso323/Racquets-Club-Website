@@ -35,7 +35,7 @@ export const MEMBER_HELP_FAQ: FaqItem[] = [
     },
     {
         question: 'When can I book next week’s sessions?',
-        answer: "Next week opens for booking Sunday at 5:00 PM Eastern. Until then, you can see next week's schedule on the card, but a lock overlay appears over the courts area and you cannot join yet. This applies to both open play and recurring coaching clinics.",
+        answer: 'Cards are the sessions in the next 14 days, so this week and the following week can both be on the page. Each weekly session can be booked as soon as its card appears, or stay locked until a time chosen for that session. New sessions start locked until Sunday at 5:00 PM Eastern. Until then you can see the later week, but a lock overlay covers the courts and you cannot join yet. This applies to both open play and recurring coaching clinics.',
     },
     {
         question: 'How does the waitlist work?',

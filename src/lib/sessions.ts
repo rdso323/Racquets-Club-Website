@@ -25,7 +25,7 @@ const WEEKDAY_ID_PATTERN =
 export const BOOKING_HORIZON_DAYS = 14;
 /** How many weekly dates to offer when a recurring session has no end date. */
 export const SKIP_WEEK_LOOKAHEAD = 16;
-export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = 'Opens Sunday 5pm Eastern';
+export const NEXT_WEEK_BOOKING_LOCK_MESSAGE = 'Opens Sunday 5:00 PM Eastern';
 
 export type { SessionType } from './sports';
 
@@ -277,18 +277,15 @@ export const isOpenPlaySessionEnded = (playDate: Date, timeStr: string): boolean
     return end ? Date.now() > end.getTime() : false;
 };
 
-export const isWeekLocked = (startOfWeek: Date, isNextWeek: boolean): boolean => {
-    const targetMonday = new Date(startOfWeek);
-    if (isNextWeek) {
-        targetMonday.setDate(startOfWeek.getDate() + 7);
-    }
-
-    const unlockTime = new Date(targetMonday);
-    unlockTime.setDate(targetMonday.getDate() - 1);
-    unlockTime.setHours(17, 0, 0, 0);
-
-    return new Date().getTime() < unlockTime.getTime();
-};
+export {
+    bookingLockMessage,
+    instantInEastern,
+    isWeekLocked,
+    resolveBookingLock,
+    storedBookingLockFields,
+    unlockInstantForWeek,
+    type BookingLockRule,
+} from './bookingLock';
 
 export const getWeekDateRangeDisplay = (startOfWeek: Date, isNextWeek: boolean): string => {
     const targetMonday = new Date(startOfWeek);
