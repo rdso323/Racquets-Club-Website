@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { FirebaseError } from 'firebase/app';
 import { addDoc, collection } from 'firebase/firestore';
 import { Plus } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -49,6 +50,11 @@ export interface ScheduleSessionFormProps {
     /** Expose saving state to a parent modal footer if needed. */
     onSavingChange?: (saving: boolean) => void;
 }
+
+const creationErrorMessage = (err: unknown): string => {
+    const detail = err instanceof FirebaseError ? err.message : err instanceof Error ? err.message : '';
+    return detail ? `Error creating session. ${detail}` : 'Error creating session.';
+};
 
 const defaultDraft = (sport: string) => ({
     title: '',
@@ -234,7 +240,7 @@ const ScheduleSessionForm = ({
             onCreated?.();
         } catch (err) {
             console.error('Error creating session:', err);
-            setMessage('Error creating session.');
+            setMessage(creationErrorMessage(err));
         } finally {
             setSaving(false);
         }

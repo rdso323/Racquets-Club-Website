@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasEmail() {
+      return signedIn() && request.auth.token.email is string && request.auth.token.email.size() > 0;
+    }
+
+    function callerEmail() {
+      return request.auth.token.email.lower();
+    }
+
+    function adminsDoc() {
+      return /databases/$(database)/documents/settings/admins;
+    }
+
+    // True only when Settings has a usable admin list. An empty or missing
+    // document falls through to the built-in officer list.
+    function savedAdminEmails() {
+      return exists(adminsDoc())
+        && get(adminsDoc()).data.emails is list
+        && get(adminsDoc()).data.emails.size() > 0;
+    }
+
+    function isListedAdmin() {
+      return hasEmail() && savedAdminEmails() && callerEmail() in get(adminsDoc()).data.emails;
+    }
+
+    function isBuiltinAdmin() {
+      return hasEmail() && callerEmail() in [
+        'altamash.memon@duke.edu',
+        'armin.thomas@duke.edu',
+        'hirsh.sinaihede@duke.edu',
+        'joe.chantajunlasin@duke.edu',
+        'kathryne.piazza@duke.edu',
+        'laura.wang@duke.edu',
+        'maddie.latimore@duke.edu',
+        'naitik.reshamwala@duke.edu',
+        'rohan.dsouza@duke.edu',
+        'rohand97@gmail.com',
+        'fuqua-racquets@duke.edu'
+      ];
+    }
+
+    function isAdmin() {
+      return isListedAdmin() || (!savedAdminEmails() && isBuiltinAdmin());
+    }
+
+    // Joining, dropping, the waitlist, and the first save of a weekly court
+    // all write a session document. Creating the weekly template does not.
+    match /sessions/{sessionId} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if signedIn() && request.auth.uid == userId;
+      allow delete: if false;
+
+      match /notifications/{notificationId} {
+        allow read: if true;
+        allow create: if signedIn();
+        allow update: if signedIn() && request.auth.uid == userId;
+        allow delete: if false;
+      }
+    }
+
+    match /feedback/{feedbackId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    // The feedback form writes here so the mail extension can send it.
+    match /mail/{mailId} {
+      allow read: if false;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /news/{newsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Weekly schedules, the admin list, ticker, and cabinet.
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
