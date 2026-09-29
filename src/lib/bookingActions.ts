@@ -15,6 +15,7 @@ import {
     getSessionEnrollmentCap,
     getSlotsPerCourt,
     isAttendeeOnCourt,
+    isMaterializedWeeklySession,
     isCourtSlotTaken,
     isSessionEnrollmentFull,
     isWaitlistFull,
@@ -76,6 +77,7 @@ const sessionSeedFields = (session: Session, activeSport?: string): Record<strin
             ? { courts: session.courts, slotsPerCourt: session.slotsPerCourt ?? getSlotsPerCourt(session) }
             : {}),
         ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
+        ...(isMaterializedWeeklySession(session) ? { recurring: true } : {}),
     };
 };
 
