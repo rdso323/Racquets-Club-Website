@@ -216,7 +216,7 @@ const Courts = () => {
                 <BookingEngine
                     initialSport={initialSport}
                     heading="Pick a session"
-                    subheading="The next 14 days. Choose a sport tab, then tap an open spot on a court."
+                    subheading="Choose a sport tab, then tap an open spot. Each weekly session shows its next date."
                 />
             </div>
 
