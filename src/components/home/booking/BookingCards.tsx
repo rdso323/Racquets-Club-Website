@@ -147,7 +147,7 @@ const AttendeesList = ({
                                 if (p.includes('|')) {
                                     const parsed = parseAttendee(p);
                                     name = formatCourtDisplayName(parsed.email, parsed.name);
-                                    tooltip = parsed.email.includes('@') ? parsed.email : parsed.name;
+                                    tooltip = name;
                                 } else {
                                     name = 'Player';
                                     tooltip = 'Player';

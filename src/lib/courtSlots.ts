@@ -12,11 +12,13 @@ export const buildCourtSlots = (
         if (!entry) return null;
         const { name, email, uid } = parseAttendee(entry);
         const isMine = userId ? entry.startsWith(`${uid}|`) || entry === uid : false;
+        const displayName = formatCourtDisplayName(email, name);
         return {
-            name: formatCourtDisplayName(email, name),
+            name: displayName,
             email,
             initials: formatCourtSlotInitials(email, name),
-            tooltip: email.includes('@') ? email : name,
+            // "Rohan D." — the same court label as the spot, not the email address.
+            tooltip: displayName,
             isMine,
         };
     });
