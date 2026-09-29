@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import type { User } from 'firebase/auth';
-import { Users, Rocket, AlertTriangle, Lock, LogIn, RotateCcw, MapPin } from 'lucide-react';
+import { Users, Rocket, AlertTriangle, Lock, LogIn, RotateCcw } from 'lucide-react';
 import { useGoToLogin } from '../../../hooks/useGoToLogin';
 import type { AdminRecurringSchedule, OpenPlayDayConfig, Sport } from '../../../lib/sports';
 import { CourtBookingView } from './CourtBookingView';
@@ -47,25 +47,6 @@ export interface BookingCardHandlers {
     onLeaveWaitlist: (session: Session) => void;
     onCoachAction: (session: Session) => void;
 }
-
-/** Opens Google Maps search for the session name. No map is loaded on the page. */
-const SessionMapLink = ({ place }: { place: string }) => {
-    const query = place.trim();
-    if (!query) return null;
-    return (
-        <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor
-            aria-label={`Find ${query} on Google Maps`}
-            className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 underline-offset-2 hover:text-gray-800 hover:underline dark:text-chalk/50 dark:hover:text-chalk"
-        >
-            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-            Map
-        </a>
-    );
-};
 
 const MembersOnlyOverlay = () => {
     const goToLogin = useGoToLogin();
@@ -292,12 +273,9 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                     </div>
                 </div>
                 <h3 className="font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{session.title}</h3>
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    {recurringDayLabel && (
-                        <p className="text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
-                    )}
-                    <SessionMapLink place={session.title} />
-                </div>
+                {recurringDayLabel && (
+                    <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
+                )}
                 <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
                     {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                 </p>
@@ -554,10 +532,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                             <SessionTags session={session} variant="booking" />
                         </div>
                         <h3 className="mt-3 font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{config.title}</h3>
-                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <p className="text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
-                            <SessionMapLink place={config.title} />
-                        </div>
+                        <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
                     </div>
                     <div className="flex flex-col items-end gap-2 sm:mt-0">
                         {isAdmin && adminActions && (
