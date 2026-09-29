@@ -295,7 +295,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                         {heading ?? 'Reserve your court'}
                     </h2>
                     <p className="mt-2 max-w-xl text-sm text-gray-500 dark:text-chalk/50">
-                        {subheading ?? `The next 14 days. Browse open play and clinic sessions across all ${SPORTS.length} club sports.`}
+                        {subheading ?? `Each weekly session shows its next date. Browse open play and clinics across all ${SPORTS.length} club sports.`}
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
