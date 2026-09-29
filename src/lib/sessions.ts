@@ -721,7 +721,7 @@ export const filterRegularSessionsForDisplay = (
 ): Session[] => {
     return sessions.filter((s) => {
         if (isRecurringCoachingSession(s)) return false;
-        if (s.id.startsWith('clinic_')) return false;
+        if (s.id.startsWith('clinic_') || s.id.startsWith('open_play_') || s.recurring === true) return false;
         if (s.type === 'court' && s.title.toLowerCase().includes('open play')) {
             return false;
         }
