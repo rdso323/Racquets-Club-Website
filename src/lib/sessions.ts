@@ -720,8 +720,7 @@ export const filterRegularSessionsForDisplay = (
     activeSport: Sport,
 ): Session[] => {
     return sessions.filter((s) => {
-        if (isRecurringCoachingSession(s)) return false;
-        if (s.id.startsWith('clinic_') || s.id.startsWith('open_play_') || s.recurring === true) return false;
+        if (isMaterializedWeeklySession(s) || isRecurringCoachingSession(s)) return false;
         if (s.type === 'court' && s.title.toLowerCase().includes('open play')) {
             return false;
         }
@@ -872,6 +871,15 @@ export const isRecurringCoachingSession = (session: Session): boolean =>
 
 export const isRecurringSession = (session: Session): boolean =>
     isOpenPlaySession(session) || isRecurringCoachingSession(session);
+
+/**
+ * A weekly template stores that week's roster in `sessions/{open_play_|clinic_…}`.
+ * Joining creates or updates that document. It is the same session as the weekly card.
+ */
+export const isMaterializedWeeklySession = (session: { id: string; recurring?: boolean }): boolean =>
+    session.recurring === true ||
+    session.id.startsWith('open_play_') ||
+    session.id.startsWith('clinic_');
 
 export const isRecurringCourtSession = (session: Session): boolean => isOpenPlaySession(session);
 
@@ -1092,8 +1100,7 @@ export const buildAdminDisplaySessions = (
 
         const customSessions = sessionsList.filter((s) => {
             if (isLegacyBundledOpenPlay(s)) return false;
-            if (isRecurringCoachingSession(s)) return false;
-            if (s.id.startsWith('clinic_')) return false;
+            if (isMaterializedWeeklySession(s) || isRecurringCoachingSession(s)) return false;
             if (openPlayIds.has(s.id) || regularIds.has(s.id)) return false;
             if (s.type === 'court' && s.title.toLowerCase().includes('open play')) return false;
 
