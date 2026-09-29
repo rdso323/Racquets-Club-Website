@@ -48,7 +48,7 @@ export interface BookingCardHandlers {
     onCoachAction: (session: Session) => void;
 }
 
-/** Opens Google Maps search for the session name. No map is loaded on the page. */
+/** Opens a Google Maps search for a place set on the session. No map is loaded on the page. */
 const SessionMapLink = ({ place }: { place: string }) => {
     const query = place.trim();
     if (!query) return null;
@@ -292,12 +292,14 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                     </div>
                 </div>
                 <h3 className="font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{session.title}</h3>
-                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    {recurringDayLabel && (
-                        <p className="text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
-                    )}
-                    <SessionMapLink place={session.title} />
-                </div>
+                {(recurringDayLabel || session.place) && (
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                        {recurringDayLabel && (
+                            <p className="text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
+                        )}
+                        {session.place && <SessionMapLink place={session.place} />}
+                    </div>
+                )}
                 <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
                     {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                 </p>
@@ -556,7 +558,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                         <h3 className="mt-3 font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{config.title}</h3>
                         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
                             <p className="text-xs font-medium text-gray-500 dark:text-chalk/45">Every {dayLabel}</p>
-                            <SessionMapLink place={config.title} />
+                            {config.place && <SessionMapLink place={config.place} />}
                         </div>
                     </div>
                     <div className="flex flex-col items-end gap-2 sm:mt-0">

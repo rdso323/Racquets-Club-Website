@@ -67,6 +67,8 @@ export const DAY_OPTIONS: { value: DayName; label: string }[] = [
 export interface OpenPlayDayConfig {
     day: DayName;
     title: string;
+    /** Google Maps search name. Omit to hide the Map link. */
+    place?: string;
     courts: string[];
     maxPerCourt: number;
     time: string;
@@ -106,6 +108,8 @@ export interface AdminRecurringSchedule {
     sport: Sport;
     day: DayName;
     title: string;
+    /** Google Maps search name. Omit to hide the Map link. */
+    place?: string;
     time: string;
     sessionType: SessionType;
     courts: string[];

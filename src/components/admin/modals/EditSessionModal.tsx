@@ -97,6 +97,21 @@ const EditSessionModal = ({
                     className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                 />
             </div>
+            <div>
+                <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                    Place <span className="font-medium normal-case text-gray-400">(optional)</span>
+                </label>
+                <input
+                    type="text"
+                    placeholder="e.g. Rock Quarry Courts"
+                    value={session.place ?? ''}
+                    onChange={(e) => onSessionChange({ ...session, place: e.target.value })}
+                    className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                />
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    Adds a Map link on the card. It searches Google Maps for this name.
+                </p>
+            </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                     <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Sport</label>

@@ -64,6 +64,7 @@ const sessionSeedFields = (session: Session, activeSport?: string): Record<strin
 
     return {
         title: session.title,
+        ...(session.place?.trim() ? { place: session.place.trim() } : {}),
         type: session.type,
         date: session.date,
         time: session.time,
