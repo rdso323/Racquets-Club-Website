@@ -58,7 +58,6 @@ const creationErrorMessage = (err: unknown): string => {
 
 const defaultDraft = (sport: string) => ({
     title: '',
-    place: '',
     sport,
     type: 'court' as SessionType,
     date: '',
@@ -160,7 +159,6 @@ const ScheduleSessionForm = ({
                     sport: newSession.sport as AdminRecurringSchedule['sport'],
                     day: seriesDay,
                     title: seriesTitle,
-                    place: newSession.place.trim(),
                     time: newSession.time,
                     sessionType: newSession.type,
                     courts,
@@ -208,7 +206,6 @@ const ScheduleSessionForm = ({
                 const timeFields = buildTimeFields(newSession.startTime, newSession.endTime || undefined);
                 const sessionData: Record<string, unknown> = {
                     title: newSession.title,
-                    ...(newSession.place.trim() ? { place: newSession.place.trim() } : {}),
                     sport: newSession.sport,
                     type: newSession.type,
                     date: newSession.date,
@@ -398,22 +395,6 @@ const ScheduleSessionForm = ({
                             </select>
                         </div>
                     </div>
-                </div>
-
-                <div>
-                    <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
-                        Place <span className="font-medium normal-case text-gray-400">(optional)</span>
-                    </label>
-                    <input
-                        type="text"
-                        placeholder="e.g. Rock Quarry Courts"
-                        value={newSession.place}
-                        onChange={(e) => setNewSession({ ...newSession, place: e.target.value })}
-                        className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
-                    />
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        Adds a Map link on the card. It searches Google Maps for this name.
-                    </p>
                 </div>
 
                 {scheduleMode === 'recurring' ? (

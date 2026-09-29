@@ -32,8 +32,6 @@ export type { SessionType } from './sports';
 export interface Session {
     id: string;
     title: string;
-    /** Google Maps search name. When set, the card shows a Map link. */
-    place?: string;
     type: SessionType;
     date: string;
     time: string;
@@ -528,7 +526,6 @@ export const resolveRecurringSession = (
             return {
                 ...dbSession,
                 title: config.title,
-                place: config.place?.trim() || undefined,
                 type: 'coaching',
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
@@ -547,7 +544,6 @@ export const resolveRecurringSession = (
         return {
             id: sessionId,
             title: config.title,
-            place: config.place?.trim() || undefined,
             type: 'coaching',
             date: playDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }),
             time: config.time,
@@ -570,7 +566,6 @@ export const resolveRecurringSession = (
         return {
             ...dbSession,
             title: config.title,
-            place: config.place?.trim() || undefined,
             type: 'court',
             maxAttendees: dbSession.maxAttendees ?? config.maxAttendees ?? totalMax,
             sport,
@@ -588,7 +583,6 @@ export const resolveRecurringSession = (
     return {
         id: sessionId,
         title: config.title,
-        place: config.place?.trim() || undefined,
         type: 'court',
         date: playDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }),
         time: config.time,

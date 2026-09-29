@@ -5,7 +5,6 @@ import {
     setDoc,
     getDoc,
     arrayUnion,
-    deleteField,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { type AdminRecurringSchedule, getSlotsPerCourtForSport, clampAdminMaxAttendees, clampAdminMaxWaitlist } from '../lib/sports';
@@ -117,10 +116,7 @@ export function useSessionAdminOps({
         const templateCourts = getCourtsForSession(latest, recurringSchedules, disabledBuiltinSchedules);
         const courts = latest.courts?.length ? latest.courts : templateCourts;
         const config = getRecurringConfigForSession(latest, recurringSchedules, disabledBuiltinSchedules);
-        setEditingSession({
-            ...latest,
-            place: config?.place ?? latest.place ?? '',
-        });
+        setEditingSession(latest);
         setEditCourtFields(courtFieldsFromSession(courts.length ? courts : latest.courts));
         setEditingScheduleMeta({
             endsOn: config?.endsOn ?? '',
@@ -174,7 +170,6 @@ export function useSessionAdminOps({
                 : { autoEnrollCreator: false as const };
             const scheduleFields: Omit<AdminRecurringSchedule, 'id' | 'sport' | 'day'> = {
                 title: sessionToSave.title,
-                place: sessionToSave.place?.trim() ?? '',
                 sessionType: sessionToSave.type,
                 time: String(updateData.time ?? sessionToSave.time),
                 courts: courts ?? config.courts,
@@ -252,7 +247,6 @@ export function useSessionAdminOps({
             const slotsPerCourt = getSlotsPerCourtForSport(sport);
             const updateData: Record<string, unknown> = {
                 title: editingSession.title,
-                place: editingSession.place?.trim() || deleteField(),
                 sport: editingSession.sport,
                 type: editingSession.type,
                 date: editingSession.date,

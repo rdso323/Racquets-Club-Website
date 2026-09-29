@@ -40,7 +40,6 @@ export const getRecurringTemplateKey = (sport: Sport, config: OpenPlayDayConfig)
 export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayDayConfig => ({
     day: schedule.day,
     title: schedule.title,
-    place: schedule.place,
     courts: schedule.courts,
     maxPerCourt: schedule.maxPerCourt,
     time: schedule.time,
@@ -67,9 +66,6 @@ export const sanitizeRecurringSchedule = (schedule: AdminRecurringSchedule): Adm
         ...schedule,
         sessionType: schedule.sessionType ?? 'court',
     };
-    const place = next.place?.trim();
-    if (place) next.place = place;
-    else delete next.place;
     if (!next.endsOn) delete next.endsOn;
     const skipDates = (next.skipDates ?? []).filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date));
     if (skipDates.length > 0) next.skipDates = [...new Set(skipDates)].sort();
