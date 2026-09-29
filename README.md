@@ -14,7 +14,7 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 - **Clinic layouts** — Coaching sessions use court diagrams when total capacity divides evenly into 2 or 4 per court; otherwise a roster list with Join Session
 - **Session waitlist** — Shared queue per session with auto-promotion; **visible roster** (position, name, email) on each booking card when anyone is queued
 - **Weekly recurring sessions** — Built-in open play and coaching clinic templates; cards show **Clinic/Open Play** and **Recurring/One-time** tags
-- **Next-week lock** — Opens **Sunday 5:00 PM ET**; until then, next week's courts show a **center overlay** (schedule stays visible, booking disabled)
+- **Next session** — Each weekly session shows its next date. The following week appears after that session ends, and can stay locked until **Sunday 5:00 PM ET**
 - **Club Wire ticker** — Live sports headlines from Firestore
 - **Events & news** — Social events carousel and news feed (up to four articles)
 - **Help** — Searchable FAQ at `/help` (jump to topics); signed-in admins also see an Operations guide section
