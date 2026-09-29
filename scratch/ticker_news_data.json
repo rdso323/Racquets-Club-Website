@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Team Europe reclaimed the Laver Cup with a 13-5 win over Team World on Sept. 27 at London's O2 as Alexander Zverev closed it out 7-6(3), 6-3 over Learner Tien after Flavio Cobolli and Jakub Mensik beat Alex de Minaur and Taylor Fritz 7-5, 6-3 — Zverev's fourth Laver Cup clincher • [SQUASH] Malaysia swept Asian Games singles gold on Sept. 27 in Nagoya as Sivasangari Subramaniam beat Anahat Singh 11-4, 11-4, 11-7 and Ng Eain Yow downed Abhay Singh 11-9, 11-5, 11-5, with both winners earning LA28 Olympic quotas • [BADMINTON] Singapore's Loh Kean Yew stunned world No. 1 Jonatan Christie 21-14, 21-19 in the men's singles quarters on Sept. 27 at Ichinomiya, guaranteeing Singapore's first Asian Games men's singles medal as semis run Sept. 28 • [PICKLEBALL] The 1,000-point Rate Las Vegas Open opens Sept. 28 at the Darling Tennis Center with amateur brackets from 8 a.m. and pro qualifying Monday as Anna Leigh Waters chases career title No. 200 in doubles • [TABLE TENNIS] China swept Sept. 27 gold at Sky Hall Toyota as Wang Manyu beat Sun Yingsha 4-2 in the women's singles final and Lin Shidong and Huang Youzheng edged Japan's Harimoto and Shinozuka 4-2 in men's doubles",
+  "tickerText": "[TENNIS] Novak Djokovic and Elena Rybakina head a 12-player panel confirmed Sept. 29 to advise the four Grand Slams on revenue share and player welfare after talks at the Laver Cup, with stars pushing for 22% of major-tournament revenue • [SQUASH] India's men's team topped Pool A with a 3-0 win over South Korea on Sept. 29 to reach the Asian Games quarter-finals, while the women beat Japan 2-1 as Tanvi Khanna clinched the decider against Akari Midorikawa • [BADMINTON] Asian Games singles finals day on Sept. 29 at Ichinomiya pits An Se-young against Akane Yamaguchi after the Korean routed Chen Yufei 21-5, 21-12, and Singapore's Loh Kean Yew faces Kunlavut Vitidsarn for historic men's gold • [PICKLEBALL] Day two of the Rate Las Vegas Open on Sept. 29 brings senior Open play and pro qualifying from 2 p.m. at the Darling Tennis Center, with 1,000 ranking points and Anna Leigh Waters two doubles titles from career No. 200 • [TABLE TENNIS] Lin Shidong closed the Asian Games program with a 4-0 men's singles final win over Wang Chuqin on Sept. 28, finishing with three golds and a team silver after 20 matches across four events in Toyota",
   "newsItems": [
     {
-      "title": "Europe Wins Laver Cup",
-      "excerpt": "Alexander Zverev sealed Team Europe's 13-5 victory over Team World on Sept. 27 at the O2, beating Learner Tien 7-6(3), 6-3 after Cobolli and Mensik won doubles to claim Europe's sixth Laver Cup title.",
-      "date": "September 28, 2026",
+      "title": "Djokovic Leads Slam Panel",
+      "excerpt": "A dozen players including Novak Djokovic and Elena Rybakina were confirmed Sept. 29 for a new Grand Slam advisory council after Laver Cup talks, as the group presses for about 22% of major revenue and stronger welfare support.",
+      "date": "September 29, 2026",
       "category": "Tennis",
-      "link": "https://lavercup.com/news/2026/09/27/zverev-again-clinches-laver-cup-for-team-europe"
+      "link": "https://www.freemalaysiatoday.com/category/sports/2026/09/29/djokovic-among-12-player-panel-to-meet-with-tennis-majors"
     },
     {
-      "title": "Malaysia Sweeps Squash Gold",
-      "excerpt": "Sivasangari Subramaniam and Ng Eain Yow defended their Asian Games singles titles on Sept. 27 in Nagoya, beating India's Anahat Singh and Abhay Singh in straight games to claim LA28 Olympic quotas.",
-      "date": "September 28, 2026",
-      "category": "Squash",
-      "link": "https://www.olympics.com/en/news/asian-games-2026-squash-singles-finals-report-abhay-anahat-singh"
+      "title": "Asiad Badminton Finals Day",
+      "excerpt": "An Se-young faces Akane Yamaguchi on Sept. 29 chasing the first back-to-back Asian Games women's singles gold, while Singapore's Loh Kean Yew meets Kunlavut Vitidsarn for men's gold after becoming his nation's first badminton finalist.",
+      "date": "September 29, 2026",
+      "category": "Badminton",
+      "link": "https://en.yna.co.kr/view/AEN20260928011400315"
     },
     {
-      "title": "Vegas Open Week Begins",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open starts Sept. 28 at the Darling Tennis Center with amateur play and more than $1 million on offer, as Anna Leigh Waters eyes career title No. 200 in doubles.",
-      "date": "September 28, 2026",
+      "title": "Vegas Open Qualifying Day",
+      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to senior Open brackets and pro qualifying on Sept. 29 at the Darling Tennis Center, with more than $1 million in payouts as top seeds fight for 1,000-point Open titles.",
+      "date": "September 29, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
     },
     {
-      "title": "China Doubles Up at Asiad",
-      "excerpt": "Wang Manyu beat Sun Yingsha 4-2 in the women's singles final on Sept. 27, and Lin Shidong and Huang Youzheng took men's doubles gold 4-2 over Japan as China closed a strong day at Sky Hall Toyota.",
-      "date": "September 28, 2026",
+      "title": "Lin Shidong's Triple Gold",
+      "excerpt": "China's Lin Shidong swept Wang Chuqin 4-0 in the Asian Games men's singles final on Sept. 28 to cap three gold medals in Toyota, adding singles to his mixed and men's doubles titles after a 4-3 semifinal comeback over Lin Yun-ju.",
+      "date": "September 29, 2026",
       "category": "Table Tennis",
-      "link": "https://www.scmp.com/sport/other-sport/article/3368966/chinas-wang-manyu-beats-sun-yingsha-womens-singles-table-tennis-final-asian-games"
+      "link": "http://global.chinadaily.com.cn/a/202609/29/WS6abb19bae4b06d4aa0560bbe.html"
     }
   ]
 }
