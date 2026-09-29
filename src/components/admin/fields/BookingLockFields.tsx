@@ -11,7 +11,7 @@ interface BookingLockFieldsProps {
     onChange: (value: BookingLockValue) => void;
 }
 
-/** Per-session choice: hold the later week until a weekday and time, or open it when the card appears. */
+/** Per-session choice: lock the later week until a weekday and time, or leave it unlocked when the card appears. */
 const BookingLockFields = ({ value, onChange }: BookingLockFieldsProps) => (
     <div className="rounded-xl border border-violet-200 bg-violet-50/70 p-3 dark:border-violet-900/40 dark:bg-violet-950/20">
         <label className="flex items-start gap-3 text-sm text-violet-950 dark:text-violet-100">
@@ -22,11 +22,11 @@ const BookingLockFields = ({ value, onChange }: BookingLockFieldsProps) => (
                 onChange={(event) => onChange({ ...value, bookingLockEnabled: event.target.checked })}
             />
             <span>
-                <span className="font-semibold">Hold the later week until a set time</span>
+                <span className="font-semibold">Lock next week’s session until a set time</span>
                 <span className="mt-1 block text-xs text-violet-800/80 dark:text-violet-200/80">
                     {value.bookingLockEnabled
-                        ? 'Members can see that week early, but cannot join until this Eastern time. Sunday at 5:00 PM is the usual time.'
-                        : 'Members can book a week as soon as its card is on the page. The next week can appear while this week is still ahead.'}
+                        ? 'Members can see the card, but the session stays locked until the day and time below. They cannot join before it unlocks.'
+                        : 'This session is unlocked. Members can join as soon as its card is on the page.'}
                 </span>
             </span>
         </label>
@@ -34,7 +34,7 @@ const BookingLockFields = ({ value, onChange }: BookingLockFieldsProps) => (
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                     <label className="mb-1 block text-xs font-bold uppercase text-violet-700 dark:text-violet-300">
-                        Opens on
+                        Unlocks on
                     </label>
                     <select
                         value={value.bookingLockDay}
