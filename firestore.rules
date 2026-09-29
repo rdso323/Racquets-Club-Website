@@ -1,0 +1,150 @@
+rules_version = '2';
+
+// Public reads match what the live database already allows.
+// Writes for schedules and sessions are limited to signed-in admins,
+// plus the member actions the app already performs (join, drop, profile, feedback).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.email is string
+        && request.auth.token.email_verified == true;
+    }
+
+    function email() {
+      return request.auth.token.email;
+    }
+
+    function adminsDoc() {
+      return /databases/$(database)/documents/settings/admins;
+    }
+
+    function isBuiltinAdmin() {
+      return email().matches('(?i)^(altamash\\.memon@duke\\.edu|armin\\.thomas@duke\\.edu|hirsh\\.sinaihede@duke\\.edu|joe\\.chantajunlasin@duke\\.edu|kathryne\\.piazza@duke\\.edu|laura\\.wang@duke\\.edu|maddie\\.latimore@duke\\.edu|naitik\\.reshamwala@duke\\.edu|rohan\\.dsouza@duke\\.edu|rohand97@gmail\\.com|fuqua-racquets@duke\\.edu)$');
+    }
+
+    // Saved list when it has addresses; otherwise the built-in officers, including Gmail.
+    function isAdmin() {
+      return signedIn() && (
+        exists(adminsDoc())
+          ? (
+            get(adminsDoc()).data.emails is list && get(adminsDoc()).data.emails.size() > 0
+              ? email() in get(adminsDoc()).data.emails
+              : isBuiltinAdmin()
+          )
+          : isBuiltinAdmin()
+      );
+    }
+
+    function ownerProfileOk() {
+      return (!('email' in request.resource.data) || request.resource.data.email == email())
+        && (!('firstName' in request.resource.data) || (request.resource.data.firstName is string && request.resource.data.firstName.size() <= 80))
+        && (!('lastName' in request.resource.data) || (request.resource.data.lastName is string && request.resource.data.lastName.size() <= 80))
+        && (!('displayName' in request.resource.data) || (request.resource.data.displayName is string && request.resource.data.displayName.size() <= 160))
+        && (!('tabPreferences' in request.resource.data) || (request.resource.data.tabPreferences is list && request.resource.data.tabPreferences.size() <= 20))
+        && (!('isAdmin' in request.resource.data) || request.resource.data.isAdmin == false || isAdmin());
+    }
+
+    match /settings/{docId} {
+      allow read: if true;
+    }
+
+    match /settings/admins {
+      allow write: if isAdmin()
+        && request.resource.data.emails is list
+        && request.resource.data.emails.size() > 0
+        && request.resource.data.emails.size() <= 30;
+    }
+
+    match /settings/ticker {
+      allow write: if isAdmin()
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 2000;
+    }
+
+    match /settings/cabinet {
+      allow write: if isAdmin();
+    }
+
+    match /settings/demoPurge {
+      allow write: if isAdmin();
+    }
+
+    // Lock fields live inside each schedule map. They are not stripped.
+    match /settings/recurringSchedules {
+      allow write: if isAdmin()
+        && request.resource.data.schedules is list
+        && request.resource.data.schedules.size() <= 80
+        && request.resource.data.disabledBuiltin is list
+        && request.resource.data.disabledBuiltin.size() <= 40;
+    }
+
+    match /sessions/{sessionId} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if isAdmin();
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /news/{articleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /feedback/{feedbackId} {
+      allow read: if true;
+      allow create: if request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 5000
+        && request.resource.data.type is string
+        && request.resource.data.type.size() <= 40;
+      allow update, delete: if isAdmin();
+    }
+
+    match /mail/{mailId} {
+      allow read: if true;
+      allow create: if request.resource.data.to is string
+        && request.resource.data.to.size() <= 254
+        && request.resource.data.message is map;
+      allow update, delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['email', 'firstName', 'lastName', 'displayName', 'tabPreferences', 'isAdmin'])
+        && ownerProfileOk();
+      allow update: if isAdmin()
+        || (signedIn()
+          && request.auth.uid == userId
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['email', 'firstName', 'lastName', 'displayName', 'tabPreferences', 'isAdmin'])
+          && ownerProfileOk());
+      allow delete: if isAdmin();
+
+      match /notifications/{notificationId} {
+        allow read: if isAdmin() || (signedIn() && request.auth.uid == userId);
+        allow create: if signedIn()
+          && request.resource.data.keys().hasOnly(['type', 'sessionId', 'sessionTitle', 'sessionDate', 'court', 'read', 'createdAt'])
+          && request.resource.data.keys().hasAll(['type', 'sessionId', 'sessionTitle', 'sessionDate', 'read', 'createdAt'])
+          && request.resource.data.type == 'waitlist_promoted'
+          && request.resource.data.read == false
+          && request.resource.data.sessionId is string
+          && request.resource.data.sessionId.size() <= 120
+          && request.resource.data.sessionTitle is string
+          && request.resource.data.sessionTitle.size() <= 200
+          && request.resource.data.sessionDate is string
+          && request.resource.data.sessionDate.size() <= 80;
+        allow update: if isAdmin()
+          || (signedIn()
+            && request.auth.uid == userId
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']));
+        allow delete: if isAdmin() || (signedIn() && request.auth.uid == userId);
+      }
+    }
+  }
+}
