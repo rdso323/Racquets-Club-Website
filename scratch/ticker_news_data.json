@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Novak Djokovic and Elena Rybakina head a 12-player panel confirmed Sept. 29 to advise the four Grand Slams on revenue share and player welfare after talks at the Laver Cup, with stars pushing for 22% of major-tournament revenue • [SQUASH] India's men's team topped Pool A with a 3-0 win over South Korea on Sept. 29 to reach the Asian Games quarter-finals, while the women beat Japan 2-1 as Tanvi Khanna clinched the decider against Akari Midorikawa • [BADMINTON] Asian Games singles finals day on Sept. 29 at Ichinomiya pits An Se-young against Akane Yamaguchi after the Korean routed Chen Yufei 21-5, 21-12, and Singapore's Loh Kean Yew faces Kunlavut Vitidsarn for historic men's gold • [PICKLEBALL] Day two of the Rate Las Vegas Open on Sept. 29 brings senior Open play and pro qualifying from 2 p.m. at the Darling Tennis Center, with 1,000 ranking points and Anna Leigh Waters two doubles titles from career No. 200 • [TABLE TENNIS] Lin Shidong closed the Asian Games program with a 4-0 men's singles final win over Wang Chuqin on Sept. 28, finishing with three golds and a team silver after 20 matches across four events in Toyota",
+  "tickerText": "[TENNIS] Daniil Medvedev beat Andrey Rublev 7-5, 6-4 on Sept. 30 to win the Hangzhou Open for his 24th ATP title and third of 2026, while the Kinoshita Japan Open and China Open both open Sept. 30 with Stefanos Tsitsipas facing Tomas Martin Etcheverry in Tokyo • [SQUASH] India's women assured another Asian Games medal with a 2-0 team semifinal win over Singapore on Sept. 30 as Tanvi Khanna and Anahat Singh won singles, while the PSA's CB Squash Tour continues in São Paulo and the Champion Fiberglass Swedish Open debuts in Stockholm • [BADMINTON] An Se-young became the first woman to win back-to-back Asian Games singles gold with a 21-17, 21-9 final win over Akane Yamaguchi on Sept. 29, and Kunlavut Vitidsarn took men's gold 21-12, 21-16 over Singapore's Loh Kean Yew • [PICKLEBALL] The Rate Las Vegas Open moves to the pro round of 32 on Sept. 30 at the Darling Tennis Center as Anna Leigh Waters—at 198 career PPA titles and skipping singles—chases No. 200 in women's and mixed doubles with a near full-strength field back from Mesa • [TABLE TENNIS] Lin Shidong swept Wang Chuqin 4-0 in the Asian Games men's singles final to complete a triple-gold haul as China's table tennis program took six of seven golds, with Japan's men the lone upset winners in the team event",
   "newsItems": [
     {
-      "title": "Djokovic Leads Slam Panel",
-      "excerpt": "A dozen players including Novak Djokovic and Elena Rybakina were confirmed Sept. 29 for a new Grand Slam advisory council after Laver Cup talks, as the group presses for about 22% of major revenue and stronger welfare support.",
-      "date": "September 29, 2026",
+      "title": "Medvedev Wins Hangzhou Open",
+      "excerpt": "Daniil Medvedev defeated Andrey Rublev 7-5, 6-4 on Sept. 30 to capture the Hangzhou Open, his 24th career ATP title and a boost toward Turin as the Japan Open and China Open also kick off across Asia.",
+      "date": "September 30, 2026",
       "category": "Tennis",
-      "link": "https://www.freemalaysiatoday.com/category/sports/2026/09/29/djokovic-among-12-player-panel-to-meet-with-tennis-majors"
+      "link": "https://www.canberratimes.com.au/story/9359833/hangzhou-win-has-medvedev-eyeing-return-to-turin/"
     },
     {
-      "title": "Asiad Badminton Finals Day",
-      "excerpt": "An Se-young faces Akane Yamaguchi on Sept. 29 chasing the first back-to-back Asian Games women's singles gold, while Singapore's Loh Kean Yew meets Kunlavut Vitidsarn for men's gold after becoming his nation's first badminton finalist.",
-      "date": "September 29, 2026",
+      "title": "An, Kunlavut Rule Asiad Singles",
+      "excerpt": "An Se-young routed Akane Yamaguchi 21-17, 21-9 on Sept. 29 for a historic second straight Asian Games women's singles gold, while Kunlavut Vitidsarn beat Loh Kean Yew for Thailand's first men's singles title.",
+      "date": "September 30, 2026",
       "category": "Badminton",
-      "link": "https://en.yna.co.kr/view/AEN20260928011400315"
+      "link": "https://www.japantimes.co.jp/sports/2026/09/30/asian-games/an-yamaguchi-badminton-asian-games/"
     },
     {
-      "title": "Vegas Open Qualifying Day",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to senior Open brackets and pro qualifying on Sept. 29 at the Darling Tennis Center, with more than $1 million in payouts as top seeds fight for 1,000-point Open titles.",
-      "date": "September 29, 2026",
+      "title": "Vegas Open Hits Round of 32",
+      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open advances to pro round-of-32 play on Sept. 30 with $1 million-plus on the line as Anna Leigh Waters, two titles shy of 200, targets both doubles draws without entering singles.",
+      "date": "September 30, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
     },
     {
-      "title": "Lin Shidong's Triple Gold",
-      "excerpt": "China's Lin Shidong swept Wang Chuqin 4-0 in the Asian Games men's singles final on Sept. 28 to cap three gold medals in Toyota, adding singles to his mixed and men's doubles titles after a 4-3 semifinal comeback over Lin Yun-ju.",
-      "date": "September 29, 2026",
+      "title": "Lin's Triple Gold In Nagoya",
+      "excerpt": "China's Lin Shidong blanked Wang Chuqin 4-0 in the Asian Games men's singles final to finish with three gold medals as the nation's paddlers claimed six of seven titles after Japan's historic men's team upset.",
+      "date": "September 30, 2026",
       "category": "Table Tennis",
-      "link": "http://global.chinadaily.com.cn/a/202609/29/WS6abb19bae4b06d4aa0560bbe.html"
+      "link": "http://en.people.cn/n3/2026/0929/c90000-20504766.html"
     }
   ]
 }
