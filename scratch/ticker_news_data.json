@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Daniil Medvedev beat Andrey Rublev 7-5, 6-4 on Sept. 30 to win the Hangzhou Open for his 24th ATP title and third of 2026, while the Kinoshita Japan Open and China Open both open Sept. 30 with Stefanos Tsitsipas facing Tomas Martin Etcheverry in Tokyo • [SQUASH] India's women assured another Asian Games medal with a 2-0 team semifinal win over Singapore on Sept. 30 as Tanvi Khanna and Anahat Singh won singles, while the PSA's CB Squash Tour continues in São Paulo and the Champion Fiberglass Swedish Open debuts in Stockholm • [BADMINTON] An Se-young became the first woman to win back-to-back Asian Games singles gold with a 21-17, 21-9 final win over Akane Yamaguchi on Sept. 29, and Kunlavut Vitidsarn took men's gold 21-12, 21-16 over Singapore's Loh Kean Yew • [PICKLEBALL] The Rate Las Vegas Open moves to the pro round of 32 on Sept. 30 at the Darling Tennis Center as Anna Leigh Waters—at 198 career PPA titles and skipping singles—chases No. 200 in women's and mixed doubles with a near full-strength field back from Mesa • [TABLE TENNIS] Lin Shidong swept Wang Chuqin 4-0 in the Asian Games men's singles final to complete a triple-gold haul as China's table tennis program took six of seven golds, with Japan's men the lone upset winners in the team event",
+  "tickerText": "[TENNIS] Novak Djokovic held off Nuno Borges 6-3, 7-6(2) on Sept. 30 to extend his perfect 30-0 Beijing record at the China Open, while Karen Khachanov upset Felix Auger-Aliassime 6-3, 6-3 and first-round play rolls on Oct. 1 as the Kinoshita Japan Open features Kei Nishikori's farewell run against Frances Tiafoe in Tokyo • [SQUASH] The Champion Fiberglass Swedish Open hits round-of-16 play in Stockholm on Oct. 1 with 16 of the world's top 20 split across equal-prize men's and women's draws before quarterfinals move to a glass court at GIH, while World Squash Day's global Team All-Stars vs Superstars rally runs Oct. 1–10 • [BADMINTON] An Se-young routed Akane Yamaguchi 21-17, 21-9 for a historic second straight Asian Games women's singles gold as Kunlavut Vitidsarn and Korea's Lee So-hee/Baek Ha-na also topped the podium, while China failed to medal in men's singles for the first time since 1974 • [PICKLEBALL] The Rate Las Vegas Open reaches pro round-of-16 action on Oct. 1 at the Darling Tennis Center with Anna Leigh Waters—at 198 career PPA titles and skipping singles—chasing No. 200 in doubles as the $1.27M Veolia Chicago Cup looms Oct. 5 • [TABLE TENNIS] Lin Shidong swept Wang Chuqin 4-0 to cap a triple-gold Asian Games haul as China claimed six of seven titles, Japan stunned China for men's team gold, and South Korea left with three bronzes—its worst Asiad table tennis result since 1958",
   "newsItems": [
     {
-      "title": "Medvedev Wins Hangzhou Open",
-      "excerpt": "Daniil Medvedev defeated Andrey Rublev 7-5, 6-4 on Sept. 30 to capture the Hangzhou Open, his 24th career ATP title and a boost toward Turin as the Japan Open and China Open also kick off across Asia.",
-      "date": "September 30, 2026",
+      "title": "Djokovic Perfect In Beijing Return",
+      "excerpt": "Novak Djokovic beat Nuno Borges 6-3, 7-6(2) on Sept. 30 to improve to 30-0 at the China Open, while Karen Khachanov stunned Felix Auger-Aliassime 6-3, 6-3 as Beijing's first round continues on Oct. 1.",
+      "date": "October 1, 2026",
       "category": "Tennis",
-      "link": "https://www.canberratimes.com.au/story/9359833/hangzhou-win-has-medvedev-eyeing-return-to-turin/"
+      "link": "https://www.standardmedia.co.ke/sports/tennis/article/2001559095/djokovic-grinds-out-opening-round-win-at-china-open/"
     },
     {
-      "title": "An, Kunlavut Rule Asiad Singles",
-      "excerpt": "An Se-young routed Akane Yamaguchi 21-17, 21-9 on Sept. 29 for a historic second straight Asian Games women's singles gold, while Kunlavut Vitidsarn beat Loh Kean Yew for Thailand's first men's singles title.",
-      "date": "September 30, 2026",
+      "title": "An Leads Asiad Badminton Sweep",
+      "excerpt": "An Se-young downed Akane Yamaguchi 21-17, 21-9 for back-to-back Asian Games women's singles gold, Kunlavut Vitidsarn won men's singles, and Lee So-hee and Baek Ha-na upset China's world No. 1 pair for Korea's first women's doubles title in 24 years.",
+      "date": "October 1, 2026",
       "category": "Badminton",
       "link": "https://www.japantimes.co.jp/sports/2026/09/30/asian-games/an-yamaguchi-badminton-asian-games/"
     },
     {
-      "title": "Vegas Open Hits Round of 32",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open advances to pro round-of-32 play on Sept. 30 with $1 million-plus on the line as Anna Leigh Waters, two titles shy of 200, targets both doubles draws without entering singles.",
-      "date": "September 30, 2026",
+      "title": "Vegas Open Hits Round Of 16",
+      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to pro round-of-16 play on Oct. 1 with Anna Leigh Waters two doubles titles shy of 200 career wins, ahead of the 1,500-point Veolia Chicago Cup opening Oct. 5.",
+      "date": "October 1, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
     },
     {
-      "title": "Lin's Triple Gold In Nagoya",
-      "excerpt": "China's Lin Shidong blanked Wang Chuqin 4-0 in the Asian Games men's singles final to finish with three gold medals as the nation's paddlers claimed six of seven titles after Japan's historic men's team upset.",
-      "date": "September 30, 2026",
+      "title": "China Dominates Asiad Paddles",
+      "excerpt": "Lin Shidong blanked Wang Chuqin 4-0 in the Asian Games men's singles final to finish with three golds as China took six of seven table tennis titles, though Japan denied the men's team and South Korea posted its leanest medal haul since 1958.",
+      "date": "October 1, 2026",
       "category": "Table Tennis",
-      "link": "http://en.people.cn/n3/2026/0929/c90000-20504766.html"
+      "link": "https://english.news.cn/20260928/952412b822a24f07a0d246c24bcdaa3c/c.html"
     }
   ]
 }
