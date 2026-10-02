@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Novak Djokovic held off Nuno Borges 6-3, 7-6(2) on Sept. 30 to extend his perfect 30-0 Beijing record at the China Open, while Karen Khachanov upset Felix Auger-Aliassime 6-3, 6-3 and first-round play rolls on Oct. 1 as the Kinoshita Japan Open features Kei Nishikori's farewell run against Frances Tiafoe in Tokyo • [SQUASH] The Champion Fiberglass Swedish Open hits round-of-16 play in Stockholm on Oct. 1 with 16 of the world's top 20 split across equal-prize men's and women's draws before quarterfinals move to a glass court at GIH, while World Squash Day's global Team All-Stars vs Superstars rally runs Oct. 1–10 • [BADMINTON] An Se-young routed Akane Yamaguchi 21-17, 21-9 for a historic second straight Asian Games women's singles gold as Kunlavut Vitidsarn and Korea's Lee So-hee/Baek Ha-na also topped the podium, while China failed to medal in men's singles for the first time since 1974 • [PICKLEBALL] The Rate Las Vegas Open reaches pro round-of-16 action on Oct. 1 at the Darling Tennis Center with Anna Leigh Waters—at 198 career PPA titles and skipping singles—chasing No. 200 in doubles as the $1.27M Veolia Chicago Cup looms Oct. 5 • [TABLE TENNIS] Lin Shidong swept Wang Chuqin 4-0 to cap a triple-gold Asian Games haul as China claimed six of seven titles, Japan stunned China for men's team gold, and South Korea left with three bronzes—its worst Asiad table tennis result since 1958",
+  "tickerText": "[TENNIS] Round-of-16 play begins Oct. 2 at the China Open and Japan Open after Alexander Zverev topped Cameron Norrie 7-6(1), 6-4 without injured No. 1 Jannik Sinner, Carlos Alcaraz advanced in Tokyo, and Kei Nishikori ended his career with a tearful 6-4, 6-4 loss to Frances Tiafoe • [SQUASH] Champion Fiberglass Swedish Open quarterfinals move to the GIH glass court in Stockholm on Oct. 2 with 16 of the world's top 20 chasing equal $109,000 purses ahead of weekend semifinals and Sunday finals • [BADMINTON] An Se-young's back-to-back Asian Games women's singles gold closed the Aichi-Nagoya tournament on Sept. 29 as Malaysia's juniors turn toward the BWF World Junior Championships team draw starting Oct. 7 in Cairo • [PICKLEBALL] Pro quarterfinals at the Rate Las Vegas Open hit Darling Tennis Center on Oct. 2 with Anna Leigh Waters two doubles titles from career No. 200 and $1.06M in payouts across the 1,000-point Open • [TABLE TENNIS] WTT China Smash qualifying rolls on at Beijing's Shougang Park through Oct. 3 before the Oct. 4 main draw, with Félix Lebrun the men's top seed as post-Asiad rests thin China's men's singles field",
   "newsItems": [
     {
-      "title": "Djokovic Perfect In Beijing Return",
-      "excerpt": "Novak Djokovic beat Nuno Borges 6-3, 7-6(2) on Sept. 30 to improve to 30-0 at the China Open, while Karen Khachanov stunned Felix Auger-Aliassime 6-3, 6-3 as Beijing's first round continues on Oct. 1.",
-      "date": "October 1, 2026",
+      "title": "Nishikori Bows Out In Tokyo",
+      "excerpt": "Kei Nishikori lost 6-4, 6-4 to Frances Tiafoe in his Japan Open farewell on Oct. 1, while Alexander Zverev beat Cameron Norrie 7-6(1), 6-4 at the Sinner-less China Open as both ATP 500 events reach the round of 16 on Oct. 2.",
+      "date": "October 2, 2026",
       "category": "Tennis",
-      "link": "https://www.standardmedia.co.ke/sports/tennis/article/2001559095/djokovic-grinds-out-opening-round-win-at-china-open/"
+      "link": "https://mainichi.jp/english/articles/20261002/p2g/00m/0sp/002000c"
     },
     {
-      "title": "An Leads Asiad Badminton Sweep",
-      "excerpt": "An Se-young downed Akane Yamaguchi 21-17, 21-9 for back-to-back Asian Games women's singles gold, Kunlavut Vitidsarn won men's singles, and Lee So-hee and Baek Ha-na upset China's world No. 1 pair for Korea's first women's doubles title in 24 years.",
-      "date": "October 1, 2026",
-      "category": "Badminton",
-      "link": "https://www.japantimes.co.jp/sports/2026/09/30/asian-games/an-yamaguchi-badminton-asian-games/"
+      "title": "Swedish Open Hits Glass QFs",
+      "excerpt": "Stockholm's Champion Fiberglass Swedish Open shifts to the GIH glass court for men's and women's quarterfinals on Oct. 2, with 16 of the world's top 20 in the field before semifinals Saturday and $109,000 titles Sunday.",
+      "date": "October 2, 2026",
+      "category": "Squash",
+      "link": "https://www.squash.tv/tournament/champion-fiberglass-swedish-open-2026-presented-by-boka-bord/"
     },
     {
-      "title": "Vegas Open Hits Round Of 16",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to pro round-of-16 play on Oct. 1 with Anna Leigh Waters two doubles titles shy of 200 career wins, ahead of the 1,500-point Veolia Chicago Cup opening Oct. 5.",
-      "date": "October 1, 2026",
+      "title": "Vegas Open Reaches Quarterfinals",
+      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to pro quarterfinals on Oct. 2 at Darling Tennis Center, with Anna Leigh Waters—skipping singles—two doubles wins from career title No. 200 on a $1.06M Open weekend.",
+      "date": "October 2, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
     },
     {
-      "title": "China Dominates Asiad Paddles",
-      "excerpt": "Lin Shidong blanked Wang Chuqin 4-0 in the Asian Games men's singles final to finish with three golds as China took six of seven table tennis titles, though Japan denied the men's team and South Korea posted its leanest medal haul since 1958.",
-      "date": "October 1, 2026",
+      "title": "China Smash Field Takes Shape",
+      "excerpt": "Qualifying continues through Oct. 3 at the WTT China Smash in Beijing before the Oct. 4 main draw, with Félix Lebrun the men's top seed as Wang Chuqin and Lin Shidong sit out and Sun Yingsha and Wang Manyu lead a loaded women's field.",
+      "date": "October 2, 2026",
       "category": "Table Tennis",
-      "link": "https://english.news.cn/20260928/952412b822a24f07a0d246c24bcdaa3c/c.html"
+      "link": "https://www.olympics.com/en/news/table-tennis-china-smash-2026-top-stars-watch-live"
     }
   ]
 }
