@@ -22,7 +22,7 @@ import {
     parseAttendee,
     promoteFromWaitlist,
 } from './sessions';
-import { formatMemberNameFromEmail } from './memberNames';
+import { formatMemberNameFromEmail, fullDisplayLabel, fullNameFromEmail } from './memberNames';
 
 export interface BookingUserProfile {
     uid: string;
@@ -41,14 +41,16 @@ export type JoinSessionResult =
     | { action: 'joined' | 'switched' }
     | { action: 'left'; promotion?: PromotionResult };
 
+/** Full "First Last" stored on future joins. Existing roster strings are left as written. */
 export const formatMemberName = (user: User): string => {
-    if (user.displayName?.trim()) {
-        const parts = user.displayName.trim().split(/\s+/);
-        if (parts.length > 1) {
-            return `${parts[0]} ${parts[parts.length - 1].charAt(0)}.`;
-        }
-        return parts[0];
-    }
+    const fromDisplay = fullDisplayLabel(user.displayName);
+    if (fromDisplay) return fromDisplay;
+
+    const fromEmail = fullNameFromEmail(user.email);
+    if (fromEmail) return fromEmail;
+
+    const trimmed = user.displayName?.trim();
+    if (trimmed) return trimmed;
 
     return formatMemberNameFromEmail(user.email);
 };

@@ -1,5 +1,6 @@
 import { Clock, ListOrdered } from 'lucide-react';
 import type { OpenPlayDayConfig } from '../../lib/sports';
+import { formatCourtHoverName } from '../../lib/memberNames';
 import {
     type Session,
     findUserWaitlistEntry,
@@ -21,6 +22,7 @@ interface WaitlistPanelProps {
     onJoinWaitlist: () => void;
     onLeaveWaitlist: () => void;
     busy?: boolean;
+    namesByUid?: ReadonlyMap<string, string>;
 }
 
 const WaitlistPanel = ({
@@ -33,6 +35,7 @@ const WaitlistPanel = ({
     onJoinWaitlist,
     onLeaveWaitlist,
     busy = false,
+    namesByUid,
 }: WaitlistPanelProps) => {
     if (!isWaitlistEnabled(session, openPlayConfig)) return null;
 
@@ -82,7 +85,8 @@ const WaitlistPanel = ({
                                 }`}
                             >
                                 <span className="truncate font-semibold text-amber-900 dark:text-amber-100">
-                                    #{index + 1} {person.name}
+                                    #{index + 1}{' '}
+                                    {formatCourtHoverName(person.email, person.name, namesByUid?.get(person.uid))}
                                     {isCurrentUser ? ' (You)' : ''}
                                 </span>
                                 <span className="ml-2 shrink-0 text-[10px] text-amber-700/70 dark:text-amber-300/60">

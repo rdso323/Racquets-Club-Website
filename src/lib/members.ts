@@ -1,3 +1,4 @@
+import { profileLabelFromUserDoc } from './memberNames';
 import { parseAttendee, parseWaitlistEntry, type Session } from './sessions';
 
 export interface ClubMember {
@@ -36,7 +37,7 @@ export const buildMemberDirectory = (userDocs: UserDoc[], sessions: Session[]): 
 
     for (const { id, data } of userDocs) {
         const email = String(data.email || '');
-        const name = String(data.displayName || data.name || '');
+        const name = profileLabelFromUserDoc(data) || String(data.displayName || data.name || '');
         if (email || name) {
             upsertMember(map, id, name || email.split('@')[0], email);
         }

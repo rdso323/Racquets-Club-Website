@@ -32,6 +32,50 @@ export const normalizePersonName = (value: string): string | null => {
     return normalized || null;
 };
 
+/**
+ * A stored "First Last" (or longer) name. A court label like "Rohan D." is not one:
+ * the last token must be at least two letters after a trailing period is removed.
+ */
+export const fullDisplayLabel = (name: string | null | undefined): string | null => {
+    if (typeof name !== 'string') return null;
+    const tokens = name.trim().split(/\s+/).filter(Boolean);
+    if (tokens.length < 2) return null;
+    const last = tokens[tokens.length - 1].replace(/\.$/, '');
+    if (last.length < 2) return null;
+    return tokens.join(' ');
+};
+
+/** "firstname.lastname@…" → "Firstname Lastname". Other addresses return null. */
+export const fullNameFromEmail = (email: string | null | undefined): string | null => {
+    if (!email) return null;
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed.includes('@') || trimmed.endsWith('@manual.club')) return null;
+    const parts = trimmed.split('@')[0].split('.').filter(Boolean);
+    if (parts.length < 2) return null;
+    const named = parts.map((part) => normalizePersonName(part));
+    if (named.some((part) => !part)) return null;
+    return named.join(' ');
+};
+
+/**
+ * Name shown on court hover and booking-card labels.
+ * Prefers a saved full name, then the name already stored on the roster,
+ * then a firstname.lastname address. Falls back to the short court label.
+ */
+export const formatCourtHoverName = (
+    email: string,
+    storedName?: string,
+    profileName?: string | null,
+): string => {
+    const fromProfile = fullDisplayLabel(profileName);
+    if (fromProfile) return fromProfile;
+    const fromStored = fullDisplayLabel(storedName);
+    if (fromStored) return fromStored;
+    const fromEmail = fullNameFromEmail(email);
+    if (fromEmail) return fromEmail;
+    return formatCourtDisplayName(email, storedName);
+};
+
 /** Court label from a stored or typed name: "Rohan Dsouza" and "Rohan D." both become "Rohan D." */
 export const courtLabelFromName = (name: string): string => {
     const tokens = name.trim().split(/\s+/).filter(Boolean);
@@ -172,6 +216,22 @@ export const memberNameFromUserDoc = (
 ): MemberName | null => {
     if (!data) return null;
     return memberNameFromParts(data.firstName, data.lastName) ?? memberNameFromDisplayName(data.displayName);
+};
+
+/** Full name from a Firestore user document, when one is stored. */
+export const profileLabelFromUserDoc = (
+    data: Record<string, unknown> | null | undefined,
+): string | null => {
+    if (!data) return null;
+    const fromParts = memberNameFromParts(data.firstName, data.lastName);
+    if (fromParts) return formatStoredDisplayName(fromParts);
+    const raw =
+        typeof data.displayName === 'string'
+            ? data.displayName
+            : typeof data.name === 'string'
+              ? data.name
+              : null;
+    return fullDisplayLabel(raw);
 };
 
 export const formatStoredDisplayName = (name: MemberName): string =>

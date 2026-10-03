@@ -8,7 +8,7 @@ import WaitlistPanel from '../WaitlistPanel';
 import SessionTags from '../../SessionTags';
 import BookingCardAdminMenu from '../BookingCardAdminMenu';
 import { buildCourtSlots } from '../../../lib/courtSlots';
-import { formatCourtDisplayName } from '../../../lib/memberNames';
+import { formatCourtHoverName } from '../../../lib/memberNames';
 import {
     type Session,
     getBaseWeekStart,
@@ -114,10 +114,12 @@ const AttendeesList = ({
     attendees,
     maxAttendees,
     courtNames,
+    namesByUid,
 }: {
     attendees: string[];
     maxAttendees: number;
     courtNames?: string[];
+    namesByUid?: ReadonlyMap<string, string>;
 }) => {
     const perCourt = courtNames?.length
         ? maxAttendees % courtNames.length === 0
@@ -146,7 +148,7 @@ const AttendeesList = ({
                             if (isPresent) {
                                 if (p.includes('|')) {
                                     const parsed = parseAttendee(p);
-                                    name = formatCourtDisplayName(parsed.email, parsed.name);
+                                    name = formatCourtHoverName(parsed.email, parsed.name, namesByUid?.get(parsed.uid));
                                     tooltip = name;
                                 } else {
                                     name = 'Player';
@@ -177,6 +179,7 @@ interface BookingRegularCardProps {
     disabledBuiltinSchedules: string[];
     adminActions?: BookingAdminActions;
     handlers: BookingCardHandlers;
+    namesByUid?: ReadonlyMap<string, string>;
 }
 
 export const BookingRegularCard = memo(function BookingRegularCard({
@@ -190,6 +193,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
     disabledBuiltinSchedules,
     adminActions,
     handlers,
+    namesByUid,
 }: BookingRegularCardProps) {
     const isCancelled = session.cancelledThisWeek === true;
 
@@ -325,7 +329,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                             (session.type === 'coaching' && sessionAtCapacity);
                                         const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                         const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                        const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
+                                        const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid, namesByUid);
                                         const spotsLeft = Math.min(
                                             slotsPerCourtForUi - courtAttendees.length,
                                             totalMax - activeAttendees.length,
@@ -373,16 +377,21 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                         </p>
                                         <div className="space-y-1">
                                             {orphanedAttendees.map((entry) => {
-                                                const { name, court } = parseAttendee(entry);
+                                                const parsed = parseAttendee(entry);
+                                                const name = formatCourtHoverName(
+                                                    parsed.email,
+                                                    parsed.name,
+                                                    namesByUid?.get(parsed.uid),
+                                                );
                                                 return (
                                                     <p
                                                         key={entry}
                                                         className="text-sm font-medium text-gray-800 dark:text-chalk/85"
                                                     >
                                                         {name}
-                                                        {court ? (
+                                                        {parsed.court ? (
                                                             <span className="ml-1 text-xs font-normal text-gray-500 dark:text-chalk/45">
-                                                                ({court})
+                                                                ({parsed.court})
                                                             </span>
                                                         ) : null}
                                                     </p>
@@ -398,6 +407,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                     attendees={activeAttendees}
                                     maxAttendees={totalMax}
                                     courtNames={sessionCourts.length > 0 ? sessionCourts : undefined}
+                                    namesByUid={namesByUid}
                                 />
                                 <button
                                     onClick={() => handlers.onJoin(session)}
@@ -424,6 +434,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                             busy={bookingBusy === `${session.id}:waitlist`}
                             onJoinWaitlist={() => handlers.onJoinWaitlist(session)}
                             onLeaveWaitlist={() => handlers.onLeaveWaitlist(session)}
+                            namesByUid={namesByUid}
                         />
 
                         {session.type === 'coaching' && user && (
@@ -470,6 +481,7 @@ interface BookingOpenPlayCardProps {
     disabledBuiltinSchedules: string[];
     adminActions?: BookingAdminActions;
     handlers: BookingCardHandlers;
+    namesByUid?: ReadonlyMap<string, string>;
 }
 
 export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
@@ -485,6 +497,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
     disabledBuiltinSchedules,
     adminActions,
     handlers,
+    namesByUid,
 }: BookingOpenPlayCardProps) {
     const isCancelled = session.cancelledThisWeek === true;
 
@@ -592,7 +605,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                             sessionAtCapacity;
                                         const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                         const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                        const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid);
+                                        const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid, namesByUid);
                                         const spotsLeft = Math.min(
                                             slotsPerCourtForUi - courtAttendees.length,
                                             totalMax - activeAttendees.length,
@@ -640,16 +653,21 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                         </p>
                                         <div className="space-y-1">
                                             {orphanedAttendees.map((entry) => {
-                                                const { name, court } = parseAttendee(entry);
+                                                const parsed = parseAttendee(entry);
+                                                const name = formatCourtHoverName(
+                                                    parsed.email,
+                                                    parsed.name,
+                                                    namesByUid?.get(parsed.uid),
+                                                );
                                                 return (
                                                     <p
                                                         key={entry}
                                                         className="text-sm font-medium text-gray-800 dark:text-chalk/85"
                                                     >
                                                         {name}
-                                                        {court ? (
+                                                        {parsed.court ? (
                                                             <span className="ml-1 text-xs font-normal text-gray-500 dark:text-chalk/45">
-                                                                ({court})
+                                                                ({parsed.court})
                                                             </span>
                                                         ) : null}
                                                     </p>
@@ -665,6 +683,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                     attendees={activeAttendees}
                                     maxAttendees={totalMax}
                                     courtNames={courtsForDay.length > 0 ? courtsForDay : undefined}
+                                    namesByUid={namesByUid}
                                 />
                                 <button
                                     onClick={() => handlers.onJoin(session)}
@@ -709,6 +728,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                             busy={bookingBusy === `${session.id}:waitlist`}
                             onJoinWaitlist={() => handlers.onJoinWaitlist(session, config)}
                             onLeaveWaitlist={() => handlers.onLeaveWaitlist(session)}
+                            namesByUid={namesByUid}
                         />
                     </div>
                     {isLocked && !isCancelled && user && <SessionLockOverlay message={lockMessage} />}

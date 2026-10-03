@@ -205,8 +205,7 @@ const Login = () => {
                         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500 dark:text-chalk/55">
                             {needsProfile ? (
                                 <>
-                                    Add your first and last name once. Court bookings show it as{' '}
-                                    <span className="font-medium text-gray-700 dark:text-chalk/75">First L.</span>
+                                    Add your first and last name once. Hovering a court spot shows that full name.
                                 </>
                             ) : emailLinkNeedsEmail ? (
                                 <>
