@@ -30,6 +30,7 @@ import CapacityReductionModal from '../admin/modals/CapacityReductionModal';
 import CreateSessionModal from '../admin/modals/CreateSessionModal';
 import { useSessionAdminOps } from '../../hooks/useSessionAdminOps';
 import { useBookingSessions } from '../../hooks/useBookingSessions';
+import { useMemberDirectory } from '../../hooks/useMemberDirectory';
 import { useSessionMaintenanceResets } from '../../hooks/useSessionMaintenanceResets';
 import {
     BookingRegularCard,
@@ -66,6 +67,14 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
         recurringSchedules,
         disabledBuiltinSchedules,
     });
+    const members = useMemberDirectory(sessions);
+    const namesByUid = useMemo(() => {
+        const map = new Map<string, string>();
+        for (const member of members) {
+            if (member.uid && member.name) map.set(member.uid, member.name);
+        }
+        return map;
+    }, [members]);
 
     useSessionMaintenanceResets({
         sessions,
@@ -400,6 +409,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                                         disabledBuiltinSchedules={disabledBuiltinSchedules}
                                         adminActions={adminActions}
                                         handlers={cardHandlers}
+                                        namesByUid={namesByUid}
                                     />
                                 ))}
                             </div>
@@ -424,6 +434,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                                             disabledBuiltinSchedules={disabledBuiltinSchedules}
                                             adminActions={adminActions}
                                             handlers={cardHandlers}
+                                        namesByUid={namesByUid}
                                         />
                                     ))}
                                 </BookingCardGrid>
@@ -443,6 +454,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                                             disabledBuiltinSchedules={disabledBuiltinSchedules}
                                             adminActions={adminActions}
                                             handlers={cardHandlers}
+                                        namesByUid={namesByUid}
                                         />
                                     ))}
                                 </BookingCardGrid>
