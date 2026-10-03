@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Round-of-16 play begins Oct. 2 at the China Open and Japan Open after Alexander Zverev topped Cameron Norrie 7-6(1), 6-4 without injured No. 1 Jannik Sinner, Carlos Alcaraz advanced in Tokyo, and Kei Nishikori ended his career with a tearful 6-4, 6-4 loss to Frances Tiafoe • [SQUASH] Champion Fiberglass Swedish Open quarterfinals move to the GIH glass court in Stockholm on Oct. 2 with 16 of the world's top 20 chasing equal $109,000 purses ahead of weekend semifinals and Sunday finals • [BADMINTON] An Se-young's back-to-back Asian Games women's singles gold closed the Aichi-Nagoya tournament on Sept. 29 as Malaysia's juniors turn toward the BWF World Junior Championships team draw starting Oct. 7 in Cairo • [PICKLEBALL] Pro quarterfinals at the Rate Las Vegas Open hit Darling Tennis Center on Oct. 2 with Anna Leigh Waters two doubles titles from career No. 200 and $1.06M in payouts across the 1,000-point Open • [TABLE TENNIS] WTT China Smash qualifying rolls on at Beijing's Shougang Park through Oct. 3 before the Oct. 4 main draw, with Félix Lebrun the men's top seed as post-Asiad rests thin China's men's singles field",
+  "tickerText": "[TENNIS] Round-of-16 Saturday at the China Open and Japan Open: Alexander Zverev meets wildcard Juncheng Shang after Cameron Norrie, Carlos Alcaraz defends in Tokyo against Matteo Arnaldi, and Daniil Medvedev faces Jan-Lennard Struff in Beijing • [SQUASH] Swedish Open semifinals hit the GIH glass court in Stockholm on Oct. 3 after Georgina Kennedy rallied from 0-2 to beat Rowan Elaraby and Amanda Sobhy, Nele Gilis, and Fayrouz Aboelkheir reached the women's last four • [BADMINTON] Malaysia's world No. 3 junior pair Redzuan-Isyraf head to Cairo for the BWF World Junior Championships team event starting Oct. 5, with the Super 500 Arctic Open in Vantaa following Oct. 6 • [PICKLEBALL] Pro semifinals at the Rate Las Vegas Open start Oct. 3 at noon PT on PickleballTV from Darling Tennis Center, with Anna Leigh Waters still two doubles titles shy of career No. 200 on the $1.06M Open • [TABLE TENNIS] Final China Smash qualifying day Oct. 3 at Shougang Park after Matteo Mutti upset Marcos Freitas in five games; eight men's and women's main-draw berths lock in before Sunday's round of 64",
   "newsItems": [
     {
-      "title": "Nishikori Bows Out In Tokyo",
-      "excerpt": "Kei Nishikori lost 6-4, 6-4 to Frances Tiafoe in his Japan Open farewell on Oct. 1, while Alexander Zverev beat Cameron Norrie 7-6(1), 6-4 at the Sinner-less China Open as both ATP 500 events reach the round of 16 on Oct. 2.",
-      "date": "October 2, 2026",
+      "title": "Alcaraz, Zverev Lead R16 Saturday",
+      "excerpt": "Carlos Alcaraz faces Matteo Arnaldi and Denis Shapovalov meets Alejandro Tabilo as the Japan Open round of 16 wraps Oct. 3, while Beijing's China Open has Alexander Zverev vs. Juncheng Shang and Daniil Medvedev vs. Jan-Lennard Struff among the ATP 500 highlights.",
+      "date": "October 3, 2026",
       "category": "Tennis",
-      "link": "https://mainichi.jp/english/articles/20261002/p2g/00m/0sp/002000c"
+      "link": "https://www.atptour.com/-/media/53d329083b8742bca1df81ccd50e9517.pdf"
     },
     {
-      "title": "Swedish Open Hits Glass QFs",
-      "excerpt": "Stockholm's Champion Fiberglass Swedish Open shifts to the GIH glass court for men's and women's quarterfinals on Oct. 2, with 16 of the world's top 20 in the field before semifinals Saturday and $109,000 titles Sunday.",
-      "date": "October 2, 2026",
-      "category": "Squash",
-      "link": "https://www.squash.tv/tournament/champion-fiberglass-swedish-open-2026-presented-by-boka-bord/"
-    },
-    {
-      "title": "Vegas Open Reaches Quarterfinals",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to pro quarterfinals on Oct. 2 at Darling Tennis Center, with Anna Leigh Waters—skipping singles—two doubles wins from career title No. 200 on a $1.06M Open weekend.",
-      "date": "October 2, 2026",
+      "title": "Vegas Open Hits Semifinals",
+      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open moves to pro semifinals on Oct. 3 at Darling Tennis Center (noon PT, PickleballTV), with Anna Leigh Waters—skipping singles—still two doubles wins from career title No. 200 on the season's second 1,000-point Open.",
+      "date": "October 3, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
     },
     {
-      "title": "China Smash Field Takes Shape",
-      "excerpt": "Qualifying continues through Oct. 3 at the WTT China Smash in Beijing before the Oct. 4 main draw, with Félix Lebrun the men's top seed as Wang Chuqin and Lin Shidong sit out and Sun Yingsha and Wang Manyu lead a loaded women's field.",
-      "date": "October 2, 2026",
+      "title": "Mutti Stuns Freitas In Beijing",
+      "excerpt": "Matteo Mutti outlasted No. 12 seed Marcos Freitas 13-15, 11-8, 11-6, 9-11, 13-11 on the penultimate China Smash qualifying day Oct. 3, with final men's and women's qualifying rounds deciding the last eight main-draw spots before play opens Oct. 4.",
+      "date": "October 3, 2026",
       "category": "Table Tennis",
-      "link": "https://www.olympics.com/en/news/table-tennis-china-smash-2026-top-stars-watch-live"
+      "link": "https://www.infinitysport.asia/news/mutti-lands-big-win-in-beijing/"
+    },
+    {
+      "title": "Juniors Eye Cairo Medals",
+      "excerpt": "World No. 3 boys' doubles Redzuan-Isyraf say they are fit and focused ahead of the VICTOR BWF World Junior Championships in Cairo from Oct. 5, aiming to put Malaysia back on the podium after missing out in Guwahati last year.",
+      "date": "October 3, 2026",
+      "category": "Badminton",
+      "link": "https://www.thestar.com.my/sport/badminton/2026/10/03/redzuan-isyraf-out-to-restore-order-with-medal-at-worlds"
     }
   ]
 }
