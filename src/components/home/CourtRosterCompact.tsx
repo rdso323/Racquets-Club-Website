@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Plus } from 'lucide-react';
 import type { CourtDiagramProps } from './CourtDiagram';
+import CourtSlotLabel from './CourtSlotLabel';
 
 const CourtRosterCompact = ({
     sport,
@@ -42,7 +43,7 @@ const CourtRosterCompact = ({
                                     disabled={disabled}
                                     onClick={() => onJoinSlot(index)}
                                     aria-label={`Join spot ${index + 1} on ${courtName}`}
-                                    className="player-slot--open flex h-11 w-full min-h-11 touch-manipulation items-center justify-center rounded-lg text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                                    className="player-slot--open flex min-h-[3.25rem] w-full touch-manipulation items-center justify-center rounded-lg text-xs disabled:cursor-not-allowed disabled:opacity-40"
                                 >
                                     <Plus className="h-4 w-4" />
                                 </button>
@@ -55,11 +56,11 @@ const CourtRosterCompact = ({
                             <div
                                 title={slot.tooltip}
                                 aria-label={`${slot.name}, spot ${index + 1}`}
-                                className={`flex h-11 w-full items-center justify-center rounded-lg text-xs font-semibold ${
+                                className={`flex min-h-[3.25rem] w-full items-center justify-center rounded-lg px-1 py-1 text-xs ${
                                     slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
                                 }`}
                             >
-                                {slot.initials}
+                                <CourtSlotLabel name={slot.name} />
                             </div>
                         </li>
                     );

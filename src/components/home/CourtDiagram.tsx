@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Plus } from 'lucide-react';
 import type { Sport } from '../../lib/sports';
+import CourtSlotLabel from './CourtSlotLabel';
 
 export interface CourtSlot {
     name: string;
@@ -28,7 +29,7 @@ const slotPosition = (index: number, total: number) => {
     const perSide = Math.max(1, Math.ceil(total / 2));
     const left = index < perSide;
     const row = left ? index : index - perSide;
-    const x = left ? 22 : 78;
+    const x = left ? 27 : 73;
     const y = perSide === 1 ? 50 : 24 + (row * 52) / (perSide - 1);
     return { x, y };
 };
@@ -131,7 +132,7 @@ const CourtDiagram = ({
                 </div>
             </div>
 
-            <div className="court-surface relative mx-auto aspect-[5/8] w-full max-w-[14rem] overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
+            <div className="court-surface relative mx-auto aspect-[5/8] w-full max-w-[18rem] overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
                 <svg
                     viewBox="0 0 200 340"
                     className="absolute inset-0 h-full w-full text-emerald-800/45 dark:text-court-line/70"
@@ -165,11 +166,12 @@ const CourtDiagram = ({
                             key={index}
                             style={style}
                             title={slot.tooltip}
-                            className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-semibold ${
+                            aria-label={slot.name}
+                            className={`absolute z-10 flex w-[5.5rem] max-w-[42%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-md px-1 py-1 text-[11px] ${
                                 slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
                             }`}
                         >
-                            {slot.initials}
+                            <CourtSlotLabel name={slot.name} />
                         </div>
                     );
                 })}

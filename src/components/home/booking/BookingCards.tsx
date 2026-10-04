@@ -4,6 +4,7 @@ import { Users, Rocket, AlertTriangle, Lock, LogIn, RotateCcw } from 'lucide-rea
 import { useGoToLogin } from '../../../hooks/useGoToLogin';
 import type { AdminRecurringSchedule, OpenPlayDayConfig, Sport } from '../../../lib/sports';
 import { CourtBookingView } from './CourtBookingView';
+import CourtSlotLabel from '../CourtSlotLabel';
 import WaitlistPanel from '../WaitlistPanel';
 import SessionTags from '../../SessionTags';
 import BookingCardAdminMenu from '../BookingCardAdminMenu';
@@ -156,8 +157,8 @@ const AttendeesList = ({
                                 }
                             }
                             return (
-                                <div key={i} className={`text-center py-2 px-1 rounded transition-all duration-300 ${isPresent ? 'bg-emerald-500/10 text-emerald-700 dark:text-court-accent font-semibold border border-emerald-500/30 truncate' : 'bg-white border border-dashed border-gray-300 text-gray-400 dark:bg-court-900/50 dark:border-chalk/10 dark:text-chalk/40'}`} title={isPresent ? tooltip : ''}>
-                                    {name}
+                                <div key={i} className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs transition-all duration-300 ${isPresent ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-court-accent' : 'border border-dashed border-gray-300 bg-white text-gray-400 dark:border-chalk/10 dark:bg-court-900/50 dark:text-chalk/40'}`} title={isPresent ? tooltip : ''}>
+                                    {isPresent ? <CourtSlotLabel name={name} /> : name}
                                 </div>
                             );
                         })}
