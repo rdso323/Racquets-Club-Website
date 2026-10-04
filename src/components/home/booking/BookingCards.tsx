@@ -9,7 +9,7 @@ import WaitlistPanel from '../WaitlistPanel';
 import SessionTags from '../../SessionTags';
 import BookingCardAdminMenu from '../BookingCardAdminMenu';
 import { buildCourtSlots } from '../../../lib/courtSlots';
-import { formatCourtHoverName } from '../../../lib/memberNames';
+import { formatCourtHoverName, formatCourtSlotInitials } from '../../../lib/memberNames';
 import {
     type Session,
     getBaseWeekStart,
@@ -146,19 +146,31 @@ const AttendeesList = ({
                             const isPresent = !!p;
                             let name = 'Open';
                             let tooltip = '';
+                            let initials = '';
                             if (isPresent) {
                                 if (p.includes('|')) {
                                     const parsed = parseAttendee(p);
                                     name = formatCourtHoverName(parsed.email, parsed.name, namesByUid?.get(parsed.uid));
+                                    initials = formatCourtSlotInitials(parsed.email, parsed.name);
                                     tooltip = name;
                                 } else {
                                     name = 'Player';
                                     tooltip = 'Player';
+                                    initials = '?';
                                 }
                             }
                             return (
                                 <div key={i} className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs transition-all duration-300 ${isPresent ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-court-accent' : 'border border-dashed border-gray-300 bg-white text-gray-400 dark:border-chalk/10 dark:bg-court-900/50 dark:text-chalk/40'}`} title={isPresent ? tooltip : ''}>
-                                    {isPresent ? <CourtSlotLabel name={name} /> : name}
+                                    {isPresent ? (
+                                        <>
+                                            <span className="lg:hidden">
+                                                <CourtSlotLabel name={name} />
+                                            </span>
+                                            <span className="hidden font-semibold lg:inline">{initials}</span>
+                                        </>
+                                    ) : (
+                                        name
+                                    )}
                                 </div>
                             );
                         })}
