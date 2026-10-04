@@ -35,7 +35,7 @@ const EditMemberNameForm = ({ onCancel, onSaved }: EditMemberNameFormProps) => {
     return (
         <form onSubmit={(event) => void handleSubmit(event)} className="px-3 py-2.5">
             <p className="px-1 text-xs font-medium text-gray-500 dark:text-chalk/50">
-                Hovering a court spot shows your full name.
+                Phones show your full name on the court spot. Larger screens show your initials.
             </p>
             <label className="mt-2 block">
                 <span className="sr-only">First name</span>

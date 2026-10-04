@@ -4,11 +4,12 @@ import { Users, Rocket, AlertTriangle, Lock, LogIn, RotateCcw } from 'lucide-rea
 import { useGoToLogin } from '../../../hooks/useGoToLogin';
 import type { AdminRecurringSchedule, OpenPlayDayConfig, Sport } from '../../../lib/sports';
 import { CourtBookingView } from './CourtBookingView';
+import CourtSlotLabel from '../CourtSlotLabel';
 import WaitlistPanel from '../WaitlistPanel';
 import SessionTags from '../../SessionTags';
 import BookingCardAdminMenu from '../BookingCardAdminMenu';
 import { buildCourtSlots } from '../../../lib/courtSlots';
-import { formatCourtHoverName } from '../../../lib/memberNames';
+import { formatCourtHoverName, formatCourtSlotInitials } from '../../../lib/memberNames';
 import {
     type Session,
     getBaseWeekStart,
@@ -145,19 +146,31 @@ const AttendeesList = ({
                             const isPresent = !!p;
                             let name = 'Open';
                             let tooltip = '';
+                            let initials = '';
                             if (isPresent) {
                                 if (p.includes('|')) {
                                     const parsed = parseAttendee(p);
                                     name = formatCourtHoverName(parsed.email, parsed.name, namesByUid?.get(parsed.uid));
+                                    initials = formatCourtSlotInitials(parsed.email, parsed.name);
                                     tooltip = name;
                                 } else {
                                     name = 'Player';
                                     tooltip = 'Player';
+                                    initials = '?';
                                 }
                             }
                             return (
-                                <div key={i} className={`text-center py-2 px-1 rounded transition-all duration-300 ${isPresent ? 'bg-emerald-500/10 text-emerald-700 dark:text-court-accent font-semibold border border-emerald-500/30 truncate' : 'bg-white border border-dashed border-gray-300 text-gray-400 dark:bg-court-900/50 dark:border-chalk/10 dark:text-chalk/40'}`} title={isPresent ? tooltip : ''}>
-                                    {name}
+                                <div key={i} className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs transition-all duration-300 ${isPresent ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-court-accent' : 'border border-dashed border-gray-300 bg-white text-gray-400 dark:border-chalk/10 dark:bg-court-900/50 dark:text-chalk/40'}`} title={isPresent ? tooltip : ''}>
+                                    {isPresent ? (
+                                        <>
+                                            <span className="lg:hidden">
+                                                <CourtSlotLabel name={name} />
+                                            </span>
+                                            <span className="hidden font-semibold lg:inline">{initials}</span>
+                                        </>
+                                    ) : (
+                                        name
+                                    )}
                                 </div>
                             );
                         })}

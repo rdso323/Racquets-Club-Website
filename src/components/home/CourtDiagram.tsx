@@ -165,6 +165,7 @@ const CourtDiagram = ({
                             key={index}
                             style={style}
                             title={slot.tooltip}
+                            aria-label={slot.name}
                             className={`absolute z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[10px] font-semibold ${
                                 slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
                             }`}

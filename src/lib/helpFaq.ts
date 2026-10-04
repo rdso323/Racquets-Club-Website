@@ -7,7 +7,7 @@ export interface FaqItem {
 export const MEMBER_HELP_FAQ: FaqItem[] = [
     {
         question: 'Who can sign in and book courts?',
-        answer: 'Sign in with any Google account. The first time, enter your first and last name — hovering a court spot shows that full name (for example Rohan Dsouza). That name is remembered, and you can change it anytime from the account menu next to your name. The schedule is visible to everyone, but you must be signed in to join a session. You stay signed in on that browser until you sign out. If you do not have a Google account, open Alternative methods on the sign-in page and use a one-time link to firstname.lastname@duke.edu.',
+        answer: 'Sign in with any Google account. The first time, enter your first and last name. On a phone, your court spot shows that full name (Rohan above Dsouza). On a larger screen the spot shows your initials, and hovering shows the full name. That name is remembered, and you can change it anytime from the account menu next to your name. The schedule is visible to everyone, but you must be signed in to join a session. You stay signed in on that browser until you sign out. If you do not have a Google account, open Alternative methods on the sign-in page and use a one-time link to firstname.lastname@duke.edu.',
     },
     {
         question: 'Is there a direct link just for booking?',

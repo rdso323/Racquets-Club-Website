@@ -38,7 +38,7 @@ Central hub for the Fuqua Racquets Club community — book courts, browse events
 
 - **Duke-only passwordless** — Members sign in with a one-time email link to `firstname.lastname@duke.edu` (NetID-only aliases not supported). No passwords. Session stays on that browser until Sign out.
 - **Public pages** — Home, Courts, Cabinet, and Help stay browseable without signing in; booking actions require sign-in.
-- **Court display names** — Court spots show initials. Hovering a spot shows the member's full name.
+- **Court display names** — Desktop court spots show initials, and hovering shows the full name. Phone spots show the first name with the last name smaller underneath.
 - **Admin access** — Email allowlist in [`AuthContext.tsx`](src/contexts/AuthContext.tsx) plus optional `VITE_ADMIN_EMAILS` env override
 
 #### Firebase Console (one-time, before testing email links)
