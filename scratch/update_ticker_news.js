@@ -14,12 +14,12 @@ async function getAccessToken() {
         }
     }
 
-    const email = process.env['Admin Email'];
-    const password = process.env['Admin Password'];
+    const email = process.env.ADMIN_EMAIL || process.env['Admin Email'];
+    const password = process.env.ADMIN_PASSWORD || process.env['Admin Password'];
     const apiKey = process.env.VITE_FIREBASE_API_KEY;
     if (!email || !password || !apiKey) {
         throw new Error(
-            'No Firebase credentials found. Log in via firebase-tools or set Admin Email, Admin Password, and VITE_FIREBASE_API_KEY.',
+            'No Firebase credentials found. Log in via firebase-tools or set ADMIN_EMAIL, ADMIN_PASSWORD, and VITE_FIREBASE_API_KEY.',
         );
     }
 
