@@ -58,7 +58,7 @@ export const fullNameFromEmail = (email: string | null | undefined): string | nu
 };
 
 /**
- * Name shown on court hover and booking-card labels.
+ * Name shown on a court spot and booking-card labels.
  * Prefers a saved full name, then the name already stored on the roster,
  * then a firstname.lastname address. Falls back to the short court label.
  */

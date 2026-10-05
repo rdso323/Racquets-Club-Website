@@ -205,7 +205,7 @@ const Login = () => {
                         <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-gray-500 dark:text-chalk/55">
                             {needsProfile ? (
                                 <>
-                                    Add your first and last name once. A phone shows that full name on your court spot. A larger screen shows your initials, and hovering shows the full name.
+                                    Add your first and last name once. Your court spot shows that name, with the first name above the last name.
                                 </>
                             ) : emailLinkNeedsEmail ? (
                                 <>
