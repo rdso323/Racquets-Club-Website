@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Sunday quarter-finals at the China Open and Japan Open: Alexander Zverev meets six-time Beijing champion Novak Djokovic (7 p.m.), Daniil Medvedev faces Francisco Cerundolo, and defending Tokyo champ Carlos Alcaraz takes on Denis Shapovalov at 1 p.m. • [SQUASH] PSA Swedish Open finals day on the GIH glass court in Stockholm: top seeds Fayrouz Aboelkheir vs Georgina Kennedy (2 p.m.) and Mohamad Zakaria vs Joel Makin (3 p.m.) after Saturday's semis • [BADMINTON] VICTOR BWF World Junior Team Championships open Monday in Cairo—the first African host since 2002—with nine continental teams and new 3×55 relay scoring for the Suhandinata Cup • [PICKLEBALL] Championship Sunday at the Rate Las Vegas Open (10 a.m. PT, PickleballTV/Tennis Channel): five 1,000-point finals at Darling Tennis Center as Anna Leigh Waters can hit career PPA title No. 200 with two doubles wins • [TABLE TENNIS] WTT China Smash main draw begins at Shougang Park with men's and women's singles round of 64 plus mixed doubles round of 24; Wang Chuqin and Felix Lebrun head the $2.05M season finale",
+  "tickerText": "[TENNIS] Monday China Open semis in Beijing: Novak Djokovic (32-0 in Beijing) faces Daniil Medvedev after a 4-6, 6-4, 6-4 QF win over Alexander Zverev; Alex de Minaur plays Hubert Hurkacz after both rallied in three-set quarter-finals • Japan Open: Carlos Alcaraz reaches the semis when Denis Shapovalov retires with a hip injury at 7-6(3), 2-1 • [SQUASH] Egyptian double at the Champion Fiberglass Swedish Open in Stockholm: Fayrouz Aboelkheir beat Georgina Kennedy 11-4, 11-5, 11-3 (first Egyptian women's champ); Mohamad Zakaria topped Joel Makin 11-6, 11-6, 8-11, 11-2 • [BADMINTON] VICTOR BWF World Junior Team Championships for the Suhandinata Cup open in Cairo—47 mixed teams, nine from Africa, under new best-of-three relay sets to 55 points • [PICKLEBALL] Rate Las Vegas Open closes Oct. 4 with 1,000-point champions crowned in all five draws at Darling Tennis Center after Ben Johns' singles run and Anna Leigh Waters' push toward 200 career PPA titles • [TABLE TENNIS] WTT China Smash day five at Shougang Park: men's and women's doubles round of 24 plus singles round of 64 in the $2.05M season finale",
   "newsItems": [
     {
-      "title": "Zverev–Djokovic Headline Beijing QFs",
-      "excerpt": "Alexander Zverev's 6-0, 6-3 rout of Juncheng Shang sets a Sunday night China Open quarter-final with Novak Djokovic, while Daniil Medvedev, Alex de Minaur, and Hubert Hurkacz also bid for the ATP 500 semis in Beijing.",
-      "date": "October 4, 2026",
+      "title": "Djokovic Extends Perfect Beijing Run",
+      "excerpt": "Novak Djokovic improved to 32-0 in Beijing with a 4-6, 6-4, 6-4 China Open quarter-final win over Alexander Zverev and meets Daniil Medvedev in Monday's semis while Alex de Minaur and Hubert Hurkacz complete the final four.",
+      "date": "October 5, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/zverev-shang-beijing-2026-saturday"
-    },
-    {
-      "title": "Stockholm Finals On Glass Court",
-      "excerpt": "The Champion Fiberglass Swedish Open closes Oct. 4 at GIH with women's final Aboelkheir–Kennedy and men's Zakaria–Makin after Kennedy rallied past Amanda Sobhy and Fayrouz Aboelkheir swept Nele Gilis in Saturday semis.",
-      "date": "October 4, 2026",
-      "category": "Squash",
-      "link": "https://www.squashinfo.com/events/11926-womens-swedish-open-2026"
+      "link": "https://www.atptour.com/en/news/zverev-djokovic-beijing-2026-sunday-qf"
     },
     {
       "title": "Vegas Open Crowns Five Champions",
-      "excerpt": "The Carvana PPA Tour's Rate Las Vegas Open finishes Oct. 4 with best-of-three finals in every division on PickleballTV; Anna Leigh Waters—skipping singles—needs women's and mixed doubles titles to reach 200 career PPA wins.",
-      "date": "October 4, 2026",
+      "excerpt": "The Carvana PPA Rate Las Vegas Open finished Oct. 4 at Darling Tennis Center with 1,000-point titles in every division after a week of upsets—notably Ben Johns (19) in men's singles and Anna Leigh Waters chasing career PPA win No. 200 in doubles.",
+      "date": "October 5, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
     },
     {
-      "title": "China Smash Main Draw Opens",
-      "excerpt": "The WTT China Smash 2026 moves from qualifying into round-of-64 singles and mixed-doubles round of 24 on Oct. 4 at Shougang Park, with world No. 1 Wang Chuqin, Felix Lebrun, and a 64-player women's field chasing 2,000 ranking points.",
-      "date": "October 4, 2026",
+      "title": "China Smash Hits Doubles Day",
+      "excerpt": "WTT China Smash 2026 moves through day five on Oct. 5 at Beijing's Shougang Park with men's and women's doubles round of 24 and more singles round-of-64 matches in the last Grand Smash of the season.",
+      "date": "October 5, 2026",
       "category": "Table Tennis",
       "link": "https://www.olympics.com/en/news/table-tennis-china-smash-2026-top-stars-watch-live"
+    },
+    {
+      "title": "Junior Team Cup Opens In Cairo",
+      "excerpt": "The VICTOR BWF World Junior Team Championships for the Suhandinata Cup run Oct. 5–10 in Cairo—the sport's second African host—with 47 nations and a revised relay format: best of three sets, each set to 55 points.",
+      "date": "October 5, 2026",
+      "category": "Badminton",
+      "link": "https://bwfbadminton.com/news-single/2026/09/30/poised-to-make-deep-inroads/"
     }
   ]
 }
