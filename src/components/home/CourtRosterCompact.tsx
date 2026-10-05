@@ -54,7 +54,6 @@ const CourtRosterCompact = ({
                     return (
                         <li key={index}>
                             <div
-                                title={slot.tooltip}
                                 aria-label={`${slot.name}, spot ${index + 1}`}
                                 className={`flex min-h-[3.25rem] w-full items-center justify-center rounded-lg px-1 py-1 text-xs ${
                                     slot.isMine ? 'player-slot--mine' : 'player-slot--filled'
