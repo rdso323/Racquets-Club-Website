@@ -1,4 +1,33 @@
+import { instantInEastern } from './bookingLock';
 import type { DayName } from './sports';
+
+/** Club sessions are wall-clock times in Durham. */
+const CLUB_TIME_ZONE = 'America/New_York';
+
+/**
+ * Outlook and phone calendars treat a time with no zone as UTC, then shift it.
+ * 17:30 with no zone becomes 13:30 Eastern. Name the zone so 17:30 stays 17:30.
+ */
+const VTIMEZONE_NEW_YORK = [
+    'BEGIN:VTIMEZONE',
+    `TZID:${CLUB_TIME_ZONE}`,
+    `X-LIC-LOCATION:${CLUB_TIME_ZONE}`,
+    'BEGIN:DAYLIGHT',
+    'TZOFFSETFROM:-0500',
+    'TZOFFSETTO:-0400',
+    'TZNAME:EDT',
+    'DTSTART:19700308T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU',
+    'END:DAYLIGHT',
+    'BEGIN:STANDARD',
+    'TZOFFSETFROM:-0400',
+    'TZOFFSETTO:-0500',
+    'TZNAME:EST',
+    'DTSTART:19701101T020000',
+    'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU',
+    'END:STANDARD',
+    'END:VTIMEZONE',
+].join('\r\n');
 
 const JS_WEEKDAY: Record<DayName, number> = {
     sunday: 0,
@@ -15,10 +44,10 @@ const pad = (n: number) => (n < 10 ? `0${n}` : String(n));
 const formatIcsLocal = (date: Date): string =>
     `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}T${pad(date.getHours())}${pad(date.getMinutes())}00`;
 
-const formatIcsStamp = (): string => {
-    const date = new Date();
-    return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}00Z`;
-};
+const formatIcsUtc = (date: Date): string =>
+    `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}00Z`;
+
+const formatIcsStamp = (): string => formatIcsUtc(new Date());
 
 const escapeIcs = (value: string): string =>
     value.replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
@@ -84,13 +113,14 @@ const eventLines = (input: {
     'PRODID:-//Fuqua Racquets Club//Booking//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
+    VTIMEZONE_NEW_YORK,
     'BEGIN:VEVENT',
     `UID:${Date.now()}-${Math.random().toString(36).slice(2)}@fuquaracquetsclub`,
     `DTSTAMP:${formatIcsStamp()}`,
-    `DTSTART:${formatIcsLocal(input.start)}`,
-    `DTEND:${formatIcsLocal(input.end)}`,
+    `DTSTART;TZID=${CLUB_TIME_ZONE}:${formatIcsLocal(input.start)}`,
+    `DTEND;TZID=${CLUB_TIME_ZONE}:${formatIcsLocal(input.end)}`,
     ...(input.rrule ? [`RRULE:${input.rrule}`] : []),
-    ...(input.exdates?.length ? [`EXDATE:${input.exdates.join(',')}`] : []),
+    ...(input.exdates?.length ? [`EXDATE;TZID=${CLUB_TIME_ZONE}:${input.exdates.join(',')}`] : []),
     `SUMMARY:${escapeIcs(input.title)}`,
     `DESCRIPTION:${escapeIcs(input.description)}`,
     'END:VEVENT',
@@ -169,15 +199,15 @@ export interface WeeklySeriesCalendarInput {
     skipDates?: string[];
 }
 
-/** RRULE for a weekly series. UNTIL is the end of `endsOn` in local floating time when set. */
+/** RRULE for a weekly series. UNTIL is the end of `endsOn` in UTC, as required when DTSTART has a TZID. */
 export const weeklySeriesRrule = (endsOn?: string): string => {
     if (!endsOn || !/^\d{4}-\d{2}-\d{2}$/.test(endsOn)) return 'FREQ=WEEKLY';
     const [year, month, day] = endsOn.split('-').map(Number);
-    const until = new Date(year, month - 1, day, 23, 59, 0, 0);
-    return `FREQ=WEEKLY;UNTIL=${formatIcsLocal(until)}`;
+    const until = instantInEastern(year, month, day, 23, 59);
+    return `FREQ=WEEKLY;UNTIL=${formatIcsUtc(until)}`;
 };
 
-/** Floating local EXDATE values matching DTSTART's clock time. */
+/** EXDATE clock times in America/New_York, matching DTSTART. */
 export const weeklySeriesExdates = (startTime: string, skipDates: string[] = []): string[] => {
     return skipDates
         .filter((iso) => /^\d{4}-\d{2}-\d{2}$/.test(iso))
@@ -208,7 +238,7 @@ export const buildWeeklySeriesLines = (input: WeeklySeriesCalendarInput, now = n
     });
 };
 
-/** One weekly repeating invite. UNTIL is the end of `endsOn` in local time when set. */
+/** One weekly repeating invite. Times are America/New_York. */
 export const downloadWeeklySeriesCalendar = (input: WeeklySeriesCalendarInput): void => {
     downloadIcsFile(input.title, buildWeeklySeriesLines(input));
 };
