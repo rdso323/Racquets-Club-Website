@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] China Open semis Monday in Beijing: Novak Djokovic (32-0 in Beijing) vs Daniil Medvedev; Alex de Minaur vs Hubert Hurkacz after Djokovic beat Alexander Zverev 4-6, 6-4, 6-4 and de Minaur rallied past Andrey Rublev 1-6, 6-2, 6-3 • [SQUASH] CIB Egyptian Squash Open qualifying starts Oct. 6 in Cairo—Hania El Hammamy and Mostafa Asal lead the Diamond draws on glass courts at the Pyramids; Timothy Brownell defended the Charlottesville Open on Oct. 3 • [BADMINTON] Day one of the VICTOR BWF World Junior Team Championships (Suhandinata Cup) in Cairo—47 nations, nine from Africa, new relay format to 55 points • [PICKLEBALL] Carvana PPA Rate Las Vegas Open crowned five 1,000-point champions Oct. 4 at Darling Tennis Center • [TABLE TENNIS] WTT China Smash day two at Shougang Park: Darius Movileanu upset No.16 Hiroto Shinozuka; Manika Batra saved two match points to beat Bruna Takahashi; Truls Moregard and Tomokazu Harimoto among Monday's singles debuts",
+  "tickerText": "[TENNIS] China Open final Tuesday in Beijing: Novak Djokovic (33-0 in Beijing) meets Alex de Minaur after Daniil Medvedev was defaulted when a ball struck a spectator with Djokovic leading 7-5, 5-3; de Minaur advanced when Hubert Hurkacz retired • [SQUASH] CIB Egyptian Squash Open qualifying starts Oct. 6 at O West as world No.1s Hania El Hammamy and Mostafa Asal open their Diamond title defenses ahead of the Pyramids glass court • [BADMINTON] CLASH OF CLANS Arctic Open 2026 opens in Vantaa—Jason Gunawan faces Christo Popov in round one; Lee Zii Jia begins qualifying; Shi Yuqi withdrew • [PICKLEBALL] Veolia Chicago Cup day two in Northbrook: senior open and pro qualifying at the tour's debut 1,500-point indoor Cup at Life Time North Shore • [TABLE TENNIS] WTT China Smash last-32 day in Beijing: Sun Yingsha beat Yeh Yi-Tian 3-1; Tomokazu Harimoto rallied from 0-2 past Jonathan Groth; Truls Moregard edged Chan Baldwin 20-18 in the fifth",
   "newsItems": [
     {
-      "title": "China Open Semis Set In Beijing",
-      "excerpt": "Monday's China Open semifinals pair Novak Djokovic with Daniil Medvedev and Alex de Minaur with Hubert Hurkacz after Sunday quarter-finals that saw Djokovic extend his perfect Beijing record to 32-0.",
-      "date": "October 5, 2026",
+      "title": "Djokovic Into Beijing Final On Default",
+      "excerpt": "Novak Djokovic reached the China Open final at 33-0 in Beijing after Daniil Medvedev was defaulted for a ball that hit a spectator; he faces Alex de Minaur on Tuesday.",
+      "date": "October 6, 2026",
       "category": "Tennis",
-      "link": "https://www.chinaopen.com/en/contents/353/728.html"
+      "link": "https://www.olympics.com/en/news/china-open-2026-novak-djokovic-reaches-beijing-final"
     },
     {
-      "title": "Vegas Open Crowns Five Champions",
-      "excerpt": "The Carvana PPA Rate Las Vegas Open wrapped Oct. 4 at Darling Tennis Center with 1,000-point titles in all five divisions after a week of upsets on the PPA Tour.",
-      "date": "October 5, 2026",
+      "title": "Chicago Cup Pro Qualifying Begins",
+      "excerpt": "The Veolia Chicago Cup's second day in Northbrook features senior open play and pro qualifying at the PPA Tour's new 1,500-point indoor stop.",
+      "date": "October 6, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/rate-las-vegas-open/"
+      "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
     },
     {
-      "title": "Batra, Movileanu Spark China Smash",
-      "excerpt": "WTT China Smash day two in Beijing featured Manika Batra's 12-10 escape over Bruna Takahashi and Darius Movileanu's straight-games upset of No.16 Hiroto Shinozuka as the $2.05M season finale rolls on.",
-      "date": "October 5, 2026",
+      "title": "Harimoto Escapes, Sun Rolls In Beijing",
+      "excerpt": "WTT China Smash round-of-32 action saw Sun Yingsha beat Yeh Yi-Tian 3-1 and Tomokazu Harimoto come back from two games down to defeat Jonathan Groth.",
+      "date": "October 6, 2026",
       "category": "Table Tennis",
-      "link": "https://www.infinitysport.asia/news/movileanu-scripts-dream-debut/"
+      "link": "https://www.chinadailyhk.com/hk/article/640585"
     },
     {
-      "title": "Junior Team Cup Opens In Cairo",
-      "excerpt": "The VICTOR BWF World Junior Team Championships for the Suhandinata Cup began Oct. 5 in Cairo—the sport's second African host—with 47 mixed teams under a revised best-of-three relay to 55 points.",
-      "date": "October 5, 2026",
+      "title": "Arctic Open Kicks Off In Vantaa",
+      "excerpt": "The BWF Arctic Open Super 500 began in Finland with Jason Gunawan drawing world No.2 Christo Popov in men's singles while Shi Yuqi withdrew from the field.",
+      "date": "October 6, 2026",
       "category": "Badminton",
-      "link": "https://bwfbadminton.com/news-single/2026/09/30/poised-to-make-deep-inroads/"
+      "link": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2026/10/06/arctic-open-gunawan-popov-clash-earl"
     }
   ]
 }
