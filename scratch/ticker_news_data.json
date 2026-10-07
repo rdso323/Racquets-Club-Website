@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] China Open final Tuesday in Beijing: Novak Djokovic (33-0 in Beijing) meets Alex de Minaur after Daniil Medvedev was defaulted when a ball struck a spectator with Djokovic leading 7-5, 5-3; de Minaur advanced when Hubert Hurkacz retired • [SQUASH] CIB Egyptian Squash Open qualifying starts Oct. 6 at O West as world No.1s Hania El Hammamy and Mostafa Asal open their Diamond title defenses ahead of the Pyramids glass court • [BADMINTON] CLASH OF CLANS Arctic Open 2026 opens in Vantaa—Jason Gunawan faces Christo Popov in round one; Lee Zii Jia begins qualifying; Shi Yuqi withdrew • [PICKLEBALL] Veolia Chicago Cup day two in Northbrook: senior open and pro qualifying at the tour's debut 1,500-point indoor Cup at Life Time North Shore • [TABLE TENNIS] WTT China Smash last-32 day in Beijing: Sun Yingsha beat Yeh Yi-Tian 3-1; Tomokazu Harimoto rallied from 0-2 past Jonathan Groth; Truls Moregard edged Chan Baldwin 20-18 in the fifth",
+  "tickerText": "[TENNIS] Djokovic lifts a record seventh China Open in Beijing after Alex de Minaur retired with an adductor injury trailing 7-6(3), 0-1—Novak's 102nd title and 34-0 in the capital • [SQUASH] CIB Egyptian Squash Open qualifying rolls on at OWest ahead of the Pyramids main draw Oct. 10–16 as defending Diamond champs Hania El Hammamy and Mostafa Asal await round one • [BADMINTON] Arctic Open day two in Vantaa: Tanvi Sharma upset Chiu Pin-chian 21-15, 21-17 and PV Sindhu beat Wen Yu Zhang 21-8, 21-11 as Li Shi Feng and top seeds advance • [PICKLEBALL] Veolia Chicago Cup pro round of 32 Wednesday at Life Time Northbrook—1,500-point indoor Cup with shuttles from off-site parking and PickleballTV from 2 p.m. CT • [TABLE TENNIS] WTT China Smash final day in Beijing: Guo Guanhong stunned Liang Jingkun 3-1 in the men's 16; Sun Yingsha faces Orawan Paranan as mixed doubles and doubles wrap the Grand Smash",
   "newsItems": [
     {
-      "title": "Djokovic Into Beijing Final On Default",
-      "excerpt": "Novak Djokovic reached the China Open final at 33-0 in Beijing after Daniil Medvedev was defaulted for a ball that hit a spectator; he faces Alex de Minaur on Tuesday.",
-      "date": "October 6, 2026",
+      "title": "Djokovic Claims Seventh China Open",
+      "excerpt": "Novak Djokovic won his 102nd ATP title when Alex de Minaur retired injured in the Beijing final, extending Djokovic's perfect 34-0 record at the China Open.",
+      "date": "October 7, 2026",
       "category": "Tennis",
-      "link": "https://www.olympics.com/en/news/china-open-2026-novak-djokovic-reaches-beijing-final"
+      "link": "https://www.atptour.com/en/news/djokovic-de-minaur-beijing-2026-final"
     },
     {
-      "title": "Chicago Cup Pro Qualifying Begins",
-      "excerpt": "The Veolia Chicago Cup's second day in Northbrook features senior open play and pro qualifying at the PPA Tour's new 1,500-point indoor stop.",
-      "date": "October 6, 2026",
+      "title": "Egyptian Open Qualifying Continues",
+      "excerpt": "Second-round qualifying at OWest narrows the field before the PSA Diamond Egyptian Open shifts to the Pyramids glass court starting Oct. 10.",
+      "date": "October 7, 2026",
+      "category": "Squash",
+      "link": "https://thesquashsite.com/cib-egyptian-open-2026"
+    },
+    {
+      "title": "Chicago Cup Hits Round Of 32",
+      "excerpt": "The Veolia Chicago Cup's pro draw opens its round-of-32 session Wednesday indoors in Northbrook, with 1,500 ranking points on the line in each division.",
+      "date": "October 7, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
     },
     {
-      "title": "Harimoto Escapes, Sun Rolls In Beijing",
-      "excerpt": "WTT China Smash round-of-32 action saw Sun Yingsha beat Yeh Yi-Tian 3-1 and Tomokazu Harimoto come back from two games down to defeat Jonathan Groth.",
-      "date": "October 6, 2026",
+      "title": "China Smash Closes With Upset",
+      "excerpt": "On the last day of WTT China Smash, Taiwan's Guo Guanhong beat Liang Jingkun 3-1 while Sun Yingsha and the remaining doubles fields played out in Beijing.",
+      "date": "October 7, 2026",
       "category": "Table Tennis",
-      "link": "https://www.chinadailyhk.com/hk/article/640585"
-    },
-    {
-      "title": "Arctic Open Kicks Off In Vantaa",
-      "excerpt": "The BWF Arctic Open Super 500 began in Finland with Jason Gunawan drawing world No.2 Christo Popov in men's singles while Shi Yuqi withdrew from the field.",
-      "date": "October 6, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtourfinals.bwfbadminton.com/news-single/2026/10/06/arctic-open-gunawan-popov-clash-earl"
+      "link": "https://www.sina.cn/news/detail/5351302370690748.html"
     }
   ]
 }
