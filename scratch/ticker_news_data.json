@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Djokovic lifts a record seventh China Open in Beijing after Alex de Minaur retired with an adductor injury trailing 7-6(3), 0-1—Novak's 102nd title and 34-0 in the capital • [SQUASH] CIB Egyptian Squash Open qualifying rolls on at OWest ahead of the Pyramids main draw Oct. 10–16 as defending Diamond champs Hania El Hammamy and Mostafa Asal await round one • [BADMINTON] Arctic Open day two in Vantaa: Tanvi Sharma upset Chiu Pin-chian 21-15, 21-17 and PV Sindhu beat Wen Yu Zhang 21-8, 21-11 as Li Shi Feng and top seeds advance • [PICKLEBALL] Veolia Chicago Cup pro round of 32 Wednesday at Life Time Northbrook—1,500-point indoor Cup with shuttles from off-site parking and PickleballTV from 2 p.m. CT • [TABLE TENNIS] WTT China Smash final day in Beijing: Guo Guanhong stunned Liang Jingkun 3-1 in the men's 16; Sun Yingsha faces Orawan Paranan as mixed doubles and doubles wrap the Grand Smash",
+  "tickerText": "[TENNIS] Rolex Shanghai Masters first-round play rolls on Oct. 8 while Alexander Zverev preps to open against Wu Yibing after Novak Djokovic lifted his seventh China Open; Iga Swiatek faces Elise Mertens in Beijing quarters chasing a WTA Finals berth • [SQUASH] CIB Egyptian Squash Open qualifying closes at OWest with men's and women's finals deciding the last main-draw spots before the Pyramids glass court hosts the PSA Diamond from Oct. 10 • [BADMINTON] Arctic Open round of 16 in Vantaa: Lee Zii Jia beat Dong Tian Yao 21-18, 21-14 and the men's field narrows toward quarterfinals with Li Shi Feng, Anders Antonsen, and Kunlavut Vitidsarn in the mix • [PICKLEBALL] Veolia Chicago Cup pro round of 16 Thursday indoors at Life Time Northbrook—1,500-point Cup with FS1 and PickleballTV from 2 p.m. CT as Anna Leigh Waters eyes career title No. 200 • [TABLE TENNIS] WTT China Smash last-16 day in Beijing: Felix Lebrun meets Tomislav Pucar, Wang Manyu faces Shin Yubin, and Sun Yingsha advanced past Orawan Paranan in five after the round of 32",
   "newsItems": [
     {
-      "title": "Djokovic Claims Seventh China Open",
-      "excerpt": "Novak Djokovic won his 102nd ATP title when Alex de Minaur retired injured in the Beijing final, extending Djokovic's perfect 34-0 record at the China Open.",
-      "date": "October 7, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/djokovic-de-minaur-beijing-2026-final"
-    },
-    {
-      "title": "Egyptian Open Qualifying Continues",
-      "excerpt": "Second-round qualifying at OWest narrows the field before the PSA Diamond Egyptian Open shifts to the Pyramids glass court starting Oct. 10.",
-      "date": "October 7, 2026",
-      "category": "Squash",
-      "link": "https://thesquashsite.com/cib-egyptian-open-2026"
-    },
-    {
-      "title": "Chicago Cup Hits Round Of 32",
-      "excerpt": "The Veolia Chicago Cup's pro draw opens its round-of-32 session Wednesday indoors in Northbrook, with 1,500 ranking points on the line in each division.",
-      "date": "October 7, 2026",
+      "title": "Chicago Cup Reaches Round Of 16",
+      "excerpt": "The Veolia Chicago Cup's pro draw moves into the round of 16 Thursday at Life Time Northbrook, with 1,500 ranking points on the line and national TV on FS1 and PickleballTV.",
+      "date": "October 8, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
     },
     {
-      "title": "China Smash Closes With Upset",
-      "excerpt": "On the last day of WTT China Smash, Taiwan's Guo Guanhong beat Liang Jingkun 3-1 while Sun Yingsha and the remaining doubles fields played out in Beijing.",
-      "date": "October 7, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.sina.cn/news/detail/5351302370690748.html"
+      "title": "Egyptian Open Qualifying Finals",
+      "excerpt": "Qualifying at OWest wraps Oct. 8 with men's and women's finals after a bruising week of upsets, setting the last entrants before the Diamond event shifts to the Pyramids.",
+      "date": "October 8, 2026",
+      "category": "Squash",
+      "link": "https://cibegyptiansquashopen.net/"
+    },
+    {
+      "title": "Shanghai Masters Gets Underway",
+      "excerpt": "First-round matches opened the Rolex Shanghai Masters on Oct. 8 as Alexander Zverev turned toward Wu Yibing, fresh off a 58-15 season and still in the hunt for year-end No. 1.",
+      "date": "October 8, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/zverev-shanghai-2026-preview"
+    },
+    {
+      "title": "Arctic Open Hits Last 16",
+      "excerpt": "The BWF Super 500 in Vantaa moved into the round of 16 as Lee Zii Jia beat Dong Tian Yao in straight games and the singles draws tightened toward weekend quarterfinals.",
+      "date": "October 8, 2026",
+      "category": "Badminton",
+      "link": "https://www.badmintonplanet.com/badminton-news/lee-zii-jia-aaron-tai-yap-roy-king-arctic-open.html"
     }
   ]
 }
