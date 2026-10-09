@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Shanghai Masters first-round play rolls on Oct. 8 while Alexander Zverev preps to open against Wu Yibing after Novak Djokovic lifted his seventh China Open; Iga Swiatek faces Elise Mertens in Beijing quarters chasing a WTA Finals berth • [SQUASH] CIB Egyptian Squash Open qualifying closes at OWest with men's and women's finals deciding the last main-draw spots before the Pyramids glass court hosts the PSA Diamond from Oct. 10 • [BADMINTON] Arctic Open round of 16 in Vantaa: Lee Zii Jia beat Dong Tian Yao 21-18, 21-14 and the men's field narrows toward quarterfinals with Li Shi Feng, Anders Antonsen, and Kunlavut Vitidsarn in the mix • [PICKLEBALL] Veolia Chicago Cup pro round of 16 Thursday indoors at Life Time Northbrook—1,500-point Cup with FS1 and PickleballTV from 2 p.m. CT as Anna Leigh Waters eyes career title No. 200 • [TABLE TENNIS] WTT China Smash last-16 day in Beijing: Felix Lebrun meets Tomislav Pucar, Wang Manyu faces Shin Yubin, and Sun Yingsha advanced past Orawan Paranan in five after the round of 32",
+  "tickerText": "[TENNIS] Rolex Shanghai Masters Day 5: Novak Djokovic faces 2023 champ Hubert Hurkacz after 19 aces from the Pole, while Alexander Zverev opens against Wu Yibing and Ben Shelton meets Daniel Altmaier on Stadium Court • [SQUASH] CIB Egyptian Squash Open rests Oct. 9 after qualifying finals at OWest—Seif Refaay and Habiba Hani among last entrants before main-draw Round One begins Friday ahead of the Pyramids stage • [BADMINTON] Arctic Open quarterfinals in Vantaa: PV Sindhu beat Riko Gunji 21-9, 21-12 and meets Ratchanok Intanon Friday as the Super 500 field narrows toward weekend semis • [PICKLEBALL] Veolia Chicago Cup pro quarterfinals Friday at Life Time Northbrook—1,500-point Cup with PickleballTV and FS2 from 2 p.m. CT as Anna Leigh Waters chases career title No. 200 • [TABLE TENNIS] WTT China Smash quarterfinal day in Beijing: Zhou Qihao swept Tomokazu Harimoto, qualifier Zhu Sibing upset Kuai Man, and men's singles QFs plus doubles semis decide the season's final Grand Smash bracket",
   "newsItems": [
     {
-      "title": "Chicago Cup Reaches Round Of 16",
-      "excerpt": "The Veolia Chicago Cup's pro draw moves into the round of 16 Thursday at Life Time Northbrook, with 1,500 ranking points on the line and national TV on FS1 and PickleballTV.",
-      "date": "October 8, 2026",
+      "title": "Sindhu Reaches Arctic QFs",
+      "excerpt": "PV Sindhu rolled past Riko Gunji 21-9, 21-12 at the BWF Super 500 in Vantaa and faces Ratchanok Intanon on Oct. 9 for a semifinal berth.",
+      "date": "October 9, 2026",
+      "category": "Badminton",
+      "link": "https://sportstar.thehindu.com/badminton/arctic-open-2026-live-streaming-sindhu-quarterfinal-match-time-where-to-watch/article71562456.ece"
+    },
+    {
+      "title": "Chicago Cup Hits Quarterfinals",
+      "excerpt": "The Veolia Chicago Cup's pro draws move into quarterfinals Friday indoors at Life Time Northbrook, with 1,500 ranking points per division and coverage on PickleballTV and FS2.",
+      "date": "October 9, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
     },
     {
-      "title": "Egyptian Open Qualifying Finals",
-      "excerpt": "Qualifying at OWest wraps Oct. 8 with men's and women's finals after a bruising week of upsets, setting the last entrants before the Diamond event shifts to the Pyramids.",
-      "date": "October 8, 2026",
-      "category": "Squash",
-      "link": "https://cibegyptiansquashopen.net/"
-    },
-    {
-      "title": "Shanghai Masters Gets Underway",
-      "excerpt": "First-round matches opened the Rolex Shanghai Masters on Oct. 8 as Alexander Zverev turned toward Wu Yibing, fresh off a 58-15 season and still in the hunt for year-end No. 1.",
-      "date": "October 8, 2026",
+      "title": "Djokovic Meets Hurkacz In Shanghai",
+      "excerpt": "Round-of-64 action at the Rolex Shanghai Masters features Novak Djokovic against Hubert Hurkacz, fresh off Beijing title No. 102, plus Zverev–Wu Yibing and Shelton–Altmaier.",
+      "date": "October 9, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/zverev-shanghai-2026-preview"
+      "link": "https://www.atptour.com/en/scores/current/Shanghai/5014/daily-schedule"
     },
     {
-      "title": "Arctic Open Hits Last 16",
-      "excerpt": "The BWF Super 500 in Vantaa moved into the round of 16 as Lee Zii Jia beat Dong Tian Yao in straight games and the singles draws tightened toward weekend quarterfinals.",
-      "date": "October 8, 2026",
-      "category": "Badminton",
-      "link": "https://www.badmintonplanet.com/badminton-news/lee-zii-jia-aaron-tai-yap-roy-king-arctic-open.html"
+      "title": "Egyptian Open Qualifying Wraps",
+      "excerpt": "Qualifying at OWest finished Oct. 8 with Seif Refaay and Habiba Hani among the last main-draw qualifiers before the PSA Diamond event shifts toward Pyramids play.",
+      "date": "October 9, 2026",
+      "category": "Squash",
+      "link": "https://cibegyptiansquashopen.net/2026-qualifying-three"
     }
   ]
 }
