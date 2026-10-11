@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Shanghai Masters Day 6: Carlos Alcaraz faces Juan Manuel Cerundolo not before 18:00 after Auger-Aliassime–Carabelli and Bu–Ruud, while Daniil Medvedev opens against Jan-Lennard Struff and Taylor Fritz meets Matteo Arnaldi • [SQUASH] CIB Egyptian Squash Open main draw begins Saturday at O West—Round One across four courts after qualifying crowned Seif Refaay and Habiba Hani before Pyramids quarterfinals Oct. 13–14 • [BADMINTON] Arctic Open semifinals in Vantaa: Lee Zii Jia meets Anders Antonsen and Ratchanok Intanon faces Line Christophersen as the Super 500 sets Sunday finals • [PICKLEBALL] Veolia Chicago Cup pro semifinals Saturday at Life Time Northbrook from noon CT on PickleballTV and Tennis Channel after Friday's quarterfinal slate • [TABLE TENNIS] WTT China Smash penultimate day in Beijing: Wang Manyu vs Miyu Haruka and Chen Xingtong vs Tomoka Sato in women's singles semis plus men's doubles and women's doubles finals",
+  "tickerText": "[TENNIS] Rolex Shanghai Masters Day 7: Ben Shelton opens against Arthur Gea at noon local before Hurkacz–Zhou, with Alexander Zverev vs Quentin Halys not before 18:00 and Davidovich Fokina–Tiafoe on Stadium Court • [SQUASH] CIB Egyptian Squash Open Round Two Sunday at O West—Mostafa Asal meets Joachim Chuah, Paul Coll faces Yannick Wilhelmi, and Marwan ElShorbagy–Karim El Hammamy tops the men's slate after opening-round upsets • [BADMINTON] Arctic Open finals day in Vantaa: Anders Antonsen rallied past Lee Zii Jia to face Yushi Tanaka, while Mia Blichfeldt and Ratchanok Intanon headline the women's singles title match • [PICKLEBALL] Veolia Chicago Cup Championship Sunday at Life Time Northbrook—gates 10:00 AM CT with all five pro finals best-of-three on PickleballTV, Tennis Channel, and FS1 • [TABLE TENNIS] WTT China Smash finals in Beijing: Wang Manyu chases another women's singles crown against Hitomi Sato as Kuai Man–Wang Manyu and Lim Jong-hoon–Oh Junsung lift doubles titles",
   "newsItems": [
     {
-      "title": "Wang Manyu Into China Semis",
-      "excerpt": "Top seed Wang Manyu swept Shin Yu-bin 4-0 in Beijing and faces Miyu Haruka on Oct. 10, while Chen Xingtong meets Tomoka Sato and the women's doubles final caps a busy penultimate day.",
-      "date": "October 10, 2026",
-      "category": "Table Tennis",
-      "link": "https://english.news.cn/20261009/02f8fefe859c422c99fa1e62b37a7f70/c.html"
-    },
-    {
-      "title": "Chicago Cup Hits Semifinals",
-      "excerpt": "The Veolia Chicago Cup moves into pro semifinals Saturday at Life Time Northbrook with gates at noon CT, streaming on PickleballTV and Tennis Channel after Friday's quarterfinals.",
-      "date": "October 10, 2026",
-      "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
-    },
-    {
-      "title": "Alcaraz Leads Shanghai Day 6",
-      "excerpt": "Round-of-64 Saturday at the Rolex Shanghai Masters features Carlos Alcaraz against Juan Manuel Cerundolo not before 18:00, plus Medvedev–Struff and Fritz–Arnaldi on the outer courts.",
-      "date": "October 10, 2026",
+      "title": "Zverev Leads Shanghai Day 7",
+      "excerpt": "Round-of-32 Sunday at the Rolex Shanghai Masters features Ben Shelton vs Arthur Gea from 12:00, Hubert Hurkacz vs Yi Zhou, and Alexander Zverev vs Quentin Halys not before 18:00 on Stadium Court.",
+      "date": "October 11, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/news/shanghai-2026-schedule"
     },
     {
-      "title": "Lee Reaches Arctic Semifinals",
-      "excerpt": "Lee Zii Jia ousted Christo Popov in straight games at the BWF Super 500 in Vantaa and meets Anders Antonsen on Oct. 10, while Ratchanok Intanon advanced past PV Sindhu in three.",
-      "date": "October 10, 2026",
+      "title": "Antonsen Into Arctic Final",
+      "excerpt": "Anders Antonsen edged Lee Zii Jia 21-11 15-21 21-16 in Vantaa and meets Yushi Tanaka on Championship Sunday, while Mia Blichfeldt and Ratchanok Intanon contest the women's singles final.",
+      "date": "October 11, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/10/arctic-open-lee-rediscovers-spark/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/11/arctic-open-welcome-back-antonsen-tells-lee-post-battle/"
+    },
+    {
+      "title": "Chicago Cup Finals Sunday",
+      "excerpt": "The Veolia Chicago Cup wraps with Championship Sunday at Life Time Northbrook—gates at 10:00 AM CT and five pro finals in best-of-three format on PickleballTV, Tennis Channel, and FS1.",
+      "date": "October 11, 2026",
+      "category": "Pickleball",
+      "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
+    },
+    {
+      "title": "China Smash Crowns Champions",
+      "excerpt": "WTT China Smash finals day in Beijing sees Wang Manyu face Hitomi Sato for the women's singles title after Kuai Man–Wang Manyu won doubles gold and Lim Jong-hoon–Oh Junsung took men's doubles.",
+      "date": "October 11, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.infinitysport.asia/news/fourth-title-for-chinese-pair-first-for-korean-duo/"
     }
   ]
 }
