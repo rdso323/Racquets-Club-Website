@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Shanghai Masters Day 7: Ben Shelton opens against Arthur Gea at noon local before Hurkacz–Zhou, with Alexander Zverev vs Quentin Halys not before 18:00 and Davidovich Fokina–Tiafoe on Stadium Court • [SQUASH] CIB Egyptian Squash Open Round Two Sunday at O West—Mostafa Asal meets Joachim Chuah, Paul Coll faces Yannick Wilhelmi, and Marwan ElShorbagy–Karim El Hammamy tops the men's slate after opening-round upsets • [BADMINTON] Arctic Open finals day in Vantaa: Anders Antonsen rallied past Lee Zii Jia to face Yushi Tanaka, while Mia Blichfeldt and Ratchanok Intanon headline the women's singles title match • [PICKLEBALL] Veolia Chicago Cup Championship Sunday at Life Time Northbrook—gates 10:00 AM CT with all five pro finals best-of-three on PickleballTV, Tennis Channel, and FS1 • [TABLE TENNIS] WTT China Smash finals in Beijing: Wang Manyu chases another women's singles crown against Hitomi Sato as Kuai Man–Wang Manyu and Lim Jong-hoon–Oh Junsung lift doubles titles",
+  "tickerText": "[TENNIS] Shanghai Masters Monday: Arthur Gea upset No. 4 Ben Shelton 7-6(5), 7-6(3) in the third round as Zheng Qinwen and Mirra Andreeva withdraw from Wuhan after the China Open final • [SQUASH] CIB Egyptian Squash Open in Cairo: world No. 1 Mostafa Asal beat Joachim Chuah 3-1 and qualifier Ruqayya Salem stunned ninth seed Tinne Gilis to reach round three • [BADMINTON] VICTOR BWF World Junior Championships open Monday at Cairo International Stadium (Oct 12–17) after China defended the Suhandinata Cup over Malaysia • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open week begins—amateur brackets and pro qualifying Monday at Pickleball Virginia Beach with 1,000 ranking points on the line • [TABLE TENNIS] WTT China Smash wrapped in Beijing: Wang Manyu retained women's singles gold over Hitomi Sato and Sora Matsushima edged Lin Yun-ju for the men's title",
   "newsItems": [
     {
-      "title": "Zverev Leads Shanghai Day 7",
-      "excerpt": "Round-of-32 Sunday at the Rolex Shanghai Masters features Ben Shelton vs Arthur Gea from 12:00, Hubert Hurkacz vs Yi Zhou, and Alexander Zverev vs Quentin Halys not before 18:00 on Stadium Court.",
-      "date": "October 11, 2026",
+      "title": "Gea Upsets Shelton in Shanghai",
+      "excerpt": "France's Arthur Gea took down No. 4 Ben Shelton 7-6(5), 7-6(3) in the Rolex Shanghai Masters third round for his first top-10 win.",
+      "date": "October 12, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/shanghai-2026-schedule"
+      "link": "https://www.beinsports.com/en-au/tennis/articles-video/gea-stuns-shelton-in-shanghai-boil-over-2026-10-12"
     },
     {
-      "title": "Antonsen Into Arctic Final",
-      "excerpt": "Anders Antonsen edged Lee Zii Jia 21-11 15-21 21-16 in Vantaa and meets Yushi Tanaka on Championship Sunday, while Mia Blichfeldt and Ratchanok Intanon contest the women's singles final.",
-      "date": "October 11, 2026",
+      "title": "Salem Stuns Gilis in Cairo",
+      "excerpt": "Egyptian qualifier Ruqayya Salem rallied from 9-5 down in the fourth to beat ninth seed Tinne Gilis 3-1 at the CIB Egyptian Squash Open.",
+      "date": "October 12, 2026",
+      "category": "Squash",
+      "link": "https://cibegyptiansquashopen.net/r2-unstoppable-qualifier-ruqayya-overtakes-tinne"
+    },
+    {
+      "title": "World Juniors Start in Cairo",
+      "excerpt": "The VICTOR BWF World Junior Championships begin Monday at Cairo International Stadium, following China's Suhandinata Cup team title over Malaysia.",
+      "date": "October 12, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/11/arctic-open-welcome-back-antonsen-tells-lee-post-battle/"
+      "link": "https://bwfbadminton.com/tournament/5635/victor-bwf-world-junior-championships-2026/info"
     },
     {
-      "title": "Chicago Cup Finals Sunday",
-      "excerpt": "The Veolia Chicago Cup wraps with Championship Sunday at Life Time Northbrook—gates at 10:00 AM CT and five pro finals in best-of-three format on PickleballTV, Tennis Channel, and FS1.",
-      "date": "October 11, 2026",
+      "title": "Virginia Beach Open Begins",
+      "excerpt": "The Mojo Energy Pouches Virginia Beach Open opens with amateur play and pro qualifying Monday at Pickleball Virginia Beach on the 1,000-point PPA slate.",
+      "date": "October 12, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/veolia-chicago-cup/"
-    },
-    {
-      "title": "China Smash Crowns Champions",
-      "excerpt": "WTT China Smash finals day in Beijing sees Wang Manyu face Hitomi Sato for the women's singles title after Kuai Man–Wang Manyu won doubles gold and Lim Jong-hoon–Oh Junsung took men's doubles.",
-      "date": "October 11, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.infinitysport.asia/news/fourth-title-for-chinese-pair-first-for-korean-duo/"
+      "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
     }
   ]
 }
