@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Shanghai Masters Monday: Arthur Gea upset No. 4 Ben Shelton 7-6(5), 7-6(3) in the third round as Zheng Qinwen and Mirra Andreeva withdraw from Wuhan after the China Open final • [SQUASH] CIB Egyptian Squash Open in Cairo: world No. 1 Mostafa Asal beat Joachim Chuah 3-1 and qualifier Ruqayya Salem stunned ninth seed Tinne Gilis to reach round three • [BADMINTON] VICTOR BWF World Junior Championships open Monday at Cairo International Stadium (Oct 12–17) after China defended the Suhandinata Cup over Malaysia • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open week begins—amateur brackets and pro qualifying Monday at Pickleball Virginia Beach with 1,000 ranking points on the line • [TABLE TENNIS] WTT China Smash wrapped in Beijing: Wang Manyu retained women's singles gold over Hitomi Sato and Sora Matsushima edged Lin Yun-ju for the men's title",
+  "tickerText": "[TENNIS] Shanghai Masters: Zizou Bergs stunned Carlos Alcaraz 7-5, 7-6(4), locking in Alexander Zverev as 2026 year-end world No. 1 • [SQUASH] CIB Egyptian Open quarter-finals move to the Pyramids—Nouran Gohar and Nour ElSherbini set a Cairo clash after round-three wins • [BADMINTON] VICTOR Denmark Open Super 750 begins in Odense as withdrawals reshuffle the draw for An Se-young, P. V. Sindhu and Victor Lai • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open: senior open and pro qualifying Tuesday while the WALKER Australia Pickleball Cup opens in Brisbane • [TABLE TENNIS] Wang Manyu regains women's world No. 1 after defending WTT China Smash with a 4-0 final over Hitomi Sato; Sora Matsushima stays atop the men",
   "newsItems": [
     {
-      "title": "Gea Upsets Shelton in Shanghai",
-      "excerpt": "France's Arthur Gea took down No. 4 Ben Shelton 7-6(5), 7-6(3) in the Rolex Shanghai Masters third round for his first top-10 win.",
-      "date": "October 12, 2026",
+      "title": "Bergs Stuns Alcaraz in Shanghai",
+      "excerpt": "Belgium's Zizou Bergs beat Carlos Alcaraz 7-5, 7-6(4) at the Rolex Shanghai Masters, helping Alexander Zverev secure the ATP year-end No. 1 ranking.",
+      "date": "October 13, 2026",
       "category": "Tennis",
-      "link": "https://www.beinsports.com/en-au/tennis/articles-video/gea-stuns-shelton-in-shanghai-boil-over-2026-10-12"
+      "link": "https://news.rthk.hk/rthk/en/component/k2/1873659-20261013.htm"
     },
     {
-      "title": "Salem Stuns Gilis in Cairo",
-      "excerpt": "Egyptian qualifier Ruqayya Salem rallied from 9-5 down in the fourth to beat ninth seed Tinne Gilis 3-1 at the CIB Egyptian Squash Open.",
-      "date": "October 12, 2026",
-      "category": "Squash",
-      "link": "https://cibegyptiansquashopen.net/r2-unstoppable-qualifier-ruqayya-overtakes-tinne"
-    },
-    {
-      "title": "World Juniors Start in Cairo",
-      "excerpt": "The VICTOR BWF World Junior Championships begin Monday at Cairo International Stadium, following China's Suhandinata Cup team title over Malaysia.",
-      "date": "October 12, 2026",
+      "title": "Denmark Open Begins in Odense",
+      "excerpt": "The VICTOR Denmark Open Super 750 kicks off in Odense with draw changes after withdrawals, setting up An Se-young vs Polina Buhrova and P. V. Sindhu vs Yvonne Li.",
+      "date": "October 13, 2026",
       "category": "Badminton",
-      "link": "https://bwfbadminton.com/tournament/5635/victor-bwf-world-junior-championships-2026/info"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/13/denmark-open-lai-handed-ubaidaillah-test-on-debut/"
     },
     {
-      "title": "Virginia Beach Open Begins",
-      "excerpt": "The Mojo Energy Pouches Virginia Beach Open opens with amateur play and pro qualifying Monday at Pickleball Virginia Beach on the 1,000-point PPA slate.",
-      "date": "October 12, 2026",
+      "title": "Virginia Beach Qualifying Day",
+      "excerpt": "The PPA Tour's Mojo Energy Pouches Virginia Beach Open continues with senior open play and pro qualifying Tuesday as the parallel Australia Cup starts in Brisbane.",
+      "date": "October 13, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
+    },
+    {
+      "title": "Wang Back to World No. 1",
+      "excerpt": "China's Wang Manyu returned to the top of the ITTF women's rankings after sweeping Hitomi Sato 4-0 to defend her WTT China Smash title in Beijing.",
+      "date": "October 13, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.chinadailyhk.com/hk/article/640965"
     }
   ]
 }
