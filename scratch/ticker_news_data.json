@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Shanghai Masters: Zizou Bergs stunned Carlos Alcaraz 7-5, 7-6(4), locking in Alexander Zverev as 2026 year-end world No. 1 • [SQUASH] CIB Egyptian Open quarter-finals move to the Pyramids—Nouran Gohar and Nour ElSherbini set a Cairo clash after round-three wins • [BADMINTON] VICTOR Denmark Open Super 750 begins in Odense as withdrawals reshuffle the draw for An Se-young, P. V. Sindhu and Victor Lai • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open: senior open and pro qualifying Tuesday while the WALKER Australia Pickleball Cup opens in Brisbane • [TABLE TENNIS] Wang Manyu regains women's world No. 1 after defending WTT China Smash with a 4-0 final over Hitomi Sato; Sora Matsushima stays atop the men",
+  "tickerText": "[TENNIS] Rolex Shanghai Masters round of 16: Medvedev–Tsitsipas and Ruud–Auger-Aliassime headline Wednesday while Wuhan sees Swiatek and Kartal through • [SQUASH] Sivasangari rallies from two games down for her first PSA Diamond semi at the CIB Egyptian Open; Gohar and ElSherbini renew their rivalry at the Pyramids • [BADMINTON] Denmark Open: Yvonne Li shocks P.V. Sindhu after a last-minute main-draw call-up; Srikanth and Tanvi Sharma advance in Odense • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open hits pro round of 32 Wednesday with senior amateur brackets also on court • [TABLE TENNIS] WTT Champions Montpellier opens Oct. 27 as the next elite stop; Wang Manyu and Sora Matsushima lead post–China Smash rankings",
   "newsItems": [
     {
-      "title": "Bergs Stuns Alcaraz in Shanghai",
-      "excerpt": "Belgium's Zizou Bergs beat Carlos Alcaraz 7-5, 7-6(4) at the Rolex Shanghai Masters, helping Alexander Zverev secure the ATP year-end No. 1 ranking.",
-      "date": "October 13, 2026",
+      "title": "Shanghai & Wuhan Roll On",
+      "excerpt": "ATP Shanghai’s round of 16 features Medvedev vs Tsitsipas and Ruud vs Auger-Aliassime, while WTA Wuhan saw Iga Swiatek and Sonay Kartal post opening wins.",
+      "date": "October 14, 2026",
       "category": "Tennis",
-      "link": "https://news.rthk.hk/rthk/en/component/k2/1873659-20261013.htm"
+      "link": "https://en.rolexshanghaimasters.com/en/scores/schedule"
     },
     {
-      "title": "Denmark Open Begins in Odense",
-      "excerpt": "The VICTOR Denmark Open Super 750 kicks off in Odense with draw changes after withdrawals, setting up An Se-young vs Polina Buhrova and P. V. Sindhu vs Yvonne Li.",
-      "date": "October 13, 2026",
+      "title": "Li Stuns Sindhu in Odense",
+      "excerpt": "Germany’s Yvonne Li beat P.V. Sindhu 13-21, 25-23, 21-19 at the VICTOR Denmark Open after driving from Hamburg when promoted off the reserve list.",
+      "date": "October 14, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/13/denmark-open-lai-handed-ubaidaillah-test-on-debut/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/14/denmark-open-straight-off-the-road-li-rocks-pusarla"
     },
     {
-      "title": "Virginia Beach Qualifying Day",
-      "excerpt": "The PPA Tour's Mojo Energy Pouches Virginia Beach Open continues with senior open play and pro qualifying Tuesday as the parallel Australia Cup starts in Brisbane.",
-      "date": "October 13, 2026",
+      "title": "Virginia Beach Round of 32",
+      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open moves to the pro round of 32 Wednesday, with senior amateur divisions also starting at Pickleball Virginia Beach.",
+      "date": "October 14, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
     },
     {
-      "title": "Wang Back to World No. 1",
-      "excerpt": "China's Wang Manyu returned to the top of the ITTF women's rankings after sweeping Hitomi Sato 4-0 to defend her WTT China Smash title in Beijing.",
-      "date": "October 13, 2026",
+      "title": "Montpellier Next on WTT Calendar",
+      "excerpt": "Elite singles return Oct. 27 at WTT Champions Montpellier after Wang Manyu defended China Smash and Sora Matsushima held the men’s No. 1 spot in Beijing.",
+      "date": "October 14, 2026",
       "category": "Table Tennis",
-      "link": "https://www.chinadailyhk.com/hk/article/640965"
+      "link": "https://www.globalgameguide.com/article/wtt-champions-montpellier-2026-guide"
     }
   ]
 }
