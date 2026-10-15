@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Shanghai Masters round of 16: Medvedev–Tsitsipas and Ruud–Auger-Aliassime headline Wednesday while Wuhan sees Swiatek and Kartal through • [SQUASH] Sivasangari rallies from two games down for her first PSA Diamond semi at the CIB Egyptian Open; Gohar and ElSherbini renew their rivalry at the Pyramids • [BADMINTON] Denmark Open: Yvonne Li shocks P.V. Sindhu after a last-minute main-draw call-up; Srikanth and Tanvi Sharma advance in Odense • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open hits pro round of 32 Wednesday with senior amateur brackets also on court • [TABLE TENNIS] WTT Champions Montpellier opens Oct. 27 as the next elite stop; Wang Manyu and Sora Matsushima lead post–China Smash rankings",
+  "tickerText": "[TENNIS] Rolex Shanghai Masters quarterfinals Thursday: Alexander Zverev faces Alex de Minaur after edging Alexander Bublik; Arthur Gea meets Alejandro Davidovich Fokina • WTA Wuhan round of 16: Karolína Muchová battles Diana Shnaider as Iga Świątek and Ann Li headline later sessions • [SQUASH] Paul Coll sweeps Victor Crouin to reach the CIB Egyptian Open semis and will face Diego Elias; Sivasangari meets Hania El Hammamy for a place in the final • [BADMINTON] Denmark Open: He Ji Ting and Ren Xiang Yu finally beat Satwiksairaj Rankireddy and Chirag Shetty 12-21, 21-15, 21-19 to reach the second round in Odense • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open moves to the pro round of 16 Thursday with PickleballTV and Tennis Channel coverage from Pickleball Virginia Beach • [TABLE TENNIS] Chinese Taipei juniors apologize after a camera flash disrupted the WTT China Smash final; ITTF World Hopes Week continues in Sheffield ahead of the Challenge on Oct. 17–18",
   "newsItems": [
     {
-      "title": "Shanghai & Wuhan Roll On",
-      "excerpt": "ATP Shanghai’s round of 16 features Medvedev vs Tsitsipas and Ruud vs Auger-Aliassime, while WTA Wuhan saw Iga Swiatek and Sonay Kartal post opening wins.",
-      "date": "October 14, 2026",
+      "title": "Shanghai QFs & Wuhan R16",
+      "excerpt": "ATP Shanghai’s Thursday card pairs Zverev with de Minaur and Gea with Davidovich Fokina, while WTA Wuhan’s round of 16 features Muchová–Shnaider and a Swiatek–Krueger night match.",
+      "date": "October 15, 2026",
       "category": "Tennis",
-      "link": "https://en.rolexshanghaimasters.com/en/scores/schedule"
+      "link": "https://www.atptour.com/en/scores/current/shanghai/5014/daily-schedule"
     },
     {
-      "title": "Li Stuns Sindhu in Odense",
-      "excerpt": "Germany’s Yvonne Li beat P.V. Sindhu 13-21, 25-23, 21-19 at the VICTOR Denmark Open after driving from Hamburg when promoted off the reserve list.",
-      "date": "October 14, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/14/denmark-open-straight-off-the-road-li-rocks-pusarla"
+      "title": "Coll Into Egyptian Open Semis",
+      "excerpt": "Second seed Paul Coll beat Victor Crouin 11-5, 11-6, 11-5 at the CIB Egyptian Open and will face Diego Elias for a spot in Sunday’s final in Giza.",
+      "date": "October 15, 2026",
+      "category": "Squash",
+      "link": "https://www.nzsportswire.com/post/coll-crusies-into-egyptian-open-semifinals"
     },
     {
-      "title": "Virginia Beach Round of 32",
-      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open moves to the pro round of 32 Wednesday, with senior amateur divisions also starting at Pickleball Virginia Beach.",
-      "date": "October 14, 2026",
+      "title": "Virginia Beach Round of 16",
+      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open hits the pro round of 16 Thursday, with gates at noon and Tennis Channel windows from 2–5 p.m. ET.",
+      "date": "October 15, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
     },
     {
-      "title": "Montpellier Next on WTT Calendar",
-      "excerpt": "Elite singles return Oct. 27 at WTT Champions Montpellier after Wang Manyu defended China Smash and Sora Matsushima held the men’s No. 1 spot in Beijing.",
-      "date": "October 14, 2026",
+      "title": "Hopes Week in Sheffield",
+      "excerpt": "Thirty-six under-12 prospects from 26 nations are training at the ITTF World Hopes Week in Sheffield, with the giant round-robin Challenge set for Oct. 17–18.",
+      "date": "October 15, 2026",
       "category": "Table Tennis",
-      "link": "https://www.globalgameguide.com/article/wtt-champions-montpellier-2026-guide"
+      "link": "https://www.ittf.com/2026/10/14/world-hopes-week-challenge-underway-in-sheffield-with-36-players-from-26-member-associations/"
     }
   ]
 }
