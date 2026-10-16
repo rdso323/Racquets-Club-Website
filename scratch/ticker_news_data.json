@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Shanghai Masters quarterfinals Thursday: Alexander Zverev faces Alex de Minaur after edging Alexander Bublik; Arthur Gea meets Alejandro Davidovich Fokina • WTA Wuhan round of 16: Karolína Muchová battles Diana Shnaider as Iga Świątek and Ann Li headline later sessions • [SQUASH] Paul Coll sweeps Victor Crouin to reach the CIB Egyptian Open semis and will face Diego Elias; Sivasangari meets Hania El Hammamy for a place in the final • [BADMINTON] Denmark Open: He Ji Ting and Ren Xiang Yu finally beat Satwiksairaj Rankireddy and Chirag Shetty 12-21, 21-15, 21-19 to reach the second round in Odense • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open moves to the pro round of 16 Thursday with PickleballTV and Tennis Channel coverage from Pickleball Virginia Beach • [TABLE TENNIS] Chinese Taipei juniors apologize after a camera flash disrupted the WTT China Smash final; ITTF World Hopes Week continues in Sheffield ahead of the Challenge on Oct. 17–18",
+  "tickerText": "[TENNIS] Rolex Shanghai Masters Friday: Rafael Jodar meets Casper Ruud and Daniil Medvedev faces Tommy Paul in quarterfinals, with Arribage/Olivetti v Cabral/Tracy in the doubles semifinals • WTA Wuhan: Jelena Ostapenko tops Diana Shnaider to reach the quarters; Elina Svitolina–Sonay Kartal and Iga Świątek–Ann Li headline later sessions • [SQUASH] CIB Egyptian Open finals at the Pyramids: Diego Elías challenges Mostafa Asal after ousting Paul Coll, while Amina Orfi and Hania El Hammamy meet in an all-Egyptian women’s title match • [BADMINTON] VICTOR Denmark Open Day 3: Rasmus Gemke beats Ng Ka Long Angus 21-12, 21-18 and Anders Antonsen rolls past Jason Gunawan as home hopes pack the Odense quarterfinals • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open hits pro quarterfinals Friday with noon gates and PickleballTV plus Tennis Channel windows from Virginia Beach • [TABLE TENNIS] ITTF World Hopes Week training continues in Sheffield ahead of the giant round-robin Challenge on Oct. 17–18; WTT Champions Montpellier follows on Oct. 27",
   "newsItems": [
     {
-      "title": "Shanghai QFs & Wuhan R16",
-      "excerpt": "ATP Shanghai’s Thursday card pairs Zverev with de Minaur and Gea with Davidovich Fokina, while WTA Wuhan’s round of 16 features Muchová–Shnaider and a Swiatek–Krueger night match.",
-      "date": "October 15, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/scores/current/shanghai/5014/daily-schedule"
-    },
-    {
-      "title": "Coll Into Egyptian Open Semis",
-      "excerpt": "Second seed Paul Coll beat Victor Crouin 11-5, 11-6, 11-5 at the CIB Egyptian Open and will face Diego Elias for a spot in Sunday’s final in Giza.",
-      "date": "October 15, 2026",
-      "category": "Squash",
-      "link": "https://www.nzsportswire.com/post/coll-crusies-into-egyptian-open-semifinals"
-    },
-    {
-      "title": "Virginia Beach Round of 16",
-      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open hits the pro round of 16 Thursday, with gates at noon and Tennis Channel windows from 2–5 p.m. ET.",
-      "date": "October 15, 2026",
+      "title": "Virginia Beach Quarterfinals",
+      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open moves into the pro quarterfinals Friday, with gates at noon and PickleballTV coverage all day plus Tennis Channel from 2–5 p.m. ET.",
+      "date": "October 16, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
     },
     {
-      "title": "Hopes Week in Sheffield",
-      "excerpt": "Thirty-six under-12 prospects from 26 nations are training at the ITTF World Hopes Week in Sheffield, with the giant round-robin Challenge set for Oct. 17–18.",
-      "date": "October 15, 2026",
+      "title": "Egyptian Open Finals Night",
+      "excerpt": "At the Pyramids, Diego Elías faces Mostafa Asal and Amina Orfi meets defending champion Hania El Hammamy to close the CIB Egyptian Open on Friday evening in Giza.",
+      "date": "October 16, 2026",
+      "category": "Squash",
+      "link": "https://cibegyptiansquashopen.net/info"
+    },
+    {
+      "title": "Hopes Challenge This Weekend",
+      "excerpt": "Thirty-six under-12 prospects from 26 nations wrap intensive training at the ITTF World Hopes Week in Sheffield before the two-day Challenge competition opens Saturday.",
+      "date": "October 16, 2026",
       "category": "Table Tennis",
       "link": "https://www.ittf.com/2026/10/14/world-hopes-week-challenge-underway-in-sheffield-with-36-players-from-26-member-associations/"
+    },
+    {
+      "title": "Shanghai QFs & Wuhan QFs",
+      "excerpt": "ATP Shanghai’s Friday card pairs Jodar with Ruud and Medvedev with Paul, while WTA Wuhan’s quarterfinals include Ostapenko’s win over Shnaider plus Svitolina–Kartal and Świątek–Li.",
+      "date": "October 16, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/scores/current/shanghai/5014/daily-schedule"
     }
   ]
 }
