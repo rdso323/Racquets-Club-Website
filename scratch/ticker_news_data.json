@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Shanghai Masters Saturday: Zverev faces Davidovich Fokina and teen sensation Rafael Jodar meets Daniil Medvedev in the ATP semifinals, while WTA Wuhan sends Kartal–Ostapenko and Świątek–Chwalinska into the last four • [SQUASH] CIB Egyptian Open crowns new champions at the Pyramids: Diego Elías edges Mostafa Asal 3–2 and Amina Orfi sweeps Hania El Hammamy 3–0 on finals night in Giza • [BADMINTON] VICTOR Denmark Open Saturday: Victor Lai, Alex Lanier, Anders Antonsen and Christo Popov fill the men’s semifinals; An Se-young, Okuhara, Yamaguchi and Wang Zhiyi lead the women’s penultimate round in Odense • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open moves into pro semifinals Saturday with noon gates and PickleballTV all day plus Tennis Channel from noon–3 p.m. ET • [TABLE TENNIS] ITTF World Hopes Challenge opens in Sheffield as 36 under-12 prospects from 26 nations begin the giant round-robin on Day 1 ahead of Sunday’s awards",
+  "tickerText": "[TENNIS] Championship Sunday in China: Rolex Shanghai Masters crowns a first-time ATP 1000 champion as Davidovich Fokina meets Rafael Jodar, while WTA Wuhan’s final pits Maja Chwalinska against qualifier Sonay Kartal for a maiden WTA 1000 title • [SQUASH] PSA Tennis & Racquet Club Boston Open wraps Sunday at 1 p.m. ET with women’s finals after Swaify–Stefanoni and Ka Yi Lee–Caroline Fouts advanced through Saturday’s semifinals • [BADMINTON] VICTOR Denmark Open finals day in Odense: Alex Lanier faces home hero Anders Antonsen in men’s singles and An Se-young meets Akane Yamaguchi as both chase history at the Super 750 • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open Championship Sunday: gates open 10 a.m. ET for pro finals at Pickleball Virginia Beach with live coverage on PickleballTV and Tennis Channel • [TABLE TENNIS] ITTF World Hopes Challenge concludes in Sheffield with quarter-finals, placement matches and the award ceremony crowning top U12 boys and girls after the giant round-robin",
   "newsItems": [
     {
-      "title": "Denmark Open Semifinal Saturday",
-      "excerpt": "Odense sets a blockbuster men’s last four of Lai–Lanier and Antonsen–Popov after Friday’s quarterfinals, while An Se-young, Okuhara, Yamaguchi and Wang Zhiyi chase women’s semifinal berths at the VICTOR Denmark Open.",
-      "date": "October 17, 2026",
+      "title": "Denmark Open Finals Day",
+      "excerpt": "Odense hosts five VICTOR Denmark Open title matches Sunday, headlined by Alex Lanier versus Anders Antonsen in men’s singles and An Se-young against Akane Yamaguchi in women’s singles at the SJF Bank Arena.",
+      "date": "October 18, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5210/victor-denmark-open-2026/results/2026-10-17"
+      "link": "https://bwfbadminton.com/tournament/5210/victor-denmark-open-2026/results"
     },
     {
-      "title": "Virginia Beach Semifinal Day",
-      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open hits pro semifinals Saturday at Pickleball Virginia Beach, with gates at noon and live coverage on PickleballTV plus Tennis Channel through mid-afternoon.",
-      "date": "October 17, 2026",
+      "title": "Virginia Beach Championship Sunday",
+      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open closes its $1M-plus Open with pro finals Sunday at Pickleball Virginia Beach, with gates at 10 a.m. ET and national coverage on PickleballTV and Tennis Channel.",
+      "date": "October 18, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
     },
     {
-      "title": "Shanghai & Wuhan Semifinals",
-      "excerpt": "ATP Shanghai’s Saturday card pairs top seed Zverev with Davidovich Fokina and Jodar with Medvedev, while WTA Wuhan’s semifinals feature Kartal–Ostapenko and an all-Polish clash between Świątek and Chwalinska.",
-      "date": "October 17, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/scores/current/shanghai/5014/daily-schedule"
-    },
-    {
-      "title": "Hopes Challenge Begins",
-      "excerpt": "The ITTF World Hopes Week in Sheffield turns competitive Saturday as 36 U12 players from 26 member associations open the two-day Challenge round-robin at the English Institute of Sport.",
-      "date": "October 17, 2026",
+      "title": "Hopes Challenge Finale",
+      "excerpt": "Sheffield’s ITTF World Hopes Week ends Sunday as 36 under-12 prospects from 26 nations complete the Challenge knockout bracket, placement matches and awards after the first giant round-robin group stage.",
+      "date": "October 18, 2026",
       "category": "Table Tennis",
       "link": "https://www.ittf.com/2026/10/14/world-hopes-week-challenge-underway-in-sheffield-with-36-players-from-26-member-associations/"
+    },
+    {
+      "title": "Shanghai & Wuhan Finals",
+      "excerpt": "ATP Shanghai’s Sunday final pairs Davidovich Fokina with teen sensation Rafael Jodar, while WTA Wuhan’s first-time WTA 1000 championship match features Poland’s Maja Chwalinska against Britain’s Sonay Kartal.",
+      "date": "October 18, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/scores/current/shanghai/5014/daily-schedule"
     }
   ]
 }
