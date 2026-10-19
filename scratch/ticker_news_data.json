@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Championship Sunday in China: Rolex Shanghai Masters crowns a first-time ATP 1000 champion as Davidovich Fokina meets Rafael Jodar, while WTA Wuhan’s final pits Maja Chwalinska against qualifier Sonay Kartal for a maiden WTA 1000 title • [SQUASH] PSA Tennis & Racquet Club Boston Open wraps Sunday at 1 p.m. ET with women’s finals after Swaify–Stefanoni and Ka Yi Lee–Caroline Fouts advanced through Saturday’s semifinals • [BADMINTON] VICTOR Denmark Open finals day in Odense: Alex Lanier faces home hero Anders Antonsen in men’s singles and An Se-young meets Akane Yamaguchi as both chase history at the Super 750 • [PICKLEBALL] Mojo Energy Pouches Virginia Beach Open Championship Sunday: gates open 10 a.m. ET for pro finals at Pickleball Virginia Beach with live coverage on PickleballTV and Tennis Channel • [TABLE TENNIS] ITTF World Hopes Challenge concludes in Sheffield with quarter-finals, placement matches and the award ceremony crowning top U12 boys and girls after the giant round-robin",
+  "tickerText": "[TENNIS] Monday rankings reset: Alejandro Davidovich Fokina jumps to a career-high No. 13 after rallying past Rafael Jodar for his first ATP Masters 1000 crown in Shanghai, while Maja Chwalinska lifts her maiden WTA 1000 title in Wuhan • [SQUASH] PSA World Tour turns to Redwood City as the Gold-level Silicon Valley Open opens Tuesday, with Victor Crouin chasing a top-four push and Scott Arnold celebrating a maiden title at Australia’s Hilton Squash Open • [BADMINTON] VICTOR Denmark Open recap: An Se-young rallies from 11-5 down in the decider to beat Akane Yamaguchi for a record 47th title, and Alex Lanier becomes the first Frenchman to win Odense • [PICKLEBALL] PPA Virginia Beach Open wraps with Kate Fahey claiming women’s singles and mixed doubles gold and 18-year-old John Lucian Goins taking men’s singles on a windy Championship Sunday • [TABLE TENNIS] Félix Lebrun completes a golden double at the European Championships in Ljubljana as the ITTF-ATTU Asian Championships get underway Monday in Tashkent on the Road to Astana 2027",
   "newsItems": [
     {
-      "title": "Denmark Open Finals Day",
-      "excerpt": "Odense hosts five VICTOR Denmark Open title matches Sunday, headlined by Alex Lanier versus Anders Antonsen in men’s singles and An Se-young against Akane Yamaguchi in women’s singles at the SJF Bank Arena.",
-      "date": "October 18, 2026",
+      "title": "Denmark Open Record Run",
+      "excerpt": "An Se-young stormed back from 11-5 down in the third to defeat Akane Yamaguchi 21-23, 21-14, 21-18 for her 47th career title—a new women’s singles record—while Alex Lanier beat Anders Antonsen to become the first Frenchman to win the Super 750 in Odense.",
+      "date": "October 19, 2026",
       "category": "Badminton",
-      "link": "https://bwfbadminton.com/tournament/5210/victor-denmark-open-2026/results"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/19/denmark-open-an-stoppable-force/"
     },
     {
-      "title": "Virginia Beach Championship Sunday",
-      "excerpt": "The PPA Tour’s Mojo Energy Pouches Virginia Beach Open closes its $1M-plus Open with pro finals Sunday at Pickleball Virginia Beach, with gates at 10 a.m. ET and national coverage on PickleballTV and Tennis Channel.",
-      "date": "October 18, 2026",
+      "title": "Lebrun’s Ljubljana Double",
+      "excerpt": "France’s Félix Lebrun rallied from 3-2 down to beat Anton Källberg 4-3 in the European Championships final, adding men’s singles gold a day after he and Alexis defended the men’s doubles title in Arena Stožice.",
+      "date": "October 19, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.ettu.org/felix-lebrun-completes-golden-double-with-european-mens-singles-title-in-ljubljana/"
+    },
+    {
+      "title": "China Swing Champions",
+      "excerpt": "Davidovich Fokina saved his biggest comeback for last, edging Jodar 1-6, 7-6(5), 6-4 for a first Masters 1000 trophy in Shanghai, and Chwalinska turned a set deficit into a maiden WTA 1000 crown over Sonay Kartal in Wuhan.",
+      "date": "October 19, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/jodar-davidovich-fokina-shanghai-2026-final"
+    },
+    {
+      "title": "Fahey Doubles Up in VB",
+      "excerpt": "Kate Fahey swept women’s singles and mixed doubles at the Mojo Energy Pouches Virginia Beach Open, while John Lucian Goins capped the $1M-plus PPA stop with a straight-sets men’s singles win over Jaume Martinez Vich.",
+      "date": "October 19, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
-    },
-    {
-      "title": "Hopes Challenge Finale",
-      "excerpt": "Sheffield’s ITTF World Hopes Week ends Sunday as 36 under-12 prospects from 26 nations complete the Challenge knockout bracket, placement matches and awards after the first giant round-robin group stage.",
-      "date": "October 18, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.ittf.com/2026/10/14/world-hopes-week-challenge-underway-in-sheffield-with-36-players-from-26-member-associations/"
-    },
-    {
-      "title": "Shanghai & Wuhan Finals",
-      "excerpt": "ATP Shanghai’s Sunday final pairs Davidovich Fokina with teen sensation Rafael Jodar, while WTA Wuhan’s first-time WTA 1000 championship match features Poland’s Maja Chwalinska against Britain’s Sonay Kartal.",
-      "date": "October 18, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/scores/current/shanghai/5014/daily-schedule"
     }
   ]
 }
