@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Monday rankings reset: Alejandro Davidovich Fokina jumps to a career-high No. 13 after rallying past Rafael Jodar for his first ATP Masters 1000 crown in Shanghai, while Maja Chwalinska lifts her maiden WTA 1000 title in Wuhan • [SQUASH] PSA World Tour turns to Redwood City as the Gold-level Silicon Valley Open opens Tuesday, with Victor Crouin chasing a top-four push and Scott Arnold celebrating a maiden title at Australia’s Hilton Squash Open • [BADMINTON] VICTOR Denmark Open recap: An Se-young rallies from 11-5 down in the decider to beat Akane Yamaguchi for a record 47th title, and Alex Lanier becomes the first Frenchman to win Odense • [PICKLEBALL] PPA Virginia Beach Open wraps with Kate Fahey claiming women’s singles and mixed doubles gold and 18-year-old John Lucian Goins taking men’s singles on a windy Championship Sunday • [TABLE TENNIS] Félix Lebrun completes a golden double at the European Championships in Ljubljana as the ITTF-ATTU Asian Championships get underway Monday in Tashkent on the Road to Astana 2027",
+  "tickerText": "[TENNIS] Fall tour shifts to Almaty, Brussels and Lyon on the ATP side and Ningbo plus Osaka on the WTA, with Duckworth, Mannarino and Kukushkin through Almaty’s round of 32 and Bencic–Ostapenko among Tuesday’s Ningbo headliners • [SQUASH] PSA Gold Silicon Valley Open opens at Squash Zone in Redwood City with $260,000 equal prize money and world No. 1s Diego Elias and Nour El Sherbini topping the draws for opening-round play Tuesday • [BADMINTON] YONEX French Open launches at Arena Grand Paris as An Se-young starts her Super 750 title defense against Amalie Schulz and Alex Lanier meets China Masters winner Jason Gunawan in a home-crowd spotlight • [PICKLEBALL] Carvana PPA Tour heads to Kai Tak Arena for the Hang Seng Bank Hong Kong Slam after Virginia Beach crowned Kate Fahey and John Lucian Goins and first-time doubles champs Schupp and Martinez Vich • [TABLE TENNIS] ITTF-ATTU Asian Championships day two in Tashkent stacks men’s singles preliminaries from Wang–Thakkar to Prasongpol–Togami as team group matches roll on toward Astana 2027 qualifying",
   "newsItems": [
     {
-      "title": "Denmark Open Record Run",
-      "excerpt": "An Se-young stormed back from 11-5 down in the third to defeat Akane Yamaguchi 21-23, 21-14, 21-18 for her 47th career title—a new women’s singles record—while Alex Lanier beat Anders Antonsen to become the first Frenchman to win the Super 750 in Odense.",
-      "date": "October 19, 2026",
+      "title": "French Open Paris Launch",
+      "excerpt": "The YONEX French Open Super 750 moves to Arena Grand Paris with An Se-young opening her title defense against Amalie Schulz, Kunlavut Vitidsarn facing Toma Junior Popov, and seventh seed Alex Lanier battling Jason Gunawan in front of the home fans.",
+      "date": "October 20, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/19/denmark-open-an-stoppable-force/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/20/french-open-star-assemble-in-paris/"
     },
     {
-      "title": "Lebrun’s Ljubljana Double",
-      "excerpt": "France’s Félix Lebrun rallied from 3-2 down to beat Anton Källberg 4-3 in the European Championships final, adding men’s singles gold a day after he and Alexis defended the men’s doubles title in Arena Stožice.",
-      "date": "October 19, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.ettu.org/felix-lebrun-completes-golden-double-with-european-mens-singles-title-in-ljubljana/"
-    },
-    {
-      "title": "China Swing Champions",
-      "excerpt": "Davidovich Fokina saved his biggest comeback for last, edging Jodar 1-6, 7-6(5), 6-4 for a first Masters 1000 trophy in Shanghai, and Chwalinska turned a set deficit into a maiden WTA 1000 crown over Sonay Kartal in Wuhan.",
-      "date": "October 19, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/jodar-davidovich-fokina-shanghai-2026-final"
-    },
-    {
-      "title": "Fahey Doubles Up in VB",
-      "excerpt": "Kate Fahey swept women’s singles and mixed doubles at the Mojo Energy Pouches Virginia Beach Open, while John Lucian Goins capped the $1M-plus PPA stop with a straight-sets men’s singles win over Jaume Martinez Vich.",
-      "date": "October 19, 2026",
+      "title": "Hong Kong Slam Begins",
+      "excerpt": "The PPA Tour’s 1,500-point Hang Seng Bank Hong Kong Slam runs Oct. 19–25 at Kai Tak Arena, the next stop after Virginia Beach where Kate Fahey doubled in singles and mixed and John Lucian Goins claimed men’s singles gold.",
+      "date": "October 20, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/virginia-beach-open/"
+      "link": "https://www.ppatour.com/events/"
+    },
+    {
+      "title": "Almaty and Ningbo Tuesday",
+      "excerpt": "ATP Almaty round-of-32 winners include James Duckworth, Adrian Mannarino and wild card Mikhail Kukushkin, while WTA action continues in Ningbo and Osaka with early-round results and a Bencic–Ostapenko Ningbo clash on the card.",
+      "date": "October 20, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/scores/current/almaty/9410/results"
+    },
+    {
+      "title": "Asian Champs Day Two",
+      "excerpt": "The 29th ITTF-ATTU Asian Championships in Tashkent move into a full men’s singles schedule—Wang Chuqin versus Manav Thakkar among the featured matchups—while men’s and women’s team group play continues through Oct. 25.",
+      "date": "October 20, 2026",
+      "category": "Table Tennis",
+      "link": "https://results.ittf.com/ittf-web-results/html/TTE3474/results.html"
     }
   ]
 }
