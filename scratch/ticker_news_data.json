@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Fall tour shifts to Almaty, Brussels and Lyon on the ATP side and Ningbo plus Osaka on the WTA, with Duckworth, Mannarino and Kukushkin through Almaty’s round of 32 and Bencic–Ostapenko among Tuesday’s Ningbo headliners • [SQUASH] PSA Gold Silicon Valley Open opens at Squash Zone in Redwood City with $260,000 equal prize money and world No. 1s Diego Elias and Nour El Sherbini topping the draws for opening-round play Tuesday • [BADMINTON] YONEX French Open launches at Arena Grand Paris as An Se-young starts her Super 750 title defense against Amalie Schulz and Alex Lanier meets China Masters winner Jason Gunawan in a home-crowd spotlight • [PICKLEBALL] Carvana PPA Tour heads to Kai Tak Arena for the Hang Seng Bank Hong Kong Slam after Virginia Beach crowned Kate Fahey and John Lucian Goins and first-time doubles champs Schupp and Martinez Vich • [TABLE TENNIS] ITTF-ATTU Asian Championships day two in Tashkent stacks men’s singles preliminaries from Wang–Thakkar to Prasongpol–Togami as team group matches roll on toward Astana 2027 qualifying",
+  "tickerText": "[TENNIS] Wednesday at Almaty sends Tsitsipas, Khachanov, Shimabukuro, Marozsan and Atmane through the round of 32 while Brussels third-round winners include Navone, Griekspoor and Struff; WTA Osaka crowns Talia Gibson and Ashlyn Krueger in early singles and Ningbo lines up Kostyuk–Alexandrova • [SQUASH] PSA Gold Silicon Valley Open hits Round of 16 Wednesday at Squash Zone in Redwood City with Diego Elias and Nour El Sherbini among the evening headliners on SquashTV after opening-day play • [BADMINTON] YONEX French Open day two in Paris sees home favorite Toma Junior Popov stun world No. 1 Kunlavut Vitidsarn 9-21, 21-14, 21-15 as An Se-young, Alex Lanier and Christo Popov headline the round-of-32 slate at Arena Grand Paris • [PICKLEBALL] Hang Seng Bank Hong Kong Slam moves into round of 32 at Kai Tak Arena as Ben Johns and Anna Leigh Waters make their Hong Kong debuts and locals Nok Yiu Tang and Hong Kit Wong chase deep runs in the PPA Asia season finale • [TABLE TENNIS] ITTF-ATTU Asian Championships in Tashkent pivot to men’s and women’s team quarterfinals Wednesday—Hong Kong vs Chinese Taipei and Korea vs India in the morning, Singapore vs Japan and China vs Thailand in the women’s session—with singles and doubles brackets continuing alongside",
   "newsItems": [
     {
-      "title": "French Open Paris Launch",
-      "excerpt": "The YONEX French Open Super 750 moves to Arena Grand Paris with An Se-young opening her title defense against Amalie Schulz, Kunlavut Vitidsarn facing Toma Junior Popov, and seventh seed Alex Lanier battling Jason Gunawan in front of the home fans.",
-      "date": "October 20, 2026",
+      "title": "Popov Stuns Vitidsarn",
+      "excerpt": "Toma Junior Popov rallied past top seed Kunlavut Vitidsarn 9-21, 21-14, 21-15 in the YONEX French Open round of 32 at Arena Grand Paris, giving the home crowd a signature upset on day two of the Super 750.",
+      "date": "October 21, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/20/french-open-star-assemble-in-paris/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/21/french-open-toma-unblocks-view/"
     },
     {
-      "title": "Hong Kong Slam Begins",
-      "excerpt": "The PPA Tour’s 1,500-point Hang Seng Bank Hong Kong Slam runs Oct. 19–25 at Kai Tak Arena, the next stop after Virginia Beach where Kate Fahey doubled in singles and mixed and John Lucian Goins claimed men’s singles gold.",
-      "date": "October 20, 2026",
+      "title": "Johns and Waters Debut",
+      "excerpt": "The Hang Seng Bank Hong Kong Slam reaches round of 32 at Kai Tak Arena with world No. 1s Ben Johns and Anna Leigh Waters stepping onto court Wednesday after locals Nok Yiu Tang and Hong Kit Wong opened the main draw with strong wins.",
+      "date": "October 21, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/"
+      "link": "https://www.ppatour-asia.com/home-comforts-tang-and-wong-sweep-through-to-r32/"
     },
     {
-      "title": "Almaty and Ningbo Tuesday",
-      "excerpt": "ATP Almaty round-of-32 winners include James Duckworth, Adrian Mannarino and wild card Mikhail Kukushkin, while WTA action continues in Ningbo and Osaka with early-round results and a Bencic–Ostapenko Ningbo clash on the card.",
-      "date": "October 20, 2026",
+      "title": "Almaty and Brussels Roll On",
+      "excerpt": "ATP Almaty round-of-32 winners include Stefanos Tsitsipas, Karen Khachanov, Sho Shimabukuro and Fabian Marozsan, while Brussels third-round results feature Griekspoor, Struff and Navone; WTA Osaka early singles went to Talia Gibson and Ashlyn Krueger.",
+      "date": "October 21, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/scores/current/almaty/9410/results"
     },
     {
-      "title": "Asian Champs Day Two",
-      "excerpt": "The 29th ITTF-ATTU Asian Championships in Tashkent move into a full men’s singles schedule—Wang Chuqin versus Manav Thakkar among the featured matchups—while men’s and women’s team group play continues through Oct. 25.",
-      "date": "October 20, 2026",
+      "title": "Tashkent Team Quarterfinals",
+      "excerpt": "The 29th ITTF-ATTU Asian Championships in Tashkent shift focus to men’s and women’s team quarterfinals on Wednesday, opening with Hong Kong against Chinese Taipei and Korea versus India as singles and doubles draws continue through Oct. 25.",
+      "date": "October 21, 2026",
       "category": "Table Tennis",
       "link": "https://results.ittf.com/ittf-web-results/html/TTE3474/results.html"
     }
