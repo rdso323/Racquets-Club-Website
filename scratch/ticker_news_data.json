@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Saturday in Almaty: Daniil Medvedev tops Terence Atmane 6-4, 6-4, Alexander Bublik saves two match points to beat Karen Khachanov 4-6, 7-6(5), 7-6(5), Stefanos Tsitsipas defeats James Duckworth 6-3, 6-4 and qualifier Nikoloz Basilashvili ousts Adrian Mannarino 6-3, 6-1 to complete the semifinal lineup • [SQUASH] Championship Saturday at the PSA Gold Silicon Valley Open in Redwood City: Sivasangari Subramaniam faces Farida Mohamed in the women's final after rallying past Anahat Singh, while Diego Elias and Mohamed ElShorbagy headline the men's title match after Friday's semis on SquashTV • [BADMINTON] YONEX French Open semifinal Saturday at Arena Grand Paris opens with An Se-young vs Nozomi Okuhara, plus Pusarla Sindhu–Hina Akechi and Feng Yan Zhe/Huang Dong Ping vs Thom Gicquel/Delphine Delrue; Alex Lanier and Christo Popov carry home hopes into the last four • [PICKLEBALL] Hang Seng Bank Hong Kong Slam semifinals at Kai Tak: Judit Castillo and Andie Dikosavljevic reach Sunday's women's final, Tama Shimabukuro and Hunter Johnson set the men's title match after Federico Staksrud's loss, with Johns/Tardio in men's doubles semis • [TABLE TENNIS] ITTF-ATTU Asian Championships Day 4 in Tashkent runs singles round-of-16 and quarterfinals plus doubles quarterfinals at Olympic Town after China and Japan claimed team gold, with Tomokazu Harimoto, Manav Vikash Thakkar and Chun Ting Wong among the men's singles contenders",
+  "tickerText": "[TENNIS] Championship Sunday: Daniil Medvedev faces qualifier Nikoloz Basilashvili in the Almaty final after Medvedev advanced 6-3 when Alexander Bublik retired and Basilashvili upset Stefanos Tsitsipas 6-4, 6-7(5), 6-3; Lorenzo Musetti meets Taylor Fritz in Lyon and Jan-Lennard Struff plays Tallon Griekspoor in Brussels, while Elena Rybakina and Leylah Fernandez clash in the Ningbo WTA 500 final • [SQUASH] Sivasangari Subramaniam captured the PSA Gold Silicon Valley Open, beating Farida Mohamed 11-7, 11-6, 11-8 for her fourth title of 2026; Victor Crouin and Mohamad Zakaria met in the men's final after Crouin rallied past Diego Elias in five and Zakaria swept Mohamed ElShorbagy • [BADMINTON] YONEX French Open finals day at Arena Grand Paris: world No. 1 An Se-young meets resurgent P.V. Sindhu in women's singles, Christo Popov and Moh. Zaki Ubaidillah contest an all-semifinalist men's final after Ubaidillah stunned Alex Lanier, and Feng Yan Zhe/Huang Dong Ping chase a third straight mixed crown • [PICKLEBALL] Hang Seng Bank Hong Kong Slam crowns champions at Kai Tak on Championship Sunday as Judit Castillo faces Andie Dikosavljevic in women's singles and Tama Shimabukuro meets Hunter Johnson in the men's final at the season-ending PPA Asia 1500 • [TABLE TENNIS] ITTF-ATTU Asian Championships medal Sunday in Tashkent: men's and women's singles semifinals pit Li Tianyang vs Kuo Guan-hong and Wen Ruibo vs Tomokazu Harimoto, with doubles finals on Olympic Town courts after Japan's Miwa Harimoto and Sora Matsushima took mixed doubles gold",
   "newsItems": [
     {
-      "title": "Almaty Semifinal Four Set",
-      "excerpt": "Daniil Medvedev beat Terence Atmane 6-4, 6-4 and Alexander Bublik edged Karen Khachanov 4-6, 7-6(5), 7-6(5) in Almaty quarterfinals, while Stefanos Tsitsipas topped James Duckworth 6-3, 6-4 and Nikoloz Basilashvili defeated Adrian Mannarino 6-3, 6-1.",
-      "date": "October 24, 2026",
+      "title": "Almaty Final Set",
+      "excerpt": "Daniil Medvedev will play Nikoloz Basilashvili for the Almaty Open title after Medvedev led 6-3 when Alexander Bublik retired in the semifinals and Basilashvili upset Stefanos Tsitsipas 6-4, 6-7(5), 6-3.",
+      "date": "October 25, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/scores/current/almaty/9410/results"
     },
     {
-      "title": "French Open Semifinal Day",
-      "excerpt": "The YONEX French Open moves into semifinals at Arena Grand Paris with An Se-young vs Nozomi Okuhara leading the slate; Hina Akechi rides a dream run into Pusarla Sindhu after upsetting Putri Kusuma Wardani, while Alex Lanier and Christo Popov keep France in the hunt.",
-      "date": "October 24, 2026",
+      "title": "French Open Finals Day",
+      "excerpt": "The YONEX French Open closes at Arena Grand Paris with An Se-young facing P.V. Sindhu for the women's crown, Popov and Ubaidillah in the men's final after the Indonesian teen ended Lanier's home run, plus Feng/Huang in mixed doubles.",
+      "date": "October 25, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/24/french-open-akechi-on-dream-run/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/25/french-open-ubaidillah-bursts-lanier-bubble/"
     },
     {
-      "title": "Hong Kong Slam Semis",
-      "excerpt": "At Kai Tak Arena, Judit Castillo and Andie Dikosavljevic won women's singles semifinals to set Sunday's final, while Tama Shimabukuro and Hunter Johnson advanced to the men's title match after Federico Staksrud fell in three games.",
-      "date": "October 24, 2026",
+      "title": "Hong Kong Slam Sunday",
+      "excerpt": "Kai Tak Arena hosts Championship Sunday at the Hang Seng Bank Hong Kong Slam, with Judit Castillo and Andie Dikosavljevic contesting the women's singles final and Tama Shimabukuro meeting Hunter Johnson for the men's title.",
+      "date": "October 25, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour-asia.com/tournament/2026/hong-kong-slam/"
     },
     {
-      "title": "Asian Champs Day Four",
-      "excerpt": "The ITTF-ATTU Asian Championships in Tashkent shift to individual knockout play with men's and women's singles round-of-16 and quarterfinals plus doubles quarterfinals, following China's men's team title and Japan's women's team win earlier in the week.",
-      "date": "October 24, 2026",
+      "title": "Asian Champs Medal Day",
+      "excerpt": "Tashkent's Olympic Town stages singles and doubles semifinals and finals at the ITTF-ATTU Asian Championships, with Harimoto, Kuai Man, Li Tianyang and Tomokazu Harimoto among those chasing individual gold after Japan's mixed doubles triumph.",
+      "date": "October 25, 2026",
       "category": "Table Tennis",
       "link": "https://results.ittf.com/ittf-web-results/html/TTE3474/results.html"
     }
