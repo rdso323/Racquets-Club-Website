@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Indoor season opens Monday as ATP 500 Vienna and Basel join WTA Tokyo and Guangzhou; Alycia Parks topped Xinyu Wang 6-1, 7-6(7) in Tokyo and meets Maja Chwalinska next while Basel hosts Holger Rune vs Quentin Halys and Casper Ruud vs Dominic Stricker • [SQUASH] Sivasangari Subramaniam and Mohamad Zakaria swept the PSA Gold Silicon Valley Open crowns in Redwood City; Sivasangari beat Farida Mohamed 11-7, 11-6, 11-8 for her fourth title of 2026 and Zakaria took the men's trophy after Victor Crouin fell in the final • [BADMINTON] YONEX French Open closed at Arena Grand Paris with An Se-young rallying past P.V. Sindhu 16-21, 21-11, 21-12 for a fourth women's crown, Christo Popov edging Moh. Zaki Ubaidillah 21-11, 14-21, 21-13, and Feng Yan Zhe/Huang Dong Ping winning a third straight mixed doubles title • [PICKLEBALL] PPA Tour Asia's season ended at Kai Tak as Hunter Johnson beat Tama Shimabukuro 11-4, 6-11, 11-7 for men's singles, Andie Dikosavljevic swept Judit Castillo 11-1, 11-5 in women's singles, and Anna Leigh Waters doubled up in women's doubles and mixed • [TABLE TENNIS] Tomokazu Harimoto rallied from two sets down to beat Li Tianyang 1-11, 9-11, 11-7, 11-8, 11-7 for men's singles gold at the ITTF-ATTU Asian Championships in Tashkent; Chen Yi took women's singles and China swept both doubles finals as continental champions were crowned worldwide on Road to Astana",
+  "tickerText": "[TENNIS] Tuesday at the indoor ATP 500s: Alex de Minaur, Matteo Berrettini and Jakub Mensik advanced in Vienna while Maya Joint beat Sorana Cirstea and Ekaterina Alexandrova topped Ann Li in Tokyo; Basel hosts Ben Shelton, Arthur Fils and Stan Wawrinka's farewell run against Jiri Lehecka • [SQUASH] PSA Silver action continues in Toronto as the Canadian Women's Open and Smart Centres Canada Cup run through October 30, following Mohamad Zakaria's five-game Silicon Valley Gold win over Victor Crouin and Sivasangari Subramaniam's straight-games sweep of Farida Mohamed in Redwood City • [BADMINTON] The HYLO Open 2026 opens in Saarbrücken with French Open runner-up Pusarla V. Sindhu headlining a deep Indian women's singles field and defending champion Jonatan Christie leading the men's draw • [PICKLEBALL] PPA Tour Asia closed at Kai Tak with Hunter Johnson edging Tama Shimabukuro in three for men's singles, Andie Dikosavljevic beating Judit Castillo 11-1, 11-5 for a second straight 1500-point title, and Anna Leigh Waters doubling up in women's doubles and mixed with Ben Johns • [TABLE TENNIS] WTT Champions Montpellier begins October 27 with China's 11-player squad in action as Sun Yingsha opens against Camille Lutz; continental crowns were just settled in Tangier, Lima and Tashkent ahead of the Road to Astana",
   "newsItems": [
     {
-      "title": "Four-Tournament Monday",
-      "excerpt": "ATP Vienna and Basel and WTA Tokyo and Guangzhou all begin main-draw week on October 26; Alycia Parks opened Tokyo with a 6-1, 7-6(7) win over Xinyu Wang and advances to face Maja Chwalinska.",
-      "date": "October 26, 2026",
+      "title": "Vienna & Tokyo Tuesday",
+      "excerpt": "Alex de Minaur, Matteo Berrettini and Jakub Mensik won Vienna first-round matches on Monday; in Tokyo, Maya Joint beat Sorana Cirstea and Ekaterina Alexandrova defeated Ann Li as Maja Chwalinska withdrew with a thigh injury.",
+      "date": "October 27, 2026",
       "category": "Tennis",
-      "link": "https://tennisconnected.com/atp-and-wta-2026-schedule-of-play-monday-october-26-for-basel-vienna-tokyo-and-guangzhou/"
+      "link": "https://www.atptour.com/en/news/vienna-2026-results"
     },
     {
-      "title": "French Open Wrap",
-      "excerpt": "An Se-young came from a set down to beat P.V. Sindhu for her fourth French Open women's singles title, Christo Popov won the men's final in three games, and Feng Yan Zhe and Huang Dong Ping claimed a third consecutive mixed doubles crown in Paris.",
-      "date": "October 26, 2026",
+      "title": "HYLO Open Begins",
+      "excerpt": "Pusarla V. Sindhu leads a strong Indian women's singles contingent into the HYLO Open in Saarbrücken, opening against Prakriti Bharath as defending champion Jonatan Christie starts the men's draw.",
+      "date": "October 27, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/26/french-open-iconic-triple-triumphs/"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/27/hylo-open-pusarla-leads-strong-indian-challenge/"
     },
     {
       "title": "Hong Kong Slam Champs",
-      "excerpt": "The Hang Seng Bank Hong Kong Slam crowned Hunter Johnson over Tama Shimabukuro in three games and Andie Dikosavljevic over Judit Castillo in straight games, closing the PPA Tour Asia season at Kai Tak Arena.",
-      "date": "October 25, 2026",
+      "excerpt": "Hunter Johnson rallied past Tama Shimabukuro for men's singles gold and Andie Dikosavljevic swept Judit Castillo for women's singles, while Anna Leigh Waters won women's doubles and mixed to close the PPA Asia 1500 in Hong Kong.",
+      "date": "October 26, 2026",
       "category": "Pickleball",
-      "link": "https://www.thepicklebase.com/ppa-tour-asia/hong-kong-slam-2026-championship-sunday"
+      "link": "https://sports.yahoo.com/articles/professional-pickleball-association-us-based-122952939.html"
     },
     {
-      "title": "Harimoto's Tashkent Rally",
-      "excerpt": "Tomokazu Harimoto saved match point drama with a 3-2 comeback against Li Tianyang to win men's singles at the ITTF-ATTU Asian Championships; Chen Yi took women's gold as China swept both doubles titles in Uzbekistan.",
-      "date": "October 26, 2026",
+      "title": "Montpellier Opens",
+      "excerpt": "WTT Champions Montpellier starts October 27 with an 11-player Chinese entry; Sun Yingsha faces Camille Lutz in round one as the tour shifts focus after continental titles were decided in Tangier, Lima and Tashkent.",
+      "date": "October 27, 2026",
       "category": "Table Tennis",
       "link": "https://www.ittf.com/2026/10/26/road-to-astana-champions-crowned-in-tangier-lima-and-tashkent/"
     }
