@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Tuesday at the indoor ATP 500s: Alex de Minaur, Matteo Berrettini and Jakub Mensik advanced in Vienna while Maya Joint beat Sorana Cirstea and Ekaterina Alexandrova topped Ann Li in Tokyo; Basel hosts Ben Shelton, Arthur Fils and Stan Wawrinka's farewell run against Jiri Lehecka • [SQUASH] PSA Silver action continues in Toronto as the Canadian Women's Open and Smart Centres Canada Cup run through October 30, following Mohamad Zakaria's five-game Silicon Valley Gold win over Victor Crouin and Sivasangari Subramaniam's straight-games sweep of Farida Mohamed in Redwood City • [BADMINTON] The HYLO Open 2026 opens in Saarbrücken with French Open runner-up Pusarla V. Sindhu headlining a deep Indian women's singles field and defending champion Jonatan Christie leading the men's draw • [PICKLEBALL] PPA Tour Asia closed at Kai Tak with Hunter Johnson edging Tama Shimabukuro in three for men's singles, Andie Dikosavljevic beating Judit Castillo 11-1, 11-5 for a second straight 1500-point title, and Anna Leigh Waters doubling up in women's doubles and mixed with Ben Johns • [TABLE TENNIS] WTT Champions Montpellier begins October 27 with China's 11-player squad in action as Sun Yingsha opens against Camille Lutz; continental crowns were just settled in Tangier, Lima and Tashkent ahead of the Road to Astana",
+  "tickerText": "[TENNIS] Wednesday at the indoor ATP 500s: Daniil Medvedev, Alex de Minaur and Frances Tiafoe headline Vienna after Tuesday wins for Alexander Zverev, Carlos Alcaraz and Jakub Mensik; in Basel, Novak Djokovic and Taylor Fritz lead the card following Ben Shelton's three-set escape and Stan Wawrinka's farewell loss to Jiri Lehecka • [SQUASH] PSA Silver events stay live in Toronto through October 30 as the Canadian Women's Open and SmartCentres Canada Cup play out under Brookfield Place's glass atrium, with Tinne Gilis, Anahat Singh and Nada Abbas among the women's seeds • [BADMINTON] HYLO Open day two in Saarbrücken brings main-draw singles and mixed doubles, with Jonatan Christie facing William Bøgebjerg, Pusarla V. Sindhu meeting Prakriti Bharath and Anders Antonsen opening against Harry Huang after four Indonesian pairs won Tuesday • [PICKLEBALL] The Carvana PPA Tour turns toward the Opendoor Pickleball World Championships in Farmers Branch, Texas (Nov. 2–8), after Hunter Johnson and Andie Dikosavljevic defended singles titles at Kai Tak and Kate Fahey's double gold at Virginia Beach • [TABLE TENNIS] WTT Champions Montpellier's round of 32 rolls on Wednesday with Felix Lebrun through after sweeping Anders Lind, Sun Yingsha past Camille Lutz, and Simon Gauzy, Alexis Lebrun, Prithika Pavade and Flavien Coton all in French action at Sud de France Arena",
   "newsItems": [
     {
-      "title": "Vienna & Tokyo Tuesday",
-      "excerpt": "Alex de Minaur, Matteo Berrettini and Jakub Mensik won Vienna first-round matches on Monday; in Tokyo, Maya Joint beat Sorana Cirstea and Ekaterina Alexandrova defeated Ann Li as Maja Chwalinska withdrew with a thigh injury.",
-      "date": "October 27, 2026",
+      "title": "Vienna & Basel Wednesday",
+      "excerpt": "Medvedev, de Minaur and Tiafoe lead Vienna on Wednesday after Zverev and Alcaraz won Tuesday; Djokovic and Fritz head Basel's card following Shelton's win and Wawrinka's farewell loss to Lehecka.",
+      "date": "October 28, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/vienna-2026-results"
+      "link": "https://www.atptour.com/en/news/vienna-2026-schedule"
     },
     {
-      "title": "HYLO Open Begins",
-      "excerpt": "Pusarla V. Sindhu leads a strong Indian women's singles contingent into the HYLO Open in Saarbrücken, opening against Prakriti Bharath as defending champion Jonatan Christie starts the men's draw.",
-      "date": "October 27, 2026",
+      "title": "HYLO Main Draw",
+      "excerpt": "Jonatan Christie opens his title defense against William Bøgebjerg and Pusarla V. Sindhu faces Prakriti Bharath as the HYLO Open's first main-draw day unfolds in Saarbrücken.",
+      "date": "October 28, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/27/hylo-open-pusarla-leads-strong-indian-challenge/"
+      "link": "https://bwfworldchampionships.bwfbadminton.com/tournament/5273/hylo-open-2026/results/2026-10-28"
     },
     {
-      "title": "Hong Kong Slam Champs",
-      "excerpt": "Hunter Johnson rallied past Tama Shimabukuro for men's singles gold and Andie Dikosavljevic swept Judit Castillo for women's singles, while Anna Leigh Waters won women's doubles and mixed to close the PPA Asia 1500 in Hong Kong.",
-      "date": "October 26, 2026",
+      "title": "Road to Worlds",
+      "excerpt": "The PPA Tour shifts focus to the Opendoor Pickleball World Championships in Texas after Asia 1500 singles wins for Hunter Johnson and Andie Dikosavljevic at Hong Kong's Kai Tak.",
+      "date": "October 28, 2026",
       "category": "Pickleball",
-      "link": "https://sports.yahoo.com/articles/professional-pickleball-association-us-based-122952939.html"
+      "link": "https://www.ppatour.com/"
     },
     {
-      "title": "Montpellier Opens",
-      "excerpt": "WTT Champions Montpellier starts October 27 with an 11-player Chinese entry; Sun Yingsha faces Camille Lutz in round one as the tour shifts focus after continental titles were decided in Tangier, Lima and Tashkent.",
-      "date": "October 27, 2026",
+      "title": "Lebrun Advances",
+      "excerpt": "Felix Lebrun swept Anders Lind to reach the WTT Champions Montpellier round of 32, while Sun Yingsha beat Camille Lutz and five French players are scheduled for Wednesday's last-32 slate.",
+      "date": "October 28, 2026",
       "category": "Table Tennis",
-      "link": "https://www.ittf.com/2026/10/26/road-to-astana-champions-crowned-in-tangier-lima-and-tashkent/"
+      "link": "https://www.fftt.com/actualites/wtt/suivre-le-wtt-champions-de-montpellier-2026/"
     }
   ]
 }
