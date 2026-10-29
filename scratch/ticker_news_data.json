@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Wednesday at the indoor ATP 500s: Daniil Medvedev, Alex de Minaur and Frances Tiafoe headline Vienna after Tuesday wins for Alexander Zverev, Carlos Alcaraz and Jakub Mensik; in Basel, Novak Djokovic and Taylor Fritz lead the card following Ben Shelton's three-set escape and Stan Wawrinka's farewell loss to Jiri Lehecka • [SQUASH] PSA Silver events stay live in Toronto through October 30 as the Canadian Women's Open and SmartCentres Canada Cup play out under Brookfield Place's glass atrium, with Tinne Gilis, Anahat Singh and Nada Abbas among the women's seeds • [BADMINTON] HYLO Open day two in Saarbrücken brings main-draw singles and mixed doubles, with Jonatan Christie facing William Bøgebjerg, Pusarla V. Sindhu meeting Prakriti Bharath and Anders Antonsen opening against Harry Huang after four Indonesian pairs won Tuesday • [PICKLEBALL] The Carvana PPA Tour turns toward the Opendoor Pickleball World Championships in Farmers Branch, Texas (Nov. 2–8), after Hunter Johnson and Andie Dikosavljevic defended singles titles at Kai Tak and Kate Fahey's double gold at Virginia Beach • [TABLE TENNIS] WTT Champions Montpellier's round of 32 rolls on Wednesday with Felix Lebrun through after sweeping Anders Lind, Sun Yingsha past Camille Lutz, and Simon Gauzy, Alexis Lebrun, Prithika Pavade and Flavien Coton all in French action at Sud de France Arena",
+  "tickerText": "[TENNIS] Thursday at the indoor ATP 500s: Alexander Zverev can clinch No. 1 with a win over Tallon Griekspoor as Carlos Alcaraz faces Nikoloz Basilashvili and Daniil Medvedev opens against Cameron Norrie in Vienna; in Basel, Novak Djokovic meets Jan-Lennard Struff, Taylor Fritz plays Denis Shapovalov and Ben Shelton faces wild card Jerome Kym • [SQUASH] Semifinal day at Brookfield Place in Toronto as the Canadian Women's Open reaches the penultimate round after Fayrouz Aboelkheir advanced when Anahat Singh withdrew injured, with Tinne Gilis, Nada Abbas, Farida Mohamed and Georgina Kennedy among Thursday's last-four hopefuls • [BADMINTON] HYLO Open round of 16 Thursday in Saarbrücken sets up an all-Indian men's singles clash between Kiran George and Lakshya Sen after George beat June Wei Cheam, while Toma Popov ousted H. S. Prannoy and the Super 500 field plays singles and doubles across three courts • [PICKLEBALL] Opendoor Pickleball World Championships week opens Friday in Farmers Branch, Texas, with the inaugural MLP Nations Cup on Halloween weekend before the Carvana PPA Tour major runs Nov. 2–8 at Brookhaven Country Club • [TABLE TENNIS] WTT Champions Montpellier's Thursday slate sees Hiroto Shinozuka past Hugo Calderano, Jang Woo-jin edge Lin Yun-Ju in five and Sora Matsushima through to face Vladimir Sidorenko as Patrick Franziska and Truls Möregårdh also advance at Sud de France Arena",
   "newsItems": [
     {
-      "title": "Vienna & Basel Wednesday",
-      "excerpt": "Medvedev, de Minaur and Tiafoe lead Vienna on Wednesday after Zverev and Alcaraz won Tuesday; Djokovic and Fritz head Basel's card following Shelton's win and Wawrinka's farewell loss to Lehecka.",
-      "date": "October 28, 2026",
+      "title": "Vienna & Basel Thursday",
+      "excerpt": "Zverev can reach No. 1 against Griekspoor as Alcaraz and Medvedev headline Vienna; Djokovic, Fritz and Shelton lead Basel's Thursday card.",
+      "date": "October 29, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/news/vienna-2026-schedule"
     },
     {
-      "title": "HYLO Main Draw",
-      "excerpt": "Jonatan Christie opens his title defense against William Bøgebjerg and Pusarla V. Sindhu faces Prakriti Bharath as the HYLO Open's first main-draw day unfolds in Saarbrücken.",
-      "date": "October 28, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldchampionships.bwfbadminton.com/tournament/5273/hylo-open-2026/results/2026-10-28"
+      "title": "Toronto Semifinals",
+      "excerpt": "The Canadian Women's Open hits semifinal day at Brookfield Place after Aboelkheir reached the last four when Singh withdrew with an injury.",
+      "date": "October 29, 2026",
+      "category": "Squash",
+      "link": "https://www.psasquashtour.com/tournament/canadian-womens-open-2026/"
     },
     {
-      "title": "Road to Worlds",
-      "excerpt": "The PPA Tour shifts focus to the Opendoor Pickleball World Championships in Texas after Asia 1500 singles wins for Hunter Johnson and Andie Dikosavljevic at Hong Kong's Kai Tak.",
-      "date": "October 28, 2026",
+      "title": "Worlds Week Ahead",
+      "excerpt": "Farmers Branch hosts the MLP Nations Cup from Oct. 30 before the Opendoor PPA major (Nov. 2–8) brings the tour's biggest ranking points payout.",
+      "date": "October 29, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/"
+      "link": "https://worlds.unitedpickleball.com/"
     },
     {
-      "title": "Lebrun Advances",
-      "excerpt": "Felix Lebrun swept Anders Lind to reach the WTT Champions Montpellier round of 32, while Sun Yingsha beat Camille Lutz and five French players are scheduled for Wednesday's last-32 slate.",
-      "date": "October 28, 2026",
+      "title": "Montpellier Round of 32",
+      "excerpt": "Shinozuka beat Calderano, Jang outlasted Lin Yun-Ju in five and Matsushima advanced as WTT Champions Montpellier's men's last-32 continued Thursday.",
+      "date": "October 29, 2026",
       "category": "Table Tennis",
-      "link": "https://www.fftt.com/actualites/wtt/suivre-le-wtt-champions-de-montpellier-2026/"
+      "link": "https://www.worldtabletennis.com/results"
     }
   ]
 }
