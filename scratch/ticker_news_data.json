@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Thursday at the indoor ATP 500s: Alexander Zverev can clinch No. 1 with a win over Tallon Griekspoor as Carlos Alcaraz faces Nikoloz Basilashvili and Daniil Medvedev opens against Cameron Norrie in Vienna; in Basel, Novak Djokovic meets Jan-Lennard Struff, Taylor Fritz plays Denis Shapovalov and Ben Shelton faces wild card Jerome Kym • [SQUASH] Semifinal day at Brookfield Place in Toronto as the Canadian Women's Open reaches the penultimate round after Fayrouz Aboelkheir advanced when Anahat Singh withdrew injured, with Tinne Gilis, Nada Abbas, Farida Mohamed and Georgina Kennedy among Thursday's last-four hopefuls • [BADMINTON] HYLO Open round of 16 Thursday in Saarbrücken sets up an all-Indian men's singles clash between Kiran George and Lakshya Sen after George beat June Wei Cheam, while Toma Popov ousted H. S. Prannoy and the Super 500 field plays singles and doubles across three courts • [PICKLEBALL] Opendoor Pickleball World Championships week opens Friday in Farmers Branch, Texas, with the inaugural MLP Nations Cup on Halloween weekend before the Carvana PPA Tour major runs Nov. 2–8 at Brookhaven Country Club • [TABLE TENNIS] WTT Champions Montpellier's Thursday slate sees Hiroto Shinozuka past Hugo Calderano, Jang Woo-jin edge Lin Yun-Ju in five and Sora Matsushima through to face Vladimir Sidorenko as Patrick Franziska and Truls Möregårdh also advance at Sud de France Arena",
+  "tickerText": "[TENNIS] Halloween Saturday semifinals at the indoor ATP 500s: Vienna sees Daniil Medvedev face Carlos Alcaraz before Alexander Zverev meets Alex de Minaur for two final spots, while Basel pits Valentin Vacherot against Taylor Fritz and Jiří Lehečka against Jan-Lennard Struff • [SQUASH] Weekend action across the PSA calendar includes the Czech Open in Brno, North Coast Open in Coffs Harbour and Moscow Squash Open satellite play as Toronto's Canadian Women's Open and Smart Centres Canada Cup wrap their Silver events • [BADMINTON] HYLO Open semifinal Saturday in Saarbrücken: Lakshya Sen meets Toma Junior Popov and Jonatan Christie faces Anders Antonsen in men's singles, while P. V. Sindhu and Anmol Kharb clash in an all-Indian women's semifinal after Malaysian pairs Hoo/Lai and Aaron Tai/Yap Roy King reached the last four • [PICKLEBALL] Farmers Branch hosts Halloween Nations Cup pool play at Brookhaven Country Club alongside Senior Open and pro qualifying at the College World Championship before the Opendoor PPA major main draw opens Monday • [TABLE TENNIS] WTT Champions Montpellier quarterfinal day at Sud de France Arena: Felix Lebrun and Hugo Calderano headline the men's draw with Lin Shidong vs Truls Möregårdh and Patrick Franziska vs Zhou Qihao, while Sun Yingsha, Wang Yidi and Hina Hayata lead the women's last eight",
   "newsItems": [
     {
-      "title": "Vienna & Basel Thursday",
-      "excerpt": "Zverev can reach No. 1 against Griekspoor as Alcaraz and Medvedev headline Vienna; Djokovic, Fritz and Shelton lead Basel's Thursday card.",
-      "date": "October 29, 2026",
+      "title": "Vienna & Basel Semis",
+      "excerpt": "Medvedev–Alcaraz and Zverev–de Minaur set Vienna's finalists; Vacherot–Fritz and Lehečka–Struff decide Basel on Halloween Saturday.",
+      "date": "October 31, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/news/vienna-2026-schedule"
     },
     {
-      "title": "Toronto Semifinals",
-      "excerpt": "The Canadian Women's Open hits semifinal day at Brookfield Place after Aboelkheir reached the last four when Singh withdrew with an injury.",
-      "date": "October 29, 2026",
-      "category": "Squash",
-      "link": "https://www.psasquashtour.com/tournament/canadian-womens-open-2026/"
+      "title": "Hylo Semifinal Day",
+      "excerpt": "Sindhu vs Kharb headlines an all-Indian women's semifinal in Saarbrücken as Sen and Christie chase men's final spots at the Super 500.",
+      "date": "October 31, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/31/hylo-open-hoo-lais-form-holds/"
     },
     {
-      "title": "Worlds Week Ahead",
-      "excerpt": "Farmers Branch hosts the MLP Nations Cup from Oct. 30 before the Opendoor PPA major (Nov. 2–8) brings the tour's biggest ranking points payout.",
-      "date": "October 29, 2026",
+      "title": "Nations Cup Saturday",
+      "excerpt": "Halloween pool play continues at Brookhaven as the MLP Nations Cup and College World Championship qualifying share Farmers Branch.",
+      "date": "October 31, 2026",
       "category": "Pickleball",
-      "link": "https://worlds.unitedpickleball.com/"
+      "link": "https://worlds.unitedpickleball.com/schedule"
     },
     {
-      "title": "Montpellier Round of 32",
-      "excerpt": "Shinozuka beat Calderano, Jang outlasted Lin Yun-Ju in five and Matsushima advanced as WTT Champions Montpellier's men's last-32 continued Thursday.",
-      "date": "October 29, 2026",
+      "title": "Montpellier Quarters",
+      "excerpt": "Lebrun and Calderano lead men's quarterfinals at Sud de France Arena as Sun Yingsha, Wang Yidi and Hayata head the women's last eight.",
+      "date": "October 31, 2026",
       "category": "Table Tennis",
       "link": "https://www.worldtabletennis.com/results"
     }
