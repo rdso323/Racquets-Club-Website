@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Halloween Saturday semifinals at the indoor ATP 500s: Vienna sees Daniil Medvedev face Carlos Alcaraz before Alexander Zverev meets Alex de Minaur for two final spots, while Basel pits Valentin Vacherot against Taylor Fritz and Jiří Lehečka against Jan-Lennard Struff • [SQUASH] Weekend action across the PSA calendar includes the Czech Open in Brno, North Coast Open in Coffs Harbour and Moscow Squash Open satellite play as Toronto's Canadian Women's Open and Smart Centres Canada Cup wrap their Silver events • [BADMINTON] HYLO Open semifinal Saturday in Saarbrücken: Lakshya Sen meets Toma Junior Popov and Jonatan Christie faces Anders Antonsen in men's singles, while P. V. Sindhu and Anmol Kharb clash in an all-Indian women's semifinal after Malaysian pairs Hoo/Lai and Aaron Tai/Yap Roy King reached the last four • [PICKLEBALL] Farmers Branch hosts Halloween Nations Cup pool play at Brookhaven Country Club alongside Senior Open and pro qualifying at the College World Championship before the Opendoor PPA major main draw opens Monday • [TABLE TENNIS] WTT Champions Montpellier quarterfinal day at Sud de France Arena: Felix Lebrun and Hugo Calderano headline the men's draw with Lin Shidong vs Truls Möregårdh and Patrick Franziska vs Zhou Qihao, while Sun Yingsha, Wang Yidi and Hina Hayata lead the women's last eight",
+  "tickerText": "[TENNIS] Championship Sunday at the indoor ATP 500s: Carlos Alcaraz meets Alex de Minaur for the Erste Bank Open crown in Vienna while Jiri Lehečka and Valentin Vacherot contest the Swiss Indoors Basel final • [SQUASH] PSA platinum season shifts to Philadelphia as the U.S. Open Squash Championships begin while Brno's Czech Open and Coffs Harbour's North Coast Open close their weekend draws • [BADMINTON] HYLO Open finals day in Saarbrücken: Lakshya Sen faces Jonatan Christie and P. V. Sindhu meets Line Kjærsfeldt in the singles title matches with doubles and mixed finals to follow • [PICKLEBALL] Inaugural MLP Nations Cup crowns its first champion at Brookhaven with Sunday semifinals and finals on Championship Court before the Opendoor PPA World Championships main draw opens Monday • [TABLE TENNIS] WTT Champions Montpellier semifinal Sunday at Sud de France Arena: Sun Yingsha vs Wang Yidi and Kuai Man vs Chen Yi in all-Chinese women's semis while Hugo Calderano, Truls Möregårdh and Patrick Franziska chase the men's final",
   "newsItems": [
     {
-      "title": "Vienna & Basel Semis",
-      "excerpt": "Medvedev–Alcaraz and Zverev–de Minaur set Vienna's finalists; Vacherot–Fritz and Lehečka–Struff decide Basel on Halloween Saturday.",
-      "date": "October 31, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/vienna-2026-schedule"
-    },
-    {
-      "title": "Hylo Semifinal Day",
-      "excerpt": "Sindhu vs Kharb headlines an all-Indian women's semifinal in Saarbrücken as Sen and Christie chase men's final spots at the Super 500.",
-      "date": "October 31, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/10/31/hylo-open-hoo-lais-form-holds/"
-    },
-    {
-      "title": "Nations Cup Saturday",
-      "excerpt": "Halloween pool play continues at Brookhaven as the MLP Nations Cup and College World Championship qualifying share Farmers Branch.",
-      "date": "October 31, 2026",
+      "title": "Nations Cup Sunday",
+      "excerpt": "Brookhaven hosts Nations Cup semis and finals to crown the first MLP international champion before PPA Worlds qualifying begins Monday in Farmers Branch.",
+      "date": "November 1, 2026",
       "category": "Pickleball",
-      "link": "https://worlds.unitedpickleball.com/schedule"
+      "link": "https://worlds.unitedpickleball.com/nations-cup"
     },
     {
-      "title": "Montpellier Quarters",
-      "excerpt": "Lebrun and Calderano lead men's quarterfinals at Sud de France Arena as Sun Yingsha, Wang Yidi and Hayata head the women's last eight.",
-      "date": "October 31, 2026",
+      "title": "Montpellier Semifinals",
+      "excerpt": "Sun Yingsha–Wang Yidi and Kuai Man–Chen Yi headline women's semis as Calderano, Möregårdh and Franziska battle for men's final spots at WTT Champions.",
+      "date": "November 1, 2026",
       "category": "Table Tennis",
-      "link": "https://www.worldtabletennis.com/results"
+      "link": "https://www.fftt.com/actualites/wtt/quelle-intensite/"
+    },
+    {
+      "title": "Vienna & Basel Finals",
+      "excerpt": "Alcaraz–de Minaur decides Vienna's Erste Bank Open while Lehečka–Vacherot contest the Swiss Indoors Basel title on ATP 500 championship Sunday.",
+      "date": "November 1, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/basel-2026-schedule"
+    },
+    {
+      "title": "Hylo Finals Day",
+      "excerpt": "Sen–Christie and Sindhu–Kjærsfeldt lead five HYLO Open title matches in Saarbrücken after both Indians reached Super 500 finals without dropping a game.",
+      "date": "November 1, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldchampionships.bwfbadminton.com/tournament/5273/hylo-open-2026/results/2026-11-01"
     }
   ]
 }
