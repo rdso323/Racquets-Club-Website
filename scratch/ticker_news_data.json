@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alcaraz and Vacherot lifted Vienna and Basel on Sunday before the Rolex Paris Masters opened Monday with Musetti, Ruud and Rafael Jodar headlining first-round action on Court Central • [SQUASH] PSA Platinum U.S. Open round-of-16 play begins Monday in Philadelphia after Sunday's round of 32, with Malaysia's Sivasangari and Eain Yow among the winners into the last 16 • [BADMINTON] India swept Hylo Open singles in Saarbrücken as Lakshya Sen beat Jonatan Christie and P.V. Sindhu topped Line Kjærsfeldt, with the BWF World Tour shifting toward November's Korea Open in Yeosu • [PICKLEBALL] Team USA swept Latin America 3-0 to win the inaugural MLP Nations Cup on Sunday and Opendoor PPA World Championships pro qualifying kicks off Monday at Brookhaven before the main draw Tuesday • [TABLE TENNIS] WTT Champions Montpellier crowned Sun Yingsha and Jang Woojin on Sunday—Sun beat Kuai Man 4-1 for her 20th WTT title while Jang rallied past Patrick Franziska 4-3 from 1-3 down",
+  "tickerText": "[TENNIS] Rolex Paris Masters Day 4 Tuesday puts Djokovic–Vacherot and wild card Kouame on Court Central before Shelton–Norrie and Ruud–Jodar close the night session • [SQUASH] PSA Platinum U.S. Open round-of-16 Day 2 runs Tuesday evening in Philadelphia on two glass courts as top seeds Amina Orfi and Mostafa Asal push toward the quarters • [BADMINTON] Yeosu Victor Korea Open Super 500 opens with qualifying at Jinnam Stadium as home No. 1 An Se Young chases a record-equalling 11th title of 2026 • [PICKLEBALL] Opendoor PPA Worlds main draw begins Tuesday at Brookhaven with Round of 64 play across five pro divisions after Monday qualifying • [TABLE TENNIS] WTT Champions Frankfurt 2026 opens at Süwag Energie Arena with the season's final Champions draw as Montpellier winners Sun Yingsha and Jang Woojin head to Germany",
   "newsItems": [
     {
-      "title": "Qualifying Monday",
-      "excerpt": "Brookhaven opens Opendoor PPA Worlds pro qualifying after Team USA swept Latin America 3-0 on Sunday to win the inaugural MLP Nations Cup.",
-      "date": "November 2, 2026",
+      "title": "Korea Open Begins",
+      "excerpt": "Qualifying starts at Jinnam Stadium in Yeosu as An Se Young opens her home Super 500 campaign chasing an 11th title of the season.",
+      "date": "November 3, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/02/korea-open-an-chases-record-equalling-11th-title/"
+    },
+    {
+      "title": "Worlds Round of 64",
+      "excerpt": "Brookhaven hosts the Opendoor PPA Worlds main draw Tuesday with first-serve at 11 a.m. CT across singles, doubles and mixed after Monday qualifying.",
+      "date": "November 3, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/pickleball-world-championships/"
     },
     {
-      "title": "U.S. Open Last 16",
-      "excerpt": "Philadelphia hosts PSA Platinum round-of-16 night sessions Monday after Sunday's round of 32, with Sivasangari and Eain Yow among those advancing.",
-      "date": "November 2, 2026",
-      "category": "Squash",
-      "link": "https://usopensquash.com/tickets/"
-    },
-    {
-      "title": "Montpellier Champions",
-      "excerpt": "Sun Yingsha beat Kuai Man 4-1 and Jang Woojin rallied from 1-3 down to edge Patrick Franziska 4-3 as WTT Champions Montpellier closed Sunday.",
-      "date": "November 2, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.fftt.com/actualites/wtt/sun-yingsha-et-jang-woojin-triomphent-a-montpellier/"
-    },
-    {
-      "title": "Paris Masters Day 1",
-      "excerpt": "Musetti–Hurkacz opens Court Central as Ruud, Jodar and Humbert join Monday's Rolex Paris Masters first round after Alcaraz and Vacherot won Vienna and Basel.",
-      "date": "November 2, 2026",
+      "title": "Paris Day 4",
+      "excerpt": "Djokovic meets Vacherot and Ruud faces Rafael Jodar on Court Central Tuesday after Monday first-round wins from Musetti, Ruud and Norrie.",
+      "date": "November 3, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/news/paris-2026-schedule"
+    },
+    {
+      "title": "U.S. Open Last 16",
+      "excerpt": "Philadelphia's PSA Platinum U.S. Open continues with round-of-16 Day 2 on two courts Tuesday evening at the Arlen Specter Center.",
+      "date": "November 3, 2026",
+      "category": "Squash",
+      "link": "https://usopensquash.com/tickets/"
     }
   ]
 }
