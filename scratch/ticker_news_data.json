@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Paris Masters Day 4 Tuesday puts Djokovic–Vacherot and wild card Kouame on Court Central before Shelton–Norrie and Ruud–Jodar close the night session • [SQUASH] PSA Platinum U.S. Open round-of-16 Day 2 runs Tuesday evening in Philadelphia on two glass courts as top seeds Amina Orfi and Mostafa Asal push toward the quarters • [BADMINTON] Yeosu Victor Korea Open Super 500 opens with qualifying at Jinnam Stadium as home No. 1 An Se Young chases a record-equalling 11th title of 2026 • [PICKLEBALL] Opendoor PPA Worlds main draw begins Tuesday at Brookhaven with Round of 64 play across five pro divisions after Monday qualifying • [TABLE TENNIS] WTT Champions Frankfurt 2026 opens at Süwag Energie Arena with the season's final Champions draw as Montpellier winners Sun Yingsha and Jang Woojin head to Germany",
+  "tickerText": "[TENNIS] Rolex Paris Masters Day 5 Wednesday stacks 14 round-of-32 matches on indoor hard, headlined by Zverev–Musetti, Djokovic–Hijikata and Alcaraz–Michelsen on Court Central • [SQUASH] PSA Platinum U.S. Open quarterfinals open Wednesday in Philadelphia with Mostafa Asal–Joel Makin and Amina Orfi–Sivasangari Subramaniam after ElShorbagy’s upset of Zakaria • [BADMINTON] Yeosu Victor Korea Open Super 500 main draw rolls at Jinnam Stadium as world No. 1 An Se Young continues her home title push after Monday qualifying • [PICKLEBALL] Opendoor PPA Worlds moves to Round of 32 Wednesday at Brookhaven with 11 a.m. CT first serve across five pro divisions on PickleballTV • [TABLE TENNIS] WTT Champions Frankfurt Day 2 at Süwag Energie Arena sends 13 more round-of-32 singles through day and night sessions, including Ovtcharov–Assar and Hayata–Zhang",
   "newsItems": [
     {
-      "title": "Korea Open Begins",
-      "excerpt": "Qualifying starts at Jinnam Stadium in Yeosu as An Se Young opens her home Super 500 campaign chasing an 11th title of the season.",
-      "date": "November 3, 2026",
+      "title": "Korea Open Main Draw",
+      "excerpt": "Super 500 play continues in Yeosu as An Se Young and defending doubles champions Kim Won Ho and Seo Seung Jae lead the field at Jinnam Stadium.",
+      "date": "November 4, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/02/korea-open-an-chases-record-equalling-11th-title/"
+      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5597/korea-open-2026/overview"
     },
     {
-      "title": "Worlds Round of 64",
-      "excerpt": "Brookhaven hosts the Opendoor PPA Worlds main draw Tuesday with first-serve at 11 a.m. CT across singles, doubles and mixed after Monday qualifying.",
-      "date": "November 3, 2026",
+      "title": "Worlds Round of 32",
+      "excerpt": "Brookhaven hosts PPA Worlds main-draw Wednesday with Round of 32 action at 11 a.m. CT as the 3,000-point major narrows the pro fields.",
+      "date": "November 4, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/pickleball-world-championships/"
     },
     {
-      "title": "Paris Day 4",
-      "excerpt": "Djokovic meets Vacherot and Ruud faces Rafael Jodar on Court Central Tuesday after Monday first-round wins from Musetti, Ruud and Norrie.",
-      "date": "November 3, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/paris-2026-schedule"
+      "title": "Frankfurt R32 Day 2",
+      "excerpt": "WTT Champions Frankfurt schedules 13 singles round-of-32 matches Wednesday, pairing home hope Ovtcharov with Assar and Hayata with American Lily Zhang.",
+      "date": "November 4, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.worldtabletennis.com/eventInfo?eventId=3252"
     },
     {
-      "title": "U.S. Open Last 16",
-      "excerpt": "Philadelphia's PSA Platinum U.S. Open continues with round-of-16 Day 2 on two courts Tuesday evening at the Arlen Specter Center.",
-      "date": "November 3, 2026",
-      "category": "Squash",
-      "link": "https://usopensquash.com/tickets/"
+      "title": "Paris Round of 32",
+      "excerpt": "Shelton and Ruud advanced Tuesday; Wednesday’s slate adds Zverev–Musetti, Medvedev–Buse and Fils–Machac as the Masters 1000 field hits the last 32.",
+      "date": "November 4, 2026",
+      "category": "Tennis",
+      "link": "https://www.rolexparismasters.com/en/schedule-and-results"
     }
   ]
 }
