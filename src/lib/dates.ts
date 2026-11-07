@@ -53,6 +53,23 @@ export const buildDateFieldsFromIso = (dateISO: string): DateFields => ({
     date: formatDisplayDate(dateISO),
 });
 
+/** True when no end time is set, or the end clock time is later the same day. */
+export const endTimeIsAfterStart = (startTime: string, endTime?: string): boolean => {
+    if (!endTime?.trim()) return true;
+    const toMinutes = (value: string): number | null => {
+        const match = value.trim().match(/^(\d{1,2}):(\d{2})$/);
+        if (!match) return null;
+        const hours = Number(match[1]);
+        const minutes = Number(match[2]);
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
+        return hours * 60 + minutes;
+    };
+    const start = toMinutes(startTime);
+    const end = toMinutes(endTime);
+    if (start === null || end === null) return true;
+    return end > start;
+};
+
 export const buildTimeFields = (startTime: string, endTime?: string): TimeFields => ({
     startTime,
     ...(endTime ? { endTime } : {}),

@@ -368,10 +368,10 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                 <div className="rounded-xl border border-red-100 bg-red-50 p-8 text-center text-sm text-red-600 shadow-sm dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300">
                     {error}
                 </div>
-            ) : !hasDisplayContent && !isAdmin ? (
+            ) : !hasDisplayContent ? (
                 <div className="glass-deep flex flex-col items-center justify-center p-16 text-center">
                     <Rocket className="mb-4 h-12 w-12 text-gray-300 dark:text-chalk/30" />
-                    <h3 className="mb-2 font-display text-xl text-gray-900 dark:text-chalk">No upcoming sessions</h3>
+                    <h3 className="mb-2 font-display text-xl text-gray-400 dark:text-chalk/45">No court sessions scheduled</h3>
                     <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">Check back later for court availability and coaching clinics.</p>
                 </div>
             ) : (

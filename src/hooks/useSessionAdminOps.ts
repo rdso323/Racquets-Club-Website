@@ -26,7 +26,7 @@ import {
     parseWaitlistEntry,
 } from '../lib/sessions';
 import { assignCoachName, formatMemberName, removeAttendeeWithPromotion, removeWaitlistEntry } from '../lib/bookingActions';
-import { buildTimeFields, resolveSessionTimes } from '../lib/dates';
+import { buildTimeFields, endTimeIsAfterStart, resolveSessionTimes } from '../lib/dates';
 import { notifyWaitlistPromotion } from '../lib/waitlistNotifications';
 import { useAuth } from '../contexts/AuthContext';
 import { useMemberDirectory } from './useMemberDirectory';
@@ -219,6 +219,10 @@ export function useSessionAdminOps({
     const handleSaveSessionEdit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!editingSession) return;
+        if (!endTimeIsAfterStart(editingSession.startTime || '18:30', editingSession.endTime)) {
+            window.alert('End time must be after the start time.');
+            return;
+        }
         try {
             const sessionRef = doc(db, 'sessions', editingSession.id);
             const existingSnap = await getDoc(sessionRef);

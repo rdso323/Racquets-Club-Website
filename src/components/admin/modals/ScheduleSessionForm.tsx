@@ -26,7 +26,7 @@ import {
     suggestedCapacityForCourts,
     type SessionType,
 } from '../../../lib/sessions';
-import { buildDateFieldsFromIso, buildTimeFields } from '../../../lib/dates';
+import { buildDateFieldsFromIso, buildTimeFields, endTimeIsAfterStart } from '../../../lib/dates';
 import { addRecurringSchedule, defaultRecurringTitle } from '../../../lib/recurringSchedules';
 import { downloadWeeklySeriesCalendar } from '../../../lib/calendar';
 import DatePickerField from '../fields/DatePickerField';
@@ -126,6 +126,10 @@ const ScheduleSessionForm = ({
         }
         if (scheduleMode === 'one-time' && (!newSession.date || !sessionDateInput)) {
             setMessage('Please pick a date for one-time sessions.');
+            return;
+        }
+        if (!endTimeIsAfterStart(newSession.startTime, newSession.endTime)) {
+            setMessage('End time must be after the start time.');
             return;
         }
         setSaving(true);
