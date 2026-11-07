@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Paris Masters round of 16 Thursday on Court Central stacks three Frenchmen before Alcaraz–Berrettini and Fils–Fritz, after Wednesday shocks from Musetti over Zverev and Hijikata over Djokovic • [SQUASH] PSA Platinum U.S. Open quarterfinals continue Thursday at 6 p.m. in Philadelphia after Wednesday’s opening QF card at the Arlen Specter Center • [BADMINTON] Yeosu Korea Open Super 500 hits round of 16 Thursday at Jinnam Stadium as An Se Young chases an 11th title of 2026 after a 39-minute R32 win • [PICKLEBALL] Opendoor PPA Worlds shifts to round of 16 Thursday at Brookhaven with 11 a.m. CT first serve plus PPA Challenger pool play on PickleballTV • [TABLE TENNIS] WTT Champions Frankfurt Day 3 at Süwag Energie Arena opens the round of 16, including Liang–Calderano and home hope Dang Qiu after Harimoto and Wang Chuqin cleared the R32",
+  "tickerText": "[TENNIS] Rolex Paris Masters semifinals Saturday at La Défense Arena: Shelton–Van Assche and Alcaraz–Ruud after Friday QF wins, with last Frenchman Van Assche chasing a first Masters 1000 final • [SQUASH] PSA Platinum U.S. Open finals Saturday at 6 p.m. ET in Philadelphia as Diego Elias meets Paul Coll after upsetting world No. 1 Mostafa Asal in the semis • [BADMINTON] Yeosu Korea Open Super 500 semifinals Saturday on Court 1 as An Se Young faces Hina Akechi after a 21-7, 21-13 QF sweep extended her 53-match win streak • [PICKLEBALL] Opendoor PPA Worlds pro semifinals Saturday from 11 a.m. CT at Brookhaven ahead of Championship Sunday finals • [TABLE TENNIS] WTT Champions Frankfurt Saturday quarterfinals at Süwag Energie Arena, with Lin Yun-Ju, Harimoto, Qiu Dang and home crowds on best-of-five tables",
   "newsItems": [
     {
-      "title": "An Se Young to R16",
-      "excerpt": "World No. 1 An Se Young beat Kaloyana Nalbantova 21-6, 21-8 in 39 minutes and eyes a record-tying 11th title as Korea Open round-of-16 play opens Thursday in Yeosu.",
-      "date": "November 5, 2026",
+      "title": "An Semifinal Saturday",
+      "excerpt": "World No. 1 An Se Young beat Riko Gunji 21-7, 21-13 in 37 minutes and meets Hina Akechi in Yeosu semifinals as she chases a record-tying 11th title of 2026.",
+      "date": "November 7, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5597/korea-open-2026/overview"
+      "link": "https://bwfworldchampionships.bwfbadminton.com/tournament/5597/yeosu-victor-korea-open-2026/results/2026-11-07"
     },
     {
-      "title": "Worlds Round of 16",
-      "excerpt": "Brookhaven hosts PPA Worlds main-draw Thursday with round-of-16 matches from 11 a.m. CT as the 3,000-point major trims the pro fields ahead of Championship Sunday.",
-      "date": "November 5, 2026",
+      "title": "Worlds Semifinal Day",
+      "excerpt": "Brookhaven hosts PPA Worlds pro semifinals Saturday from 11 a.m. CT as the 3,000-point major sets up Championship Sunday title matches across five divisions.",
+      "date": "November 7, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/pickleball-world-championships/"
+      "link": "https://www.ppatour.com/events/2026/pickleball-world-championships/today/"
     },
     {
-      "title": "Paris Last 16",
-      "excerpt": "Halys, Rinderknech and Van Assche head a French-heavy Thursday slate before Alcaraz–Berrettini and Fils–Fritz, following Wednesday upsets of Zverev, Medvedev and Djokovic.",
-      "date": "November 5, 2026",
+      "title": "Frankfurt Last Eight",
+      "excerpt": "WTT Champions Frankfurt opens Saturday quarterfinals on a single table at the Süwag Energie Arena as the season’s final Champions stop stakes Hong Kong Finals points.",
+      "date": "November 7, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.worldtabletennis.com/description?artId=6725"
+    },
+    {
+      "title": "Paris Semi Saturday",
+      "excerpt": "Shelton–Van Assche and Alcaraz–Ruud headline Paris semifinals after Alcaraz saved two match points vs Fritz and Van Assche kept France’s last hope alive.",
+      "date": "November 7, 2026",
       "category": "Tennis",
-      "link": "https://www.rolexparismasters.com/en/news/article/round-of-16-schedule-singles-doubles-france-usa-shelton-alcaraz-fils"
-    },
-    {
-      "title": "U.S. Open QF Night",
-      "excerpt": "Philadelphia’s PSA Platinum U.S. Open stages quarterfinals day two Thursday at 6 p.m. on the Specter Center show court after Wednesday’s opening quarterfinal session.",
-      "date": "November 5, 2026",
-      "category": "Squash",
-      "link": "https://usopensquash.com/tickets/"
+      "link": "https://www.rolexparismasters.com/en/news/article/quarter-finals-schedule-singles-doubles-wheelchair-tennis-shelton-van-assche-alcaraz"
     }
   ]
 }
