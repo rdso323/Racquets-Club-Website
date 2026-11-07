@@ -27,7 +27,6 @@ const CreateSessionModal = ({ initialSport = 'Tennis', onClose }: CreateSessionM
     return createPortal(
         <div
             className="fixed inset-0 z-[160] flex items-start justify-center overflow-y-auto bg-black/50 p-3 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-center sm:p-6"
-            onClick={onClose}
             role="presentation"
         >
             <div
@@ -35,7 +34,6 @@ const CreateSessionModal = ({ initialSport = 'Tennis', onClose }: CreateSessionM
                 aria-modal="true"
                 aria-label="Schedule new session"
                 className="my-2 flex w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-carbon sm:my-0"
-                onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex shrink-0 items-center justify-between border-b border-gray-200 px-4 pb-2 pt-4 dark:border-gray-800 sm:px-6 sm:pt-5">
                     <div>
