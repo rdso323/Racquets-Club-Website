@@ -73,6 +73,11 @@ const CabinetMemberPortrait = ({
                 >
                     {member.name}
                 </h3>
+                {member.note && (
+                    <p className="mt-1 text-xs font-medium tracking-wide text-gray-500 dark:text-chalk/50">
+                        {member.note}
+                    </p>
+                )}
             </div>
         </motion.article>
     );

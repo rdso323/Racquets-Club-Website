@@ -18,6 +18,8 @@ export interface CabinetMember {
     sport?: Sport;
     photo: string;
     initials: string;
+    /** Extra line under the role, used for the first-year roster. */
+    note?: string;
 }
 
 export interface CabinetRoster {
@@ -104,6 +106,73 @@ export const CABINET_MEMBERS: CabinetMember[] = [
         sport: 'Squash',
         photo: '/cabinet/maddie-latimore.jpg',
         initials: 'ML',
+    },
+];
+
+/** First-year cabinet from the 2026–2027 roster deck. Shown alongside the main cabinet. */
+export const FIRST_YEAR_CABINET: CabinetMember[] = [
+    {
+        id: 'mark-roh',
+        name: 'Mark Roh',
+        role: 'Tennis',
+        kind: 'officer',
+        sport: 'Tennis',
+        photo: '/cabinet/mark-roh.jpg',
+        initials: 'MR',
+    },
+    {
+        id: 'ashley-coskey',
+        name: 'Ashley Coskey',
+        role: 'Tennis',
+        kind: 'officer',
+        sport: 'Tennis',
+        photo: '/cabinet/ashley-coskey.jpg',
+        initials: 'AC',
+    },
+    {
+        id: 'devin-ramadhar',
+        name: 'Devin Ramadhar',
+        role: 'Tennis',
+        kind: 'officer',
+        sport: 'Tennis',
+        photo: '/cabinet/devin-ramadhar.jpg',
+        initials: 'DR',
+    },
+    {
+        id: 'christie-chan',
+        name: 'Christie Chan',
+        role: 'Tennis',
+        kind: 'officer',
+        sport: 'Tennis',
+        photo: '/cabinet/christie-chan.jpg',
+        initials: 'CC',
+    },
+    {
+        id: 'ansh-gupta',
+        name: 'Ansh Gupta',
+        role: 'Pickleball',
+        kind: 'officer',
+        sport: 'Pickleball',
+        photo: '/cabinet/ansh-gupta.jpg',
+        initials: 'AG',
+    },
+    {
+        id: 'sophia-yazigi',
+        name: 'Sophia Yazigi',
+        role: 'Squash',
+        kind: 'officer',
+        sport: 'Squash',
+        photo: '/cabinet/sophia-yazigi.jpg',
+        initials: 'SY',
+        note: '2Y · Supporting Member',
+    },
+    {
+        id: 'alekhya-melam',
+        name: 'Alekhya Melam',
+        role: 'MQM Liaison',
+        kind: 'officer',
+        photo: '/cabinet/alekhya-melam.jpg',
+        initials: 'AM',
     },
 ];
 
