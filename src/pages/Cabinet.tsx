@@ -8,6 +8,7 @@ import CabinetMemberPortrait from '../components/cabinet/CabinetMemberPortrait';
 import {
     CABINET_SETTINGS_COLLECTION,
     CABINET_SETTINGS_DOC_ID,
+    FIRST_YEAR_CABINET,
     resolveCabinetDisplay,
     type ResolvedCabinet,
 } from '../lib/cabinet';
@@ -141,6 +142,25 @@ const Cabinet = () => {
                             ))}
                         </div>
                     )}
+                </div>
+            </section>
+
+            <section className="border-t border-gray-200/80 dark:border-chalk/10">
+                <div className="mx-auto max-w-6xl px-5 py-12 md:px-10 md:py-16">
+                    <div className="mb-8">
+                        <p className="hud-label mb-3 text-emerald-600 dark:text-court-accent">2026–2027</p>
+                        <h2 className="font-display text-3xl text-gray-900 dark:text-chalk md:text-4xl">
+                            First-Year Cabinet
+                        </h2>
+                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-600 dark:text-chalk/60">
+                            First-year leads supporting tennis, pickleball, squash, and the MQM program.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 sm:gap-x-6 sm:gap-y-10">
+                        {FIRST_YEAR_CABINET.map((member, i) => (
+                            <CabinetMemberPortrait key={member.id} member={member} index={i} />
+                        ))}
+                    </div>
                 </div>
             </section>
 
