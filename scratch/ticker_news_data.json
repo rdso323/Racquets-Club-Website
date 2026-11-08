@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Paris Masters semifinals Saturday at La Défense Arena: Shelton–Van Assche and Alcaraz–Ruud after Friday QF wins, with last Frenchman Van Assche chasing a first Masters 1000 final • [SQUASH] PSA Platinum U.S. Open finals Saturday at 6 p.m. ET in Philadelphia as Diego Elias meets Paul Coll after upsetting world No. 1 Mostafa Asal in the semis • [BADMINTON] Yeosu Korea Open Super 500 semifinals Saturday on Court 1 as An Se Young faces Hina Akechi after a 21-7, 21-13 QF sweep extended her 53-match win streak • [PICKLEBALL] Opendoor PPA Worlds pro semifinals Saturday from 11 a.m. CT at Brookhaven ahead of Championship Sunday finals • [TABLE TENNIS] WTT Champions Frankfurt Saturday quarterfinals at Süwag Energie Arena, with Lin Yun-Ju, Harimoto, Qiu Dang and home crowds on best-of-five tables",
+  "tickerText": "[TENNIS] Rolex Paris Masters final Sunday at 3 p.m. CET: Carlos Alcaraz and Ben Shelton meet after Alcaraz beat Ruud 6-4, 6-4 and Shelton rallied past Van Assche 5-7, 6-3, 6-4 • [SQUASH] Paul Coll won his second U.S. Open title in Philadelphia, beating Diego Elias 11-8, 11-5, 11-6, 11-8 after dropping the opener in the PSA Platinum final • [BADMINTON] Korea Open finals Sunday at Jinnam Stadium: home fans saw Kim Yu-jung–Lee Yu-lim take women's doubles silver in a 113-rally epic before An Se Young faced Akane Yamaguchi for singles gold • [PICKLEBALL] Opendoor PPA Worlds Championship Sunday from 10 a.m. CT at Brookhaven as the 3,000-point season finale crowns five pro champions live on PickleballTV • [TABLE TENNIS] WTT Champions Frankfurt semifinals Sunday at Süwag Energie Arena after Saturday's quarterfinals ended with no Chinese survivors and Franziska, Togami, Lin and Harimoto in the men's last four",
   "newsItems": [
     {
-      "title": "An Semifinal Saturday",
-      "excerpt": "World No. 1 An Se Young beat Riko Gunji 21-7, 21-13 in 37 minutes and meets Hina Akechi in Yeosu semifinals as she chases a record-tying 11th title of 2026.",
-      "date": "November 7, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldchampionships.bwfbadminton.com/tournament/5597/yeosu-victor-korea-open-2026/results/2026-11-07"
+      "title": "Paris Final Sunday",
+      "excerpt": "Alcaraz and Shelton renew their US Open quarterfinal rivalry in Sunday's Paris final after straight-set and three-set semifinal wins over Ruud and Van Assche.",
+      "date": "November 8, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/alcaraz-shelton-paris-2026-final-preview"
     },
     {
-      "title": "Worlds Semifinal Day",
-      "excerpt": "Brookhaven hosts PPA Worlds pro semifinals Saturday from 11 a.m. CT as the 3,000-point major sets up Championship Sunday title matches across five divisions.",
-      "date": "November 7, 2026",
+      "title": "Yeosu Finals Day",
+      "excerpt": "Korea Open closes at Jinnam Stadium with Kim Yu-jung–Lee Yu-lim's women's doubles runner-up finish and An Se Young bidding for an 11th title of 2026 against Akane Yamaguchi.",
+      "date": "November 8, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldchampionships.bwfbadminton.com/results/5597/yeosu-victor-korea-open-2026/2026-11-08"
+    },
+    {
+      "title": "Frankfurt Semis Set",
+      "excerpt": "China's last four players fell in Frankfurt quarterfinals as Patrick Franziska, Shunsuke Togami, Lin Yun-Ju and Tomokazu Harimoto advanced to Sunday semifinals.",
+      "date": "November 8, 2026",
+      "category": "Table Tennis",
+      "link": "https://english.news.cn/20261108/f4043ab7fb424eefb41cb61dd650f995/c.html"
+    },
+    {
+      "title": "Worlds Title Sunday",
+      "excerpt": "Brookhaven hosts PPA Worlds Championship Sunday with first serve at 10 a.m. CT and PickleballTV coverage from 11 a.m.–5 p.m. ET across five pro divisions.",
+      "date": "November 8, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/pickleball-world-championships/today/"
-    },
-    {
-      "title": "Frankfurt Last Eight",
-      "excerpt": "WTT Champions Frankfurt opens Saturday quarterfinals on a single table at the Süwag Energie Arena as the season’s final Champions stop stakes Hong Kong Finals points.",
-      "date": "November 7, 2026",
-      "category": "Table Tennis",
-      "link": "https://www.worldtabletennis.com/description?artId=6725"
-    },
-    {
-      "title": "Paris Semi Saturday",
-      "excerpt": "Shelton–Van Assche and Alcaraz–Ruud headline Paris semifinals after Alcaraz saved two match points vs Fritz and Van Assche kept France’s last hope alive.",
-      "date": "November 7, 2026",
-      "category": "Tennis",
-      "link": "https://www.rolexparismasters.com/en/news/article/quarter-finals-schedule-singles-doubles-wheelchair-tennis-shelton-van-assche-alcaraz"
     }
   ]
 }
