@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rolex Paris Masters final Sunday at 3 p.m. CET: Carlos Alcaraz and Ben Shelton meet after Alcaraz beat Ruud 6-4, 6-4 and Shelton rallied past Van Assche 5-7, 6-3, 6-4 • [SQUASH] Paul Coll won his second U.S. Open title in Philadelphia, beating Diego Elias 11-8, 11-5, 11-6, 11-8 after dropping the opener in the PSA Platinum final • [BADMINTON] Korea Open finals Sunday at Jinnam Stadium: home fans saw Kim Yu-jung–Lee Yu-lim take women's doubles silver in a 113-rally epic before An Se Young faced Akane Yamaguchi for singles gold • [PICKLEBALL] Opendoor PPA Worlds Championship Sunday from 10 a.m. CT at Brookhaven as the 3,000-point season finale crowns five pro champions live on PickleballTV • [TABLE TENNIS] WTT Champions Frankfurt semifinals Sunday at Süwag Energie Arena after Saturday's quarterfinals ended with no Chinese survivors and Franziska, Togami, Lin and Harimoto in the men's last four",
+  "tickerText": "[TENNIS] Alcaraz won his first Paris Masters crown Sunday, beating Ben Shelton 7-6(5), 7-5 for ninth Masters 1000 title and revenge after their US Open quarterfinal • [SQUASH] Paul Coll rallied from a game down to beat Diego Elias 8-11, 11-5, 11-6, 11-8 for his second U.S. Open title as Amina Orfi swept Nouran Gohar for the women's crown in Philadelphia • [BADMINTON] An Se-young beat Akane Yamaguchi 21-12, 15-21, 21-16 at Yeosu to win a record-tying 11th international title of 2026 on home soil • [PICKLEBALL] PPA Worlds closed at Brookhaven as Anna Leigh Waters claimed a 46th Triple Crown, JW Johnson and Tama Shimabukuro rallied from down two games in men's doubles, and John Lucian Goins defended singles gold • [TABLE TENNIS] Japan swept WTT Champions Frankfurt as Tomokazu Harimoto beat Patrick Franziska 4-2 and Hina Hayata edged Satsuki Odo 4-2 after a week with no Chinese players in either semifinal",
   "newsItems": [
     {
-      "title": "Paris Final Sunday",
-      "excerpt": "Alcaraz and Shelton renew their US Open quarterfinal rivalry in Sunday's Paris final after straight-set and three-set semifinal wins over Ruud and Van Assche.",
-      "date": "November 8, 2026",
+      "title": "Alcaraz Wins Paris",
+      "excerpt": "Carlos Alcaraz took his first Rolex Paris Masters title Sunday, defeating Ben Shelton 7-6(5), 7-5 to claim his ninth ATP Masters 1000 trophy and avenge their US Open quarterfinal.",
+      "date": "November 9, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/alcaraz-shelton-paris-2026-final-preview"
+      "link": "https://www.nittoatpfinals.com/en/news/alcaraz-shelton-paris-2026-final-sunday"
     },
     {
-      "title": "Yeosu Finals Day",
-      "excerpt": "Korea Open closes at Jinnam Stadium with Kim Yu-jung–Lee Yu-lim's women's doubles runner-up finish and An Se Young bidding for an 11th title of 2026 against Akane Yamaguchi.",
-      "date": "November 8, 2026",
+      "title": "An's 11th Title",
+      "excerpt": "World No. 1 An Se-young edged Akane Yamaguchi in three games at the Korea Open final in Yeosu to tie the record with an 11th international crown in a single season.",
+      "date": "November 9, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldchampionships.bwfbadminton.com/results/5597/yeosu-victor-korea-open-2026/2026-11-08"
+      "link": "https://en.yna.co.kr/view/AEN20261108002151315"
     },
     {
-      "title": "Frankfurt Semis Set",
-      "excerpt": "China's last four players fell in Frankfurt quarterfinals as Patrick Franziska, Shunsuke Togami, Lin Yun-Ju and Tomokazu Harimoto advanced to Sunday semifinals.",
-      "date": "November 8, 2026",
+      "title": "Frankfurt Japan Sweep",
+      "excerpt": "Tomokazu Harimoto and Hina Hayata lifted the men's and women's singles titles at WTT Champions Frankfurt on Sunday after home hope Patrick Franziska fell in a six-game final.",
+      "date": "November 9, 2026",
       "category": "Table Tennis",
-      "link": "https://english.news.cn/20261108/f4043ab7fb424eefb41cb61dd650f995/c.html"
+      "link": "https://english.news.cn/20261109/5f70638dd3ec4c52adf1542ef8fa6c51/c.html"
     },
     {
-      "title": "Worlds Title Sunday",
-      "excerpt": "Brookhaven hosts PPA Worlds Championship Sunday with first serve at 10 a.m. CT and PickleballTV coverage from 11 a.m.–5 p.m. ET across five pro divisions.",
-      "date": "November 8, 2026",
+      "title": "Waters' Triple Crown",
+      "excerpt": "Anna Leigh Waters closed PPA Worlds with singles, doubles, and mixed gold at Brookhaven—her 46th Triple Crown—while John Lucian Goins repeated as men's singles champion.",
+      "date": "November 9, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/pickleball-world-championships/today/"
+      "link": "https://pickleball.com/news/worlds-championship-sunday-recap-johnson-shimabukuro-pull-off-epic-comeback-as-waters-defends-triple-crown"
     }
   ]
 }
