@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Alcaraz won his first Paris Masters crown Sunday, beating Ben Shelton 7-6(5), 7-5 for ninth Masters 1000 title and revenge after their US Open quarterfinal • [SQUASH] Paul Coll rallied from a game down to beat Diego Elias 8-11, 11-5, 11-6, 11-8 for his second U.S. Open title as Amina Orfi swept Nouran Gohar for the women's crown in Philadelphia • [BADMINTON] An Se-young beat Akane Yamaguchi 21-12, 15-21, 21-16 at Yeosu to win a record-tying 11th international title of 2026 on home soil • [PICKLEBALL] PPA Worlds closed at Brookhaven as Anna Leigh Waters claimed a 46th Triple Crown, JW Johnson and Tama Shimabukuro rallied from down two games in men's doubles, and John Lucian Goins defended singles gold • [TABLE TENNIS] Japan swept WTT Champions Frankfurt as Tomokazu Harimoto beat Patrick Franziska 4-2 and Hina Hayata edged Satsuki Odo 4-2 after a week with no Chinese players in either semifinal",
+  "tickerText": "[TENNIS] Aryna Sabalenka opened her WTA Finals campaign Monday with a 7-6(2), 7-5 win over Karolina Muchova in Indian Wells and will face Mirra Andreeva next, while Cobolli, Fils, Tiafoe and Jodar locked in the last four ATP Finals berths in Turin • [SQUASH] Paul Coll and Amina Orfi remain on a high after US Open titles in Philadelphia as the PSA Tour turns toward the China Open Gold event starting November 17 • [BADMINTON] An Se-young edged Akane Yamaguchi in three games at Yeosu to tie her own record with an 11th international crown in a single season on home soil • [PICKLEBALL] Fifteen-year-old Tama Shimabukuro and JW Johnson rallied from two games down to win men's doubles at PPA Worlds as Anna Leigh Waters logged a 46th Triple Crown in Texas • [TABLE TENNIS] Tomokazu Harimoto rose to world No. 2 after beating Patrick Franziska 4-2 in Frankfurt as WTT Contender Istanbul opens the week's calendar",
   "newsItems": [
     {
-      "title": "Alcaraz Wins Paris",
-      "excerpt": "Carlos Alcaraz took his first Rolex Paris Masters title Sunday, defeating Ben Shelton 7-6(5), 7-5 to claim his ninth ATP Masters 1000 trophy and avenge their US Open quarterfinal.",
-      "date": "November 9, 2026",
+      "title": "Sabalenka In Form",
+      "excerpt": "Aryna Sabalenka beat Karolina Muchova 7-6(2), 7-5 on Monday for her first win at the 2026 WTA Finals in Indian Wells and lines up a semifinal clash with Mirra Andreeva.",
+      "date": "November 10, 2026",
       "category": "Tennis",
-      "link": "https://www.nittoatpfinals.com/en/news/alcaraz-shelton-paris-2026-final-sunday"
+      "link": "https://apnews.com/article/wta-finals-indian-wells-sabalenka-5fbf0c1ad429cd18030cd0189579b50e"
     },
     {
       "title": "An's 11th Title",
-      "excerpt": "World No. 1 An Se-young edged Akane Yamaguchi in three games at the Korea Open final in Yeosu to tie the record with an 11th international crown in a single season.",
-      "date": "November 9, 2026",
+      "excerpt": "World No. 1 An Se-young outlasted Akane Yamaguchi 21-12, 15-21, 21-16 in Yeosu to match her 2025 tally with an 11th title of the season at the Korea Open.",
+      "date": "November 10, 2026",
       "category": "Badminton",
-      "link": "https://en.yna.co.kr/view/AEN20261108002151315"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/08/korea-open-indomitable-an-equals-greatest-season"
     },
     {
-      "title": "Frankfurt Japan Sweep",
-      "excerpt": "Tomokazu Harimoto and Hina Hayata lifted the men's and women's singles titles at WTT Champions Frankfurt on Sunday after home hope Patrick Franziska fell in a six-game final.",
-      "date": "November 9, 2026",
+      "title": "Harimoto To No. 2",
+      "excerpt": "Tomokazu Harimoto defeated Patrick Franziska 4-2 in Frankfurt and Hina Hayata beat Satsuki Odo for women's gold as Japan swept WTT Champions before the circuit moves to Istanbul.",
+      "date": "November 10, 2026",
       "category": "Table Tennis",
-      "link": "https://english.news.cn/20261109/5f70638dd3ec4c52adf1542ef8fa6c51/c.html"
+      "link": "https://pingpongtimes.com/news/weekly-rankings-roundup-november-9-2026--a54f9e050ade99ba"
     },
     {
-      "title": "Waters' Triple Crown",
-      "excerpt": "Anna Leigh Waters closed PPA Worlds with singles, doubles, and mixed gold at Brookhaven—her 46th Triple Crown—while John Lucian Goins repeated as men's singles champion.",
-      "date": "November 9, 2026",
+      "title": "Shimabukuro Makes History",
+      "excerpt": "Tama Shimabukuro, 15, became the youngest men's doubles champion in PPA Tour history with JW Johnson after a three-game comeback at the Opendoor World Championships in Texas.",
+      "date": "November 10, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/worlds-championship-sunday-recap-johnson-shimabukuro-pull-off-epic-comeback-as-waters-defends-triple-crown"
+      "link": "https://www.thedinkpickleball.com/ppa-tour-worlds-recap-teenage-sensation-wins-gold-waters-claims-triple-crown-and-goins-dominates/"
     }
   ]
 }
