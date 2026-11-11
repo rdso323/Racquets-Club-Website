@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Aryna Sabalenka opened her WTA Finals campaign Monday with a 7-6(2), 7-5 win over Karolina Muchova in Indian Wells and will face Mirra Andreeva next, while Cobolli, Fils, Tiafoe and Jodar locked in the last four ATP Finals berths in Turin • [SQUASH] Paul Coll and Amina Orfi remain on a high after US Open titles in Philadelphia as the PSA Tour turns toward the China Open Gold event starting November 17 • [BADMINTON] An Se-young edged Akane Yamaguchi in three games at Yeosu to tie her own record with an 11th international crown in a single season on home soil • [PICKLEBALL] Fifteen-year-old Tama Shimabukuro and JW Johnson rallied from two games down to win men's doubles at PPA Worlds as Anna Leigh Waters logged a 46th Triple Crown in Texas • [TABLE TENNIS] Tomokazu Harimoto rose to world No. 2 after beating Patrick Franziska 4-2 in Frankfurt as WTT Contender Istanbul opens the week's calendar",
+  "tickerText": "[TENNIS] Sara Errani and Jasmine Paolini became the first doubles team into the WTA Finals semis after a three-set win in Indian Wells, while Group 2 singles pairs Sabalenka–Svitolina and Andreeva–Muchova play Wednesday as the Nitto ATP Finals draw in Turin lands Thursday • [SQUASH] The PSA Pittsburgh Open Silver event opened its 32-man draw on November 11 while Shanghai readies the season-ending China Open Gold from November 17 with Mostafa Asal, Amina Orfi and $279,000 on the line • [BADMINTON] An Se-young took an 11th title of 2026 at the YEOSU VICTOR Korea Open and Victor Lai became Canada's first men's champion at the Super 500 stop in Yeosu • [PICKLEBALL] PPA Worlds wrapped in Texas with John Lucian Goins men's singles gold, Anna Leigh Waters sweeping three titles and 15-year-old Tama Shimabukuro pairing JW Johnson for a five-game men's doubles comeback • [TABLE TENNIS] Qualifying for WTT Contender Istanbul runs through November 11 at Ata Sporları Merkezi ahead of a $100,000 main draw headlined by Anders Lind, Honoka Hashimoto and a deep Japanese women's field",
   "newsItems": [
     {
-      "title": "Sabalenka In Form",
-      "excerpt": "Aryna Sabalenka beat Karolina Muchova 7-6(2), 7-5 on Monday for her first win at the 2026 WTA Finals in Indian Wells and lines up a semifinal clash with Mirra Andreeva.",
-      "date": "November 10, 2026",
+      "title": "Italians Advance",
+      "excerpt": "Sara Errani and Jasmine Paolini rallied for a 3-6, 6-2, 10-7 win on Tuesday to become the first team into the 2026 WTA Finals doubles semifinals in Indian Wells.",
+      "date": "November 11, 2026",
       "category": "Tennis",
-      "link": "https://apnews.com/article/wta-finals-indian-wells-sabalenka-5fbf0c1ad429cd18030cd0189579b50e"
+      "link": "https://www.wtatennis.com/news/4607688/errani-paolini-first-to-reach-fage-wta-finals-doubles-semis-townsend-siniakova-stay-alive"
     },
     {
-      "title": "An's 11th Title",
-      "excerpt": "World No. 1 An Se-young outlasted Akane Yamaguchi 21-12, 15-21, 21-16 in Yeosu to match her 2025 tally with an 11th title of the season at the Korea Open.",
-      "date": "November 10, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/08/korea-open-indomitable-an-equals-greatest-season"
+      "title": "Shanghai Gold Next",
+      "excerpt": "The PSA's final Gold event of 2026 brings 48 players to Shanghai November 17–22, with defending champion Amina Orfi and world No. 1 Mostafa Asal headlining the draws.",
+      "date": "November 11, 2026",
+      "category": "Squash",
+      "link": "https://english.shanghai.gov.cn/en-Events/20261029/732ba55f8e6642f5917ac2193d2ad33c.html"
     },
     {
-      "title": "Harimoto To No. 2",
-      "excerpt": "Tomokazu Harimoto defeated Patrick Franziska 4-2 in Frankfurt and Hina Hayata beat Satsuki Odo for women's gold as Japan swept WTT Champions before the circuit moves to Istanbul.",
-      "date": "November 10, 2026",
-      "category": "Table Tennis",
-      "link": "https://pingpongtimes.com/news/weekly-rankings-roundup-november-9-2026--a54f9e050ade99ba"
-    },
-    {
-      "title": "Shimabukuro Makes History",
-      "excerpt": "Tama Shimabukuro, 15, became the youngest men's doubles champion in PPA Tour history with JW Johnson after a three-game comeback at the Opendoor World Championships in Texas.",
-      "date": "November 10, 2026",
+      "title": "Goins Takes Worlds",
+      "excerpt": "John Lucian Goins beat Jack Sock 11-5, 12-10 for his first PPA major singles title as Anna Leigh Waters completed another Triple Crown at the Opendoor Worlds in Texas.",
+      "date": "November 11, 2026",
       "category": "Pickleball",
       "link": "https://www.thedinkpickleball.com/ppa-tour-worlds-recap-teenage-sensation-wins-gold-waters-claims-triple-crown-and-goins-dominates/"
+    },
+    {
+      "title": "Istanbul Draw Opens",
+      "excerpt": "WTT Contender Istanbul qualifying is underway ahead of the November 12 main draw, where Tom Jarvis, Anders Lind and Honoka Hashimoto chase ranking points at Ata Sporları Merkezi.",
+      "date": "November 11, 2026",
+      "category": "Table Tennis",
+      "link": "https://pingpongtimes.com/events/contender-istanbul-2026"
     }
   ]
 }
