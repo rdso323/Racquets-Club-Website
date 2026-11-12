@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Sara Errani and Jasmine Paolini became the first doubles team into the WTA Finals semis after a three-set win in Indian Wells, while Group 2 singles pairs Sabalenka–Svitolina and Andreeva–Muchova play Wednesday as the Nitto ATP Finals draw in Turin lands Thursday • [SQUASH] The PSA Pittsburgh Open Silver event opened its 32-man draw on November 11 while Shanghai readies the season-ending China Open Gold from November 17 with Mostafa Asal, Amina Orfi and $279,000 on the line • [BADMINTON] An Se-young took an 11th title of 2026 at the YEOSU VICTOR Korea Open and Victor Lai became Canada's first men's champion at the Super 500 stop in Yeosu • [PICKLEBALL] PPA Worlds wrapped in Texas with John Lucian Goins men's singles gold, Anna Leigh Waters sweeping three titles and 15-year-old Tama Shimabukuro pairing JW Johnson for a five-game men's doubles comeback • [TABLE TENNIS] Qualifying for WTT Contender Istanbul runs through November 11 at Ata Sporları Merkezi ahead of a $100,000 main draw headlined by Anders Lind, Honoka Hashimoto and a deep Japanese women's field",
+  "tickerText": "[TENNIS] The Nitto ATP Finals draw in Turin goes live Thursday at noon CET for Zverev, Alcaraz and the full eight-man field, while Dabrowski and Stefani moved to 2-0 in WTA Finals doubles at Indian Wells with a match-tiebreak win over Guo and Mladenovic • [SQUASH] PSA Silver play continues at the Pittsburgh Open through November 15 as Shanghai prepares for the season-ending China Open Gold from November 17, headlined by Mostafa Asal and Amina Orfi • [BADMINTON] An Se-young's three-set Korea Open final win over Akane Yamaguchi tied her for 11 titles in 2026, while Victor Lai became Canada's first men's champion at the Yeosu Super 500 • [PICKLEBALL] Challenger Showdown winners locked in PPA Tour contracts in Texas and the 1,000-point Proton Daytona Beach Open opens qualifying November 17 ahead of $1M-plus payout week in Holly Hill • [TABLE TENNIS] WTT Contender Istanbul's main draw opens November 12 after qualifiers such as Quadri Aruna advanced, with No. 1 Anders Lind and Honoka Hashimoto leading last-32 singles fields at Ata Sporları Merkezi",
   "newsItems": [
     {
-      "title": "Italians Advance",
-      "excerpt": "Sara Errani and Jasmine Paolini rallied for a 3-6, 6-2, 10-7 win on Tuesday to become the first team into the 2026 WTA Finals doubles semifinals in Indian Wells.",
-      "date": "November 11, 2026",
+      "title": "Turin Draw Day",
+      "excerpt": "The 2026 Nitto ATP Finals group draw takes place Thursday at noon CET in Turin, setting round-robin paths for Zverev, Alcaraz and six rivals before indoor play begins November 15.",
+      "date": "November 12, 2026",
       "category": "Tennis",
-      "link": "https://www.wtatennis.com/news/4607688/errani-paolini-first-to-reach-fage-wta-finals-doubles-semis-townsend-siniakova-stay-alive"
+      "link": "https://www.atptour.com/en/news/nitto-atp-finals-draw-stream-2026"
     },
     {
-      "title": "Shanghai Gold Next",
-      "excerpt": "The PSA's final Gold event of 2026 brings 48 players to Shanghai November 17–22, with defending champion Amina Orfi and world No. 1 Mostafa Asal headlining the draws.",
-      "date": "November 11, 2026",
-      "category": "Squash",
-      "link": "https://english.shanghai.gov.cn/en-Events/20261029/732ba55f8e6642f5917ac2193d2ad33c.html"
+      "title": "An Ties Her Mark",
+      "excerpt": "An Se-young beat Akane Yamaguchi 21-12, 15-21, 21-16 in Yeosu to win the YEOSU VICTOR Korea Open and match her own 11-title season best from 2025.",
+      "date": "November 12, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/08/korea-open-indomitable-an-equals-greatest-season"
     },
     {
-      "title": "Goins Takes Worlds",
-      "excerpt": "John Lucian Goins beat Jack Sock 11-5, 12-10 for his first PPA major singles title as Anna Leigh Waters completed another Triple Crown at the Opendoor Worlds in Texas.",
-      "date": "November 11, 2026",
+      "title": "Daytona Open Next",
+      "excerpt": "The Carvana PPA Tour's Proton Daytona Beach Open runs November 16–22 at Pictona, an Open-tier stop worth 1,000 ranking points and more than $1 million in total payouts.",
+      "date": "November 12, 2026",
       "category": "Pickleball",
-      "link": "https://www.thedinkpickleball.com/ppa-tour-worlds-recap-teenage-sensation-wins-gold-waters-claims-triple-crown-and-goins-dominates/"
+      "link": "https://www.ppatour.com/events/2026/proton-daytona-beach-open/"
     },
     {
-      "title": "Istanbul Draw Opens",
-      "excerpt": "WTT Contender Istanbul qualifying is underway ahead of the November 12 main draw, where Tom Jarvis, Anders Lind and Honoka Hashimoto chase ranking points at Ata Sporları Merkezi.",
-      "date": "November 11, 2026",
+      "title": "Istanbul Last 32",
+      "excerpt": "Singles main-draw play begins at WTT Contender Istanbul on November 12, where top seeds Anders Lind and Honoka Hashimoto lead 24-player draws chasing $100,000 in prize money.",
+      "date": "November 12, 2026",
       "category": "Table Tennis",
-      "link": "https://pingpongtimes.com/events/contender-istanbul-2026"
+      "link": "https://www.worldtabletennis.com/eventInfo?eventId=3257"
     }
   ]
 }
