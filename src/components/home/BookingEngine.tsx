@@ -1,10 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, type CSSProperties } from 'react';
 import { collection, onSnapshot, doc, query, where } from 'firebase/firestore';
-import { useLenis } from 'lenis/react';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Rocket, PartyPopper, Plus, X } from 'lucide-react';
-import HorizontalScrollRail from '../system/HorizontalScrollRail';
 import BookingCardGrid from './booking/BookingCardGrid';
 import { type Sport, SPORTS, getSportTheme, type AdminRecurringSchedule, type OpenPlayDayConfig } from '../../lib/sports';
 import {
@@ -52,7 +50,6 @@ interface BookingEngineProps {
 
 const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps = {}) => {
     const { user, isAdmin, tabPreferences, updateTabPreferences } = useAuth();
-    const lenis = useLenis();
     const [recurringSchedules, setRecurringSchedules] = useState<AdminRecurringSchedule[]>([]);
     const [disabledBuiltinSchedules, setDisabledBuiltinSchedules] = useState<string[]>([]);
     const [activeSport, setActiveSport] = useState<Sport>(initialSport ?? 'Tennis');
@@ -279,14 +276,6 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
         recurringClinicInstances.length > 0 ||
         oneTimeSessions.length > 0;
 
-    const visibleClinicCount =
-        recurringClinicInstances.length +
-        oneTimeSessions.filter((session) => session.type === 'coaching').length;
-
-    const scrollToClinics = useCallback(() => {
-        const el = document.getElementById('booking-clinics');
-        if (el) lenis?.scrollTo(el, { duration: 1.2, offset: -80 });
-    }, [lenis]);
     const theme = getSportTheme(activeSport);
     const accentStyle = {
         '--accent': theme.accent,
@@ -377,93 +366,57 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
                     </p>
                 </div>
             ) : (
-                <div className="flex flex-col gap-8">
-                    {openPlayInstances.length > 0 && (
-                        <>
-                        <p className="mb-4 text-sm text-gray-500 dark:text-chalk/50 md:hidden">
-                            Swipe sideways to browse open play sessions
-                        </p>
-                        <HorizontalScrollRail
-                            className="-mx-5 px-5 md:mx-0 md:px-0"
-                            ariaLabel="Open play sessions"
-                            downNav={
-                                visibleClinicCount > 0
-                                    ? {
-                                          onClick: scrollToClinics,
-                                          ariaLabel: 'Scroll to coaching clinics below',
-                                      }
-                                    : undefined
-                            }
-                        >
-                            <div className="flex gap-6 md:grid md:grid-cols-2 md:gap-6">
-                                {openPlayInstances.map(({ session, config, playDate, isNextWeek }) => (
-                                    <BookingOpenPlayCard
-                                        key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
-                                        session={session}
-                                        config={config}
-                                        playDate={playDate}
-                                        isNextWeek={isNextWeek}
-                                        activeSport={activeSport}
-                                        user={user}
-                                        isAdmin={isAdmin}
-                                        bookingBusy={bookingBusy}
-                                        recurringSchedules={recurringSchedules}
-                                        disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                        adminActions={adminActions}
-                                        handlers={cardHandlers}
-                                        namesByUid={namesByUid}
-                                    />
-                                ))}
-                            </div>
-                        </HorizontalScrollRail>
-                        </>
-                    )}
-
-                    {(recurringClinicInstances.length > 0 || oneTimeSessions.length > 0) && (
-                        <div id="booking-clinics" className="flex flex-col gap-8 scroll-mt-24">
-                            {recurringClinicInstances.length > 0 && (
-                                <BookingCardGrid>
-                                    {recurringClinicInstances.map(({ session, playDate, isNextWeek }) => (
-                                        <BookingRegularCard
-                                            key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
-                                            session={session}
-                                            recurringWeek={{ playDate, isNextWeek }}
-                                            activeSport={activeSport}
-                                            user={user}
-                                            isAdmin={isAdmin}
-                                            bookingBusy={bookingBusy}
-                                            recurringSchedules={recurringSchedules}
-                                            disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                            adminActions={adminActions}
-                                            handlers={cardHandlers}
-                                        namesByUid={namesByUid}
-                                        />
-                                    ))}
-                                </BookingCardGrid>
-                            )}
-
-                            {oneTimeSessions.length > 0 && (
-                                <BookingCardGrid>
-                                    {oneTimeSessions.map((session) => (
-                                        <BookingRegularCard
-                                            key={session.id}
-                                            session={session}
-                                            activeSport={activeSport}
-                                            user={user}
-                                            isAdmin={isAdmin}
-                                            bookingBusy={bookingBusy}
-                                            recurringSchedules={recurringSchedules}
-                                            disabledBuiltinSchedules={disabledBuiltinSchedules}
-                                            adminActions={adminActions}
-                                            handlers={cardHandlers}
-                                        namesByUid={namesByUid}
-                                        />
-                                    ))}
-                                </BookingCardGrid>
-                            )}
-                        </div>
-                    )}
-                </div>
+                <BookingCardGrid>
+                    {openPlayInstances.map(({ session, config, playDate, isNextWeek }) => (
+                        <BookingOpenPlayCard
+                            key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
+                            session={session}
+                            config={config}
+                            playDate={playDate}
+                            isNextWeek={isNextWeek}
+                            activeSport={activeSport}
+                            user={user}
+                            isAdmin={isAdmin}
+                            bookingBusy={bookingBusy}
+                            recurringSchedules={recurringSchedules}
+                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                            adminActions={adminActions}
+                            handlers={cardHandlers}
+                            namesByUid={namesByUid}
+                        />
+                    ))}
+                    {recurringClinicInstances.map(({ session, playDate, isNextWeek }) => (
+                        <BookingRegularCard
+                            key={`${session.id}-${isNextWeek ? 'next' : 'this'}`}
+                            session={session}
+                            recurringWeek={{ playDate, isNextWeek }}
+                            activeSport={activeSport}
+                            user={user}
+                            isAdmin={isAdmin}
+                            bookingBusy={bookingBusy}
+                            recurringSchedules={recurringSchedules}
+                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                            adminActions={adminActions}
+                            handlers={cardHandlers}
+                            namesByUid={namesByUid}
+                        />
+                    ))}
+                    {oneTimeSessions.map((session) => (
+                        <BookingRegularCard
+                            key={session.id}
+                            session={session}
+                            activeSport={activeSport}
+                            user={user}
+                            isAdmin={isAdmin}
+                            bookingBusy={bookingBusy}
+                            recurringSchedules={recurringSchedules}
+                            disabledBuiltinSchedules={disabledBuiltinSchedules}
+                            adminActions={adminActions}
+                            handlers={cardHandlers}
+                            namesByUid={namesByUid}
+                        />
+                    ))}
+                </BookingCardGrid>
             )}
         </section>
 
