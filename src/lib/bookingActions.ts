@@ -79,6 +79,7 @@ const sessionSeedFields = (session: Session, activeSport?: string): Record<strin
             ? { courts: session.courts, slotsPerCourt: session.slotsPerCourt ?? getSlotsPerCourt(session) }
             : {}),
         ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
+        ...(session.type === 'coaching' && session.coachCourt ? { coachCourt: session.coachCourt } : {}),
         ...(isMaterializedWeeklySession(session) ? { recurring: true } : {}),
     };
 };

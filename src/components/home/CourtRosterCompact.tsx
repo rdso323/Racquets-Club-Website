@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Plus } from 'lucide-react';
-import type { CourtDiagramProps } from './CourtDiagram';
+import { CoachSlotButton, type CourtDiagramProps } from './CourtDiagram';
 import CourtSlotLabel from './CourtSlotLabel';
 
 const CourtRosterCompact = ({
@@ -13,6 +13,8 @@ const CourtRosterCompact = ({
     userInThisCourt,
     onAction,
     onJoinSlot,
+    instructor,
+    coachSlot,
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
@@ -22,6 +24,11 @@ const CourtRosterCompact = ({
                 <div>
                     <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
                     <h4 className="font-display text-lg text-gray-900 dark:text-chalk">{courtName}</h4>
+                    {instructor && (
+                        <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
+                            Instructor: <span className="font-bold accent-text">{instructor}</span>
+                        </p>
+                    )}
                 </div>
                 <div className="text-right">
                     <p className="text-sm font-semibold text-emerald-900 dark:accent-text">{filled}/{slots.length}</p>
@@ -80,6 +87,7 @@ const CourtRosterCompact = ({
             >
                 {actionLabel}
             </button>
+            {coachSlot && <CoachSlotButton coachSlot={coachSlot} />}
         </div>
     );
 };

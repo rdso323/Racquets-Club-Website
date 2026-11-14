@@ -281,7 +281,8 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                 <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
                     {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                 </p>
-                {session.type === 'coaching' && (
+                {session.type === 'coaching' &&
+                    !(showCourtDiagram && session.coachCourt && sessionCourts.includes(session.coachCourt)) && (
                     <p className="mt-2 flex items-center text-sm font-medium text-gray-600 dark:text-chalk/60">
                         <Rocket className="mr-1.5 h-4 w-4 accent-text" />
                         Instructor:
@@ -325,8 +326,28 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                         const isCourtFull =
                                             courtAttendees.length >= slotsPerCourtForUi ||
                                             (session.type === 'coaching' && sessionAtCapacity);
+                                        const isCoachCourt =
+                                            session.type === 'coaching' && session.coachCourt === courtName;
                                         const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                         const userInAnotherCourt = !!(userEntry && !userInThisCourt);
+                                        const coachSlot =
+                                            isCoachCourt && user
+                                                ? {
+                                                      label:
+                                                          session.coachId === user.uid
+                                                              ? 'Drop Coach Slot'
+                                                              : session.coachId
+                                                                ? 'Coach Slot Filled'
+                                                                : 'Claim Coach Slot',
+                                                      disabled:
+                                                          sessionDisabled ||
+                                                          bookingBusy === `${session.id}:coach` ||
+                                                          (!!session.coachId && session.coachId !== user.uid),
+                                                      claimedByMe: session.coachId === user.uid,
+                                                      filled: !!session.coachId && session.coachId !== user.uid,
+                                                      onClick: () => handlers.onCoachAction(session),
+                                                  }
+                                                : undefined;
                                         const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid, namesByUid);
                                         const spotsLeft = Math.min(
                                             slotsPerCourtForUi - courtAttendees.length,
@@ -364,6 +385,8 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                                 userInThisCourt={userInThisCourt}
                                                 onAction={() => handlers.onJoin(session, courtName)}
                                                 onJoinSlot={(slotIndex) => handlers.onJoin(session, courtName, slotIndex)}
+                                                instructor={isCoachCourt ? session.coach || 'TBD' : undefined}
+                                                coachSlot={coachSlot}
                                             />
                                         );
                                     })}
@@ -435,7 +458,9 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                             namesByUid={namesByUid}
                         />
 
-                        {session.type === 'coaching' && user && (
+                        {session.type === 'coaching' &&
+                            user &&
+                            !(showCourtDiagram && session.coachCourt && sessionCourts.includes(session.coachCourt)) && (
                             <button
                                 onClick={() => handlers.onCoachAction(session)}
                                 className={`mt-3 w-full min-h-11 touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
