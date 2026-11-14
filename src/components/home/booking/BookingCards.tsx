@@ -266,12 +266,18 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                 />
             )}
 
-            <div className={`border-b border-gray-200 p-4 dark:border-chalk/10 md:p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
-                <div className="mb-4 flex items-start justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <SessionTags session={session} variant="booking" />
+            <div className={`border-b border-chalk/10 p-4 md:p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                            <SessionTags session={session} variant="booking" />
+                        </div>
+                        <h3 className="mt-3 font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{session.title}</h3>
+                        {recurringDayLabel && (
+                            <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
+                        )}
                     </div>
-                    <div className="flex flex-col items-end gap-2">
+                    <div className="flex flex-col items-end gap-2 sm:mt-0">
                         {isAdmin && adminActions && (
                             <BookingCardAdminMenu
                                 session={session}
@@ -282,16 +288,12 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                 onDelete={() => adminActions.onDelete(session)}
                             />
                         )}
-                        <p className="hud-label w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
+                        <p className="hud-label mt-1 w-fit border border-gray-200 px-2 py-1.5 text-gray-500 dark:border-chalk/10 dark:text-chalk/50">
                             {dateHeaderLabel}
                         </p>
                     </div>
                 </div>
-                <h3 className="font-display text-xl text-gray-900 dark:text-chalk md:text-2xl">{session.title}</h3>
-                {recurringDayLabel && (
-                    <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/45">Every {recurringDayLabel}</p>
-                )}
-                <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
+                <p className="text-sm font-medium text-wimbledon-navy dark:text-chalk/70">
                     {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                 </p>
                 {session.type === 'coaching' &&
@@ -307,11 +309,11 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                         <Users className="h-4 w-4" />
                         {activeAttendees.length} / {totalMax} enrolled
                     </span>
-                    <span className={isFull ? 'text-red-500 dark:text-red-400' : 'accent-text'}>
+                    <span className={isFull ? 'text-red-400' : 'accent-text'}>
                         {totalMax - activeAttendees.length} spots left
                     </span>
                 </div>
-                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-chalk/10">
+                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-chalk/10">
                     <div
                         className={`h-full rounded-full transition-all duration-700 ${isFull ? 'bg-red-500' : 'accent-bg'}`}
                         style={{ width: `${Math.min(100, (activeAttendees.length / totalMax) * 100)}%` }}
