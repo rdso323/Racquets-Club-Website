@@ -75,6 +75,13 @@ const EditSessionModal = ({
     const isRecurring = isRecurringSession(session);
     const isOneTime = !isRecurring;
     const showCourtFields = session.type === 'court' || session.type === 'coaching';
+    const previewCourts = showCourtFields
+        ? buildCourtLabels(
+              editCourtFields.courtCount,
+              editCourtFields.courtStartNumber,
+              editCourtFields.customCourtLabels,
+          )
+        : [];
     const dateISO = session.weekStartDate || resolveSessionDateISO(session) || '';
 
     const updateCourtsCapacity = (fields: EditCourtFields) => {
@@ -360,6 +367,26 @@ const EditSessionModal = ({
                             className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             placeholder="Coach Name"
                         />
+                    </div>
+                )}
+                {session.type === 'coaching' && previewCourts.length > 1 && (
+                    <div>
+                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">Coaching court</label>
+                        <select
+                            value={previewCourts.includes(session.coachCourt || '') ? session.coachCourt || '' : ''}
+                            onChange={(e) => onSessionChange({ ...session, coachCourt: e.target.value || null })}
+                            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                        >
+                            <option value="">Whole clinic</option>
+                            {previewCourts.map((court) => (
+                                <option key={court} value={court}>
+                                    {court}
+                                </option>
+                            ))}
+                        </select>
+                        <p className="mt-1 text-[10px] text-gray-400">
+                            The instructor name shows only on this court.
+                        </p>
                     </div>
                 )}
             </div>

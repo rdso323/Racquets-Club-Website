@@ -67,6 +67,7 @@ const defaultDraft = (sport: string) => ({
     maxAttendees: getDefaultMaxAttendees('court'),
     maxWaitlistSize: DEFAULT_WAITLIST_PER_COURT * 2,
     coach: '',
+    coachCourt: '',
     courtCount: 2,
     courtStartNumber: 1,
     customCourtLabels: '',
@@ -169,6 +170,9 @@ const ScheduleSessionForm = ({
                     maxPerCourt: getSlotsPerCourtForSport(newSession.sport),
                     maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                     coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
+                    ...(newSession.type === 'coaching' && courts.includes(newSession.coachCourt)
+                        ? { coachCourt: newSession.coachCourt }
+                        : {}),
                     maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
                     ...(seriesEndsOn ? { endsOn: seriesEndsOn } : {}),
                     ...(seriesSkipDates.length > 0 ? { skipDates: seriesSkipDates } : {}),
@@ -218,6 +222,10 @@ const ScheduleSessionForm = ({
                     attendees: [],
                     coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : null,
                     coachId: null,
+                    coachCourt:
+                        newSession.type === 'coaching' && courts.includes(newSession.coachCourt)
+                            ? newSession.coachCourt
+                            : null,
                     weekStartDate: sessionDateInput,
                 };
 
@@ -687,6 +695,28 @@ const ScheduleSessionForm = ({
                                 onChange={(e) => setNewSession({ ...newSession, coach: e.target.value })}
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             />
+                        </div>
+                    )}
+                    {newSession.type === 'coaching' && previewCourtLabels.length > 1 && (
+                        <div>
+                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                Coaching court
+                            </label>
+                            <select
+                                value={previewCourtLabels.includes(newSession.coachCourt) ? newSession.coachCourt : ''}
+                                onChange={(e) => setNewSession({ ...newSession, coachCourt: e.target.value })}
+                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                            >
+                                <option value="">Whole clinic</option>
+                                {previewCourtLabels.map((court) => (
+                                    <option key={court} value={court}>
+                                        {court}
+                                    </option>
+                                ))}
+                            </select>
+                            <p className="mt-1 text-[10px] text-gray-400">
+                                The instructor name shows only on this court. Leave blank to label the whole clinic.
+                            </p>
                         </div>
                     )}
                 </div>

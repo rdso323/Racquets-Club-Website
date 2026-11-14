@@ -46,6 +46,7 @@ export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayD
     sessionType: schedule.sessionType,
     maxAttendees: schedule.maxAttendees,
     coach: schedule.coach,
+    coachCourt: schedule.coachCourt,
     maxWaitlistSize: schedule.maxWaitlistSize,
     scheduleId: schedule.id,
     isCustom: true,
@@ -80,7 +81,12 @@ export const sanitizeRecurringSchedule = (schedule: AdminRecurringSchedule): Adm
         delete next.creatorName;
         delete next.creatorEmail;
     }
-    if (next.sessionType === 'court') delete next.coach;
+    if (next.sessionType === 'court') {
+        delete next.coach;
+        delete next.coachCourt;
+    } else if (!next.coachCourt || !next.courts.includes(next.coachCourt)) {
+        delete next.coachCourt;
+    }
     if (!next.autoEnrollCreator) next.autoEnrollCreator = false;
     for (const key of Object.keys(next) as (keyof AdminRecurringSchedule)[]) {
         if (next[key] === undefined) delete next[key];

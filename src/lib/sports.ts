@@ -74,7 +74,8 @@ export interface OpenPlayDayConfig {
     sessionType?: SessionType;
     maxAttendees?: number;
     coach?: string;
-    /** Session-level waitlist cap override (common queue for all courts) */
+    /** Court name the instructor belongs to. Omitted means the whole clinic. */
+    coachCourt?: string;
     maxWaitlistSize?: number;
     /** Admin-created template id; built-in schedules omit this */
     scheduleId?: string;
@@ -112,6 +113,8 @@ export interface AdminRecurringSchedule {
     maxPerCourt: number;
     maxAttendees?: number;
     coach?: string;
+    /** Court name the instructor belongs to. Omitted means the whole clinic. */
+    coachCourt?: string;
     maxWaitlistSize?: number;
     /** Inclusive last play date (YYYY-MM-DD). Omit to run until the schedule is removed. */
     endsOn?: string;

@@ -45,6 +45,8 @@ export interface Session {
     maxWaitlistSize?: number;
     coach?: string | null;
     coachId?: string | null;
+    /** When set, the instructor label belongs to this court only. */
+    coachCourt?: string | null;
     sport?: string;
     weekStartDate?: string;
     courts?: string[];
@@ -529,6 +531,7 @@ export const resolveRecurringSession = (
                 type: 'coaching',
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
+                coachCourt: config.coachCourt ?? null,
                 maxAttendees: dbSession.maxAttendees ?? config.maxAttendees ?? totalMax,
                 attendees: dbSession.attendees ?? [],
                 waitlist: dbSession.waitlist ?? [],
@@ -552,6 +555,7 @@ export const resolveRecurringSession = (
             waitlist: [],
             coach: config.coach ?? 'TBD',
             coachId: null,
+            coachCourt: config.coachCourt ?? null,
             maxWaitlistSize:
                 config.maxWaitlistSize ??
                 (config.courts.length > 0 ? config.courts.length * DEFAULT_WAITLIST_PER_COURT : DEFAULT_WAITLIST_PER_COURT * 2),
@@ -906,6 +910,7 @@ export const applySessionTypeChange = (
                 type: newType,
                 coach: session.coach || '',
                 coachId: null,
+                coachCourt: session.coachCourt ?? null,
                 maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
                 maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
             },
@@ -919,6 +924,7 @@ export const applySessionTypeChange = (
             type: newType,
             coach: null,
             coachId: null,
+            coachCourt: null,
             maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
             maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
         },

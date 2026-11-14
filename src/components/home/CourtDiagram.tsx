@@ -21,6 +21,15 @@ interface CourtDiagramProps {
     userInThisCourt: boolean;
     onAction: () => void;
     onJoinSlot: (slotIndex: number) => void;
+    /** Shown under this court's name when the instructor belongs here. */
+    instructor?: string | null;
+    coachSlot?: {
+        label: string;
+        disabled: boolean;
+        claimedByMe: boolean;
+        filled: boolean;
+        onClick: () => void;
+    };
 }
 
 export type { CourtDiagramProps };
@@ -106,6 +115,27 @@ const CourtMarkings = ({ sport }: { sport: string }) => {
     );
 };
 
+export const CoachSlotButton = ({
+    coachSlot,
+}: {
+    coachSlot: NonNullable<CourtDiagramProps['coachSlot']>;
+}) => (
+    <button
+        type="button"
+        onClick={coachSlot.onClick}
+        disabled={coachSlot.disabled}
+        className={`min-h-11 w-full touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+            coachSlot.claimedByMe
+                ? 'border border-amber-300/50 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:bg-amber-900/20 dark:text-amber-300'
+                : coachSlot.filled
+                  ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+                  : 'border border-court-accent/40 bg-court-accent/10 text-emerald-700 hover:bg-court-accent/20 dark:text-court-accent'
+        }`}
+    >
+        {coachSlot.label}
+    </button>
+);
+
 const CourtDiagram = ({
     sport,
     courtName,
@@ -116,6 +146,8 @@ const CourtDiagram = ({
     userInThisCourt,
     onAction,
     onJoinSlot,
+    instructor,
+    coachSlot,
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
@@ -125,6 +157,11 @@ const CourtDiagram = ({
                 <div>
                     <p className="hud-label text-gray-400 dark:text-chalk/45">{sport}</p>
                     <h4 className="font-display text-lg text-gray-900 dark:text-chalk">{courtName}</h4>
+                    {instructor && (
+                        <p className="mt-1 text-sm font-medium text-gray-600 dark:text-chalk/60">
+                            Instructor: <span className="font-bold accent-text">{instructor}</span>
+                        </p>
+                    )}
                 </div>
                 <div className="text-right">
                     <p className="text-sm font-semibold text-emerald-900 dark:accent-text">{filled}/{slots.length}</p>
@@ -190,6 +227,7 @@ const CourtDiagram = ({
             >
                 {actionLabel}
             </button>
+            {coachSlot && <CoachSlotButton coachSlot={coachSlot} />}
         </div>
     );
 };

@@ -116,7 +116,10 @@ export function useSessionAdminOps({
         const templateCourts = getCourtsForSession(latest, recurringSchedules, disabledBuiltinSchedules);
         const courts = latest.courts?.length ? latest.courts : templateCourts;
         const config = getRecurringConfigForSession(latest, recurringSchedules, disabledBuiltinSchedules);
-        setEditingSession(latest);
+        setEditingSession({
+            ...latest,
+            coachCourt: config?.coachCourt ?? latest.coachCourt ?? null,
+        });
         setEditCourtFields(courtFieldsFromSession(courts.length ? courts : latest.courts));
         setEditingScheduleMeta({
             endsOn: config?.endsOn ?? '',
@@ -187,7 +190,10 @@ export function useSessionAdminOps({
                 bookingLockTime: editingScheduleMeta.bookingLockTime,
                 ...creatorFields,
                 ...(sessionToSave.type === 'coaching'
-                    ? { coach: sessionToSave.coach || 'TBD' }
+                    ? {
+                          coach: sessionToSave.coach || 'TBD',
+                          coachCourt: sessionToSave.coachCourt || '',
+                      }
                     : {}),
             };
 
@@ -259,6 +265,11 @@ export function useSessionAdminOps({
                 maxWaitlistSize: clampAdminMaxWaitlist(Number(editingSession.maxWaitlistSize ?? 0)),
                 coach: editingSession.type === 'coaching' ? editingSession.coach || 'TBD' : null,
                 coachId: null,
+                coachCourt:
+                    editingSession.type === 'coaching' &&
+                    courts?.includes(editingSession.coachCourt || '')
+                        ? editingSession.coachCourt
+                        : null,
             };
 
             if (editingSession.weekStartDate) {
@@ -350,7 +361,13 @@ export function useSessionAdminOps({
             ? { courts: session.courts, slotsPerCourt: getSlotsPerCourt(session) }
             : {}),
         ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
-        ...(session.type === 'coaching' ? { coach: session.coach || 'TBD', coachId: null } : {}),
+        ...(session.type === 'coaching'
+            ? {
+                  coach: session.coach || 'TBD',
+                  coachId: null,
+                  ...(session.coachCourt ? { coachCourt: session.coachCourt } : {}),
+              }
+            : {}),
     });
 
     const handleCancelThisWeek = async (session: Session) => {
