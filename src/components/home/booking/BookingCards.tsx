@@ -4,6 +4,7 @@ import { Users, Rocket, AlertTriangle, Lock, LogIn, RotateCcw } from 'lucide-rea
 import { useGoToLogin } from '../../../hooks/useGoToLogin';
 import type { AdminRecurringSchedule, OpenPlayDayConfig, Sport } from '../../../lib/sports';
 import { CourtBookingView } from './CourtBookingView';
+import { CoachSlotButton } from '../CourtDiagram';
 import CourtSlotLabel from '../CourtSlotLabel';
 import WaitlistPanel from '../WaitlistPanel';
 import SessionTags from '../../SessionTags';
@@ -24,6 +25,7 @@ import {
     getSessionRosterAttendees,
     diagramSlotsForCourt,
     getDiagramSlotsPerCourt,
+    usesCourtDiagramLayout,
     isRecurringCoachingSession,
     getRecurringConfigForSession,
     filterAttendeesByCourt,
@@ -392,6 +394,44 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                                     : isCourtFull
                                                       ? `${courtName} Full`
                                                       : `Join ${courtName}`;
+
+                                        if (isCoachCourt && !usesCourtDiagramLayout(courtSlots)) {
+                                            return (
+                                                <div key={courtName} className="flex flex-col">
+                                                    <AttendeesList
+                                                        attendees={courtAttendees}
+                                                        maxAttendees={courtSlots}
+                                                        courtNames={[courtName]}
+                                                        namesByUid={namesByUid}
+                                                    />
+                                                    {isCoachCourt && (
+                                                        <p className="mb-2 text-sm font-medium text-gray-600 dark:text-chalk/60">
+                                                            Instructor:{' '}
+                                                            <span className="font-bold accent-text">{session.coach || 'TBD'}</span>
+                                                        </p>
+                                                    )}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handlers.onJoin(session, courtName)}
+                                                        disabled={disabled}
+                                                        className={`min-h-11 w-full touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
+                                                            userInThisCourt
+                                                                ? 'border border-red-400/40 bg-red-500/10 text-red-600 hover:bg-red-500/15 dark:text-red-300'
+                                                                : disabled
+                                                                  ? 'cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-chalk/10 dark:bg-carbon dark:text-chalk/30'
+                                                                  : 'accent-bg text-court-950 hover:brightness-110'
+                                                        }`}
+                                                    >
+                                                        {actionLabel}
+                                                    </button>
+                                                    {coachSlot && (
+                                                        <div className="mt-2">
+                                                            <CoachSlotButton coachSlot={coachSlot} />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        }
 
                                         return (
                                             <CourtBookingView
