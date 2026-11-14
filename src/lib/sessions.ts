@@ -3,6 +3,7 @@ import {
     ADMIN_MAX_ATTENDEES,
     DEFAULT_OPEN_PLAY_CAPACITY,
     DEFAULT_WAITLIST_PER_COURT,
+    COACHING_COURT_SLOT_MAX,
     SLOTS_PER_COURT,
     clampAdminCourtCount,
     clampAdminMaxAttendees,
@@ -47,6 +48,8 @@ export interface Session {
     coachId?: string | null;
     /** When set, the instructor label belongs to this court only. */
     coachCourt?: string | null;
+    /** Spots on coachCourt. Other courts keep the shared slot count. */
+    coachCourtSlots?: number | null;
     sport?: string;
     weekStartDate?: string;
     courts?: string[];
@@ -532,6 +535,7 @@ export const resolveRecurringSession = (
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
                 coachCourt: config.coachCourt ?? null,
+                coachCourtSlots: config.coachCourtSlots ?? null,
                 maxAttendees: dbSession.maxAttendees ?? config.maxAttendees ?? totalMax,
                 attendees: dbSession.attendees ?? [],
                 waitlist: dbSession.waitlist ?? [],
@@ -556,6 +560,7 @@ export const resolveRecurringSession = (
             coach: config.coach ?? 'TBD',
             coachId: null,
             coachCourt: config.coachCourt ?? null,
+            coachCourtSlots: config.coachCourtSlots ?? null,
             maxWaitlistSize:
                 config.maxWaitlistSize ??
                 (config.courts.length > 0 ? config.courts.length * DEFAULT_WAITLIST_PER_COURT : DEFAULT_WAITLIST_PER_COURT * 2),
@@ -802,6 +807,43 @@ export const getSlotsPerCourt = (
     return getSlotsPerCourtForSport(inferSport(session));
 };
 
+/** Clinic coaching-court size, or null when every court shares one slot count. */
+export const coachingCourtSlotCount = (
+    session: Pick<Session, 'type' | 'coachCourt' | 'coachCourtSlots'>,
+): number | null => {
+    if (session.type !== 'coaching' || !session.coachCourt) return null;
+    const raw = Number(session.coachCourtSlots);
+    if (!Number.isFinite(raw) || raw < 1) return null;
+    return Math.min(COACHING_COURT_SLOT_MAX, Math.floor(raw));
+};
+
+/** Spots on one court. Only the named coaching court can differ from the shared count. */
+export const slotsOnCourt = (
+    session: Session,
+    courtName: string,
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): number => {
+    const coachSlots = coachingCourtSlotCount(session);
+    if (coachSlots != null && courtName === session.coachCourt) return coachSlots;
+    return getSlotsPerCourt(session, customSchedules, disabledBuiltin);
+};
+
+export const courtCapacityTotal = (
+    session: Session,
+    courts: string[],
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): number | null => {
+    if (coachingCourtSlotCount(session) == null || !session.coachCourt || !courts.includes(session.coachCourt)) {
+        return null;
+    }
+    return courts.reduce(
+        (sum, court) => sum + slotsOnCourt(session, court, customSchedules, disabledBuiltin),
+        0,
+    );
+};
+
 /** Court diagram UI only for standard 2- or 4-player court layouts. */
 export const usesCourtDiagramLayout = (slotsPerCourt: number): boolean =>
     slotsPerCourt === 2 || slotsPerCourt === 4;
@@ -817,6 +859,10 @@ export const getDiagramSlotsPerCourt = (
     disabledBuiltin: string[] = [],
 ): number | null => {
     if (courts.length === 0) return null;
+    if (courtCapacityTotal(session, courts, customSchedules, disabledBuiltin) != null) {
+        const perCourt = getSlotsPerCourt(session, customSchedules, disabledBuiltin);
+        return usesCourtDiagramLayout(perCourt) ? perCourt : null;
+    }
 
     const total =
         session.maxAttendees > 0
@@ -839,6 +885,10 @@ export const shouldShowCourtDiagram = (
 export const suggestedCapacityForCourts = (courts: string[], slotsPerCourt = SLOTS_PER_COURT): number => {
     return courts.length * slotsPerCourt;
 };
+
+/** Open courts stay at 4. Extra spots exist only on the coaching court. */
+export const splitCourtCapacity = (courtCount: number, coachSlots: number): number =>
+    Math.max(0, courtCount - 1) * SLOTS_PER_COURT + coachSlots;
 
 export const courtFieldsFromSession = (courts?: string[]): {
     courtCount: number;
@@ -911,6 +961,7 @@ export const applySessionTypeChange = (
                 coach: session.coach || '',
                 coachId: null,
                 coachCourt: session.coachCourt ?? null,
+                coachCourtSlots: session.coachCourtSlots ?? null,
                 maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
                 maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
             },
@@ -925,6 +976,7 @@ export const applySessionTypeChange = (
             coach: null,
             coachId: null,
             coachCourt: null,
+            coachCourtSlots: null,
             maxAttendees: suggestedCapacityForCourts(courts, slotsPerCourt),
             maxWaitlistSize: courts.length * DEFAULT_WAITLIST_PER_COURT,
         },
@@ -1012,11 +1064,28 @@ export const getCourtsForSession = (
 };
 
 /** Authoritative roster cap — prefers admin-set maxAttendees for all session types. */
+export const diagramSlotsForCourt = (
+    session: Session,
+    courtName: string,
+    courts: string[],
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
+): number | null => {
+    if (courtCapacityTotal(session, courts, customSchedules, disabledBuiltin) == null) {
+        return getDiagramSlotsPerCourt(session, courts, customSchedules, disabledBuiltin);
+    }
+    const count = slotsOnCourt(session, courtName, customSchedules, disabledBuiltin);
+    if (courtName === session.coachCourt) return count >= 1 && count <= COACHING_COURT_SLOT_MAX ? count : null;
+    return usesCourtDiagramLayout(count) ? count : null;
+};
+
 export const getSessionEnrollmentCap = (
     session: Session,
     courts: string[],
     maxPerCourt: number,
 ): number => {
+    const splitTotal = courtCapacityTotal(session, courts);
+    if (splitTotal != null) return Math.min(ADMIN_MAX_ATTENDEES, splitTotal);
     if (session.maxAttendees > 0) {
         return clampAdminMaxAttendees(session.maxAttendees);
     }

@@ -15,6 +15,9 @@ export const parseSportSlug = (slug: string | undefined): Sport | null => {
 
 export const DEFAULT_OPEN_PLAY_CAPACITY = 8;
 export const SLOTS_PER_COURT = 4;
+/** Spots on a clinic's coaching court when an admin sets one. Other courts stay at 4. */
+export const DEFAULT_COACHING_COURT_SLOTS = 6;
+export const COACHING_COURT_SLOT_MAX = 8;
 /** Default waitlist slots per court when session has no explicit maxWaitlistSize */
 export const DEFAULT_WAITLIST_PER_COURT = 4;
 
@@ -76,6 +79,8 @@ export interface OpenPlayDayConfig {
     coach?: string;
     /** Court name the instructor belongs to. Omitted means the whole clinic. */
     coachCourt?: string;
+    /** Spots on coachCourt. Omitted means every court uses the shared slot count. */
+    coachCourtSlots?: number;
     maxWaitlistSize?: number;
     /** Admin-created template id; built-in schedules omit this */
     scheduleId?: string;
@@ -115,6 +120,8 @@ export interface AdminRecurringSchedule {
     coach?: string;
     /** Court name the instructor belongs to. Omitted means the whole clinic. */
     coachCourt?: string;
+    /** Spots on coachCourt. Omitted means every court uses the shared slot count. */
+    coachCourtSlots?: number;
     maxWaitlistSize?: number;
     /** Inclusive last play date (YYYY-MM-DD). Omit to run until the schedule is removed. */
     endsOn?: string;
