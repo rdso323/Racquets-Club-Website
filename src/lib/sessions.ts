@@ -1,6 +1,7 @@
 import {
     ADMIN_MAX_COURTS,
     ADMIN_MAX_ATTENDEES,
+    DEFAULT_COACHING_COURT_SLOTS,
     DEFAULT_OPEN_PLAY_CAPACITY,
     DEFAULT_WAITLIST_PER_COURT,
     COACHING_COURT_SLOT_MAX,
@@ -535,7 +536,9 @@ export const resolveRecurringSession = (
                 sport,
                 coach: dbSession.coach ?? config.coach ?? 'TBD',
                 coachCourt: config.coachCourt ?? null,
-                coachCourtSlots: config.coachCourtSlots ?? null,
+                coachCourtSlots: config.coachCourt
+                    ? (config.coachCourtSlots ?? DEFAULT_COACHING_COURT_SLOTS)
+                    : null,
                 maxAttendees: dbSession.maxAttendees ?? config.maxAttendees ?? totalMax,
                 attendees: dbSession.attendees ?? [],
                 waitlist: dbSession.waitlist ?? [],
@@ -560,7 +563,9 @@ export const resolveRecurringSession = (
             coach: config.coach ?? 'TBD',
             coachId: null,
             coachCourt: config.coachCourt ?? null,
-            coachCourtSlots: config.coachCourtSlots ?? null,
+            coachCourtSlots: config.coachCourt
+                ? (config.coachCourtSlots ?? DEFAULT_COACHING_COURT_SLOTS)
+                : null,
             maxWaitlistSize:
                 config.maxWaitlistSize ??
                 (config.courts.length > 0 ? config.courts.length * DEFAULT_WAITLIST_PER_COURT : DEFAULT_WAITLIST_PER_COURT * 2),
@@ -813,7 +818,7 @@ export const coachingCourtSlotCount = (
 ): number | null => {
     if (session.type !== 'coaching' || !session.coachCourt) return null;
     const raw = Number(session.coachCourtSlots);
-    if (!Number.isFinite(raw) || raw < 1) return null;
+    if (!Number.isFinite(raw) || raw < 1) return DEFAULT_COACHING_COURT_SLOTS;
     return Math.min(COACHING_COURT_SLOT_MAX, Math.floor(raw));
 };
 
