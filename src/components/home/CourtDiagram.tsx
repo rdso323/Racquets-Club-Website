@@ -21,6 +21,8 @@ interface CourtDiagramProps {
     userInThisCourt: boolean;
     onAction: () => void;
     onJoinSlot: (slotIndex: number) => void;
+    /** diagram draws the court. roster keeps the same header and uses open boxes. */
+    layout?: 'diagram' | 'roster';
     /** Shown under this court's name when the instructor belongs here. */
     instructor?: string | null;
     coachSlot?: {
@@ -115,6 +117,45 @@ const CourtMarkings = ({ sport }: { sport: string }) => {
     );
 };
 
+export const OpenRosterBoxes = ({
+    slots,
+    disabled,
+    onJoinSlot,
+    courtName,
+}: Pick<CourtDiagramProps, 'slots' | 'disabled' | 'onJoinSlot' | 'courtName'>) => (
+    <ul
+        role="list"
+        aria-label={`${courtName} roster`}
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3"
+    >
+        {slots.map((slot, index) => (
+            <li key={index}>
+                {slot ? (
+                    <div
+                        aria-label={slot.name}
+                        className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs ${
+                            slot.isMine
+                                ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-court-accent'
+                                : 'border border-emerald-500/20 bg-emerald-500/5 text-emerald-800 dark:text-court-line'
+                        }`}
+                    >
+                        <CourtSlotLabel name={slot.name} />
+                    </div>
+                ) : (
+                    <button
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => onJoinSlot(index)}
+                        className="flex min-h-[3.25rem] w-full touch-manipulation items-center justify-center rounded border border-dashed border-gray-300 bg-white text-xs text-gray-400 disabled:cursor-not-allowed disabled:opacity-40 dark:border-chalk/10 dark:bg-court-900/50 dark:text-chalk/40"
+                    >
+                        Open
+                    </button>
+                )}
+            </li>
+        ))}
+    </ul>
+);
+
 export const CoachSlotButton = ({
     coachSlot,
 }: {
@@ -148,6 +189,7 @@ const CourtDiagram = ({
     onJoinSlot,
     instructor,
     coachSlot,
+    layout = 'diagram',
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
@@ -169,6 +211,9 @@ const CourtDiagram = ({
                 </div>
             </div>
 
+            {layout === 'roster' ? (
+                <OpenRosterBoxes slots={slots} disabled={disabled} onJoinSlot={onJoinSlot} courtName={courtName} />
+            ) : (
             <div className="court-surface relative mx-auto aspect-[5/8] w-full max-w-[22rem] overflow-hidden rounded-md bg-emerald-100/60 dark:bg-court-800/50">
                 <svg
                     viewBox="0 0 200 340"
@@ -212,6 +257,7 @@ const CourtDiagram = ({
                     );
                 })}
             </div>
+            )}
 
             <button
                 type="button"

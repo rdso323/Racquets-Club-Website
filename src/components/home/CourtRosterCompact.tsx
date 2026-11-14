@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Plus } from 'lucide-react';
-import { CoachSlotButton, type CourtDiagramProps } from './CourtDiagram';
+import { CoachSlotButton, OpenRosterBoxes, type CourtDiagramProps } from './CourtDiagram';
 import CourtSlotLabel from './CourtSlotLabel';
 
 const CourtRosterCompact = ({
@@ -15,6 +15,7 @@ const CourtRosterCompact = ({
     onJoinSlot,
     instructor,
     coachSlot,
+    layout = 'diagram',
 }: CourtDiagramProps) => {
     const filled = slots.filter(Boolean).length;
 
@@ -36,6 +37,9 @@ const CourtRosterCompact = ({
                 </div>
             </div>
 
+            {layout === 'roster' ? (
+                <OpenRosterBoxes slots={slots} disabled={disabled} onJoinSlot={onJoinSlot} courtName={courtName} />
+            ) : (
             <ul
                 role="list"
                 aria-label={`${courtName} roster, ${filled} of ${slots.length} filled`}
@@ -72,6 +76,7 @@ const CourtRosterCompact = ({
                     );
                 })}
             </ul>
+            )}
 
             <button
                 type="button"
