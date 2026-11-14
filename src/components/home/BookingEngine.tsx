@@ -371,19 +371,10 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
             ) : !hasDisplayContent ? (
                 <div className="glass-deep flex flex-col items-center justify-center p-16 text-center">
                     <Rocket className="mb-4 h-12 w-12 text-gray-300 dark:text-chalk/30" />
-                    {activeSport === 'Badminton' || activeSport === 'Pickleball' ? (
-                        <>
-                            <h3 className="mb-2 font-display text-xl text-gray-400 dark:text-chalk/45">Check the group chats</h3>
-                            <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">
-                                {activeSport} is not booked on this site. Please check WhatsApp and Slack for updates.
-                            </p>
-                        </>
-                    ) : (
-                        <>
-                            <h3 className="mb-2 font-display text-xl text-gray-400 dark:text-chalk/45">No court sessions scheduled</h3>
-                            <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">Check back later for court availability and coaching clinics.</p>
-                        </>
-                    )}
+                    <h3 className="mb-2 font-display text-xl text-gray-400 dark:text-chalk/45">No court sessions scheduled</h3>
+                    <p className="mt-1 max-w-sm text-sm text-gray-500 dark:text-chalk/50">
+                        Please check WhatsApp and Slack for updates.
+                    </p>
                 </div>
             ) : (
                 <div className="flex flex-col gap-8">
