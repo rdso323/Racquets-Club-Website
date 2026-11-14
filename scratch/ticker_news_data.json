@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] The Nitto ATP Finals draw placed Zverev in the John McEnroe Group with Shelton, Fils and Jodar while Alcaraz leads Ivan Lendl alongside Medvedev, Cobolli and Tiafoe ahead of Sunday's Turin opener • [SQUASH] PSA Silver last-eight pairings are set at the Pittsburgh Open after Makin, El Sherbini, Vargas and Withington won through, with Shanghai's Gold China Open following Nov 17 • [BADMINTON] The Kumamoto Masters Japan Super 500 continues through Nov 15 on a $500,000 prize fund as the season's late hard-court swing rolls on in Japan • [PICKLEBALL] Full pro draws are out for the Nov 16–22 Proton Daytona Beach Open at Pictona, where John Lucian Goins chases a third straight singles title • [TABLE TENNIS] WTT Contender Istanbul's round of 32 is underway after Abdullah Yigenler upset Maksim Grebnev and Jessica Reyes Lai beat England's Tianer Yu in qualifying",
+  "tickerText": "[TENNIS] Nitto ATP Finals round-robin play opens Sunday in Turin as top seed Alexander Zverev faces Rafael Jodar and Ben Shelton meets Arthur Fils, with Saturday's final Inalpi Arena practice day for ticket holders • [SQUASH] Pittsburgh Open PSA Silver semifinals Saturday pair No. 1 Joel Makin with Leonel Cardenas and pit Finnlay Withington against Marwan ElShorbagy before Sunday's $96,000 final • [BADMINTON] Kumamoto Masters Japan Super 500 semifinals on Nov 14 advanced Alwi Farhan past Lakshya Sen and set Koki Watanabe against Kunlavut Vitidsarn with Miyazaki and Yamaguchi into women's title matches • [PICKLEBALL] Amateur registration closes Friday for the Nov 16–22 Proton Daytona Beach Open at Pictona as all five pro draws are set for a 1,000-point week with more than $1 million in payouts • [TABLE TENNIS] WTT Contender Istanbul's Nov 14 slate runs singles quarterfinals and women's doubles semis, with Russia's Evgeny Tikhonov and Maria Panfilova meeting Connor Green and Anna Hursey in the mixed doubles final",
   "newsItems": [
     {
-      "title": "Turin Groups Set",
-      "excerpt": "Thursday's Nitto ATP Finals draw put No. 1 Alexander Zverev in the John McEnroe Group and Carlos Alcaraz atop the Ivan Lendl Group before indoor round-robin play begins Sunday in Turin.",
-      "date": "November 13, 2026",
+      "title": "Turin Opens Sunday",
+      "excerpt": "The Nitto ATP Finals begin Sunday at Inalpi Arena as Alexander Zverev opens against Rafael Jodar and Ben Shelton takes on Arthur Fils, while Saturday remains the last on-site practice day before eight-man round-robin play.",
+      "date": "November 14, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-draw"
+      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-schedule-sunday-monday"
     },
     {
-      "title": "Pittsburgh Quarters",
-      "excerpt": "Joel Makin, Mohamed El Sherbini, Juan Camilo Vargas and Finnlay Withington reached the PSA Silver quarterfinals at the $96,000 Pittsburgh Open on Nov 12 ahead of Thursday's last-eight lineup.",
-      "date": "November 13, 2026",
+      "title": "Pittsburgh Semis Set",
+      "excerpt": "Saturday's PSA Silver semifinals at the Pittsburgh Open send top seed Joel Makin against Leonel Cardenas and Finnlay Withington against Marwan ElShorbagy after Friday's quarterfinal upsets cleared the last-eight field.",
+      "date": "November 14, 2026",
       "category": "Squash",
       "link": "https://followsquash.com/tournaments/214"
     },
     {
-      "title": "Daytona Draws Out",
-      "excerpt": "The Carvana PPA Tour released all five pro draws for the Proton Daytona Beach Open at Pictona Nov 16–22, a 1,000-point Open with more than $1 million in total payouts across divisions.",
-      "date": "November 13, 2026",
+      "title": "Daytona Gates Open",
+      "excerpt": "Friday is the final day to register for amateur brackets at the Proton Daytona Beach Open, with pro qualifying beginning Monday Nov 16 at Pictona on a Carvana PPA Tour Open worth 1,000 points across five divisions.",
+      "date": "November 14, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/draws-released-for-the-proton-daytona-beach-open"
+      "link": "https://www.ppatour.com/events/2026/proton-daytona-beach-open/"
     },
     {
-      "title": "Istanbul R32 Live",
-      "excerpt": "Men's singles round-of-32 play is rolling at WTT Contender Istanbul, where Abdullah Yigenler upset Maksim Grebnev 3-1 and Jessica Reyes Lai advanced past Tianer Yu after qualifying.",
-      "date": "November 13, 2026",
+      "title": "Istanbul Final Day",
+      "excerpt": "Saturday at WTT Contender Istanbul features men's and women's singles quarterfinals and mixed doubles medal play, including Tikhonov and Panfilova against Green and Hursey for the mixed title on a $100,000 prize week.",
+      "date": "November 14, 2026",
       "category": "Table Tennis",
-      "link": "https://www.worldtabletennis.com/eventInfo?eventId=3257"
+      "link": "https://pingpongtimes.com/events/contender-istanbul-2026"
     }
   ]
 }
