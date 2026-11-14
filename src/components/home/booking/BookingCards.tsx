@@ -22,6 +22,7 @@ import {
     getSlotsPerCourt,
     getSessionEnrollmentCap,
     getSessionRosterAttendees,
+    diagramSlotsForCourt,
     getDiagramSlotsPerCourt,
     isRecurringCoachingSession,
     getRecurringConfigForSession,
@@ -214,7 +215,18 @@ export const BookingRegularCard = memo(function BookingRegularCard({
         recurringSchedules,
         disabledBuiltinSchedules,
     );
-    const showCourtDiagram = diagramSlotsPerCourt != null;
+    const showCourtDiagram =
+        sessionCourts.length > 0 &&
+        sessionCourts.every(
+            (court) =>
+                diagramSlotsForCourt(
+                    session,
+                    court,
+                    sessionCourts,
+                    recurringSchedules,
+                    disabledBuiltinSchedules,
+                ) != null,
+        );
     const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
 
     const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
@@ -323,8 +335,16 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                     {sessionCourts.map((courtName) => {
                                         const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
                                         const sessionAtCapacity = activeAttendees.length >= totalMax;
+                                        const courtSlots =
+                                            diagramSlotsForCourt(
+                                                session,
+                                                courtName,
+                                                sessionCourts,
+                                                recurringSchedules,
+                                                disabledBuiltinSchedules,
+                                            ) ?? slotsPerCourtForUi;
                                         const isCourtFull =
-                                            courtAttendees.length >= slotsPerCourtForUi ||
+                                            courtAttendees.length >= courtSlots ||
                                             (session.type === 'coaching' && sessionAtCapacity);
                                         const isCoachCourt =
                                             session.type === 'coaching' && session.coachCourt === courtName;
@@ -348,9 +368,9 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                                       onClick: () => handlers.onCoachAction(session),
                                                   }
                                                 : undefined;
-                                        const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid, namesByUid);
+                                        const slots = buildCourtSlots(courtAttendees, courtSlots, user?.uid, namesByUid);
                                         const spotsLeft = Math.min(
-                                            slotsPerCourtForUi - courtAttendees.length,
+                                            courtSlots - courtAttendees.length,
                                             totalMax - activeAttendees.length,
                                         );
                                         const disabled =

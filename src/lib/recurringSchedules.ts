@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 import { storedBookingLockFields } from './bookingLock';
 import {
+    COACHING_COURT_SLOT_MAX,
     CLINIC_SCHEDULE,
     OPEN_PLAY_SCHEDULE,
     type AdminRecurringSchedule,
@@ -47,6 +48,7 @@ export const toOpenPlayDayConfig = (schedule: AdminRecurringSchedule): OpenPlayD
     maxAttendees: schedule.maxAttendees,
     coach: schedule.coach,
     coachCourt: schedule.coachCourt,
+    coachCourtSlots: schedule.coachCourtSlots,
     maxWaitlistSize: schedule.maxWaitlistSize,
     scheduleId: schedule.id,
     isCustom: true,
@@ -84,8 +86,14 @@ export const sanitizeRecurringSchedule = (schedule: AdminRecurringSchedule): Adm
     if (next.sessionType === 'court') {
         delete next.coach;
         delete next.coachCourt;
+        delete next.coachCourtSlots;
     } else if (!next.coachCourt || !next.courts.includes(next.coachCourt)) {
         delete next.coachCourt;
+        delete next.coachCourtSlots;
+    } else if (next.coachCourtSlots != null) {
+        const slots = Math.floor(Number(next.coachCourtSlots));
+        if (!Number.isFinite(slots) || slots < 1) delete next.coachCourtSlots;
+        else next.coachCourtSlots = Math.min(COACHING_COURT_SLOT_MAX, slots);
     }
     if (!next.autoEnrollCreator) next.autoEnrollCreator = false;
     for (const key of Object.keys(next) as (keyof AdminRecurringSchedule)[]) {

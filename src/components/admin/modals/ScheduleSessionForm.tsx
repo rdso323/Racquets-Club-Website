@@ -9,7 +9,10 @@ import {
     ADMIN_MAX_ATTENDEES,
     ADMIN_MAX_WAITLIST,
     DAY_OPTIONS,
+    COACHING_COURT_SLOT_MAX,
+    DEFAULT_COACHING_COURT_SLOTS,
     DEFAULT_WAITLIST_PER_COURT,
+    SLOTS_PER_COURT,
     SPORTS,
     clampAdminMaxAttendees,
     clampAdminMaxWaitlist,
@@ -23,6 +26,7 @@ import {
     buildCourtLabels,
     getDefaultMaxAttendees,
     keepVisibleSkipDates,
+    splitCourtCapacity,
     suggestedCapacityForCourts,
     type SessionType,
 } from '../../../lib/sessions';
@@ -68,6 +72,7 @@ const defaultDraft = (sport: string) => ({
     maxWaitlistSize: DEFAULT_WAITLIST_PER_COURT * 2,
     coach: '',
     coachCourt: '',
+    coachCourtSlots: DEFAULT_COACHING_COURT_SLOTS,
     courtCount: 2,
     courtStartNumber: 1,
     customCourtLabels: '',
@@ -171,7 +176,22 @@ const ScheduleSessionForm = ({
                     maxAttendees: clampAdminMaxAttendees(Number(newSession.maxAttendees)),
                     coach: newSession.type === 'coaching' ? newSession.coach || 'TBD' : undefined,
                     ...(newSession.type === 'coaching' && courts.includes(newSession.coachCourt)
-                        ? { coachCourt: newSession.coachCourt }
+                        ? {
+                              coachCourt: newSession.coachCourt,
+                              coachCourtSlots: Math.min(
+                                  COACHING_COURT_SLOT_MAX,
+                                  Math.max(1, Math.floor(Number(newSession.coachCourtSlots) || DEFAULT_COACHING_COURT_SLOTS)),
+                              ),
+                              maxAttendees: clampAdminMaxAttendees(
+                                  splitCourtCapacity(
+                                      courts.length,
+                                      Math.min(
+                                          COACHING_COURT_SLOT_MAX,
+                                          Math.max(1, Math.floor(Number(newSession.coachCourtSlots) || DEFAULT_COACHING_COURT_SLOTS)),
+                                      ),
+                                  ),
+                              ),
+                          }
                         : {}),
                     maxWaitlistSize: clampAdminMaxWaitlist(Number(newSession.maxWaitlistSize)),
                     ...(seriesEndsOn ? { endsOn: seriesEndsOn } : {}),
@@ -226,6 +246,29 @@ const ScheduleSessionForm = ({
                         newSession.type === 'coaching' && courts.includes(newSession.coachCourt)
                             ? newSession.coachCourt
                             : null,
+                    coachCourtSlots:
+                        newSession.type === 'coaching' && courts.includes(newSession.coachCourt)
+                            ? Math.min(
+                                  COACHING_COURT_SLOT_MAX,
+                                  Math.max(1, Math.floor(Number(newSession.coachCourtSlots) || DEFAULT_COACHING_COURT_SLOTS)),
+                              )
+                            : null,
+                    ...(newSession.type === 'coaching' && courts.includes(newSession.coachCourt)
+                        ? {
+                              maxAttendees: clampAdminMaxAttendees(
+                                  splitCourtCapacity(
+                                      courts.length,
+                                      Math.min(
+                                          COACHING_COURT_SLOT_MAX,
+                                          Math.max(
+                                              1,
+                                              Math.floor(Number(newSession.coachCourtSlots) || DEFAULT_COACHING_COURT_SLOTS),
+                                          ),
+                                      ),
+                                  ),
+                              ),
+                          }
+                        : {}),
                     weekStartDate: sessionDateInput,
                 };
 
@@ -704,7 +747,22 @@ const ScheduleSessionForm = ({
                             </label>
                             <select
                                 value={previewCourtLabels.includes(newSession.coachCourt) ? newSession.coachCourt : ''}
-                                onChange={(e) => setNewSession({ ...newSession, coachCourt: e.target.value })}
+                                onChange={(e) => {
+                                    const coachCourt = e.target.value;
+                                    const coachCourtSlots = newSession.coachCourtSlots || DEFAULT_COACHING_COURT_SLOTS;
+                                    setNewSession({
+                                        ...newSession,
+                                        coachCourt,
+                                        coachCourtSlots,
+                                        ...(coachCourt
+                                            ? {
+                                                  maxAttendees: clampAdminMaxAttendees(
+                                                      splitCourtCapacity(previewCourtLabels.length, coachCourtSlots),
+                                                  ),
+                                              }
+                                            : {}),
+                                    });
+                                }}
                                 className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
                             >
                                 <option value="">Whole clinic</option>
@@ -716,6 +774,32 @@ const ScheduleSessionForm = ({
                             </select>
                             <p className="mt-1 text-[10px] text-gray-400">
                                 The instructor name shows only on this court. Leave blank to label the whole clinic.
+                            </p>
+                        </div>
+                    )}
+                    {newSession.type === 'coaching' && previewCourtLabels.includes(newSession.coachCourt) && (
+                        <div>
+                            <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                                Spots on the coaching court
+                            </label>
+                            <AdminNumericField
+                                required
+                                min={1}
+                                max={COACHING_COURT_SLOT_MAX}
+                                value={newSession.coachCourtSlots}
+                                onChange={(coachCourtSlots) =>
+                                    setNewSession({
+                                        ...newSession,
+                                        coachCourtSlots,
+                                        maxAttendees: clampAdminMaxAttendees(
+                                            splitCourtCapacity(previewCourtLabels.length, coachCourtSlots),
+                                        ),
+                                    })
+                                }
+                                className="w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:ring-1 focus:ring-court-accent dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                            />
+                            <p className="mt-1 text-[10px] text-gray-400">
+                                The other courts stay at {SLOTS_PER_COURT} spots each. Raising the session total does not add those extra spots here.
                             </p>
                         </div>
                     )}

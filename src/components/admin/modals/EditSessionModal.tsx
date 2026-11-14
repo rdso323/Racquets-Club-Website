@@ -2,7 +2,10 @@ import {
     SPORTS,
     type DayName,
     getSlotsPerCourtForSport,
+    COACHING_COURT_SLOT_MAX,
+    DEFAULT_COACHING_COURT_SLOTS,
     DEFAULT_WAITLIST_PER_COURT,
+    SLOTS_PER_COURT,
     ADMIN_MAX_ATTENDEES,
     ADMIN_MAX_WAITLIST,
     clampAdminMaxWaitlist,
@@ -21,6 +24,7 @@ import {
     type SessionType,
     applySessionTypeChange,
     buildCourtLabels,
+    splitCourtCapacity,
     suggestedCapacityForCourts,
     isRecurringSession,
     keepVisibleSkipDates,
@@ -386,6 +390,30 @@ const EditSessionModal = ({
                         </select>
                         <p className="mt-1 text-[10px] text-gray-400">
                             The instructor name shows only on this court.
+                        </p>
+                    </div>
+                )}
+                {session.type === 'coaching' && previewCourts.includes(session.coachCourt || '') && (
+                    <div>
+                        <label className="mb-1 block text-xs font-bold uppercase text-gray-500">
+                            Spots on the coaching court
+                        </label>
+                        <AdminNumericField
+                            required
+                            min={1}
+                            max={COACHING_COURT_SLOT_MAX}
+                            value={session.coachCourtSlots || DEFAULT_COACHING_COURT_SLOTS}
+                            onChange={(coachCourtSlots) =>
+                                onSessionChange({
+                                    ...session,
+                                    coachCourtSlots,
+                                    maxAttendees: splitCourtCapacity(previewCourts.length, coachCourtSlots),
+                                })
+                            }
+                            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-court-950 dark:text-chalk"
+                        />
+                        <p className="mt-1 text-[10px] text-gray-400">
+                            Other courts stay at {SLOTS_PER_COURT}. A higher session total does not move extra people onto this court.
                         </p>
                     </div>
                 )}

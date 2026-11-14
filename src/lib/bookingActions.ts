@@ -11,7 +11,9 @@ import {
     formatWaitlistEntry,
     firstOpenCourtSlot,
     getCourtsForSession,
+    coachingCourtSlotCount,
     getDiagramSlotsPerCourt,
+    slotsOnCourt,
     getSessionEnrollmentCap,
     getSlotsPerCourt,
     isAttendeeOnCourt,
@@ -80,6 +82,7 @@ const sessionSeedFields = (session: Session, activeSport?: string): Record<strin
             : {}),
         ...(session.maxWaitlistSize != null ? { maxWaitlistSize: session.maxWaitlistSize } : {}),
         ...(session.type === 'coaching' && session.coachCourt ? { coachCourt: session.coachCourt } : {}),
+        ...(session.type === 'coaching' && session.coachCourtSlots ? { coachCourtSlots: session.coachCourtSlots } : {}),
         ...(isMaterializedWeeklySession(session) ? { recurring: true } : {}),
     };
 };
@@ -109,6 +112,8 @@ export const joinSessionCourt = async (
         const courts = getCourtsForSession(data);
         const maxPerCourt =
             getDiagramSlotsPerCourt(data, courts) ?? getSlotsPerCourt(data);
+        const limit = (court?: string) =>
+            court && coachingCourtSlotCount(data) ? slotsOnCourt(data, court) : maxPerCourt;
         let attendees = [...(data.attendees || [])];
         const waitlist = [...(data.waitlist || [])];
 
@@ -118,11 +123,12 @@ export const joinSessionCourt = async (
         if (existingEntry) {
             if (courtName && !isAttendeeOnCourt(existingEntry, courtName)) {
                 const targetCourtAttendees = courtAttendeesFor(attendees, courtName);
+                const courtLimit = limit(courtName);
                 let targetSlot = slotIndex;
                 if (targetSlot == null) {
-                    targetSlot = firstOpenCourtSlot(targetCourtAttendees, maxPerCourt) ?? undefined;
+                    targetSlot = firstOpenCourtSlot(targetCourtAttendees, courtLimit) ?? undefined;
                 }
-                if (targetSlot == null || isCourtSlotTaken(targetCourtAttendees, maxPerCourt, targetSlot)) {
+                if (targetSlot == null || isCourtSlotTaken(targetCourtAttendees, courtLimit, targetSlot)) {
                     throw new Error('This spot is not available.');
                 }
                 const attendeeString = formatAttendee(
@@ -149,7 +155,7 @@ export const joinSessionCourt = async (
                     nextAttendees,
                     nextWaitlist,
                     freedCourt || undefined,
-                    maxPerCourt,
+                    limit(freedCourt),
                 );
                 nextAttendees = promoted.attendees;
                 nextWaitlist = promoted.waitlist;
@@ -182,14 +188,15 @@ export const joinSessionCourt = async (
 
         if (courtName && courts.length > 0) {
             const targetCourtAttendees = courtAttendeesFor(attendees, courtName);
+            const courtLimit = limit(courtName);
             let targetSlot = slotIndex;
             if (targetSlot == null) {
-                targetSlot = firstOpenCourtSlot(targetCourtAttendees, maxPerCourt) ?? undefined;
+                targetSlot = firstOpenCourtSlot(targetCourtAttendees, courtLimit) ?? undefined;
             }
             if (targetSlot == null) {
                 throw new Error('This court is full.');
             }
-            if (isCourtSlotTaken(targetCourtAttendees, maxPerCourt, targetSlot)) {
+            if (isCourtSlotTaken(targetCourtAttendees, courtLimit, targetSlot)) {
                 throw new Error('This spot is already taken.');
             }
             const attendeeString = formatAttendee(
@@ -299,6 +306,7 @@ export const removeAttendeeWithPromotion = async (
         attendees = attendees.filter((a) => a !== attendeeStr);
         const freedCourt = parseAttendee(attendeeStr).court;
         const freedSlot = parseAttendee(attendeeStr).slotIndex;
+        const courtLimit = freedCourt && coachingCourtSlotCount(data) ? slotsOnCourt(data, freedCourt) : maxPerCourt;
 
         let promoted: PromotionResult = { promoted: false };
         if (waitlist.length > 0) {
@@ -306,7 +314,7 @@ export const removeAttendeeWithPromotion = async (
                 attendees,
                 waitlist,
                 courts.length > 0 ? freedCourt || undefined : undefined,
-                maxPerCourt,
+                courtLimit,
             );
             attendees = result.attendees;
             waitlist = result.waitlist;
@@ -370,7 +378,10 @@ const creatorRosterEntry = (
     const email = config.creatorEmail || '';
     if (courts.length === 0) return formatAttendee(uid, name, email);
     for (const court of courts) {
-        const slot = firstOpenCourtSlot(filterAttendeesByCourt(attendees, court), maxPerCourt);
+        const courtLimit = config.coachCourt === court && config.coachCourtSlots
+            ? config.coachCourtSlots
+            : maxPerCourt;
+        const slot = firstOpenCourtSlot(filterAttendeesByCourt(attendees, court), courtLimit);
         if (slot != null) return formatAttendee(uid, name, email, court, slot);
     }
     return null;

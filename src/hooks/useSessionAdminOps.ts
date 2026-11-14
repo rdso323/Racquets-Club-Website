@@ -119,6 +119,7 @@ export function useSessionAdminOps({
         setEditingSession({
             ...latest,
             coachCourt: config?.coachCourt ?? latest.coachCourt ?? null,
+            coachCourtSlots: config?.coachCourtSlots ?? latest.coachCourtSlots ?? null,
         });
         setEditCourtFields(courtFieldsFromSession(courts.length ? courts : latest.courts));
         setEditingScheduleMeta({
@@ -193,6 +194,7 @@ export function useSessionAdminOps({
                     ? {
                           coach: sessionToSave.coach || 'TBD',
                           coachCourt: sessionToSave.coachCourt || '',
+                          coachCourtSlots: sessionToSave.coachCourt ? sessionToSave.coachCourtSlots || 6 : 0,
                       }
                     : {}),
             };
@@ -270,6 +272,11 @@ export function useSessionAdminOps({
                     courts?.includes(editingSession.coachCourt || '')
                         ? editingSession.coachCourt
                         : null,
+                coachCourtSlots:
+                    editingSession.type === 'coaching' &&
+                    courts?.includes(editingSession.coachCourt || '')
+                        ? editingSession.coachCourtSlots || 6
+                        : null,
             };
 
             if (editingSession.weekStartDate) {
@@ -279,6 +286,15 @@ export function useSessionAdminOps({
             if (usesCourts && courts && courts.length > 0) {
                 updateData.courts = courts;
                 updateData.slotsPerCourt = slotsPerCourt;
+                if (
+                    editingSession.type === 'coaching' &&
+                    editingSession.coachCourt &&
+                    courts.includes(editingSession.coachCourt)
+                ) {
+                    const coachSlots = Math.min(8, Math.max(1, Math.floor(Number(editingSession.coachCourtSlots) || 6)));
+                    updateData.coachCourtSlots = coachSlots;
+                    updateData.maxAttendees = clampAdminMaxAttendees((courts.length - 1) * slotsPerCourt + coachSlots);
+                }
             } else if (usesCourts) {
                 updateData.courts = null;
                 updateData.slotsPerCourt = null;
@@ -366,6 +382,7 @@ export function useSessionAdminOps({
                   coach: session.coach || 'TBD',
                   coachId: null,
                   ...(session.coachCourt ? { coachCourt: session.coachCourt } : {}),
+                  ...(session.coachCourtSlots ? { coachCourtSlots: session.coachCourtSlots } : {}),
               }
             : {}),
     });
