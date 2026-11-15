@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Nitto ATP Finals round-robin play opens Sunday in Turin as top seed Alexander Zverev faces Rafael Jodar and Ben Shelton meets Arthur Fils, with Saturday's final Inalpi Arena practice day for ticket holders • [SQUASH] Pittsburgh Open PSA Silver semifinals Saturday pair No. 1 Joel Makin with Leonel Cardenas and pit Finnlay Withington against Marwan ElShorbagy before Sunday's $96,000 final • [BADMINTON] Kumamoto Masters Japan Super 500 semifinals on Nov 14 advanced Alwi Farhan past Lakshya Sen and set Koki Watanabe against Kunlavut Vitidsarn with Miyazaki and Yamaguchi into women's title matches • [PICKLEBALL] Amateur registration closes Friday for the Nov 16–22 Proton Daytona Beach Open at Pictona as all five pro draws are set for a 1,000-point week with more than $1 million in payouts • [TABLE TENNIS] WTT Contender Istanbul's Nov 14 slate runs singles quarterfinals and women's doubles semis, with Russia's Evgeny Tikhonov and Maria Panfilova meeting Connor Green and Anna Hursey in the mixed doubles final",
+  "tickerText": "[TENNIS] Nitto ATP Finals open Sunday at Inalpi Arena with doubles from 11:30 a.m., world No. 1 Alexander Zverev facing Rafael Jodar not before 2 p.m., and Ben Shelton meeting Arthur Fils to cap McEnroe Group night session • [SQUASH] Joel Makin lifted the $96,000 PSA Silver crown at the Pittsburgh Open, beating Leonel Cardenas in Sunday's final after Marwan ElShorbagy defeated Finnlay Withington for third • [BADMINTON] Kumamoto Masters Japan Super 500 finals Sunday saw Lakshya Sen rally past Koki Watanabe for men's singles while Akane Yamaguchi, Takuro Hoki/Yugo Kobayashi, and Rin Iwanaga/Kie Nakanishi took the other main titles • [PICKLEBALL] Proton Daytona Beach Open week at Pictona starts Monday with pro qualifying and senior open play after amateur registration closed, as John Lucian Goins chases a third straight PPA singles title on a 1,000-point Open • [TABLE TENNIS] WTT Contender Istanbul closes Sunday with men's and women's singles finals plus doubles medals, as Korea's Kang Dongsoo and Joo Cheonhui headline singles while Luxembourg's Luka Mladenovic and Mael Van Dessel defend men's doubles gold",
   "newsItems": [
     {
-      "title": "Turin Opens Sunday",
-      "excerpt": "The Nitto ATP Finals begin Sunday at Inalpi Arena as Alexander Zverev opens against Rafael Jodar and Ben Shelton takes on Arthur Fils, while Saturday remains the last on-site practice day before eight-man round-robin play.",
-      "date": "November 14, 2026",
+      "title": "Turin Round Robin Starts",
+      "excerpt": "The 2026 Nitto ATP Finals begin Sunday in Turin with Heliovaara and Patten opening doubles before Alexander Zverev meets debutant Rafael Jodar and Ben Shelton faces Arthur Fils in John McEnroe Group singles.",
+      "date": "November 15, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-schedule-sunday-monday"
+      "link": "https://www.atptour.com/en/news/zverev-jodar-shelton-fils-nitto-atp-finals-2026-day-1-preview"
     },
     {
-      "title": "Pittsburgh Semis Set",
-      "excerpt": "Saturday's PSA Silver semifinals at the Pittsburgh Open send top seed Joel Makin against Leonel Cardenas and Finnlay Withington against Marwan ElShorbagy after Friday's quarterfinal upsets cleared the last-eight field.",
-      "date": "November 14, 2026",
-      "category": "Squash",
-      "link": "https://followsquash.com/tournaments/214"
+      "title": "Sen Rallies In Kumamoto",
+      "excerpt": "Lakshya Sen came from a set down to beat home hope Koki Watanabe 13-21, 21-18, 21-14 in the Kumamoto Masters men's final, adding a second 2026 title as Yamaguchi and Japan's top doubles pairs swept the other Sunday crowns.",
+      "date": "November 15, 2026",
+      "category": "Badminton",
+      "link": "https://indianexpress.com/article/sports/badminton/lakshya-sen-beckham-drift-wins-kumamoto-masters-title-10963654/"
     },
     {
-      "title": "Daytona Gates Open",
-      "excerpt": "Friday is the final day to register for amateur brackets at the Proton Daytona Beach Open, with pro qualifying beginning Monday Nov 16 at Pictona on a Carvana PPA Tour Open worth 1,000 points across five divisions.",
-      "date": "November 14, 2026",
+      "title": "Daytona Week Begins",
+      "excerpt": "The Carvana PPA Tour's Proton Daytona Beach Open at Pictona runs Nov 16-22 with pro qualifying Monday, as John Lucian Goins eyes a third straight singles win and Bright and Waters pursue their 19th straight doubles title.",
+      "date": "November 15, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/proton-daytona-beach-open/"
+      "link": "https://pickleball.com/news/draws-released-for-the-proton-daytona-beach-open"
     },
     {
-      "title": "Istanbul Final Day",
-      "excerpt": "Saturday at WTT Contender Istanbul features men's and women's singles quarterfinals and mixed doubles medal play, including Tikhonov and Panfilova against Green and Hursey for the mixed title on a $100,000 prize week.",
-      "date": "November 14, 2026",
+      "title": "Istanbul Finals Day",
+      "excerpt": "Sunday at WTT Contender Istanbul crowns the remaining singles and doubles champions after Connor Green and Anna Hursey took mixed doubles Saturday, with Kang Dongsoo and Joo Cheonhui in the men's and women's singles title matches.",
+      "date": "November 15, 2026",
       "category": "Table Tennis",
       "link": "https://pingpongtimes.com/events/contender-istanbul-2026"
     }
