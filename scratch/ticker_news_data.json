@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Nitto ATP Finals shift to Monday's Stefan Edberg Group as Carlos Alcaraz meets Frances Tiafoe not before 2 p.m. and Daniil Medvedev faces Flavio Cobolli at night, after Alexander Zverev and Ben Shelton each opened 1-0 in the McEnroe Group with wins over Rafael Jodar and Arthur Fils • [SQUASH] Joel Makin defended his Pittsburgh Open crown Sunday by rallying from two games down to beat Marwan Elshorbagy 8-11, 9-11, 12-10, 11-5, 11-7, while Malaysia's Sanjay Jeeva upset top seed Alex Lau for the Singapore Classic title • [BADMINTON] Kumamoto Masters Japan closed Sunday with Lakshya Sen's back-to-back Super 500 win over Koki Watanabe and Akane Yamaguchi's home singles triumph, as attention turns to Tuesday's Hong Kong Open and the race for BWF World Tour Finals berths • [PICKLEBALL] Pro qualifying for the Proton Daytona Beach Open runs Monday across 20-plus courts at Pictona from 8 a.m. ET on YouTube, opening a 1,000-point Carvana PPA week with John Lucian Goins chasing a third straight singles title • [TABLE TENNIS] WTT Contender Istanbul crowned Fang Bo and Honoka Hashimoto singles champions Sunday before WTT Star Contender Muscat begins Monday with more than 200 players from 37 nations contesting $300,000 in prizes",
+  "tickerText": "[TENNIS] Nitto ATP Finals turn to Tuesday's McEnroe Group as Alexander Zverev meets Ben Shelton and Arthur Fils faces Rafael Jodar, after Carlos Alcaraz and Daniil Medvedev each opened 1-0 in the Ivan Lendl Group on Monday in Turin • [SQUASH] PSA Gold China Open first-round play begins in Shanghai at the Diamond Squash Center, with top-seeded Sivasangari Subramaniam headlining a 48-player field that includes Mostafa Asal and Nouran Gohar • [BADMINTON] LI-NING Hong Kong Open starts at Kai Tak as the final HSBC Race to Finals stop, with Anders Antonsen promoted to No. 1 in the draw and high stakes around Kidambi Srikanth versus Koki Watanabe for Lakshya Sen's qualification • [PICKLEBALL] Proton Daytona Beach Open moves to the round of 64 at Pictona from 10 a.m. ET, with main-draw streaming noon–8 p.m. on PickleballTV and YouTube in a 1,000-point Carvana PPA week • [TABLE TENNIS] WTT Star Contender Muscat rolls through day-two qualifying in Oman with 200-plus players from 37 nations chasing $300,000 before Wednesday's main draw led by Dang Qiu, Darko Jorgic and Satsuki Odo",
   "newsItems": [
     {
-      "title": "Turin Opens With Zverev",
-      "excerpt": "World No. 1 Alexander Zverev beat Rafael Jodar 6-4, 6-4 and Ben Shelton edged Arthur Fils 6-2, 3-6, 6-3 to open the Nitto ATP Finals, with Monday's Edberg Group spotlight on Carlos Alcaraz versus Frances Tiafoe in Turin.",
-      "date": "November 16, 2026",
+      "title": "McEnroe Group Awaits",
+      "excerpt": "Nitto ATP Finals day three spotlights the McEnroe Group as Alexander Zverev and Ben Shelton square off at 1-1 and Arthur Fils meets Rafael Jodar, after Carlos Alcaraz beat Frances Tiafoe and Daniil Medvedev topped Flavio Cobolli on Monday in Turin.",
+      "date": "November 17, 2026",
       "category": "Tennis",
       "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-results"
     },
     {
-      "title": "Makin Retakes Pittsburgh",
-      "excerpt": "Top seed Joel Makin saved his Pittsburgh Open title Sunday, coming from two games down to beat Marwan Elshorbagy in five after a straight-games semifinal win over Leonel Cardenas at the PSA Silver event.",
-      "date": "November 15, 2026",
+      "title": "Shanghai Gold Begins",
+      "excerpt": "The PSA China Open opened round one Tuesday in Shanghai, kicking off a $279,000 Gold event with Sivasangari Subramaniam as women's top seed and Mostafa Asal among 48 players from 14 countries at the Diamond Squash Center.",
+      "date": "November 17, 2026",
       "category": "Squash",
-      "link": "https://www.psasquashtour.com/news/"
+      "link": "https://thesquashsite.com/china-open-2026"
     },
     {
-      "title": "Sen Doubles Down",
-      "excerpt": "Lakshya Sen rallied past Koki Watanabe for his second straight BWF title in Kumamoto while Akane Yamaguchi won women's singles on home soil, boosting both ahead of the Hong Kong Open qualifying finale.",
-      "date": "November 15, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/15/kumamoto-masters-new-combo-tastes-success-yet-again"
+      "title": "Muscat Qualifiers Continue",
+      "excerpt": "WTT Star Contender Muscat's second qualifying day runs at the Sultan Qaboos Sports Complex before Wednesday's main draw, with top contenders including Dang Qiu, Darko Jorgic and Satsuki Odo among 200-plus entrants from 37 countries.",
+      "date": "November 17, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.worldtabletennis.com/eventInfo?eventId=3170"
     },
     {
-      "title": "Daytona Qualifiers Start",
-      "excerpt": "The Carvana PPA Tour's Proton Daytona Beach Open begins Monday pro qualifying at Pictona in Holly Hill, streaming on YouTube from 8 a.m. ET as John Lucian Goins pursues a third consecutive singles crown.",
-      "date": "November 16, 2026",
+      "title": "Daytona Main Draw",
+      "excerpt": "The Carvana PPA Tour's Proton Daytona Beach Open advances to the round of 64 Tuesday at Pictona in Holly Hill, with gates at 10 a.m. ET and marquee courts streaming noon–8 p.m. on PickleballTV and YouTube.",
+      "date": "November 17, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/proton-daytona-beach-open/"
     }
