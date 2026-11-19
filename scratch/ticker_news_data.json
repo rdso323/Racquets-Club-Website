@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Nitto ATP Finals Wednesday in Turin puts Carlos Alcaraz against Daniil Medvedev in the Ivan Lendl Group from 2 p.m., with Flavio Cobolli and Frances Tiafoe chasing a first win after Alexander Zverev qualified by beating Ben Shelton on Tuesday • [SQUASH] PSA China Open continues in Shanghai at the Diamond Squash Center with second-round singles across a 48-player Gold field, while QSF 3 PSA Copper in Doha wraps its run through Nov. 19 • [BADMINTON] LI-NING Hong Kong Open day two at Kai Tak keeps HSBC Race to Finals math tight as qualifiers give way to main-draw pressure and key first-round clashes shape Hangzhou berths • [PICKLEBALL] Proton Daytona Beach Open hits round of 32 at Pictona from 10 a.m. ET, with Humana Championship Court and YouTube streams noon–8 p.m. as John Lucian Goins chases a third straight men's singles title • [TABLE TENNIS] WTT Star Contender Muscat opens the main draw Wednesday at Sultan Qaboos Sports Complex as 200-plus players from 37 nations contest a $300,000 week led by Dang Qiu, Satsuki Odo and Darko Jorgic",
+  "tickerText": "[TENNIS] Nitto ATP Finals Thursday in Turin pairs Ben Shelton with Rafael Jodar from 2 p.m. and Alexander Zverev with Arthur Fils at 8:30 p.m., with the World No. 1 already through after Carlos Alcaraz topped Daniil Medvedev 6-2, 6-4 and Frances Tiafoe beat Flavio Cobolli on Wednesday • [SQUASH] PSA China Open quarterfinals unfold in Shanghai with men's last-eight ties featuring Mostafa Asal, Youssef Ibrahim and Mohamad Zakaria, while Satomi Watanabe and Marina Stefanoni headline women's QF night sessions at Xian Xia • [BADMINTON] LI-NING Hong Kong Open round of 16 at Kai Tak Arena puts Loh Kean Yew through after 12-21, 21-9, 21-14 over Kenta Nishimoto, with Lakshya Sen set for Rasmus Gemke as Race to Finals spots tighten • [PICKLEBALL] Proton Daytona Beach Open moves to round of 16 Thursday at Pictona with PickleballTV from noon ET, overflow parking on Ridgewood Ave after local flooding, and John Lucian Goins chasing a third straight men's singles title • [TABLE TENNIS] WTT Star Contender Muscat's main draw rolls on at Sultan Qaboos Sports Complex as 200-plus players from 37 nations contest singles and doubles toward a $300,000 purse led by Dang Qiu, Satsuki Odo and Darko Jorgic",
   "newsItems": [
     {
-      "title": "Alcaraz vs Medvedev",
-      "excerpt": "Nitto ATP Finals Wednesday centers on Carlos Alcaraz meeting Daniil Medvedev in Turin, with both 1-0 in the Ivan Lendl Group and a win likely booking a semifinal spot; Flavio Cobolli faces Frances Tiafoe in the nightcap after Alexander Zverev beat Ben Shelton on Tuesday.",
-      "date": "November 18, 2026",
+      "title": "Turin Decision Day",
+      "excerpt": "Thursday at the Nitto ATP Finals sends Ben Shelton against Rafael Jodar and Alexander Zverev against Arthur Fils in the Boris Becker Group, with both semifinal places at stake after Alcaraz beat Medvedev and Tiafoe ousted Cobolli on Wednesday.",
+      "date": "November 19, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/alcaraz-medvedev-cobolli-tiafoe-nitto-atp-finals-2026-day-4-preview"
+      "link": "https://www.atptour.com/en/news/shelton-jodar-zverev-fils-nitto-atp-finals-2026-day-5-preview"
     },
     {
-      "title": "Shanghai Rolls On",
-      "excerpt": "The PSA China Open advances through round two in Shanghai on a $279,000 Gold week at the Diamond Squash Center, with Sivasangari Subramaniam leading the women's draw and Mostafa Asal among 48 entrants from 14 countries.",
-      "date": "November 18, 2026",
-      "category": "Squash",
-      "link": "https://thesquashsite.com/china-open-2026"
-    },
-    {
-      "title": "Hong Kong Stakes",
-      "excerpt": "The LI-NING Hong Kong Open's second day at Kai Tak highlights the last Super 500 stop before the HSBC BWF World Tour Finals, with Anders Antonsen installed as men's No. 1 after seed movement and several qualification races still alive across singles and doubles.",
-      "date": "November 18, 2026",
+      "title": "Hong Kong Last 16",
+      "excerpt": "The LI-NING Hong Kong Open's round of 16 at Kai Tak delivers early winners including Tomoka Miyazaki and top-10 duo Pearly Tan and Thinaah Muralitharan, while Lakshya Sen's clash with Rasmus Gemke carries extra weight after he clinched a BWF Finals berth.",
+      "date": "November 19, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/17/hong-kong-open-race-to-finals-down-to-the-wire/"
+      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5218/hong-kong-open-2026/results/2026-11-19"
     },
     {
-      "title": "Daytona Round of 32",
-      "excerpt": "The Carvana PPA's Proton Daytona Beach Open moves to the round of 32 Wednesday at Pictona, with top seeds chasing 1,000-point Open titles as John Lucian Goins bids for a third straight men's singles crown amid a depleted but wide-open field.",
-      "date": "November 18, 2026",
+      "title": "Daytona Last 16",
+      "excerpt": "The Carvana PPA's Proton Daytona Beach Open advances to round of 16 Thursday at Holly Hill, with national PickleballTV coverage and overflow shuttle parking after flooding trimmed on-site options, in a men's singles draw reshaped by Christopher Haworth's round-of-32 exit.",
+      "date": "November 19, 2026",
       "category": "Pickleball",
       "link": "https://www.ppatour.com/events/2026/proton-daytona-beach-open/"
+    },
+    {
+      "title": "Muscat Star Contender",
+      "excerpt": "WTT Star Contender Muscat continues its main-draw week in Oman with top talents such as Dang Qiu, Satsuki Odo and Darko Jorgic chasing ranking points across five events at Sultan Qaboos Sports Complex through Nov. 21.",
+      "date": "November 19, 2026",
+      "category": "Table Tennis",
+      "link": "https://worldtabletennis.com/eventInfo?eventId=3185"
     }
   ]
 }
