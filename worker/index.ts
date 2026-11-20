@@ -47,6 +47,17 @@ export default {
             return handleFuquaConnectImport(request);
         }
 
-        return env.ASSETS.fetch(request);
+        const assetResponse = await env.ASSETS.fetch(request);
+        const contentType = assetResponse.headers.get('content-type') ?? '';
+        const isHtml = contentType.includes('text/html') || pathname === '/' || pathname.endsWith('.html');
+        if (!isHtml) return assetResponse;
+
+        const headers = new Headers(assetResponse.headers);
+        headers.set('Cache-Control', 'no-cache');
+        return new Response(assetResponse.body, {
+            status: assetResponse.status,
+            statusText: assetResponse.statusText,
+            headers,
+        });
     },
 } satisfies ExportedHandler<Env>;

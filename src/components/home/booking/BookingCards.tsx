@@ -22,8 +22,7 @@ import {
     getSlotsPerCourt,
     getSessionEnrollmentCap,
     getSessionRosterAttendees,
-    diagramSlotsForCourt,
-    getDiagramSlotsPerCourt,
+    slotsOnCourt,
     usesCourtDiagramLayout,
     isRecurringCoachingSession,
     getRecurringConfigForSession,
@@ -95,7 +94,7 @@ const SessionCancelledOverlay = ({
     <div className="absolute inset-0 z-40 flex items-center justify-center rounded-2xl bg-white/30 backdrop-blur-[2px] dark:bg-court-950/40">
         <div className="flex max-w-[75%] flex-col items-center rounded-xl border border-red-200 bg-white px-5 py-4 text-center shadow-lg dark:border-red-900/50 dark:bg-carbon">
             <AlertTriangle className="mb-2 h-6 w-6 text-red-500" />
-            <p className="text-sm font-bold text-red-700 dark:text-red-300">Cancelled This Week</p>
+            <p className="text-sm font-bold text-red-700 dark:text-red-300">No courts this week</p>
             <p className="mt-1 text-xs font-medium text-gray-500 dark:text-chalk/50">
                 This session won&apos;t be running this week.
             </p>
@@ -156,7 +155,7 @@ const AttendeesList = ({
                                 }
                             }
                             return (
-                                <div key={i} className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs transition-all duration-300 ${isPresent ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-court-accent' : 'border border-dashed border-gray-300 bg-white text-gray-400 dark:border-chalk/10 dark:bg-court-900/50 dark:text-chalk/40'}`}>
+                                <div key={i} className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs transition-all duration-300 ${isPresent ? 'border border-emerald-600/50 bg-emerald-100 text-emerald-950 dark:border-emerald-400/60 dark:bg-emerald-800 dark:text-emerald-50' : 'border border-dashed border-gray-300 bg-white text-gray-400 dark:border-chalk/10 dark:bg-court-900/50 dark:text-chalk/40'}`}>
                                     {isPresent ? <CourtSlotLabel name={name} /> : name}
                                 </div>
                             );
@@ -210,25 +209,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
     const sessionCourts = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
     const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
     const totalMax = getSessionEnrollmentCap(session, sessionCourts, maxPerCourt);
-    const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
-        session,
-        sessionCourts,
-        recurringSchedules,
-        disabledBuiltinSchedules,
-    );
-    const showCourtDiagram =
-        sessionCourts.length > 0 &&
-        sessionCourts.every(
-            (court) =>
-                diagramSlotsForCourt(
-                    session,
-                    court,
-                    sessionCourts,
-                    recurringSchedules,
-                    disabledBuiltinSchedules,
-                ) != null,
-        );
-    const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
+    const showPerCourt = sessionCourts.length > 0;
 
     const activeAttendees = getSessionRosterAttendees(session, sessionCourts, maxPerCourt);
     const orphanedAttendees = getAttendeesNotOnConfiguredCourts(session.attendees || [], sessionCourts);
@@ -266,7 +247,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                 />
             )}
 
-            <div className={`border-b border-chalk/10 p-4 md:p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`border-b border-chalk/10 p-4 md:p-6 ${isCancelled ? 'opacity-70 blur-[1px]' : ''}`}>
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -297,7 +278,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                     {formattedClinicDate} · {session.time || '3:00 PM - 4:00 PM'}
                 </p>
                 {session.type === 'coaching' &&
-                    !(showCourtDiagram && session.coachCourt && sessionCourts.includes(session.coachCourt)) && (
+                    !(showPerCourt && session.coachCourt && sessionCourts.includes(session.coachCourt)) && (
                     <p className="mt-2 flex items-center text-sm font-medium text-gray-600 dark:text-chalk/60">
                         <Rocket className="mr-1.5 h-4 w-4 accent-text" />
                         Instructor:
@@ -321,12 +302,12 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                 </div>
             </div>
 
-            <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-70 blur-[1px]' : ''}`}>
                 {!user && <MembersOnlyOverlay />}
 
                 <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                     <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
-                        {showCourtDiagram ? (
+                        {showPerCourt ? (
                             <>
                                 <div
                                     className={
@@ -338,14 +319,12 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                     {sessionCourts.map((courtName) => {
                                         const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
                                         const sessionAtCapacity = activeAttendees.length >= totalMax;
-                                        const courtSlots =
-                                            diagramSlotsForCourt(
-                                                session,
-                                                courtName,
-                                                sessionCourts,
-                                                recurringSchedules,
-                                                disabledBuiltinSchedules,
-                                            ) ?? slotsPerCourtForUi;
+                                        const courtSlots = slotsOnCourt(
+                                            session,
+                                            courtName,
+                                            recurringSchedules,
+                                            disabledBuiltinSchedules,
+                                        );
                                         const isCourtFull =
                                             courtAttendees.length >= courtSlots ||
                                             (session.type === 'coaching' && sessionAtCapacity);
@@ -410,7 +389,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
                                                 onJoinSlot={(slotIndex) => handlers.onJoin(session, courtName, slotIndex)}
                                                 instructor={isCoachCourt ? session.coach || 'TBD' : undefined}
                                                 coachSlot={coachSlot}
-                                                layout={isCoachCourt && !usesCourtDiagramLayout(courtSlots) ? 'roster' : 'diagram'}
+                                                layout={usesCourtDiagramLayout(courtSlots) ? 'diagram' : 'roster'}
                                             />
                                         );
                                     })}
@@ -484,7 +463,7 @@ export const BookingRegularCard = memo(function BookingRegularCard({
 
                         {session.type === 'coaching' &&
                             user &&
-                            !(showCourtDiagram && session.coachCourt && sessionCourts.includes(session.coachCourt)) && (
+                            !(showPerCourt && session.coachCourt && sessionCourts.includes(session.coachCourt)) && (
                             <button
                                 onClick={() => handlers.onCoachAction(session)}
                                 className={`mt-3 w-full min-h-11 touch-manipulation rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
@@ -555,14 +534,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
 
     const courtsForDay = getCourtsForSession(session, recurringSchedules, disabledBuiltinSchedules);
     const maxPerCourt = getSlotsPerCourt(session, recurringSchedules, disabledBuiltinSchedules);
-    const diagramSlotsPerCourt = getDiagramSlotsPerCourt(
-        session,
-        courtsForDay,
-        recurringSchedules,
-        disabledBuiltinSchedules,
-    );
-    const showCourtDiagram = diagramSlotsPerCourt != null;
-    const slotsPerCourtForUi = diagramSlotsPerCourt ?? maxPerCourt;
+    const showPerCourt = courtsForDay.length > 0;
     const totalMax = getSessionEnrollmentCap(session, courtsForDay, maxPerCourt);
 
     const activeAttendees = getSessionRosterAttendees(session, courtsForDay, maxPerCourt);
@@ -585,7 +557,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                 />
             )}
 
-            <div className={`border-b border-chalk/10 p-4 md:p-6 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`border-b border-chalk/10 p-4 md:p-6 ${isCancelled ? 'opacity-70 blur-[1px]' : ''}`}>
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -630,12 +602,12 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                 </div>
             </div>
 
-            <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-40 blur-[1px]' : ''}`}>
+            <div className={`relative flex-grow p-4 md:p-5 ${isCancelled ? 'opacity-70 blur-[1px]' : ''}`}>
                 {!user && <MembersOnlyOverlay />}
 
                 <div className={!user ? 'pointer-events-none blur-[1.5px] opacity-40' : isLocked && !isCancelled ? 'pointer-events-none' : ''}>
                     <div className={isLocked && !isCancelled ? 'opacity-65' : ''}>
-                        {showCourtDiagram ? (
+                        {showPerCourt ? (
                             <>
                                 <div
                                     className={
@@ -647,14 +619,20 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                     {courtsForDay.map((courtName) => {
                                         const courtAttendees = filterAttendeesByCourt(session.attendees || [], courtName);
                                         const sessionAtCapacity = activeAttendees.length >= totalMax;
+                                        const courtSlots = slotsOnCourt(
+                                            session,
+                                            courtName,
+                                            recurringSchedules,
+                                            disabledBuiltinSchedules,
+                                        );
                                         const isCourtFull =
-                                            courtAttendees.length >= slotsPerCourtForUi ||
+                                            courtAttendees.length >= courtSlots ||
                                             sessionAtCapacity;
                                         const userInThisCourt = !!(userEntry && isAttendeeOnCourt(userEntry, courtName));
                                         const userInAnotherCourt = !!(userEntry && !userInThisCourt);
-                                        const slots = buildCourtSlots(courtAttendees, slotsPerCourtForUi, user?.uid, namesByUid);
+                                        const slots = buildCourtSlots(courtAttendees, courtSlots, user?.uid, namesByUid);
                                         const spotsLeft = Math.min(
-                                            slotsPerCourtForUi - courtAttendees.length,
+                                            courtSlots - courtAttendees.length,
                                             totalMax - activeAttendees.length,
                                         );
                                         const disabled =
@@ -689,6 +667,7 @@ export const BookingOpenPlayCard = memo(function BookingOpenPlayCard({
                                                 userInThisCourt={userInThisCourt}
                                                 onAction={() => handlers.onJoin(session, courtName)}
                                                 onJoinSlot={(slotIndex) => handlers.onJoin(session, courtName, slotIndex)}
+                                                layout={usesCourtDiagramLayout(courtSlots) ? 'diagram' : 'roster'}
                                             />
                                         );
                                     })}

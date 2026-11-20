@@ -1,7 +1,7 @@
 import { arrayUnion, doc, runTransaction, setDoc } from 'firebase/firestore';
 import type { User } from 'firebase/auth';
 import { db } from './firebase';
-import type { OpenPlayDayConfig } from './sports';
+import type { AdminRecurringSchedule, OpenPlayDayConfig } from './sports';
 import {
     type Session,
     filterAttendeesByCourt,
@@ -103,17 +103,22 @@ export const joinSessionCourt = async (
     courtName: string | undefined,
     activeSport?: string,
     slotIndex?: number,
+    customSchedules: AdminRecurringSchedule[] = [],
+    disabledBuiltin: string[] = [],
 ): Promise<JoinSessionResult> => {
     const sessionRef = doc(db, 'sessions', session.id);
 
     const snap = await runTransaction(db, async (tx) => {
         const docSnap = await tx.get(sessionRef);
         const data = readSessionData(session, docSnap.data());
-        const courts = getCourtsForSession(data);
+        const courts = getCourtsForSession(data, customSchedules, disabledBuiltin);
         const maxPerCourt =
-            getDiagramSlotsPerCourt(data, courts) ?? getSlotsPerCourt(data);
+            getDiagramSlotsPerCourt(data, courts, customSchedules, disabledBuiltin) ??
+            getSlotsPerCourt(data, customSchedules, disabledBuiltin);
         const limit = (court?: string) =>
-            court && coachingCourtSlotCount(data) ? slotsOnCourt(data, court) : maxPerCourt;
+            court && coachingCourtSlotCount(data)
+                ? slotsOnCourt(data, court, customSchedules, disabledBuiltin)
+                : maxPerCourt;
         let attendees = [...(data.attendees || [])];
         const waitlist = [...(data.waitlist || [])];
 
@@ -150,7 +155,7 @@ export const joinSessionCourt = async (
             let nextWaitlist = waitlist;
             let promotion: PromotionResult | undefined;
 
-            if (waitlist.length > 0) {
+            if (waitlist.length > 0 && (freedCourt || courts.length === 0)) {
                 const promoted = promoteFromWaitlist(
                     nextAttendees,
                     nextWaitlist,
@@ -186,7 +191,10 @@ export const joinSessionCourt = async (
             throw new Error('You are on the waitlist. Leave the waitlist before joining a court.');
         }
 
-        if (courtName && courts.length > 0) {
+        if (courtName) {
+            if (courts.length > 0 && !courts.includes(courtName)) {
+                throw new Error('That court is not on this session.');
+            }
             const targetCourtAttendees = courtAttendeesFor(attendees, courtName);
             const courtLimit = limit(courtName);
             let targetSlot = slotIndex;
@@ -207,6 +215,8 @@ export const joinSessionCourt = async (
                 targetSlot,
             );
             attendees.push(attendeeString);
+        } else if (courts.length > 0) {
+            throw new Error('Choose a court.');
         } else if (isSessionEnrollmentFull(data, courts, maxPerCourt)) {
             throw new Error('This session is full.');
         } else {

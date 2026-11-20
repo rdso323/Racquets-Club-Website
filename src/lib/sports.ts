@@ -151,7 +151,21 @@ export const OPEN_PLAY_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
 /** Built-in weekly coaching clinic templates — empty until admins schedule live clinics. */
 export const CLINIC_SCHEDULE: Record<Sport, OpenPlayDayConfig[]> = {
     Tennis: [],
-    Badminton: [],
+    // Temporary public clinic so the coaching-court join can be checked on a phone. Remove after that check.
+    Badminton: [
+        {
+            day: 'saturday',
+            title: 'Test clinic',
+            courts: ['Test Court 1', 'Test Court 2', 'Test Court 3'],
+            maxPerCourt: 4,
+            time: '6:00 PM - 7:30 PM',
+            sessionType: 'coaching',
+            coach: 'TBD',
+            coachCourt: 'Test Court 3',
+            coachCourtSlots: 6,
+            bookingLockEnabled: false,
+        },
+    ],
     Squash: [],
     Pickleball: [],
     'Table Tennis': [],

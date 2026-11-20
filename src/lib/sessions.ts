@@ -501,9 +501,6 @@ export const isSkippedPlayDate = (playDate: Date, skipDates?: string[]): boolean
     return skipDates.includes(formatISODate(playDate));
 };
 
-const recurringWeekHasPlayers = (session: Session): boolean =>
-    (session.attendees?.length ?? 0) > 0 || (session.waitlist?.length ?? 0) > 0;
-
 export const isWithinBookingHorizon = (date: Date): boolean => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -683,7 +680,6 @@ export const getOpenPlayInstancesWithinHorizon = (
 
             const session = resolveRecurringSession(sessions, sport, config, weekOffset);
             if (isSkippedPlayDate(playDate, config.skipDates)) {
-                if (!recurringWeekHasPlayers(session)) continue;
                 instances.push({
                     session: { ...session, cancelledThisWeek: true },
                     config,
