@@ -1,31 +1,31 @@
 {
-  "tickerText": "[TENNIS] Nitto ATP Finals Thursday in Turin pairs Ben Shelton with Rafael Jodar from 2 p.m. and Alexander Zverev with Arthur Fils at 8:30 p.m., with the World No. 1 already through after Carlos Alcaraz topped Daniil Medvedev 6-2, 6-4 and Frances Tiafoe beat Flavio Cobolli on Wednesday • [SQUASH] PSA China Open quarterfinals unfold in Shanghai with men's last-eight ties featuring Mostafa Asal, Youssef Ibrahim and Mohamad Zakaria, while Satomi Watanabe and Marina Stefanoni headline women's QF night sessions at Xian Xia • [BADMINTON] LI-NING Hong Kong Open round of 16 at Kai Tak Arena puts Loh Kean Yew through after 12-21, 21-9, 21-14 over Kenta Nishimoto, with Lakshya Sen set for Rasmus Gemke as Race to Finals spots tighten • [PICKLEBALL] Proton Daytona Beach Open moves to round of 16 Thursday at Pictona with PickleballTV from noon ET, overflow parking on Ridgewood Ave after local flooding, and John Lucian Goins chasing a third straight men's singles title • [TABLE TENNIS] WTT Star Contender Muscat's main draw rolls on at Sultan Qaboos Sports Complex as 200-plus players from 37 nations contest singles and doubles toward a $300,000 purse led by Dang Qiu, Satsuki Odo and Darko Jorgic",
+  "tickerText": "[TENNIS] Nitto ATP Finals Friday in Turin sends Carlos Alcaraz against home hope Flavio Cobolli from 2 p.m. after Ben Shelton and Alexander Zverev booked Saturday semis, with Medvedev and Tiafoe playing winner-takes-all at 8:30 p.m. for the last Ivan Lendl Group spot • [SQUASH] PSA China Open semifinals loom in Shanghai as Mostafa Asal and Youssef Ibrahim advance, while PSA World Championship tickets hit general sale at 3 p.m. GMT for March's British Airways ARC in London • [BADMINTON] LI-NING Hong Kong Open quarterfinals Friday at Kai Tak follow Rakshitha Ramraj's idol-slaying run ending 21-19, 21-16 to Pornpawee Chochuwong, with Kidambi Srikanth set for Kunlavut Vitidsarn • [PICKLEBALL] Proton Daytona Beach Open quarterfinals Thursday at Pictona pit John Lucian Goins against Eric Oncins and JW Johnson against Federico Staksrud as mixed and doubles QFs fill the $1M Open week • [TABLE TENNIS] WTT Star Contender Muscat crowns men's and women's doubles Friday at Sultan Qaboos Sport Complex after teenager Sun Yang's 3-1 stunner over top seed Darko Jorgic, with singles finals looming Saturday",
   "newsItems": [
     {
-      "title": "Turin Decision Day",
-      "excerpt": "Thursday at the Nitto ATP Finals sends Ben Shelton against Rafael Jodar and Alexander Zverev against Arthur Fils in the Boris Becker Group, with both semifinal places at stake after Alcaraz beat Medvedev and Tiafoe ousted Cobolli on Wednesday.",
-      "date": "November 19, 2026",
+      "title": "Turin SF Lineup",
+      "excerpt": "Ben Shelton and Alexander Zverev advanced from the John McEnroe Group on Thursday, setting up Saturday semifinals while Friday's Alcaraz–Cobolli and Medvedev–Tiafoe matches decide the Ivan Lendl Group's last-four picture in Turin.",
+      "date": "November 20, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/shelton-jodar-zverev-fils-nitto-atp-finals-2026-day-5-preview"
+      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-results"
     },
     {
-      "title": "Hong Kong Last 16",
-      "excerpt": "The LI-NING Hong Kong Open's round of 16 at Kai Tak delivers early winners including Tomoka Miyazaki and top-10 duo Pearly Tan and Thinaah Muralitharan, while Lakshya Sen's clash with Rasmus Gemke carries extra weight after he clinched a BWF Finals berth.",
-      "date": "November 19, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5218/hong-kong-open-2026/results/2026-11-19"
+      "title": "Shanghai SF Bound",
+      "excerpt": "Egypt's Mostafa Asal and Youssef Ibrahim reached the PSA China Open semifinals in Shanghai, while fans can grab 2026–27 PSA World Championships tickets starting Friday for the British Airways ARC in London.",
+      "date": "November 20, 2026",
+      "category": "Squash",
+      "link": "https://www.worldsquash.sport/2026-27-psa-world-championships-to-take-place-at-londons-british-airways-arc/"
     },
     {
-      "title": "Daytona Last 16",
-      "excerpt": "The Carvana PPA's Proton Daytona Beach Open advances to round of 16 Thursday at Holly Hill, with national PickleballTV coverage and overflow shuttle parking after flooding trimmed on-site options, in a men's singles draw reshaped by Christopher Haworth's round-of-32 exit.",
-      "date": "November 19, 2026",
+      "title": "Daytona QF Day",
+      "excerpt": "The Carvana PPA Proton Daytona Beach Open hits quarterfinals Thursday at Pictona, with men's draws featuring Goins–Oncins and Staksrud–JW Johnson after Lenhard's 0-11 first-game comeback and Oncins' win over Bellamy.",
+      "date": "November 20, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/events/2026/proton-daytona-beach-open/"
+      "link": "https://picklm.com/news/ppa-daytona-beach-open-2026/"
     },
     {
-      "title": "Muscat Star Contender",
-      "excerpt": "WTT Star Contender Muscat continues its main-draw week in Oman with top talents such as Dang Qiu, Satsuki Odo and Darko Jorgic chasing ranking points across five events at Sultan Qaboos Sports Complex through Nov. 21.",
-      "date": "November 19, 2026",
+      "title": "Muscat Doubles Finals",
+      "excerpt": "WTT Star Contender Muscat's doubles finals cap Friday in Oman after qualifier Sun Yang stunned No. 1 seed Darko Jorgic 13-11, 11-9, 9-11, 11-5, with singles champions crowned at Sultan Qaboos Sport Complex on Saturday.",
+      "date": "November 20, 2026",
       "category": "Table Tennis",
       "link": "https://worldtabletennis.com/eventInfo?eventId=3185"
     }
