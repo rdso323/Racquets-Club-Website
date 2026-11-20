@@ -135,8 +135,8 @@ export const OpenRosterBoxes = ({
                         aria-label={slot.name}
                         className={`flex min-h-[3.25rem] items-center justify-center rounded px-1 py-1 text-center text-xs ${
                             slot.isMine
-                                ? 'border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-court-accent'
-                                : 'border border-emerald-500/20 bg-emerald-500/5 text-emerald-800 dark:text-court-line'
+                                ? 'border-2 border-clay-500 bg-clay-200 text-clay-900 dark:border-clay-400 dark:bg-clay-800 dark:text-clay-50'
+                                : 'border border-emerald-600/50 bg-emerald-100 text-emerald-950 dark:border-emerald-400/60 dark:bg-emerald-800 dark:text-emerald-50'
                         }`}
                     >
                         <CourtSlotLabel name={slot.name} />

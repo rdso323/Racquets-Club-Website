@@ -147,7 +147,15 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
         const profile = toBookingProfile(user);
 
         try {
-            const result = await joinSessionCourt(sessionToJoin, profile, courtName, activeSport, slotIndex);
+            const result = await joinSessionCourt(
+                sessionToJoin,
+                profile,
+                courtName,
+                activeSport,
+                slotIndex,
+                recurringSchedules,
+                disabledBuiltinSchedules,
+            );
 
             if (result.action === 'joined' && window.confirm('Successfully joined! Would you like to download a calendar invite?')) {
                 downloadSessionCalendarInvite(sessionToJoin, courtName);
@@ -174,7 +182,7 @@ const BookingEngine = ({ initialSport, heading, subheading }: BookingEngineProps
         } finally {
             setBookingBusy(null);
         }
-    }, [user, activeSport]);
+    }, [user, activeSport, recurringSchedules, disabledBuiltinSchedules]);
 
     const handleJoinWaitlist = useCallback(async (sessionToJoin: Session, openPlayConfig?: OpenPlayDayConfig | null) => {
         if (!user) return;

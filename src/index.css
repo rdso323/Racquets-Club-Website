@@ -169,19 +169,19 @@
   }
 
   .player-slot--filled {
-    @apply border border-emerald-500/40 bg-emerald-500/15 font-medium text-emerald-800;
+    @apply border border-emerald-600/50 bg-emerald-100 font-medium text-emerald-950;
   }
 
   .dark .player-slot--filled {
-    @apply border-court-line/30 bg-court-accent/15 text-court-line;
+    @apply border-emerald-400/60 bg-emerald-800 text-emerald-50;
   }
 
   .player-slot--mine {
-    @apply border-2 border-clay-400 bg-clay-500/25 font-semibold text-clay-700;
+    @apply border-2 border-clay-500 bg-clay-200 font-semibold text-clay-900;
   }
 
   .dark .player-slot--mine {
-    @apply text-clay-100;
+    @apply border-clay-400 bg-clay-800 text-clay-50;
   }
 
   .scroll-rise {
