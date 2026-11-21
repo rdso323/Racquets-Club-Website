@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Nitto ATP Finals Friday in Turin sends Carlos Alcaraz against home hope Flavio Cobolli from 2 p.m. after Ben Shelton and Alexander Zverev booked Saturday semis, with Medvedev and Tiafoe playing winner-takes-all at 8:30 p.m. for the last Ivan Lendl Group spot • [SQUASH] PSA China Open semifinals loom in Shanghai as Mostafa Asal and Youssef Ibrahim advance, while PSA World Championship tickets hit general sale at 3 p.m. GMT for March's British Airways ARC in London • [BADMINTON] LI-NING Hong Kong Open quarterfinals Friday at Kai Tak follow Rakshitha Ramraj's idol-slaying run ending 21-19, 21-16 to Pornpawee Chochuwong, with Kidambi Srikanth set for Kunlavut Vitidsarn • [PICKLEBALL] Proton Daytona Beach Open quarterfinals Thursday at Pictona pit John Lucian Goins against Eric Oncins and JW Johnson against Federico Staksrud as mixed and doubles QFs fill the $1M Open week • [TABLE TENNIS] WTT Star Contender Muscat crowns men's and women's doubles Friday at Sultan Qaboos Sport Complex after teenager Sun Yang's 3-1 stunner over top seed Darko Jorgic, with singles finals looming Saturday",
+  "tickerText": "[TENNIS] Nitto ATP Finals Saturday in Turin pits Carlos Alcaraz against Ben Shelton from 2:30 p.m. and Alexander Zverev against Daniil Medvedev at 8:30 p.m. after Alcaraz beat Flavio Cobolli and Medvedev swept Frances Tiafoe on Friday • [SQUASH] PSA China Open semifinals Friday in Shanghai match top seed Mostafa Asal with Youssef Ibrahim and Mohamad Zakaria with Simon Herbert after Orfi's withdrawal reshaped the women's draw • [BADMINTON] LI-NING Hong Kong Open semifinals Saturday at Kai Tak follow Wang Zhiyi's 22-20 twin-set escape past Putri Kusuma Wardani, with Anders Antonsen–Lakshya Sen and Feng Yanzhe–Huang Dongping in the mix • [PICKLEBALL] Proton Daytona Beach Open semifinals Friday at Pictona lock all five final fours, sending Ford–Staksrud and Goins–Hunter Johnson in men's singles as Goins chases a third straight title • [TABLE TENNIS] WTT Star Contender Muscat crowns Lim Jonghoon–Oh Junsung and Satsuki Odo–Sakura Yokoi in doubles while Odo and Honoka Hashimoto reach women's singles semis ahead of Saturday's 1 p.m. men's last-four",
   "newsItems": [
     {
-      "title": "Turin SF Lineup",
-      "excerpt": "Ben Shelton and Alexander Zverev advanced from the John McEnroe Group on Thursday, setting up Saturday semifinals while Friday's Alcaraz–Cobolli and Medvedev–Tiafoe matches decide the Ivan Lendl Group's last-four picture in Turin.",
-      "date": "November 20, 2026",
+      "title": "Turin Final Four",
+      "excerpt": "Medvedev and Alcaraz closed out Friday at the Nitto ATP Finals with straight-set wins over Tiafoe and Cobolli, setting Saturday semifinals of Alcaraz–Shelton and Zverev–Medvedev at Inalpi Arena.",
+      "date": "November 21, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-results"
+      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-schedule"
     },
     {
-      "title": "Shanghai SF Bound",
-      "excerpt": "Egypt's Mostafa Asal and Youssef Ibrahim reached the PSA China Open semifinals in Shanghai, while fans can grab 2026–27 PSA World Championships tickets starting Friday for the British Airways ARC in London.",
-      "date": "November 20, 2026",
+      "title": "Shanghai Semis Day",
+      "excerpt": "Egyptian top seeds Mostafa Asal and Mohamad Zakaria headline PSA China Open semifinals in Shanghai against Youssef Ibrahim and Simon Herbert after four quarterfinal wins at the Gold event.",
+      "date": "November 21, 2026",
       "category": "Squash",
-      "link": "https://www.worldsquash.sport/2026-27-psa-world-championships-to-take-place-at-londons-british-airways-arc/"
+      "link": "https://www.squashinfo.com/events/12002-mens-china-open-2026"
     },
     {
-      "title": "Daytona QF Day",
-      "excerpt": "The Carvana PPA Proton Daytona Beach Open hits quarterfinals Thursday at Pictona, with men's draws featuring Goins–Oncins and Staksrud–JW Johnson after Lenhard's 0-11 first-game comeback and Oncins' win over Bellamy.",
-      "date": "November 20, 2026",
+      "title": "Kai Tak Semis Set",
+      "excerpt": "Top seed Wang Zhiyi survived two 22-20 sets to reach the Hong Kong Open women's singles semifinals, while men's and mixed draws send Antonsen–Sen and Feng–Huang into Saturday's Super 500 last four.",
+      "date": "November 21, 2026",
+      "category": "Badminton",
+      "link": "https://bwfworldchampionships.bwfbadminton.com/results/5218/li-ning-hong-kong-open-2026/2026-11-21"
+    },
+    {
+      "title": "Daytona Final Fours",
+      "excerpt": "Saturday semifinals at the Carvana PPA Proton Daytona Beach Open are set across every pro division, with John Lucian Goins facing Hunter Johnson and Federico Staksrud meeting Zane Ford in men's singles.",
+      "date": "November 21, 2026",
       "category": "Pickleball",
       "link": "https://picklm.com/news/ppa-daytona-beach-open-2026/"
-    },
-    {
-      "title": "Muscat Doubles Finals",
-      "excerpt": "WTT Star Contender Muscat's doubles finals cap Friday in Oman after qualifier Sun Yang stunned No. 1 seed Darko Jorgic 13-11, 11-9, 9-11, 11-5, with singles champions crowned at Sultan Qaboos Sport Complex on Saturday.",
-      "date": "November 20, 2026",
-      "category": "Table Tennis",
-      "link": "https://worldtabletennis.com/eventInfo?eventId=3185"
     }
   ]
 }
