@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Nitto ATP Finals Saturday in Turin pits Carlos Alcaraz against Ben Shelton from 2:30 p.m. and Alexander Zverev against Daniil Medvedev at 8:30 p.m. after Alcaraz beat Flavio Cobolli and Medvedev swept Frances Tiafoe on Friday • [SQUASH] PSA China Open semifinals Friday in Shanghai match top seed Mostafa Asal with Youssef Ibrahim and Mohamad Zakaria with Simon Herbert after Orfi's withdrawal reshaped the women's draw • [BADMINTON] LI-NING Hong Kong Open semifinals Saturday at Kai Tak follow Wang Zhiyi's 22-20 twin-set escape past Putri Kusuma Wardani, with Anders Antonsen–Lakshya Sen and Feng Yanzhe–Huang Dongping in the mix • [PICKLEBALL] Proton Daytona Beach Open semifinals Friday at Pictona lock all five final fours, sending Ford–Staksrud and Goins–Hunter Johnson in men's singles as Goins chases a third straight title • [TABLE TENNIS] WTT Star Contender Muscat crowns Lim Jonghoon–Oh Junsung and Satsuki Odo–Sakura Yokoi in doubles while Odo and Honoka Hashimoto reach women's singles semis ahead of Saturday's 1 p.m. men's last-four",
+  "tickerText": "[TENNIS] Nitto ATP Finals close Sunday in Turin as Carlos Alcaraz meets Alexander Zverev for the title after Alcaraz rallied past Ben Shelton 3-6, 6-3, 7-6(1) and Zverev topped Daniil Medvedev 7-6(0), 6-4 in Saturday semis • [SQUASH] PSA China Open finals Sunday in Shanghai send top seed Mostafa Asal against Mohamad Zakaria in an all-Egyptian men's title match while S. Sivasangari faces Satomi Watanabe for the women's crown at 7 p.m. • [BADMINTON] LI-NING Hong Kong Open finals Sunday at Kai Tak open at 1:30 p.m. with Wang Zhiyi–Pornpawee Chochuwong, Anders Antonsen–Kunlavut Vitidsarn, and an all-China Feng Yanzhe–Huang Dongping vs Jiang Zhenbang–Wei Yaxin mixed clash • [PICKLEBALL] Proton Daytona Beach Open Championship Sunday at Pictona starts at 10 a.m. with all five pro finals, including Federico Staksrud–Hunter Johnson in men's singles and Ben Johns–Anna Leigh Waters in mixed • [TABLE TENNIS] WTT Star Contender Muscat finished Saturday in Oman as Shunsuke Togami beat Park Ganghyeon for men's singles, Honoka Hashimoto edged Kaho Akae for women's, and Japan also swept mixed and women's doubles",
   "newsItems": [
     {
-      "title": "Turin Final Four",
-      "excerpt": "Medvedev and Alcaraz closed out Friday at the Nitto ATP Finals with straight-set wins over Tiafoe and Cobolli, setting Saturday semifinals of Alcaraz–Shelton and Zverev–Medvedev at Inalpi Arena.",
-      "date": "November 21, 2026",
+      "title": "Turin Title Sunday",
+      "excerpt": "Carlos Alcaraz and Alexander Zverev meet in Sunday's Nitto ATP Finals championship after Alcaraz came from a set down to beat Ben Shelton and Zverev stayed undefeated with a straight-sets win over Daniil Medvedev.",
+      "date": "November 22, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-schedule"
+      "link": "https://www.atptour.com/en/news/nitto-atp-finals-2026-results"
     },
     {
-      "title": "Shanghai Semis Day",
-      "excerpt": "Egyptian top seeds Mostafa Asal and Mohamad Zakaria headline PSA China Open semifinals in Shanghai against Youssef Ibrahim and Simon Herbert after four quarterfinal wins at the Gold event.",
-      "date": "November 21, 2026",
-      "category": "Squash",
-      "link": "https://www.squashinfo.com/events/12002-mens-china-open-2026"
-    },
-    {
-      "title": "Kai Tak Semis Set",
-      "excerpt": "Top seed Wang Zhiyi survived two 22-20 sets to reach the Hong Kong Open women's singles semifinals, while men's and mixed draws send Antonsen–Sen and Feng–Huang into Saturday's Super 500 last four.",
-      "date": "November 21, 2026",
+      "title": "Kai Tak Finals Day",
+      "excerpt": "Five HSBC BWF World Tour Super 500 titles are on the line at Kai Tak Arena, headlined by Anders Antonsen versus Kunlavut Vitidsarn in men's singles and defending champion Wang Zhiyi against Pornpawee Chochuwong in women's singles.",
+      "date": "November 22, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldchampionships.bwfbadminton.com/results/5218/li-ning-hong-kong-open-2026/2026-11-21"
+      "link": "https://bwfworldchampionships.bwfbadminton.com/results/5218/li-ning-hong-kong-open-2026/2026-11-22"
     },
     {
-      "title": "Daytona Final Fours",
-      "excerpt": "Saturday semifinals at the Carvana PPA Proton Daytona Beach Open are set across every pro division, with John Lucian Goins facing Hunter Johnson and Federico Staksrud meeting Zane Ford in men's singles.",
-      "date": "November 21, 2026",
+      "title": "Daytona Title Sunday",
+      "excerpt": "Championship Sunday at the Carvana PPA Proton Daytona Beach Open locks in five pro finals at Pictona, with Federico Staksrud facing Hunter Johnson in men's singles and Ben Johns pairing Anna Leigh Waters in mixed doubles.",
+      "date": "November 22, 2026",
       "category": "Pickleball",
       "link": "https://picklm.com/news/ppa-daytona-beach-open-2026/"
+    },
+    {
+      "title": "Muscat Japan Sweep",
+      "excerpt": "Japan dominated the weekend finale in Muscat as Shunsuke Togami and Honoka Hashimoto won singles titles and Togami teamed with Satsuki Odo for mixed gold on the Star Contender's last day of play.",
+      "date": "November 22, 2026",
+      "category": "Table Tennis",
+      "link": "https://www.worldtabletennis.com/eventInfo?eventId=3256&selectedTab=Results"
     }
   ]
 }
