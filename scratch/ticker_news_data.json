@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Carlos Alcaraz capped Turin with a 6-2, 7-6(7) Nitto ATP Finals win over Alexander Zverev for his first season-ending crown, and Arribage/Olivetti rallied past Arevalo/Pavic for the doubles title • [SQUASH] PSA China Open closed in Shanghai as Mostafa Asal edged Mohamad Zakaria 13-11, 10-12, 11-9, 13-11 and S. Sivasangari took the women's title by walkover after Satomi Watanabe withdrew • [BADMINTON] LI-NING Hong Kong Open finished at Kai Tak with Wang Zhiyi beating Pornpawee Chochuwong 21-16, 21-11, Anders Antonsen awarded men's singles after Kunlavut Vitidsarn pulled out, and Man/Tee, Tan/Thinaah, and Feng/Huang taking the doubles trophies • [PICKLEBALL] Proton Daytona Beach Open ended with five straight-game finals: Hunter Johnson over Federico Staksrud, Judit Castillo over Kiora Kunimoto, Johns/Waters in mixed, Bright/Waters in women's doubles, and defending champs Ge/JW Johnson in men's doubles • [TABLE TENNIS] WTT Star Contender Muscat wrapped Saturday in Oman with Shunsuke Togami and Honoka Hashimoto winning singles and Japan adding mixed and women's doubles gold as WTT Feeder Düsseldorf II opens Monday in Germany",
+  "tickerText": "[TENNIS] Challenger Sunday brought five new crowns: Dylan Dietrich won his third title in four events with a 6-1, 6-2 final over Liam Draxl in Drummondville, while Passaro, Samuel, Seyboth Wild and Watanuki also finished on top • [SQUASH] Joel Makin defended the Pittsburgh Open by rallying from two games down to beat Marwan ElShorbagy 8-11, 9-11, 12-10, 11-5, 11-7, and the 2026–27 PSA World Championships head to London's British Airways ARC from March 27 with a record $1.5 million purse • [BADMINTON] Syed Modi India International Super 300 began in Lucknow with rising Indian stars Tanvi Sharma and Unnati Hooda in action as Indonesia locked three Hangzhou Finals spots for Alwi Farhan, Fajar/Fikri and Tiwi/Fadia • [PICKLEBALL] Championship Sunday at Proton Daytona Beach saw Hunter Johnson beat Federico Staksrud for men's singles, Judit Castillo take women's singles, Johns/Waters win mixed, Bright/Waters stretch their streak to 19 straight titles, and Ge/JW Johnson defend men's doubles • [TABLE TENNIS] Muscat closed the WTT Finals race as Togami won Star Contender singles and Hong Kong's full fields were set with Matsushima topping the men's standings, Wang Manyu and Honoka Hashimoto among the women, and Wang Chuqin/Sun Yingsha taking mixed wild card at Kai Tak Dec. 9–13",
   "newsItems": [
     {
-      "title": "Alcaraz Clinches Turin",
-      "excerpt": "Carlos Alcaraz beat world No. 1 Alexander Zverev 6-2, 7-6(7) on Sunday to claim his first Nitto ATP Finals title, rallying from 3-6 down in the tie-break to become the youngest man to hold all four majors and the season finale.",
-      "date": "November 23, 2026",
+      "title": "Dietrich's Third In Four",
+      "excerpt": "Virginia alum Dylan Dietrich captured his third ATP Challenger title in four appearances Sunday in Drummondville, rolling past Canada's Liam Draxl 6-1, 6-2 to climb to a career-high No. 155.",
+      "date": "November 24, 2026",
       "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/alcaraz-zverev-nitto-atp-finals-2026-sunday"
+      "link": "https://www.atptour.com/en/news/dietrich-drummondville-challenger-2026-title"
     },
     {
-      "title": "Shanghai Crowns Asal",
-      "excerpt": "Mostafa Asal outlasted Mohamad Zakaria in four games to win the PSA China Open in Shanghai, while S. Sivasangari was awarded the women's crown after Satomi Watanabe withdrew from the final.",
-      "date": "November 23, 2026",
-      "category": "Squash",
-      "link": "https://www.squashinfo.com/latest-news/8647-asal-sivasangari-crowned-china-open-champions"
-    },
-    {
-      "title": "Kai Tak Podium Set",
-      "excerpt": "Wang Zhiyi defended her Hong Kong Open women's singles title with a straight-games win over Pornpawee Chochuwong, and Anders Antonsen took men's singles by walkover after Kunlavut Vitidsarn withdrew injured.",
-      "date": "November 23, 2026",
+      "title": "Lucknow Draws Open",
+      "excerpt": "The Syed Modi India International Super 300 kicked off Tuesday in Lucknow with Tanvi Sharma, Unnati Hooda, Treesa Jolly and Gayatri Gopichand leading a deep Indian contingent at the BWF World Tour stop.",
+      "date": "November 24, 2026",
       "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/tournament/5218/hong-kong-open-2026/results/podium"
+      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/23/syed-modi-depth-of-home-talent-in-focus/"
     },
     {
-      "title": "Daytona Five Sweeps",
-      "excerpt": "Championship Sunday at the Carvana PPA Proton Daytona Beach Open saw Hunter Johnson, Judit Castillo, Ben Johns and Anna Leigh Waters, and defending men's doubles pair Augie Ge and JW Johnson win all five finals in straight games.",
-      "date": "November 23, 2026",
+      "title": "Hong Kong Fields Set",
+      "excerpt": "WTT confirmed all 32 singles players for Finals Hong Kong after Star Contender Muscat, with Sora Matsushima leading the men's race, seven Chinese women qualified, and Sabine Winter and Joo Cheonhui sealing the last women's berths.",
+      "date": "November 24, 2026",
+      "category": "Table Tennis",
+      "link": "https://eleventabletennis.com/news/wtt-finals-hong-kong-2026-fields-confirmed-togami-jorgic-dang-qiu-lin-shidong"
+    },
+    {
+      "title": "Daytona Streak Hits 19",
+      "excerpt": "Anna Bright and Anna Leigh Waters won their 19th consecutive women's doubles title at the Proton Daytona Beach Open, while Hunter Johnson, Judit Castillo and defending pair Augie Ge and JW Johnson swept the other finals.",
+      "date": "November 24, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/augie-ge-and-jw-johnson-deliver-daytonas-biggest-surprise-with-back-to-back-titles"
+      "link": "https://www.ppatour.com/news/"
     }
   ]
 }
