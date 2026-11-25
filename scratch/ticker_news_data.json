@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Challenger Sunday brought five new crowns: Dylan Dietrich won his third title in four events with a 6-1, 6-2 final over Liam Draxl in Drummondville, while Passaro, Samuel, Seyboth Wild and Watanuki also finished on top • [SQUASH] Joel Makin defended the Pittsburgh Open by rallying from two games down to beat Marwan ElShorbagy 8-11, 9-11, 12-10, 11-5, 11-7, and the 2026–27 PSA World Championships head to London's British Airways ARC from March 27 with a record $1.5 million purse • [BADMINTON] Syed Modi India International Super 300 began in Lucknow with rising Indian stars Tanvi Sharma and Unnati Hooda in action as Indonesia locked three Hangzhou Finals spots for Alwi Farhan, Fajar/Fikri and Tiwi/Fadia • [PICKLEBALL] Championship Sunday at Proton Daytona Beach saw Hunter Johnson beat Federico Staksrud for men's singles, Judit Castillo take women's singles, Johns/Waters win mixed, Bright/Waters stretch their streak to 19 straight titles, and Ge/JW Johnson defend men's doubles • [TABLE TENNIS] Muscat closed the WTT Finals race as Togami won Star Contender singles and Hong Kong's full fields were set with Matsushima topping the men's standings, Wang Manyu and Honoka Hashimoto among the women, and Wang Chuqin/Sun Yingsha taking mixed wild card at Kai Tak Dec. 9–13",
+  "tickerText": "[TENNIS] Jannik Sinner underwent minor iliotibial-band surgery on November 24 after months off since Wimbledon; ATP Year-End No. 1 Alexander Zverev closed the season in Turin while Carlos Alcaraz lifted his first Nitto ATP Finals trophy and tightened the gap on No. 2 Sinner in the rankings • [SQUASH] Mostafa Asal captured his 31st PSA title at the China Open in Shanghai, while Sivasangari Subramaniam was crowned after Satomi Watanabe withdrew ill from the women's final • [BADMINTON] Kunlavut Vitidsarn reclaimed BWF men's singles world No. 1 on November 24 as Syed Modi India International Super 300 round-of-32 play continued in Lucknow ahead of December's Hangzhou Finals • [PICKLEBALL] The Opendoor Pickleball World Championships set PPA/MLP single-event records with 70,000 fans, $2 million in ticket revenue and 79 million Pickleballtv minutes watched at Brookhaven Country Club in Texas • [TABLE TENNIS] Shunsuke Togami and Honoka Hashimoto won singles at WTT Star Contender Muscat as Japan swept four titles, while Hong Kong Finals fields locked for Kai Tak December 9–13 after the Oman points race ended",
   "newsItems": [
     {
-      "title": "Dietrich's Third In Four",
-      "excerpt": "Virginia alum Dylan Dietrich captured his third ATP Challenger title in four appearances Sunday in Drummondville, rolling past Canada's Liam Draxl 6-1, 6-2 to climb to a career-high No. 155.",
-      "date": "November 24, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/dietrich-drummondville-challenger-2026-title"
-    },
-    {
-      "title": "Lucknow Draws Open",
-      "excerpt": "The Syed Modi India International Super 300 kicked off Tuesday in Lucknow with Tanvi Sharma, Unnati Hooda, Treesa Jolly and Gayatri Gopichand leading a deep Indian contingent at the BWF World Tour stop.",
-      "date": "November 24, 2026",
-      "category": "Badminton",
-      "link": "https://bwfworldtour.bwfbadminton.com/news-single/2026/11/23/syed-modi-depth-of-home-talent-in-focus/"
-    },
-    {
-      "title": "Hong Kong Fields Set",
-      "excerpt": "WTT confirmed all 32 singles players for Finals Hong Kong after Star Contender Muscat, with Sora Matsushima leading the men's race, seven Chinese women qualified, and Sabine Winter and Joo Cheonhui sealing the last women's berths.",
-      "date": "November 24, 2026",
-      "category": "Table Tennis",
-      "link": "https://eleventabletennis.com/news/wtt-finals-hong-kong-2026-fields-confirmed-togami-jorgic-dang-qiu-lin-shidong"
-    },
-    {
-      "title": "Daytona Streak Hits 19",
-      "excerpt": "Anna Bright and Anna Leigh Waters won their 19th consecutive women's doubles title at the Proton Daytona Beach Open, while Hunter Johnson, Judit Castillo and defending pair Augie Ge and JW Johnson swept the other finals.",
-      "date": "November 24, 2026",
+      "title": "Worlds Breaks Records",
+      "excerpt": "The 2026 Opendoor Pickleball World Championships drew 70,000 fans and $2 million in ticket and registration revenue at Brookhaven Country Club, setting new PPA/MLP highs for attendance, viewership and social reach.",
+      "date": "November 25, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/news/"
+      "link": "https://www.ppatour.com/2026-opendoor-pickleball-world-championships-biggest-event-in-ppa-mlp-history/"
+    },
+    {
+      "title": "Japan Sweeps Muscat",
+      "excerpt": "Shunsuke Togami and Honoka Hashimoto took WTT Star Contender Muscat singles crowns as Japan won four of five titles in Oman, with Togami and Satsuki Odo adding mixed doubles on finals day.",
+      "date": "November 25, 2026",
+      "category": "Table Tennis",
+      "link": "https://eleventabletennis.com/news/wtt-star-contender-muscat-2026-finals-honoka-hashimoto-shunsuke-togami-titles"
+    },
+    {
+      "title": "Sinner Under The Knife",
+      "excerpt": "World No. 2 Jannik Sinner announced successful minor surgery on his iliotibial band on November 24 and will begin recovery after not competing since winning Wimbledon in July.",
+      "date": "November 25, 2026",
+      "category": "Tennis",
+      "link": "https://www.atptour.com/en/news/sinner-november-2026-surgery"
+    },
+    {
+      "title": "Asal Rules Shanghai",
+      "excerpt": "World No. 1 Mostafa Asal beat Mohamad Zakaria in a four-game China Open final filled with video-ref drama to land his 31st PSA title as the Gold event wrapped in Shanghai.",
+      "date": "November 25, 2026",
+      "category": "Squash",
+      "link": "https://www.squashinfo.com/latest-news/8647-asal-sivasangari-crowned-china-open-champions"
     }
   ]
 }
