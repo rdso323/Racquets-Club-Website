@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Jannik Sinner underwent minor iliotibial-band surgery on November 24 after months off since Wimbledon; ATP Year-End No. 1 Alexander Zverev closed the season in Turin while Carlos Alcaraz lifted his first Nitto ATP Finals trophy and tightened the gap on No. 2 Sinner in the rankings • [SQUASH] Mostafa Asal captured his 31st PSA title at the China Open in Shanghai, while Sivasangari Subramaniam was crowned after Satomi Watanabe withdrew ill from the women's final • [BADMINTON] Kunlavut Vitidsarn reclaimed BWF men's singles world No. 1 on November 24 as Syed Modi India International Super 300 round-of-32 play continued in Lucknow ahead of December's Hangzhou Finals • [PICKLEBALL] The Opendoor Pickleball World Championships set PPA/MLP single-event records with 70,000 fans, $2 million in ticket revenue and 79 million Pickleballtv minutes watched at Brookhaven Country Club in Texas • [TABLE TENNIS] Shunsuke Togami and Honoka Hashimoto won singles at WTT Star Contender Muscat as Japan swept four titles, while Hong Kong Finals fields locked for Kai Tak December 9–13 after the Oman points race ended",
+  "tickerText": "[TENNIS] Tennis Australia confirmed World No. 2 Jannik Sinner will miss the January Australian Open while he recovers from right-knee surgery, as Matteo Berrettini and Andrea Vavassori clinched Italy's Davis Cup quarterfinal win over South Korea in Bologna • [SQUASH] Mostafa Asal landed his 31st PSA title at the China Open in Shanghai and Sivasangari Subramaniam was crowned when Satomi Watanabe withdrew ill ahead of the women's final • [BADMINTON] The BWF approved sweeping Thomas & Uber Cup, Sudirman Cup and World Championships format changes from 2027 as Youku Sports renewed a four-year World Tour broadcast pact through 2030 • [PICKLEBALL] Judit Castillo won women's singles and Hunter Johnson took men's gold at the Proton Daytona Beach Open while Bright and Waters stretched their PPA women's-doubles streak to 19 straight wins • [TABLE TENNIS] Shunsuke Togami, Honoka Hashimoto and Japan claimed four Muscat titles as Togami, Darko Jorgic, Dang Qiu and Lin Shidong sealed the last Hong Kong Finals men's berths ahead of Kai Tak December 9–13",
   "newsItems": [
     {
-      "title": "Worlds Breaks Records",
-      "excerpt": "The 2026 Opendoor Pickleball World Championships drew 70,000 fans and $2 million in ticket and registration revenue at Brookhaven Country Club, setting new PPA/MLP highs for attendance, viewership and social reach.",
-      "date": "November 25, 2026",
+      "title": "Castillo Captures Daytona",
+      "excerpt": "Judit Castillo won her first U.S. singles gold since 2024 at the Proton Daytona Beach Open, beating Kiora Kunimoto 12-10, 11-2 as Anna Leigh Waters and Kate Fahey sat out women's singles.",
+      "date": "November 26, 2026",
       "category": "Pickleball",
-      "link": "https://www.ppatour.com/2026-opendoor-pickleball-world-championships-biggest-event-in-ppa-mlp-history/"
+      "link": "https://pickleball.com/news/judit-castillos-second-us-gold-medal-headlines-proton-daytona-beach-open"
     },
     {
-      "title": "Japan Sweeps Muscat",
-      "excerpt": "Shunsuke Togami and Honoka Hashimoto took WTT Star Contender Muscat singles crowns as Japan won four of five titles in Oman, with Togami and Satsuki Odo adding mixed doubles on finals day.",
-      "date": "November 25, 2026",
-      "category": "Table Tennis",
-      "link": "https://eleventabletennis.com/news/wtt-star-contender-muscat-2026-finals-honoka-hashimoto-shunsuke-togami-titles"
-    },
-    {
-      "title": "Sinner Under The Knife",
-      "excerpt": "World No. 2 Jannik Sinner announced successful minor surgery on his iliotibial band on November 24 and will begin recovery after not competing since winning Wimbledon in July.",
-      "date": "November 25, 2026",
-      "category": "Tennis",
-      "link": "https://www.atptour.com/en/news/sinner-november-2026-surgery"
-    },
-    {
-      "title": "Asal Rules Shanghai",
-      "excerpt": "World No. 1 Mostafa Asal beat Mohamad Zakaria in a four-game China Open final filled with video-ref drama to land his 31st PSA title as the Gold event wrapped in Shanghai.",
-      "date": "November 25, 2026",
+      "title": "Sivasangari Takes Shanghai",
+      "excerpt": "Sivasangari Subramaniam won the China Open without playing the final after Satomi Watanabe withdrew with fever, adding a 19th PSA crown ahead of the Hong Kong Open starting November 30.",
+      "date": "November 26, 2026",
       "category": "Squash",
-      "link": "https://www.squashinfo.com/latest-news/8647-asal-sivasangari-crowned-china-open-champions"
+      "link": "https://www.nst.com.my/sports/racquet-sports/2026/11/1583367/sivasangari-claims-china-open-crown-without-playing-final"
+    },
+    {
+      "title": "Sinner Skips Melbourne",
+      "excerpt": "Tennis Australia said Jannik Sinner will not compete at the 2027 Australian Open in January as he continues rehab from iliotibial-band surgery after missing the second half of 2026.",
+      "date": "November 26, 2026",
+      "category": "Tennis",
+      "link": "https://www.afp.com/en/two-time-champion-sinner-out-australian-open-after-surgery"
+    },
+    {
+      "title": "Hong Kong Fields Set",
+      "excerpt": "Muscat champion Shunsuke Togami plus Darko Jorgic, Dang Qiu and Lin Shidong claimed the final men's WTT Finals Hong Kong spots; Joo Cheonhui and Sabine Winter filled the last women's places.",
+      "date": "November 26, 2026",
+      "category": "Table Tennis",
+      "link": "https://eleventabletennis.com/news/wtt-finals-hong-kong-2026-fields-confirmed-togami-jorgic-dang-qiu-lin-shidong"
     }
   ]
 }
