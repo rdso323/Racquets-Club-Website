@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Tennis Australia confirmed World No. 2 Jannik Sinner will miss the January Australian Open while he recovers from right-knee surgery, as Matteo Berrettini and Andrea Vavassori clinched Italy's Davis Cup quarterfinal win over South Korea in Bologna • [SQUASH] Mostafa Asal landed his 31st PSA title at the China Open in Shanghai and Sivasangari Subramaniam was crowned when Satomi Watanabe withdrew ill ahead of the women's final • [BADMINTON] The BWF approved sweeping Thomas & Uber Cup, Sudirman Cup and World Championships format changes from 2027 as Youku Sports renewed a four-year World Tour broadcast pact through 2030 • [PICKLEBALL] Judit Castillo won women's singles and Hunter Johnson took men's gold at the Proton Daytona Beach Open while Bright and Waters stretched their PPA women's-doubles streak to 19 straight wins • [TABLE TENNIS] Shunsuke Togami, Honoka Hashimoto and Japan claimed four Muscat titles as Togami, Darko Jorgic, Dang Qiu and Lin Shidong sealed the last Hong Kong Finals men's berths ahead of Kai Tak December 9–13",
+  "tickerText": "[TENNIS] Rafael Jodar rallied from a set down with a bagel to send Spain into the Davis Cup semifinals in Bologna as Alexander Zverev and Lorenzo Musetti also won their group ties • [SQUASH] PSA Platinum Hong Kong Open starts November 30 with defending men's champ Mostafa Asal, Paul Coll and World No. 1 Amina Orfi leading 64-player fields at Edinburgh Place • [BADMINTON] BWF locked Hangzhou World Tour Finals qualifiers after Hong Kong and awarded Worlds 2027 to Mississauga while greenlighting 24-team league formats from 2027 • [PICKLEBALL] The Opendoor Pickleball World Championships drew a record 70,000 fans and $2M in ticket revenue as Anna Leigh Waters notched her 46th PPA Triple Crown • [TABLE TENNIS] Muscat champion Shunsuke Togami, Honoka Hashimoto and Japan swept Star Contender titles before Wang Chuqin and Sun Yingsha took Hong Kong Finals mixed-doubles wildcards for Kai Tak December 9–13",
   "newsItems": [
     {
-      "title": "Castillo Captures Daytona",
-      "excerpt": "Judit Castillo won her first U.S. singles gold since 2024 at the Proton Daytona Beach Open, beating Kiora Kunimoto 12-10, 11-2 as Anna Leigh Waters and Kate Fahey sat out women's singles.",
-      "date": "November 26, 2026",
+      "title": "Opendoor Sets Records",
+      "excerpt": "The 2026 Opendoor Pickleball World Championships in Farmers Branch drew 70,000 attendees and $2 million in ticket and registration revenue, with Waters claiming a 46th career PPA Triple Crown.",
+      "date": "November 27, 2026",
       "category": "Pickleball",
-      "link": "https://pickleball.com/news/judit-castillos-second-us-gold-medal-headlines-proton-daytona-beach-open"
+      "link": "https://www.ppatour.com/2026-opendoor-pickleball-world-championships-biggest-event-in-ppa-mlp-history/"
     },
     {
-      "title": "Sivasangari Takes Shanghai",
-      "excerpt": "Sivasangari Subramaniam won the China Open without playing the final after Satomi Watanabe withdrew with fever, adding a 19th PSA crown ahead of the Hong Kong Open starting November 30.",
-      "date": "November 26, 2026",
+      "title": "Hong Kong Draw Loaded",
+      "excerpt": "The Milwaukee Hong Kong Squash Open runs November 30–December 6 with 64 players across three venues; Asal chases a fourth title and Orfi returns as women's world No. 1.",
+      "date": "November 27, 2026",
       "category": "Squash",
-      "link": "https://www.nst.com.my/sports/racquet-sports/2026/11/1583367/sivasangari-claims-china-open-crown-without-playing-final"
+      "link": "https://www.bastillepost.com/global/article/6396444-hong-kong-squash-open-2026-to-kick-off-64-top-players-vie-for-psa-platinum-title"
     },
     {
-      "title": "Sinner Skips Melbourne",
-      "excerpt": "Tennis Australia said Jannik Sinner will not compete at the 2027 Australian Open in January as he continues rehab from iliotibial-band surgery after missing the second half of 2026.",
-      "date": "November 26, 2026",
-      "category": "Tennis",
-      "link": "https://www.afp.com/en/two-time-champion-sinner-out-australian-open-after-surgery"
-    },
-    {
-      "title": "Hong Kong Fields Set",
-      "excerpt": "Muscat champion Shunsuke Togami plus Darko Jorgic, Dang Qiu and Lin Shidong claimed the final men's WTT Finals Hong Kong spots; Joo Cheonhui and Sabine Winter filled the last women's places.",
-      "date": "November 26, 2026",
+      "title": "Wildcards for Wang/Sun",
+      "excerpt": "Wang Chuqin and Sun Yingsha received the lone mixed-doubles wildcard for WTT Finals Hong Kong at Kai Tak Arena December 9–13 after Muscat winners Togami and Hashimoto clinched the last singles berths.",
+      "date": "November 27, 2026",
       "category": "Table Tennis",
-      "link": "https://eleventabletennis.com/news/wtt-finals-hong-kong-2026-fields-confirmed-togami-jorgic-dang-qiu-lin-shidong"
+      "link": "https://pingpongtimes.com/news/wang-chuqin-and-sun-yingsha-receive-hong-kong-finals-mixed-doubles-wildcard--70d89c4cb1501c16"
+    },
+    {
+      "title": "Jodar Lifts Spain",
+      "excerpt": "Rafael Jodar overturned a 2–6 opening set with a 6–0 second set to beat Jurij Rodionov and put Spain into the Davis Cup semifinals in Bologna; Zverev dismissed Arthur Fery 6–3, 6–2 in the same group.",
+      "date": "November 27, 2026",
+      "category": "Tennis",
+      "link": "https://today.tennis/en/a/2026-11-27-zverev-pobedil-v-bolone-egorova-vyshla-v-chetvertfinal-vo-fl.html"
     }
   ]
 }
