@@ -1,33 +1,33 @@
 {
-  "tickerText": "[TENNIS] Rafael Jodar rallied from a set down with a bagel to send Spain into the Davis Cup semifinals in Bologna as Alexander Zverev and Lorenzo Musetti also won their group ties • [SQUASH] PSA Platinum Hong Kong Open starts November 30 with defending men's champ Mostafa Asal, Paul Coll and World No. 1 Amina Orfi leading 64-player fields at Edinburgh Place • [BADMINTON] BWF locked Hangzhou World Tour Finals qualifiers after Hong Kong and awarded Worlds 2027 to Mississauga while greenlighting 24-team league formats from 2027 • [PICKLEBALL] The Opendoor Pickleball World Championships drew a record 70,000 fans and $2M in ticket revenue as Anna Leigh Waters notched her 46th PPA Triple Crown • [TABLE TENNIS] Muscat champion Shunsuke Togami, Honoka Hashimoto and Japan swept Star Contender titles before Wang Chuqin and Sun Yingsha took Hong Kong Finals mixed-doubles wildcards for Kai Tak December 9–13",
+  "tickerText": "[TENNIS] Defending champion Italy reached a fourth straight Davis Cup final after Lorenzo Musetti and Andrea Vavassori edged Czechia in Bologna while Spain and Great Britain contest the other semifinal with Carlos Alcaraz in singles • [SQUASH] The PSA Platinum Milwaukee Hong Kong Squash Open begins November 30 with World No. 1 Amina Orfi, Mostafa Asal and Paul Coll headlining 64-player draws across Edinburgh Place • [BADMINTON] BWF confirmed Mississauga for the 2027 Worlds, New Delhi and Paris for future Thomas & Uber Cups and locked the top eight for December's $3.5M Hangzhou World Tour Finals • [PICKLEBALL] The Opendoor World Championships set PPA attendance and revenue records at 70,000 fans and Judit Castillo won women's singles at the Proton Daytona Beach Open • [TABLE TENNIS] Shunsuke Togami and Honoka Hashimoto clinched the final WTT Finals Hong Kong singles spots in Muscat as Olympic champions Wang Chuqin and Sun Yingsha received the mixed-doubles wildcard for Kai Tak December 9–13",
   "newsItems": [
     {
-      "title": "Opendoor Sets Records",
-      "excerpt": "The 2026 Opendoor Pickleball World Championships in Farmers Branch drew 70,000 attendees and $2 million in ticket and registration revenue, with Waters claiming a 46th career PPA Triple Crown.",
-      "date": "November 27, 2026",
-      "category": "Pickleball",
-      "link": "https://www.ppatour.com/2026-opendoor-pickleball-world-championships-biggest-event-in-ppa-mlp-history/"
+      "title": "BWF Through 2030",
+      "excerpt": "BWF awarded the 2027 World Championships to Mississauga, Thomas & Uber Finals to New Delhi in 2028 and Paris in 2030, and approved 24-team league-and-knockout formats from 2028.",
+      "date": "November 28, 2026",
+      "category": "Badminton",
+      "link": "https://bwfbadminton.com/news-single/2026/11/25/bwf-awards-major-championships-through-2030/"
     },
     {
-      "title": "Hong Kong Draw Loaded",
-      "excerpt": "The Milwaukee Hong Kong Squash Open runs November 30–December 6 with 64 players across three venues; Asal chases a fourth title and Orfi returns as women's world No. 1.",
-      "date": "November 27, 2026",
-      "category": "Squash",
-      "link": "https://www.bastillepost.com/global/article/6396444-hong-kong-squash-open-2026-to-kick-off-64-top-players-vie-for-psa-platinum-title"
-    },
-    {
-      "title": "Wildcards for Wang/Sun",
-      "excerpt": "Wang Chuqin and Sun Yingsha received the lone mixed-doubles wildcard for WTT Finals Hong Kong at Kai Tak Arena December 9–13 after Muscat winners Togami and Hashimoto clinched the last singles berths.",
-      "date": "November 27, 2026",
+      "title": "Finals Field Set",
+      "excerpt": "Muscat champions Shunsuke Togami and Honoka Hashimoto took the last men's and women's singles berths for WTT Finals Hong Kong; Wang Chuqin and Sun Yingsha received the lone mixed-doubles wildcard.",
+      "date": "November 28, 2026",
       "category": "Table Tennis",
-      "link": "https://pingpongtimes.com/news/wang-chuqin-and-sun-yingsha-receive-hong-kong-finals-mixed-doubles-wildcard--70d89c4cb1501c16"
+      "link": "https://english.news.cn/20261123/6eac716d0d91476cad5f2996e184bebc/c.html"
     },
     {
-      "title": "Jodar Lifts Spain",
-      "excerpt": "Rafael Jodar overturned a 2–6 opening set with a 6–0 second set to beat Jurij Rodionov and put Spain into the Davis Cup semifinals in Bologna; Zverev dismissed Arthur Fery 6–3, 6–2 in the same group.",
-      "date": "November 27, 2026",
+      "title": "Italy Four-Peat Bid",
+      "excerpt": "Lorenzo Musetti beat Jakub Mensik and Italy's doubles pair clinched a 2–1 semifinal win over Czechia, sending the three-time champions into Sunday's Davis Cup final in Bologna.",
+      "date": "November 28, 2026",
       "category": "Tennis",
-      "link": "https://today.tennis/en/a/2026-11-27-zverev-pobedil-v-bolone-egorova-vyshla-v-chetvertfinal-vo-fl.html"
+      "link": "https://www.atptour.com/en/news/italy-czechia-davis-cup-2026"
+    },
+    {
+      "title": "Castillo Takes Daytona",
+      "excerpt": "Judit Castillo lifted her second U.S. PPA singles title with a 12–10, 11–2 win over Kiora Kunimoto at the Proton Daytona Beach Open after Anna Leigh Waters sat out women's singles.",
+      "date": "November 28, 2026",
+      "category": "Pickleball",
+      "link": "https://pickleball.com/news/judit-castillos-second-us-gold-medal-headlines-proton-daytona-beach-open"
     }
   ]
 }
